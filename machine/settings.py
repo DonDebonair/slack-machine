@@ -1,17 +1,21 @@
 import os
+import logging
 from machine.utils.collections import CaseInsensitiveDict
+
+logger = logging.getLogger(__name__)
 
 def import_settings():
     default_settings = {
         'PLUGINS': ['machine.plugins.builtin.general.DebugPlugin',
-                    'machine.plugins.builtin.general.MessagePrintPlugin']
+                    'machine.plugins.builtin.general.EchoPlugin',
+                    'machine.plugins.builtin.general.PingPongPlugin']
     }
     settings = CaseInsensitiveDict(default_settings)
     try:
         import local_settings
-        print("local_settings found!")
+        found_local_settings = True
     except ImportError:
-        print("No local_settings found!")
+        found_local_settings = False
     else:
         for k in dir(local_settings):
             if not k.startswith('_'):
@@ -22,4 +26,4 @@ def import_settings():
             k = k[8:]
             settings[k] = v
 
-    return settings
+    return (settings, found_local_settings)
