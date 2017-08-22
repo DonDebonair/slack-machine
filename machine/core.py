@@ -6,6 +6,7 @@ from machine.settings import import_settings
 from machine.utils.module_loading import import_string
 from machine.plugins.base import MachineBasePlugin
 from machine.dispatch import EventDispatcher
+from machine.client import MessagingClient
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +42,7 @@ class Machine:
             for class_name, cls in import_string(plugin):
                 if MachineBasePlugin in cls.__bases__ and cls is not MachineBasePlugin:
                     logger.debug("Found a Machine plugin: {}".format(plugin))
-                    instance = cls(self._settings, self._client)
+                    instance = cls(self._settings, MessagingClient(self._client))
                     self._register_plugin(plugin, instance)
 
     def _fqn_fn_name(self, plugin, fn_name):

@@ -6,9 +6,8 @@ logger = logging.getLogger(__name__)
 
 def import_settings():
     default_settings = {
-        'PLUGINS': ['machine.plugins.builtin.general.DebugPlugin',
-                    'machine.plugins.builtin.general.EchoPlugin',
-                    'machine.plugins.builtin.general.PingPongPlugin']
+        'PLUGINS': ['machine.plugins.builtin.general.PingPongPlugin',
+                    'machine.plugins.builtin.general.HelloPlugin']
     }
     settings = CaseInsensitiveDict(default_settings)
     try:

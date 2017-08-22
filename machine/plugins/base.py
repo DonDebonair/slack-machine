@@ -1,19 +1,31 @@
 class MachineBasePlugin:
 
     def __init__(self, settings, client):
-        self.settings = settings
         self._client = client
+        self.settings = settings
 
     @property
     def users(self):
-        return self._client.server.users
+        return self._client.users
 
     @property
     def channels(self):
-        return self._client.server.channels
+        return self._client.channels
 
-    def send(self, channel, message, thread=None, reply_broadcast=None):
-        self._client.rtm_send_message(channel, message, thread, reply_broadcast)
+    def send(self, channel, text, thread_ts=None):
+        self._client.send(channel, text, thread_ts)
+
+    def send_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
+        self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
+
+    def react(self, channel, ts, emoji):
+        self._client.react(channel, ts, emoji)
+
+    def send_dm(self, user, text):
+        self._client.send_dm(user, text)
+
+    def send_dm_webapi(self, user, text, attachments=None):
+        self._client.send_dm_webapi(user, text, attachments)
 
 class Message:
 
@@ -23,18 +35,68 @@ class Message:
 
     @property
     def sender(self):
-        return self._client.server.users.find(self._msg_event['user'])
+        return self._client.users.find(self._msg_event['user'])
 
     @property
     def channel(self):
-        return self._client.server.channels.find(self._msg_event['channel'])
+        return self._client.channels.find(self._msg_event['channel'])
 
     @property
     def text(self):
         return self._msg_event['text']
 
-    def send(self, text):
-        self._client.rtm_send_message(self.channel.id, text)
+    @property
+    def mention(self):
+        return "<@{}>".format(self.sender.id)
+
+    def send(self, text, thread_ts=None, **kwargs):
+        self._client.send(self.channel.id, text, thread_ts)
+
+    def send_webapi(self, text, attachments=None, thread_ts=None, ephemeral=False, **kwargs):
+        if ephemeral:
+            ephemeral_user = self.sender.id
+        else:
+            ephemeral_user = None
+        self._client.send_webapi(self.channel.id, text, attachments, thread_ts, ephemeral_user)
+
+    def reply(self, text, in_thread=False):
+        if in_thread:
+            self.send(text, thread_ts=self.thread_ts)
+        else:
+            text = self.create_reply(text)
+            self.send(text)
+
+    def reply_dm(self, text):
+        self._client.send_dm(self.sender.id, text)
+
+    def reply_webapi(self, text, attachments=None, in_thread=False, ephemeral=False):
+        if in_thread and not ephemeral:
+            self.send_webapi(text, attachments=attachments, thread_ts=self.thread_ts)
+        else:
+            text = self.create_reply(text)
+            self.send_webapi(text, attachments=attachments, ephemeral=ephemeral)
+
+    def reply_dm_webapi(self, text, attachments=None):
+        self._client.send_dm_webapi(self.sender.id, text, attachments)
+
+    def react(self, emoji, **kwargs):
+        self._client.react(self.channel.id, self._msg_event['ts'], emoji)
+
+    def create_reply(self, text):
+        chan = self._msg_event['channel']
+        if chan.startswith('C') or chan.startswith('G'):
+            return "{}: {}".format(self.mention, text)
+        else:
+            return text
+
+    @property
+    def thread_ts(self):
+        try:
+            thread_ts = self._msg_event['thread_ts']
+        except KeyError:
+            thread_ts = self._msg_event['ts']
+
+        return thread_ts
 
     def __str__(self):
         return "Message '{}', sent by user @{} in channel #{}".format(self.text, self.sender.name, self.channel.name)

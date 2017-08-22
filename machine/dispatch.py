@@ -1,7 +1,11 @@
 import time
 import re
+import logging
 from machine.utils.pool import ThreadPool
 from machine.plugins.base import Message
+from machine.client import MessagingClient
+
+logger = logging.getLogger(__name__)
 
 class EventDispatcher:
 
@@ -42,7 +46,7 @@ class EventDispatcher:
         return [action for action in self._plugin_actions[type].values()]
 
     def _gen_message(self, event):
-        return Message(self._client, event)
+        return Message(MessagingClient(self._client), event)
 
     def _get_bot_id(self):
         return self._client.server.login_data['self']['id']
@@ -81,6 +85,6 @@ class EventDispatcher:
         message = self._gen_message(event)
         for l in listeners:
             matcher = l['regex']
-            match = matcher.search(event.get('text', None))
+            match = matcher.search(event.get('text', ''))
             if match:
                 l['function'](message, **match.groupdict())
