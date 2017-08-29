@@ -24,7 +24,7 @@ setup(
     author=about["__author__"],
     author_email=about["__email__"],
     classifiers=[
-        "Development Status :: 3 - Alpha"
+        "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
@@ -33,8 +33,8 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3 :: Only"
-        "Topic :: Communications :: Chat,"
+        "Programming Language :: Python :: 3 :: Only",
+        "Topic :: Communications :: Chat",
         "Topic :: Internet",
         "Topic :: Office/Business"
     ],
