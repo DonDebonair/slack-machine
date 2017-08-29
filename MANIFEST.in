@@ -1,0 +1,4 @@
+include README.rst LICENSE requirements.txt
+include extra/logo.png
+include run_dev.py
+exclude local_settings.py

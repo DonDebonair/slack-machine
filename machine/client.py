@@ -1,5 +1,4 @@
 class MessagingClient:
-
     def __init__(self, slack_client):
         self._slack_client = slack_client
 

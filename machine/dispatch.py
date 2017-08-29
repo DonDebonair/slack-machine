@@ -7,8 +7,8 @@ from machine.client import MessagingClient
 
 logger = logging.getLogger(__name__)
 
-class EventDispatcher:
 
+class EventDispatcher:
     RESPOND_MATCHER = re.compile(r'^(?:\<@(?P<atuser>\w+)\>:?|(?P<username>\w+):) ?(?P<text>.*)$')
 
     def __init__(self, client, plugin_actions):
@@ -40,7 +40,6 @@ class EventDispatcher:
             else:
                 listeners = self._find_listeners('listen_to')
                 self._dispatch_listeners(listeners, event)
-
 
     def _find_listeners(self, type):
         return [action for action in self._plugin_actions[type].values()]

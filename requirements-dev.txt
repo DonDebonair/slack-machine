@@ -1,0 +1,3 @@
+-r requirements.txt
+check-manifest==0.35
+pyroma==2.2

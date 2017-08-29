@@ -10,10 +10,12 @@ from machine.client import MessagingClient
 
 logger = logging.getLogger(__name__)
 
+
 class Machine:
     def __init__(self):
         self._settings, found_local_settings = import_settings()
-        fmt = '[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s'
+        fmt = '[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d |' \
+              ' %(message)s'
         date_fmt = '%Y-%m-%d %H:%M:%S'
         log_level = self._settings.get('LOGLEVEL', logging.ERROR)
         logging.basicConfig(
@@ -23,7 +25,7 @@ class Machine:
         )
         if not found_local_settings:
             logger.warning("No local_settings found! Are you sure this is what you want?")
-        if not 'SLACK_API_TOKEN' in self._settings:
+        if 'SLACK_API_TOKEN' not in self._settings:
             logger.error("No SLACK_API_TOKEN found in settings! I need that to work...")
             sys.exit(1)
         self._client = SlackClient(self._settings['SLACK_API_TOKEN'])
@@ -79,8 +81,4 @@ class Machine:
 
     def run(self):
         self._client.rtm_connect()
-        try:
-            self._dispatcher.start()
-        except (KeyboardInterrupt, SystemExit):
-            print("Thanks for playing!")
-
+        self._dispatcher.start()

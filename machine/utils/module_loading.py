@@ -1,6 +1,7 @@
 from importlib import import_module
 import inspect
 
+
 def import_string(dotted_path):
     """
     Import all Classes from the module specified by
@@ -13,7 +14,7 @@ def import_string(dotted_path):
     try:
         module = import_module(dotted_path)
         return inspect.getmembers(module, predicate=inspect.isclass)
-    except ModuleNotFoundError:
+    except ImportError:
         try:
             module_path, class_name = dotted_path.rsplit('.', 1)
             module = import_module(module_path)
@@ -21,4 +22,3 @@ def import_string(dotted_path):
         except AttributeError:
             msg = "{} doesn't look like a module or class".format(dotted_path)
             raise ImportError(msg)
-

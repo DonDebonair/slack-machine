@@ -4,8 +4,10 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class Worker(Thread):
     """ Thread executing tasks from a given tasks queue """
+
     def __init__(self, queue):
         Thread.__init__(self)
         self.queue = queue
@@ -17,9 +19,9 @@ class Worker(Thread):
             func, args, kargs = self.queue.get()
             try:
                 func(*args, **kargs)
-            except Exception as e:
+            except Exception as ex:
                 # An exception happened in this thread
-                logger.exception("An error occurred while performing work", exc_info=e)
+                logger.exception("An error occurred while performing work", exc_info=ex)
             finally:
                 # Mark this task as done, whether an exception happened or not
                 self.queue.task_done()
@@ -27,6 +29,7 @@ class Worker(Thread):
 
 class ThreadPool:
     """ Pool of threads consuming tasks from a queue """
+
     def __init__(self, num_threads=10):
         self.queue = Queue(num_threads)
         for _ in range(num_threads):

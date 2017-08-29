@@ -1,5 +1,4 @@
 class MachineBasePlugin:
-
     def __init__(self, settings, client):
         self._client = client
         self.settings = settings
@@ -27,8 +26,8 @@ class MachineBasePlugin:
     def send_dm_webapi(self, user, text, attachments=None):
         self._client.send_dm_webapi(user, text, attachments)
 
-class Message:
 
+class Message:
     def __init__(self, client, msg_event):
         self._client = client
         self._msg_event = msg_event
@@ -99,5 +98,5 @@ class Message:
         return thread_ts
 
     def __str__(self):
-        return "Message '{}', sent by user @{} in channel #{}".format(self.text, self.sender.name, self.channel.name)
-
+        return "Message '{}', sent by user @{} in channel #{}".format(
+            self.text, self.sender.name, self.channel.name)
