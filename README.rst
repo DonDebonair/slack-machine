@@ -63,7 +63,7 @@ Usage
 	SLACK_API_TOKEN = 'xox-my-slack-token'
 
 #. Start the bot with ``slack-machine``
-#. ...
+#. \...
 #. Profit!
 
 Writing plugins

@@ -1,3 +1,8 @@
 -r requirements.txt
-check-manifest==0.35
-pyroma==2.2
+check-manifest~=0.35
+pyroma~=2.2
+pytest~=3.2
+tox~=2.7
+detox~=0.11
+flake8~=3.4
+twine~=1.5

@@ -47,9 +47,6 @@ class Machine:
                     instance = cls(self._settings, MessagingClient(self._client))
                     self._register_plugin(plugin, instance)
 
-    def _fqn_fn_name(self, plugin, fn_name):
-        return "{}.{}".format(plugin, fn_name)
-
     def _register_plugin(self, plugin, cls_instance):
         if hasattr(cls_instance, 'catch_all'):
             self._plugin_actions['catch_all'][plugin] = {
@@ -61,7 +58,7 @@ class Machine:
                 self._register_plugin_actions(plugin, fn.metadata, cls_instance, name, fn)
 
     def _register_plugin_actions(self, plugin, metadata, cls_instance, fn_name, fn):
-        fq_fn_name = self._fqn_fn_name(plugin, fn_name)
+        fq_fn_name = "{}.{}".format(plugin, fn_name)
         for action, config in metadata['plugin_actions'].items():
             if action == 'process':
                 event_type = config['event_type']
