@@ -1,0 +1,11 @@
+[run]
+source = machine
+
+[report]
+# Regexes for lines to exclude from consideration
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't care about returning functions from decorator wrappers
+    return f\(\*args, \*\*kwargs\)

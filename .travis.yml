@@ -17,7 +17,8 @@ cache: pip
 install:
   - "travis_retry pip install setuptools --upgrade"
   - "travis_retry pip install tox"
+  - "travis_retry pip install codecov"
 script:
   - tox -e $TOX_ENV
-after_script:
-  - cat .tox/$TOX_ENV/log/*.log
+after_success:
+  - test $TOX_ENV == "py36" && codecov
