@@ -1,6 +1,18 @@
 Slack Machine
 =============
 
+.. image:: https://travis-ci.org/DandyDev/slack-machine.svg?branch=master
+    :target: https://travis-ci.org/DandyDev/slack-machine
+
+.. image:: https://img.shields.io/pypi/v/slack-machine.svg
+    :target: https://pypi.python.org/pypi/slack-machine
+
+.. image:: https://img.shields.io/pypi/l/slack-machine.svg
+    :target: https://pypi.python.org/pypi/slack-machine
+
+.. image:: https://img.shields.io/pypi/pyversions/slack-machine.svg
+    :target: https://pypi.python.org/pypi/slack-machine
+
 Slack Machine is a sexy, simple, yet powerful and extendable Slack bot. More than just a bot, 
 Slack Machine is a framework that helps you develop your Slack team into a ChatOps powerhouse.
 

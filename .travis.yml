@@ -1,14 +1,18 @@
 sudo: false
 language: python
-python:
-  - "3.6"
-env:
-  matrix:
-    - TOX_ENV=py33
-    - TOX_ENV=py34
-    - TOX_ENV=py35
-    - TOX_ENV=py36
-    - TOX_ENV=flake8
+python: 3.6
+matrix:
+  include:
+    - python: 3.3
+      env: TOX_ENV=py33
+    - python: 3.4
+      env: TOX_ENV=py34
+    - python: 3.5
+      env: TOX_ENV=py35
+    - python: 3.6
+      env: TOX_ENV=py36
+    - python: 3.6
+      env: TOX_ENV=flake8
 cache: pip
 install:
   - "travis_retry pip install setuptools --upgrade"
