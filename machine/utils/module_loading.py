@@ -6,7 +6,7 @@ def import_string(dotted_path):
     """
     Import all Classes from the module specified by
     the dotted_path. If dotted_path is not a module, try
-    importing it as a Class instead
+    importing it as a member of a module instead
 
     returns: list of classes or list of single class
     """
@@ -19,6 +19,6 @@ def import_string(dotted_path):
             module_path, class_name = dotted_path.rsplit('.', 1)
             module = import_module(module_path)
             return [(class_name, getattr(module, class_name))]
-        except AttributeError:
+        except (ImportError, AttributeError):
             msg = "{} doesn't look like a module or class".format(dotted_path)
             raise ImportError(msg)
