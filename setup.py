@@ -74,6 +74,8 @@ setup(
     url=about["__uri__"],
     author=about["__author__"],
     author_email=about["__email__"],
+    setup_requires=['pytest-runner'],
+    tests_require=['pytest', 'pytest-cov', 'coverage'],
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
