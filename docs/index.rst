@@ -1,3 +1,8 @@
+.. Slack Machine documentation master file, created by
+   sphinx-quickstart on Fri Sep  1 17:18:52 2017.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
 Slack Machine
 =============
 
@@ -18,8 +23,6 @@ Slack Machine
 
 Slack Machine is a sexy, simple, yet powerful and extendable Slack bot. More than just a bot, 
 Slack Machine is a framework that helps you develop your Slack team into a ChatOps powerhouse.
-
-.. image:: extra/logo.png
 
 Features
 --------
@@ -52,36 +55,16 @@ Coming Soon
 - Help texts for Plugins
 - ... and much more
 
-Installation
-------------
+User Guide
+----------
 
-You can install Slack Machine using pip:
+.. toctree::
+   :maxdepth: 2
 
-.. code-block:: bash
+   user/intro
+   user/install
+   user/usage
 
-    $ pip install slack-machine
-
-It is **strongly recommended** that you install ``slack-machine`` inside a `virtual environment`_!
-
-.. _virtual environment: http://docs.python-guide.org/en/latest/dev/virtualenvs/
-
-Usage
------
-
-1. Create a directory for your Slack Machine bot: ``mkdir my-slack-bot && cd my-slack-bot``
-2. Add a ``local_settings.py`` file to your bot directory: ``touch local_settings.py``
-3. Create a Bot User for your Slack team: https://my.slack.com/services/new/bot (take note of your API token)
-4. Add the Slack API token to your ``local_settings.py`` like this:
-
-.. code-block:: python
-	
-	SLACK_API_TOKEN = 'xox-my-slack-token'
-
-5. Start the bot with ``slack-machine``
-6. \...
-7. Profit!
-
-Writing plugins
+Writing Plugins
 ---------------
 
-*Coming Soon!*

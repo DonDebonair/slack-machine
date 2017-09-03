@@ -11,10 +11,10 @@ class MachineBasePlugin:
     def channels(self):
         return self._client.channels
 
-    def send(self, channel, text, thread_ts=None):
+    def say(self, channel, text, thread_ts=None):
         self._client.send(channel, text, thread_ts)
 
-    def send_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
+    def say_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
         self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
 
     def react(self, channel, ts, emoji):
@@ -45,13 +45,13 @@ class Message:
         return self._msg_event['text']
 
     @property
-    def mention(self):
+    def sender_mention(self):
         return "<@{}>".format(self.sender.id)
 
-    def send(self, text, thread_ts=None, **kwargs):
+    def say(self, text, thread_ts=None, **kwargs):
         self._client.send(self.channel.id, text, thread_ts)
 
-    def send_webapi(self, text, attachments=None, thread_ts=None, ephemeral=False, **kwargs):
+    def say_webapi(self, text, attachments=None, thread_ts=None, ephemeral=False, **kwargs):
         if ephemeral:
             ephemeral_user = self.sender.id
         else:
@@ -60,20 +60,20 @@ class Message:
 
     def reply(self, text, in_thread=False):
         if in_thread:
-            self.send(text, thread_ts=self.thread_ts)
+            self.say(text, thread_ts=self.thread_ts)
         else:
-            text = self.create_reply(text)
-            self.send(text)
+            text = self._create_reply(text)
+            self.say(text)
 
     def reply_dm(self, text):
         self._client.send_dm(self.sender.id, text)
 
     def reply_webapi(self, text, attachments=None, in_thread=False, ephemeral=False):
         if in_thread and not ephemeral:
-            self.send_webapi(text, attachments=attachments, thread_ts=self.thread_ts)
+            self.say_webapi(text, attachments=attachments, thread_ts=self.thread_ts)
         else:
-            text = self.create_reply(text)
-            self.send_webapi(text, attachments=attachments, ephemeral=ephemeral)
+            text = self._create_reply(text)
+            self.say_webapi(text, attachments=attachments, ephemeral=ephemeral)
 
     def reply_dm_webapi(self, text, attachments=None):
         self._client.send_dm_webapi(self.sender.id, text, attachments)
@@ -81,10 +81,10 @@ class Message:
     def react(self, emoji, **kwargs):
         self._client.react(self.channel.id, self._msg_event['ts'], emoji)
 
-    def create_reply(self, text):
+    def _create_reply(self, text):
         chan = self._msg_event['channel']
         if chan.startswith('C') or chan.startswith('G'):
-            return "{}: {}".format(self.mention, text)
+            return "{}: {}".format(self.sender_mention, text)
         else:
             return text
 
@@ -99,4 +99,14 @@ class Message:
 
     def __str__(self):
         return "Message '{}', sent by user @{} in channel #{}".format(
-            self.text, self.sender.name, self.channel.name)
+            self.text,
+            self.sender.name,
+            self.channel.name
+        )
+
+    def __repr__(self):
+        return "Message(text={}, sender={}, channel={})".format(
+            repr(self.text),
+            repr(self.sender.name),
+            repr(self.channel.name)
+        )

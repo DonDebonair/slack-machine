@@ -36,7 +36,7 @@ class Machine:
             'catch_all': {}
         }
         self.load_plugins()
-        logger.debug(self._plugin_actions)
+        logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
         self._dispatcher = EventDispatcher(self._client, self._plugin_actions)
 
     def load_plugins(self):

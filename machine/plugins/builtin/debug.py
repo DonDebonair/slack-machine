@@ -16,4 +16,4 @@ class EchoPlugin(MachineBasePlugin):
     @process(event_type='message')
     def echo_message(self, event):
         logger.debug("Message received: %s", event)
-        self.send(event['channel'], event['text'])
+        self.say(event['channel'], event['text'])
