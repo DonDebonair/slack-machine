@@ -68,3 +68,10 @@ User Guide
 Writing Plugins
 ---------------
 
+API Docs
+--------
+
+.. toctree::
+   :maxdepth: 2
+
+   api

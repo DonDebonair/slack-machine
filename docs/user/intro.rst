@@ -24,7 +24,7 @@ These are non-goals for me at the moment, but that might change in the future:
 
 - Support for other backends than Slack
 - Build-in AI. At least not in the core, although whatever intelligence developers put into their 
-plugins, is cool of course
+  plugins, is cool of course
 
 Why Slack Machine was built
 ---------------------------

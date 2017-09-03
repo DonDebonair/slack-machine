@@ -1,4 +1,15 @@
 class MachineBasePlugin:
+    """Base class for all Slack Machine plugins
+
+    :var settings: Slack Machine settings object that contains all settings that
+        were defined through ``local_settings.py``
+
+    The purpose of this class is two-fold:
+
+    1. It acts as a marker-class so Slack Machine can recognize plugins as such
+    2. It provides a lot of common functionality and convenience methods for plugins to
+       interact with channels and users
+    """
     def __init__(self, settings, client):
         self._client = client
         self.settings = settings
@@ -12,9 +23,27 @@ class MachineBasePlugin:
         return self._client.channels
 
     def say(self, channel, text, thread_ts=None):
+        """Send a message to a channel
+
+        Sends a message to a channel using the RTM API. Only basic Slack formatting allowed.
+        For richer formatting using attachments, use :py:meth:`say_webapi`
+
+        :param channel: id or name of channel to send message to
+        :param text: message text
+        :param thread_ts: optional timestamp of thread, to reply in thread
+        """
         self._client.send(channel, text, thread_ts)
 
     def say_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
+        """Send a message to a channel using the WebAPI
+
+        :param channel: id or name of channel to send message to
+        :param text: message text
+        :param attachments: optional attachments
+        :param thread_ts: optional timestamp of thread, to reply in thread
+        :param ephemeral_user: optional user name or id if the message needs to visible
+            to a specific user only
+        """
         self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
 
     def react(self, channel, ts, emoji):
