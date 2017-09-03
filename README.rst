@@ -81,7 +81,9 @@ Usage
 6. \...
 7. Profit!
 
-Writing plugins
----------------
+Documentation
+-------------
 
-*Coming Soon!*
+You can find the documentation for Slack Machine here: http://slack-machine.readthedocs.io/en/latest/
+
+Go read it to learn how to configure Slack Machine, write plugins, and more!
