@@ -49,11 +49,13 @@ class MessagingClient:
         return response['channel']['id']
 
     def send_dm(self, user, text):
-        dm_channel = self.open_im(user)
+        u = self.users.find(user)
+        dm_channel = self.open_im(u.id)
         self.send(dm_channel, text)
 
     def send_dm_webapi(self, user, text, attachments=None):
-        dm_channel = self.open_im(user)
+        u = self.users.find(user)
+        dm_channel = self.open_im(u.id)
         self._slack_client.api_call(
             'chat.postMessage',
             channel=dm_channel,
