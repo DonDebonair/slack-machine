@@ -6,6 +6,8 @@ Introduction
 Philosophy
 ----------
 
+Slack Machine is a sexy, simple, yet powerful and extendable bot platform for Slack. 
+
 Slack Machine should be:
 
 - Full-featured

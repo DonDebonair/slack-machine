@@ -21,7 +21,8 @@ class MachineBasePlugin:
         """Dictionary of all users in the Slack team
 
         :return: a dictionary of all users in the Slack team, where the key is the user id and
-            the value is a User object (see the source code of `User`_ in the underlying Slack client library)
+            the value is a User object (see the source code of `User`_ in the underlying Slack
+            client library)
 
         .. _User: https://github.com/slackapi/python-slackclient/blob/master/slackclient/user.py
         """
@@ -38,7 +39,7 @@ class MachineBasePlugin:
         :return: a list of all channels in the Slack team, where each channel is a Channel
             object (see the source code of `Channel`_ in the underlying Slack client library)
 
-        .. _Channel: https://github.com/slackapi/python-slackclient/blob/master/slackclient/channel.py
+        .. _Channel: https://github.com/slackapi/python-slackclient/blob/master/slackclient/channel.py # NOQA
         """
         return self._client.channels
 
@@ -46,7 +47,8 @@ class MachineBasePlugin:
         """Send a message to a channel
 
         Send a message to a channel using the RTM API. Only `basic Slack formatting`_ allowed.
-        For richer formatting using attachments, use :py:meth:`~machine.plugins.base.MachineBasePlugin.say_webapi`
+        For richer formatting using attachments, use
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.say_webapi`
 
         .. _basic Slack formatting: https://api.slack.com/docs/message-formatting
 

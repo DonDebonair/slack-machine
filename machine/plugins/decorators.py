@@ -64,7 +64,8 @@ def respond_to(regex, flags=re.IGNORECASE):
     The Plugin method will be called for each message that mentions the bot and matches the
     specified regex pattern. The received :py:class:`~machine.plugins.base.Message` will be passed
     to the method when called. Named groups can be used in the regex pattern, to catch specific
-    parts of the message. These groups will be passed to the method as keyword arguments when called.
+    parts of the message. These groups will be passed to the method as keyword arguments when
+    called.
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching

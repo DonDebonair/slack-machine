@@ -20,6 +20,8 @@ The following 2 classes form the basis for Plugin development.
 .. autoclass:: machine.plugins.base.Message
    :members:
 
+.. _decorators-section:
+
 Decorators
 ----------
 
