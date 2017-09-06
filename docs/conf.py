@@ -36,10 +36,13 @@ import machine
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
-    'sphinx.ext.viewcode'
+    'sphinx.ext.viewcode',
+    'sphinx.ext.intersphinx'
 ]
 
 autodoc_member_order = 'bysource'
+
+intersphinx_mapping = {'python': ('https://docs.python.org/3.6', None)}
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

@@ -21,4 +21,4 @@ class HelloPlugin(MachineBasePlugin):
     @respond_to(r'^(?P<greeting>hi|hello)')
     def greet(self, msg, greeting):
         logger.debug("Greeting '%s' received", greeting)
-        msg.say("{}, {}!".format(greeting.title(), msg.sender_mention))
+        msg.say("{}, {}!".format(greeting.title(), msg.at_sender))

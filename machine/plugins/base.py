@@ -43,6 +43,9 @@ class MachineBasePlugin:
         """
         return self._client.channels
 
+    def at(self, user):
+        return self._client.fmt_mention(user)
+
     def say(self, channel, text, thread_ts=None):
         """Send a message to a channel
 
@@ -162,7 +165,7 @@ class Message:
         return self._msg_event['text']
 
     @property
-    def sender_mention(self):
+    def at_sender(self):
         """The sender of the message formatted as mention
 
         :return: a string representation of the sender of the message, formatted as `mention`_,
@@ -170,7 +173,7 @@ class Message:
 
         .. _mention: https://api.slack.com/docs/message-formatting#linking_to_channels_and_users
         """
-        return "<@{}>".format(self.sender.id)
+        return self._client.fmt_mention(self.sender)
 
     def say(self, text, thread_ts=None):
         """Send a new message to the channel the original message was received in
@@ -281,7 +284,7 @@ class Message:
     def _create_reply(self, text):
         chan = self._msg_event['channel']
         if chan.startswith('C') or chan.startswith('G'):
-            return "{}: {}".format(self.sender_mention, text)
+            return "{}: {}".format(self.at_sender, text)
         else:
             return text
 

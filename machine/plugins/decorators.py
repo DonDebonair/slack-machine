@@ -49,8 +49,11 @@ def listen_to(regex, flags=re.IGNORECASE):
 
         wrapped_f.metadata = getattr(f, "metadata", {})
         wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['listen_to'] = {}
-        wrapped_f.metadata['plugin_actions']['listen_to']['regex'] = re.compile(regex, flags)
+        wrapped_f.metadata['plugin_actions']['listen_to'] = \
+            wrapped_f.metadata['plugin_actions'].get('listen_to', {})
+        wrapped_f.metadata['plugin_actions']['listen_to']['regex'] = \
+            wrapped_f.metadata['plugin_actions']['listen_to'].get('regex', [])
+        wrapped_f.metadata['plugin_actions']['listen_to']['regex'].append(re.compile(regex, flags))
         return wrapped_f
 
     return listen_to_decorator
@@ -78,8 +81,11 @@ def respond_to(regex, flags=re.IGNORECASE):
 
         wrapped_f.metadata = getattr(f, "metadata", {})
         wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['respond_to'] = {}
-        wrapped_f.metadata['plugin_actions']['respond_to']['regex'] = re.compile(regex, flags)
+        wrapped_f.metadata['plugin_actions']['respond_to'] = \
+            wrapped_f.metadata['plugin_actions'].get('respond_to', {})
+        wrapped_f.metadata['plugin_actions']['respond_to']['regex'] = \
+            wrapped_f.metadata['plugin_actions']['respond_to'].get('regex', [])
+        wrapped_f.metadata['plugin_actions']['respond_to']['regex'].append(re.compile(regex, flags))
         return wrapped_f
 
     return respond_to_decorator

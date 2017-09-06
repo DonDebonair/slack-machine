@@ -53,8 +53,7 @@ def test_listen_to(listen_to_f):
     assert 'plugin_actions' in listen_to_f.metadata
     assert 'listen_to' in listen_to_f.metadata['plugin_actions']
     assert 'regex' in listen_to_f.metadata['plugin_actions']['listen_to']
-    assert listen_to_f.metadata['plugin_actions']['listen_to']['regex'] == re.compile(r'hello',
-                                                                                      re.IGNORECASE)
+    assert listen_to_f.metadata['plugin_actions']['listen_to']['regex'] == [re.compile(r'hello', re.IGNORECASE)]
 
 
 def test_respond_to(respond_to_f):
@@ -62,7 +61,7 @@ def test_respond_to(respond_to_f):
     assert 'plugin_actions' in respond_to_f.metadata
     assert 'respond_to' in respond_to_f.metadata['plugin_actions']
     assert 'regex' in respond_to_f.metadata['plugin_actions']['respond_to']
-    assert respond_to_f.metadata['plugin_actions']['respond_to']['regex'] == re.compile(r'hello', re.IGNORECASE)
+    assert respond_to_f.metadata['plugin_actions']['respond_to']['regex'] == [re.compile(r'hello', re.IGNORECASE)]
 
 
 def test_mulitple_decorators(multi_decorator_f):

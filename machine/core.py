@@ -69,12 +69,14 @@ class Machine:
                 }
                 self._plugin_actions['process'][event_type] = event_handlers
             if action == 'respond_to' or action == 'listen_to':
-                event_handler = {
-                    'class': cls_instance,
-                    'function': fn,
-                    'regex': config['regex']
-                }
-                self._plugin_actions[action][fq_fn_name] = event_handler
+                for regex in config['regex']:
+                    event_handler = {
+                        'class': cls_instance,
+                        'function': fn,
+                        'regex': regex
+                    }
+                    key = "{}-{}".format(fq_fn_name, str(regex))
+                    self._plugin_actions[action][key] = event_handler
 
     def run(self):
         self._client.rtm_connect()

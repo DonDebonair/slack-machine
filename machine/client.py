@@ -10,6 +10,10 @@ class MessagingClient:
     def channels(self):
         return self._slack_client.server.channels
 
+    def fmt_mention(self, user):
+        u = self.users.find(user)
+        return "<@{}>".format(u.id)
+
     def send(self, channel, text, thread_ts=None):
         self._slack_client.rtm_send_message(channel, text, thread_ts)
 

@@ -72,6 +72,9 @@ Writing Plugins
    :maxdepth: 2
 
    plugins/basics
+   plugins/listening
+   plugins/responding
+   plugins/settings
 
 API Docs
 --------
