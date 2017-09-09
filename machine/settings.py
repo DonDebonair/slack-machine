@@ -22,7 +22,7 @@ def import_settings():
                 settings[k] = getattr(local_settings, k)
 
     for k, v in os.environ.items():
-        if k[:8] == 'MACHINE_':
+        if k[:8] == 'SM_':
             k = k[8:]
             settings[k] = v
 

@@ -18,9 +18,9 @@ class MachineBasePlugin:
 
     @property
     def users(self):
-        """Dictionary of all users in the Slack team
+        """Dictionary of all users in the Slack workspace
 
-        :return: a dictionary of all users in the Slack team, where the key is the user id and
+        :return: a dictionary of all users in the Slack workspace, where the key is the user id and
             the value is a User object (see the source code of `User`_ in the underlying Slack
             client library)
 
@@ -30,13 +30,13 @@ class MachineBasePlugin:
 
     @property
     def channels(self):
-        """List of all channels in the Slack team
+        """List of all channels in the Slack workspace
 
-        This is a list of all channels in the Slack team that the bot is aware of. This includes
-        all public channels, all private channels the bot is a member of and all DM channels the
-        bot is a member of.
+        This is a list of all channels in the Slack workspace that the bot is aware of. This
+        includes all public channels, all private channels the bot is a member of and all DM
+        channels the bot is a member of.
 
-        :return: a list of all channels in the Slack team, where each channel is a Channel
+        :return: a list of all channels in the Slack workspace, where each channel is a Channel
             object (see the source code of `Channel`_ in the underlying Slack client library)
 
         .. _Channel: https://github.com/slackapi/python-slackclient/blob/master/slackclient/channel.py # NOQA

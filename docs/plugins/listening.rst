@@ -1,31 +1,32 @@
 .. _listening:
 
-Listening for stuff
-===================
+Listening for things
+====================
 
 Slack Machine allows you to listen for various different things and respond to that. By decorating 
-functions in your plugin using the :ref:`decorators-section` Slack Machine provides, you tell 
-Slack Machine to run those functions when something happens.
+functions in your plugin using the :ref:`decorators-section` Slack Machine provides, you can tell 
+Slack Machine to run those functions when something specific happens.
 
 Listen for a mention
 --------------------
 
 The :py:meth:`~machine.plugins.decorators.respond_to` decorator tells Slack Machine to listen 
-for messages mentioning your bot and matching a certain pattern. Slack Machine will hear messages 
+for messages mentioning your bot and matching a specific pattern. Slack Machine will hear messages 
 sent in any channel or private group it is a member of. For a message to trigger a function 
 decorated by ``@respond_to(...)``, the message has to *start* with a mention of your 
 bot. The exception is direct messages sent to the bot, they don't have to include a mention 
 to trigger ``@respond_to``.
 
-``@respond_to`` takes 2 parameters. The first parameter, ``regex``, is the regular expression 
-Slack Machine should listen to, and is *required*. When matching the message to the regular 
-expression you provide, Slack Machine will remove the mention of your bot. 
-Slack Machine listens for any occurrence of the pattern in the message, so if you want to 
-specifically match the whole message, you can anchor your pattern using the ``^`` and ``$`` 
-symbols.
+``@respond_to`` takes 2 parameters:
+    
+    ``regex`` (*required*): the regular expression Slack Machine should listen for. The regex 
+    pattern should **not** account for the mention of your bot, as Slack Machine will remove 
+    the mention before looking for a match. Slack Machine listens for any occurrence of the 
+    pattern in the message, so if you want to specifically match the whole message, you can 
+    anchor your pattern using the ``^`` and ``$`` symbols.
 
-The second parameter, ``flags``, is optional and can be used to pass flags for the regex matching 
-as defined in the :py:mod:`re` module. By default :py:data:`re.IGNORECASE` is applied.
+    ``flags`` (optional): can be used to pass flags for the regex matching 
+    as defined in the :py:mod:`re` module. By default :py:data:`re.IGNORECASE` is applied.
 
 How your function will be called
 """"""""""""""""""""""""""""""""
@@ -111,4 +112,4 @@ Catch all
 
 Slack Machine also provides a way to listen to **all events** that Slack produces. Your plugin 
 should implement a method ``catch_all`` that takes one parameter. That function will be called 
-for each event, with the event received.
+for each event, with the received event.
