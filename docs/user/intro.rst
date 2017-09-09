@@ -66,6 +66,15 @@ would be cool new project to take up.
 .. _Will: http://skoczen.github.io/will/
 .. _for the time being: http://skoczen.github.io/will/roadmap/#project-roadmap
 
+Acknowledgements
+----------------
+
+Slack Machine owes a great deal of debt to the aforementioned packages. Parts of the API of 
+Slack Machine were inspired by those packages, and I was at a great advantage while building 
+Slack Machine because I was able to look at existing code to get an idea on how to approach 
+certain problems. While obviously I'd like to think I have improved upon my inspirations, 
+Slack Machine couldn't have existed without them.
+
 Slack Machine License
 ---------------------
 

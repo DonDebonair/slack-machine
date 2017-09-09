@@ -12,9 +12,10 @@ with the same name from ``local_settings.py`` or the default settings.
 
 So an environment variable ``SM_SLACK_API_TOKEN`` will result in a setting ``SLACK_API_TOKEN``.
 
-Setting names are case insensitive.
+Setting names are **case insensitive**.
 
-**Example of using settings:**
+Example of using settings
+-------------------------
 
 When the ``local_settings.py`` looks like this:
 

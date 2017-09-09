@@ -12,8 +12,12 @@ logger = logging.getLogger(__name__)
 
 
 class Machine:
-    def __init__(self):
-        self._settings, found_local_settings = import_settings()
+    def __init__(self, settings=None):
+        if settings:
+            self._settings = settings
+            found_local_settings = True
+        else:
+            self._settings, found_local_settings = import_settings()
         fmt = '[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d |' \
               ' %(message)s'
         date_fmt = '%Y-%m-%d %H:%M:%S'
@@ -45,20 +49,20 @@ class Machine:
                 if MachineBasePlugin in cls.__bases__ and cls is not MachineBasePlugin:
                     logger.debug("Found a Machine plugin: {}".format(plugin))
                     instance = cls(self._settings, MessagingClient(self._client))
-                    self._register_plugin(plugin, instance)
+                    self._register_plugin(class_name, instance)
 
-    def _register_plugin(self, plugin, cls_instance):
+    def _register_plugin(self, plugin_class, cls_instance):
         if hasattr(cls_instance, 'catch_all'):
-            self._plugin_actions['catch_all'][plugin] = {
+            self._plugin_actions['catch_all'][plugin_class] = {
                 'class': cls_instance,
                 'function': getattr(cls_instance, 'catch_all')
             }
         for name, fn in inspect.getmembers(cls_instance, predicate=inspect.ismethod):
             if hasattr(fn, 'metadata'):
-                self._register_plugin_actions(plugin, fn.metadata, cls_instance, name, fn)
+                self._register_plugin_actions(plugin_class, fn.metadata, cls_instance, name, fn)
 
-    def _register_plugin_actions(self, plugin, metadata, cls_instance, fn_name, fn):
-        fq_fn_name = "{}.{}".format(plugin, fn_name)
+    def _register_plugin_actions(self, plugin_class, metadata, cls_instance, fn_name, fn):
+        fq_fn_name = "{}.{}".format(plugin_class, fn_name)
         for action, config in metadata['plugin_actions'].items():
             if action == 'process':
                 event_type = config['event_type']
@@ -75,7 +79,7 @@ class Machine:
                         'function': fn,
                         'regex': regex
                     }
-                    key = "{}-{}".format(fq_fn_name, str(regex))
+                    key = "{}-{}".format(fq_fn_name, regex.pattern)
                     self._plugin_actions[action][key] = event_handler
 
     def run(self):
