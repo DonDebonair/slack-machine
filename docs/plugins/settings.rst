@@ -34,4 +34,4 @@ This can be used in a plugin, like this:
             msg.at_sender
         ))
 
-The respond to a message *@superbot Hello!" from **@john**, in this case would be: *Bonjour, @john!*
+The respond to a message *@superbot Hello!"* from **@john**, in this case would be: *Bonjour, @john!*
