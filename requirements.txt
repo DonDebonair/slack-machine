@@ -1,1 +1,2 @@
 slackclient~=1.0
+dill~=0.2

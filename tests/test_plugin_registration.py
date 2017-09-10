@@ -10,6 +10,7 @@ def settings():
     settings = CaseInsensitiveDict()
     settings['PLUGINS'] = ['tests.fake_plugins']
     settings['SLACK_API_TOKEN'] = 'xoxo-abc123'
+    settings['STORAGE_BACKEND'] = 'machine.storage.backends.memory.MemoryStorage'
     return settings
 
 
@@ -18,8 +19,7 @@ def test_load_and_register_plugins(settings):
     actions = machine._plugin_actions
 
     # Test general structure of _plugin_actions
-    assert set(actions.keys()) == {'process', 'listen_to', 'respond_to',
-                                                   'catch_all'}
+    assert set(actions.keys()) == {'process', 'listen_to', 'respond_to', 'catch_all'}
 
     # Test registration of process actions
     assert 'some_event' in actions['process']
@@ -48,3 +48,11 @@ def test_load_and_register_plugins(settings):
     assert 'tests.fake_plugins.FakePlugin' not in actions['catch_all']
     assert 'class' in actions['catch_all']['tests.fake_plugins.FakePlugin2']
     assert 'function' in actions['catch_all']['tests.fake_plugins.FakePlugin2']
+
+def test_plugin_storage_fq_plugin_name(settings):
+    machine = Machine(settings=settings)
+    actions = machine._plugin_actions
+    plugin1_cls = actions['respond_to']['tests.fake_plugins.FakePlugin.respond_function-hello']['class']
+    plugin2_cls = actions['catch_all']['tests.fake_plugins.FakePlugin2']['class']
+    assert plugin1_cls.storage._fq_plugin_name == 'tests.fake_plugins.FakePlugin'
+    assert plugin2_cls.storage._fq_plugin_name == 'tests.fake_plugins.FakePlugin2'

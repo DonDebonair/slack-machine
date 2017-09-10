@@ -3,6 +3,7 @@ import inspect
 import logging
 from slackclient import SlackClient
 from machine.settings import import_settings
+from machine.storage import PluginStorage
 from machine.utils.module_loading import import_string
 from machine.plugins.base import MachineBasePlugin
 from machine.dispatch import EventDispatcher
@@ -33,6 +34,9 @@ class Machine:
             logger.error("No SLACK_API_TOKEN found in settings! I need that to work...")
             sys.exit(1)
         self._client = SlackClient(self._settings['SLACK_API_TOKEN'])
+        logger.debug("Initializing storage '%s'...", self._settings['STORAGE_BACKEND'])
+        self._storage = self.init_storage()
+        logger.debug("Storage initialized!")
         self._plugin_actions = {
             'process': {},
             'listen_to': {},
@@ -43,12 +47,17 @@ class Machine:
         logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
         self._dispatcher = EventDispatcher(self._client, self._plugin_actions)
 
+    def init_storage(self):
+        class_name, cls = import_string(self._settings['STORAGE_BACKEND'])[0]
+        return cls(self._settings)
+
     def load_plugins(self):
         for plugin in self._settings['PLUGINS']:
             for class_name, cls in import_string(plugin):
                 if MachineBasePlugin in cls.__bases__ and cls is not MachineBasePlugin:
                     logger.debug("Found a Machine plugin: {}".format(plugin))
-                    instance = cls(self._settings, MessagingClient(self._client))
+                    storage = PluginStorage(class_name, self._storage)
+                    instance = cls(self._settings, MessagingClient(self._client), storage)
                     self._register_plugin(class_name, instance)
 
     def _register_plugin(self, plugin_class, cls_instance):

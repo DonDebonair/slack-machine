@@ -12,8 +12,10 @@ class MachineBasePlugin:
         settings that are defined by the user, and ask users to add new settings
         specifically for their plugin.
     """
-    def __init__(self, settings, client):
+
+    def __init__(self, settings, client, storage):
         self._client = client
+        self.storage = storage
         self.settings = settings
 
     @property
@@ -136,6 +138,7 @@ class Message:
     The ``Message`` class also contains convenience methods for replying to the message in the
     right channel, replying to the sender, etc.
     """
+
     def __init__(self, client, msg_event):
         self._client = client
         self._msg_event = msg_event

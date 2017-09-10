@@ -2,27 +2,33 @@ import re
 
 import pytest
 from slackclient import SlackClient
+
 from machine.client import MessagingClient
 from machine.dispatch import EventDispatcher
 from machine.plugins.base import Message
+from machine.storage.backends.base import MachineBaseStorage
 from tests.fake_plugins import FakePlugin, FakePlugin2
+
 
 @pytest.fixture
 def msg_client(mocker):
     return mocker.MagicMock(spec=MessagingClient)
 
+@pytest.fixture
+def storage(mocker):
+    return mocker.MagicMock(spec=MachineBaseStorage)
 
 @pytest.fixture
-def fake_plugin(mocker, msg_client):
-    plugin_instance = FakePlugin({}, msg_client)
+def fake_plugin(mocker, msg_client, storage):
+    plugin_instance = FakePlugin({}, msg_client, storage)
     mocker.spy(plugin_instance, 'respond_function')
     mocker.spy(plugin_instance, 'listen_function')
     mocker.spy(plugin_instance, 'process_function')
     return plugin_instance
 
 @pytest.fixture
-def fake_plugin2(mocker, msg_client):
-    plugin_instance = FakePlugin2({}, msg_client)
+def fake_plugin2(mocker, msg_client, storage):
+    plugin_instance = FakePlugin2({}, msg_client, storage)
     mocker.spy(plugin_instance, 'catch_all')
     return plugin_instance
 
