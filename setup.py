@@ -76,6 +76,11 @@ setup(
     author_email=about["__email__"],
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-cov', 'coverage'],
+    install_requires=dependencies,
+    python_requires='~=3.3',
+    extras_require={
+        'redis': ['redis', 'hiredis']
+    },
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
@@ -92,8 +97,6 @@ setup(
         "Topic :: Office/Business"
     ],
     keywords='slack bot framework ai',
-    install_requires=dependencies,
-    python_requires='~=3.3',
     entry_points={
         'console_scripts': [
             'slack-machine = machine.bin.run:main',

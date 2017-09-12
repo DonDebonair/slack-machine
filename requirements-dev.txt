@@ -11,3 +11,4 @@ coverage~=4.4
 pytest-cov~=2.5
 Sphinx~=1.6
 sphinx-autobuild~=0.7
+redis~=2.10
