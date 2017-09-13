@@ -30,14 +30,16 @@ Features
 - High-level API for maximum convenience when building plugins
 - Low-level API for maximum flexibility
 - Plugin API features:
-	- Listen and respond to any regular expression
-	- Capture parts of messages to use as variables in your functions
-	- Respond to messages in channels, groups and direct message conversations
-	- Respond with Emoji
-	- Respond in threads
-	- Send DMs to any user
-	- Support for `message attachments`_
-	- Listen and respond to any `Slack event`_ supported by the RTM API
+    - Listen and respond to any regular expression
+    - Capture parts of messages to use as variables in your functions
+    - Respond to messages in channels, groups and direct message conversations
+    - Respond with Emoji
+    - Respond in threads
+    - Send DMs to any user
+    - Support for `message attachments`_
+    - Listen and respond to any `Slack event`_ supported by the RTM API
+    - Store and retrieve any kind of data in persistent storage (currently Redis and in-memory
+      storage are supported)
 
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
@@ -48,7 +50,6 @@ Coming Soon
 """""""""""
 
 - Schedule actions and messages
-- Plugin-accesible storage
 - Help texts for Plugins
 - ... and much more
 
@@ -74,8 +75,8 @@ Usage
 4. Add the Slack API token to your ``local_settings.py`` like this:
 
 .. code-block:: python
-	
-	SLACK_API_TOKEN = 'xox-my-slack-token'
+
+    SLACK_API_TOKEN = 'xox-my-slack-token'
 
 5. Start the bot with ``slack-machine``
 6. \...
@@ -86,4 +87,4 @@ Documentation
 
 You can find the documentation for Slack Machine here: http://slack-machine.readthedocs.io/en/latest/
 
-Go read it to learn how to configure Slack Machine, write plugins, and more!
+Go read it to learn how to properly configure Slack Machine, write plugins, and more!

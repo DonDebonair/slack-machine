@@ -41,6 +41,7 @@ Features
 	- Send DMs to any user
 	- Support for `message attachments`_
 	- Listen and respond to any `Slack event`_ supported by the RTM API
+	- Store and retrieve any kind of data in persistent storage (currently Redis and in-memory storage are supported)
 
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
@@ -51,7 +52,6 @@ Coming Soon
 """""""""""
 
 - Schedule actions and messages
-- Plugin-accesible storage
 - Help texts for Plugins
 - ... and much more
 
@@ -75,6 +75,7 @@ Writing Plugins
    plugins/listening
    plugins/interacting
    plugins/settings
+   plugins/storage
 
 API Docs
 --------

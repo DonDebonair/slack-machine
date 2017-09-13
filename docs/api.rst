@@ -30,3 +30,19 @@ These are the decorators you can use to have Slack Machine respond to specific t
 
 .. automodule:: machine.plugins.decorators
    :members:
+
+Storage
+-------
+
+Storage is exposed to plugins through the ``self.storage`` field. The following class implements 
+the interface plugins can use to interact with the storage backend.
+
+.. autoclass:: machine.storage.PluginStorage
+   :members:
+
+-----
+
+New *Storage Backends* can be implemented by extending the following class:
+
+.. autoclass:: machine.storage.backends.base.MachineBaseStorage
+   :members:
