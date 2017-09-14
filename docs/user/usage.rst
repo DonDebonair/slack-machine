@@ -72,6 +72,8 @@ Slack Machine can load any plugin that is on the Python path. This means you can
 is installed in the same virtual environment you installed Slack Machine in. And as a convenience, 
 Slack Machine will also add the directory you start Slack Machine from, to your Python path.
 
+.. _storage options:
+
 Choosing storage
 """"""""""""""""
 
