@@ -1,9 +1,11 @@
 import time
 import re
 import logging
+
+from machine.singletons import Slack
 from machine.utils.pool import ThreadPool
 from machine.plugins.base import Message
-from machine.client import MessagingClient
+from machine.slack import MessagingClient
 
 logger = logging.getLogger(__name__)
 
@@ -11,8 +13,8 @@ logger = logging.getLogger(__name__)
 class EventDispatcher:
     RESPOND_MATCHER = re.compile(r'^(?:\<@(?P<atuser>\w+)\>:?|(?P<username>\w+):) ?(?P<text>.*)$')
 
-    def __init__(self, client, plugin_actions):
-        self._client = client
+    def __init__(self, plugin_actions):
+        self._client = Slack()
         self._plugin_actions = plugin_actions
         self._pool = ThreadPool()
 
@@ -44,8 +46,8 @@ class EventDispatcher:
     def _find_listeners(self, type):
         return [action for action in self._plugin_actions[type].values()]
 
-    def _gen_message(self, event):
-        return Message(MessagingClient(self._client), event)
+    def _gen_message(self, event, plugin_class_name):
+        return Message(MessagingClient(), event, plugin_class_name)
 
     def _get_bot_id(self):
         return self._client.server.login_data['self']['id']
@@ -81,9 +83,9 @@ class EventDispatcher:
         return event
 
     def _dispatch_listeners(self, listeners, event):
-        message = self._gen_message(event)
         for l in listeners:
             matcher = l['regex']
             match = matcher.search(event.get('text', ''))
             if match:
+                message = self._gen_message(event, l['class_name'])
                 l['function'](message, **match.groupdict())

@@ -1,21 +1,15 @@
-from urllib.parse import urlparse
 from redis import StrictRedis
 
 from machine.storage.backends.base import MachineBaseStorage
+from machine.utils.redis import gen_config_dict
 
 
 class RedisStorage(MachineBaseStorage):
     def __init__(self, settings):
         super().__init__(settings)
         self._key_prefix = settings.get('REDIS_KEY_PREFIX', 'SM')
-        url = urlparse(settings['REDIS_URL'])
-        if hasattr(url, "path"):
-            db = url.path[1:]
-        else:
-            db = 0
-        max_connections = settings.get('REDIS_MAX_CONNECTIONS', None)
-        self._redis = StrictRedis(host=url.hostname, port=url.port, db=db,
-                                  password=url.password, max_connections=max_connections)
+        redis_config = gen_config_dict(settings)
+        self._redis = StrictRedis(**redis_config)
 
     def _prefix(self, key):
         return "{}:{}".format(self._key_prefix, key)

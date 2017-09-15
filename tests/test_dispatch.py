@@ -1,9 +1,9 @@
 import re
 
 import pytest
-from slackclient import SlackClient
+from apscheduler.schedulers.base import BaseScheduler
 
-from machine.client import MessagingClient
+from machine.slack import MessagingClient
 from machine.dispatch import EventDispatcher
 from machine.plugins.base import Message
 from machine.storage.backends.base import MachineBaseStorage
@@ -42,12 +42,14 @@ def plugin_actions(mocker, fake_plugin, fake_plugin2):
         'catch_all': {
             'TestPlugin2': {
                 'class': fake_plugin2,
+                'class_name': 'tests.fake_plugins.FakePlugin2',
                 'function': catch_all_fn
             }
         },
         'listen_to': {
             'TestPlugin.listen_function-hi': {
                 'class': fake_plugin,
+                'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': listen_fn,
                 'regex': re.compile('hi', re.IGNORECASE)
             }
@@ -55,6 +57,7 @@ def plugin_actions(mocker, fake_plugin, fake_plugin2):
         'respond_to': {
             'TestPlugin.respond_function-hello': {
                 'class': fake_plugin,
+                'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': respond_fn,
                 'regex': re.compile('hello', re.IGNORECASE)
             }
@@ -63,6 +66,7 @@ def plugin_actions(mocker, fake_plugin, fake_plugin2):
             'some_event': {
                 'TestPlugin.process_function': {
                     'class': fake_plugin,
+                    'class_name': 'tests.fake_plugins.FakePlugin',
                     'function': process_fn
                 }
             }
@@ -73,9 +77,9 @@ def plugin_actions(mocker, fake_plugin, fake_plugin2):
 @pytest.fixture
 def dispatcher(mocker, plugin_actions):
     mocker.patch('machine.dispatch.ThreadPool', autospec=True)
-    fake_slack_client = mocker.MagicMock(spec=SlackClient)
-    fake_slack_client.server = mocker.MagicMock()
-    dispatch_instance = EventDispatcher(fake_slack_client, plugin_actions)
+    mocker.patch('machine.singletons.SlackClient', autospec=True)
+    mocker.patch('machine.singletons.BackgroundScheduler', autospec=True)
+    dispatch_instance = EventDispatcher(plugin_actions)
     mocker.patch.object(dispatch_instance, '_get_bot_id')
     dispatch_instance._get_bot_id.return_value = '123'
     mocker.patch.object(dispatch_instance, '_get_bot_name')

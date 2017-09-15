@@ -17,6 +17,7 @@ class MachineBasePlugin:
         self._client = client
         self.storage = storage
         self.settings = settings
+        self._fq_name = "{}.{}".format(self.__module__, self.__class__.__name__)
 
     @property
     def users(self):
@@ -139,9 +140,10 @@ class Message:
     right channel, replying to the sender, etc.
     """
 
-    def __init__(self, client, msg_event):
+    def __init__(self, client, msg_event, plugin_class_name):
         self._client = client
         self._msg_event = msg_event
+        self._fq_plugin_name = plugin_class_name
 
     @property
     def sender(self):
@@ -191,6 +193,9 @@ class Message:
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         """
         self._client.send(self.channel.id, text, thread_ts)
+
+    def say_scheduled(self, when, text, thread_ts=None):
+        self._client.send_scheduled(when, self.channel.id, text, thread_ts)
 
     def say_webapi(self, text, attachments=None, thread_ts=None, ephemeral=False):
         """Send a new message using the WebAPI to the channel the original message was received in
@@ -260,6 +265,9 @@ class Message:
         :param text: message text
         """
         self._client.send_dm(self.sender.id, text)
+
+    def reply_dm_scheduled(self, when, text):
+        self._client.send_dm_scheduled(when, self.sender.id, text)
 
     def reply_dm_webapi(self, text, attachments=None):
         """Reply to the sender of the original message in a DM using the WebAPI
