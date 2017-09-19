@@ -1,10 +1,9 @@
 -r requirements.txt
-check-manifest~=0.35
-pyroma~=2.2
+check-manifest==0.35
+pyroma==2.2
 pytest==3.2.2
 pytest-mock==1.6.3
 tox==2.8.2
-detox~=0.11
 flake8==3.4.1
 twine==1.9.1
 coverage==4.4.1
