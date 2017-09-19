@@ -10,5 +10,5 @@ twine==1.9.1
 coverage==4.4.1
 pytest-cov==2.5.1
 Sphinx==1.6.3
-sphinx-autobuild~=0.7
+sphinx-autobuild==0.7.1
 redis~=2.10
