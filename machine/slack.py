@@ -17,9 +17,9 @@ class MessagingClient:
     def send(self, channel, text, thread_ts=None):
         Slack.get_instance().rtm_send_message(channel, text, thread_ts)
 
-    def send_scheduled(self, when, channel, text, thread_ts=None):
+    def send_scheduled(self, when, channel, text):
         args = [self, channel, text]
-        kwargs = {'thread_ts': thread_ts}
+        kwargs = {'thread_ts': None}
         Scheduler.get_instance().add_job(MessagingClient.send, trigger='date', args=args,
                                          kwargs=kwargs, run_date=when)
 
@@ -43,12 +43,11 @@ class MessagingClient:
             **kwargs
         )
 
-    def send_webapi_scheduled(self, when, channel, text, attachments=None, thread_ts=None,
-                              ephemeral_user=None):
+    def send_webapi_scheduled(self, when, channel, text, attachments=None, ephemeral_user=None):
         args = [self, channel, text]
         kwargs = {
             'attachments': attachments,
-            'thread_ts': thread_ts,
+            'thread_ts': None,
             'ephemeral_user': ephemeral_user
         }
         Scheduler.get_instance().add_job(MessagingClient.send_webapi, trigger='date', args=args,

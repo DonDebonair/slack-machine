@@ -65,6 +65,21 @@ class MachineBasePlugin:
         """
         self._client.send(channel, text, thread_ts)
 
+    def say_scheduled(self, when, channel, text):
+        """Schedule a message to a channel
+
+        This is the scheduled version of
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
+        It behaves the same, but will send the message at the scheduled time.
+
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param channel: id or name of channel to send message to. Can be public or private (group)
+            channel, or DM channel.
+        :param text: message text
+        """
+        self._client.send_scheduled(when, channel, text)
+
     def say_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
         """Send a message to a channel using the WebAPI
 
@@ -86,16 +101,31 @@ class MachineBasePlugin:
         """
         self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
 
+    def say_webapi_scheduled(self, when, channel, text, attachments, ephemeral_user):
+        """Schedule a message to a channel and send it using the WebAPI
+
+        This is the scheduled version of
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.say_webapi`.
+        It behaves the same, but will send the message at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param ephemeral_user: optional user name or id if the message needs to visible
+            to a specific user only
+        """
+        self._client.send_webapi_scheduled(when, channel, text, attachments, ephemeral_user)
+
     def react(self, channel, ts, emoji):
         """React to a message in a channel
 
         Add a reaction to a message in a channel. What message to react to, is determined by the
         combination of the channel and the timestamp of the message.
 
-        :param: channel: id or name of channel to send message to. Can be public or private (group)
+        :param channel: id or name of channel to send message to. Can be public or private (group)
             channel, or DM channel.
-        :param: ts: timestamp of the message to react to
-        :param: emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
+        :param ts: timestamp of the message to react to
+        :param emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
         """
         self._client.react(channel, ts, emoji)
 
@@ -108,10 +138,23 @@ class MachineBasePlugin:
 
         .. _basic Slack formatting: https://api.slack.com/docs/message-formatting
 
-        :param: user: id or name of the user to send direct message to
-        :param: text: message text
+        :param user: id or name of the user to send direct message to
+        :param text: message text
         """
         self._client.send_dm(user, text)
+
+    def send_dm_scheduled(self, when, user, text):
+        """Schedule a Direct Message
+
+        This is the scheduled version of
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm`. It behaves the same, but will
+        send the DM at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param user: id or name of the user to send direct message to
+        :param text: message text
+        """
+        self._client.send_dm_scheduled(when, user, text)
 
     def send_dm_webapi(self, user, text, attachments=None):
         """Send a Direct Message through the WebAPI
@@ -122,11 +165,26 @@ class MachineBasePlugin:
 
         .. _attachments: https://api.slack.com/docs/message-attachments
 
-        :param: user: id or name of the user to send direct message to
-        :param: text: message text
+        :param user: id or name of the user to send direct message to
+        :param text: message text
         :param attachments: optional attachments (see `attachments`_)
         """
         self._client.send_dm_webapi(user, text, attachments)
+
+    def send_dm_webapi_scheduled(self, when, user, text, attachments=None):
+        """Schedule a Direct Message and send it using the WebAPI
+
+        This is the scheduled version of
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm_webapi`. It behaves the same, but
+        will send the DM at the scheduled time.
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        """
+        self._client.send_dm_webapi_scheduled(when, user, text, attachments)
 
 
 class Message:
@@ -194,8 +252,16 @@ class Message:
         """
         self._client.send(self.channel.id, text, thread_ts)
 
-    def say_scheduled(self, when, text, thread_ts=None):
-        self._client.send_scheduled(when, self.channel.id, text, thread_ts)
+    def say_scheduled(self, when, text):
+        """Schedule a message
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
+        It behaves the same, but will send the message at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        """
+        self._client.send_scheduled(when, self.channel.id, text)
 
     def say_webapi(self, text, attachments=None, thread_ts=None, ephemeral=False):
         """Send a new message using the WebAPI to the channel the original message was received in
@@ -220,10 +286,31 @@ class Message:
             ephemeral_user = None
         self._client.send_webapi(self.channel.id, text, attachments, thread_ts, ephemeral_user)
 
+    def say_webapi_scheduled(self, when, text, attachments=None, ephemeral=False):
+        """Schedule a message and send it using the WebAPI
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say_webapi`.
+        It behaves the same, but will send the DM at the scheduled time.
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
+            visible to the sender of the original message
+        """
+        if ephemeral:
+            ephemeral_user = self.sender.id
+        else:
+            ephemeral_user = None
+        self._client.send_webapi_scheduled(when, self.channel.id, text, attachments, ephemeral_user)
+
     def reply(self, text, in_thread=False):
         """Reply to the sender of the original message
 
         Reply to the sender of the original message with a new message, mentioning that user.
+
         :param text: message text
         :param in_thread: ``True/False`` wether to reply to the original message in-thread
         """
@@ -232,6 +319,17 @@ class Message:
         else:
             text = self._create_reply(text)
             self.say(text)
+
+    def reply_scheduled(self, when, text):
+        """Schedule a reply
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
+        It behaves the same, but will send the reply at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        """
+        self.say_scheduled(when, self._create_reply(text))
 
     def reply_webapi(self, text, attachments=None, in_thread=False, ephemeral=False):
         """Reply to the sender of the original message using the WebAPI
@@ -256,8 +354,23 @@ class Message:
             text = self._create_reply(text)
             self.say_webapi(text, attachments=attachments, ephemeral=ephemeral)
 
+    def reply_webapi_scheduled(self, when, text, attachments=None, ephemeral=False):
+        """Schedule a reply and send it using the WebAPI
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_webapi`.
+        It behaves the same, but will send the reply at the scheduled time.
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param attachments: optional attachments (see `attachments`_)
+        :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
+            visible to the sender of the original message
+        """
+        self.say_webapi_scheduled(when, self._create_reply(text), attachments, ephemeral)
+
     def reply_dm(self, text):
-        """Reply to the sender of the original message in a DM
+        """Reply to the sender of the original message with a DM
 
         Reply in a Direct Message to the sender of the original message by opening a DM channel and
         sending a message to it.
@@ -267,10 +380,18 @@ class Message:
         self._client.send_dm(self.sender.id, text)
 
     def reply_dm_scheduled(self, when, text):
+        """Schedule a DM reply
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`. It
+        behaves the same, but will send the DM at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        """
         self._client.send_dm_scheduled(when, self.sender.id, text)
 
     def reply_dm_webapi(self, text, attachments=None):
-        """Reply to the sender of the original message in a DM using the WebAPI
+        """Reply to the sender of the original message with a DM using the WebAPI
 
         Reply in a Direct Message to the sender of the original message by opening a DM channel and
         sending a message to it via the WebAPI. Allows for rich formatting using
@@ -282,6 +403,20 @@ class Message:
         :param attachments: optional attachments (see `attachments`_)
         """
         self._client.send_dm_webapi(self.sender.id, text, attachments)
+
+    def reply_dm_webapi_scheduled(self, when, text, attachments=None):
+        """Schedule a DM reply and send it using the WebAPI
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm_webapi`.
+        It behaves the same, but will send the DM at the scheduled time.
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        """
+        self._client.send_dm_webapi_scheduled(when, self.sender.id, text, attachments)
 
     def react(self, emoji):
         """React to the original message

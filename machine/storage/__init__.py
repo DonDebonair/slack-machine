@@ -41,7 +41,7 @@ class PluginStorage:
 
         :param key: key for the data to retrieve
         :param shared: ``True/False`` wether to retrieve data from the shared (global) namespace.
-        :return: the data, or ``None` if the key cannot be found/has expired
+        :return: the data, or ``None`` if the key cannot be found/has expired
         """
         namespaced_key = self._namespace_key(key, shared)
         value = self._storage.get(namespaced_key)
