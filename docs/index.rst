@@ -33,15 +33,16 @@ Features
 - High-level API for maximum convenience when building plugins
 - Low-level API for maximum flexibility
 - Plugin API features:
-	- Listen and respond to any regular expression
-	- Capture parts of messages to use as variables in your functions
-	- Respond to messages in channels, groups and direct message conversations
-	- Respond with Emoji
-	- Respond in threads
-	- Send DMs to any user
-	- Support for `message attachments`_
-	- Listen and respond to any `Slack event`_ supported by the RTM API
-	- Store and retrieve any kind of data in persistent storage (currently Redis and in-memory storage are supported)
+    - Listen and respond to any regular expression
+    - Capture parts of messages to use as variables in your functions
+    - Respond to messages in channels, groups and direct message conversations
+    - Respond with Emoji
+    - Respond in threads
+    - Send DMs to any user
+    - Support for `message attachments`_
+    - Listen and respond to any `Slack event`_ supported by the RTM API
+    - Store and retrieve any kind of data in persistent storage (currently Redis and in-memory storage are supported)
+    - Schedule actions and messages
 
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
@@ -51,8 +52,8 @@ Features
 Coming Soon
 """""""""""
 
-- Schedule actions and messages
 - Help texts for Plugins
+- Emit and listen for events
 - ... and much more
 
 User Guide
