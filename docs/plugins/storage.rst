@@ -9,7 +9,7 @@ which lets you store, retrieve and remove values by key, check for the existence
 information about the current size of the underlying storage.
 
 The :py:class:`~machine.storage.PluginStorage` class interfaces with whatever storage backend Slack Machine 
-is configured with. You can read more about the available storage backend in the :ref:`user guide <storage options>`.
+is configured with. You can read more about the available storage backends in the :ref:`user guide <storage options>`.
 
 Example:
 

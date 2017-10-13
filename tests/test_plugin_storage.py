@@ -5,12 +5,15 @@ from machine.storage.backends.memory import MemoryStorage
 
 
 @pytest.fixture
-def storage_backend():
-    return MemoryStorage({})
+def storage_backend(mocker):
+    storage = MemoryStorage({})
+    backend_get_instance = mocker.patch('machine.storage.Storage.get_instance')
+    backend_get_instance.return_value = storage
+    return storage
 
 @pytest.fixture
 def plugin_storage(storage_backend):
-    storage_instance = PluginStorage('tests.fake_plugin.FakePlugin', storage_backend)
+    storage_instance = PluginStorage('tests.fake_plugin.FakePlugin')
     return storage_instance
 
 def test_namespacing(plugin_storage, storage_backend):

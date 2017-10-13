@@ -2,7 +2,7 @@ import sys
 import inspect
 import logging
 from machine.settings import import_settings
-from machine.singletons import Slack, Scheduler
+from machine.singletons import Slack, Scheduler, Storage
 from machine.storage import PluginStorage
 from machine.utils.module_loading import import_string
 from machine.plugins.base import MachineBasePlugin
@@ -35,7 +35,7 @@ class Machine:
             sys.exit(1)
         self._client = Slack()
         logger.debug("Initializing storage '%s'...", self._settings['STORAGE_BACKEND'])
-        self._storage = self.init_storage()
+        self._storage = Storage.get_instance()
         logger.debug("Storage initialized!")
         self._plugin_actions = {
             'process': {},
@@ -47,17 +47,13 @@ class Machine:
         logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
         self._dispatcher = EventDispatcher(self._plugin_actions)
 
-    def init_storage(self):
-        class_name, cls = import_string(self._settings['STORAGE_BACKEND'])[0]
-        return cls(self._settings)
-
     def load_plugins(self):
         logger.debug("PLUGINS: %s", self._settings['PLUGINS'])
         for plugin in self._settings['PLUGINS']:
             for class_name, cls in import_string(plugin):
                 if MachineBasePlugin in cls.__bases__ and cls is not MachineBasePlugin:
                     logger.debug("Found a Machine plugin: {}".format(plugin))
-                    storage = PluginStorage(class_name, self._storage)
+                    storage = PluginStorage(class_name)
                     instance = cls(self._settings, MessagingClient(),
                                    storage)
                     self._register_plugin(class_name, instance)
@@ -95,6 +91,9 @@ class Machine:
                     }
                     key = "{}-{}".format(fq_fn_name, regex.pattern)
                     self._plugin_actions[action][key] = event_handler
+            if action == 'schedule':
+                Scheduler.get_instance().add_job(fq_fn_name, trigger='cron', args=[cls_instance],
+                                                 id=fq_fn_name, replace_existing=True, **config)
 
     def run(self):
         self._client.rtm_connect()

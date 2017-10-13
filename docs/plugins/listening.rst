@@ -113,3 +113,25 @@ Catch all
 Slack Machine also provides a way to listen to **all events** that Slack produces. Your plugin 
 should implement a method ``catch_all`` that takes one parameter. That function will be called 
 for each event, with the received event.
+
+Take action on a Schedule
+-------------------------
+
+Slack Machine can also run functions on a schedule, using the :py:meth:`~machine.plugins.decorators.schedule` 
+decorator. ``@schedule`` behaves like Linux/Unix `Crontab`_, and receives similar parameters. You can 
+specify on what schedule your function should be called. When your function is called, it will not receive 
+any arguments except ``self``, but you can of course call any :py:class:`~machine.plugins.base.MachineBasePlugin` 
+methods to send message and do other things.
+
+Example:
+
+.. code-block:: python
+
+    @schedule(hour='9-17', minute='*/30')
+    def movement_reminder(self):
+        self.say('general',
+                 '<!here> maybe now is a good time to take a short walk!')
+
+.. _Crontab: http://www.adminschoice.com/crontab-quick-reference
+
+

@@ -1,6 +1,6 @@
 import re
 import pytest
-from machine.plugins.decorators import process, listen_to, respond_to
+from machine.plugins.decorators import process, listen_to, respond_to, schedule
 
 
 @pytest.fixture
@@ -31,6 +31,15 @@ def respond_to_f():
 
 
 @pytest.fixture
+def schedule_f():
+    @schedule(hour='*/2', minute=30)
+    def f():
+        pass
+
+    return f
+
+
+@pytest.fixture
 def multi_decorator_f():
     @respond_to(r'hello', re.IGNORECASE)
     @listen_to(r'hello', re.IGNORECASE)
@@ -53,7 +62,8 @@ def test_listen_to(listen_to_f):
     assert 'plugin_actions' in listen_to_f.metadata
     assert 'listen_to' in listen_to_f.metadata['plugin_actions']
     assert 'regex' in listen_to_f.metadata['plugin_actions']['listen_to']
-    assert listen_to_f.metadata['plugin_actions']['listen_to']['regex'] == [re.compile(r'hello', re.IGNORECASE)]
+    assert listen_to_f.metadata['plugin_actions']['listen_to']['regex'] == [
+        re.compile(r'hello', re.IGNORECASE)]
 
 
 def test_respond_to(respond_to_f):
@@ -61,7 +71,16 @@ def test_respond_to(respond_to_f):
     assert 'plugin_actions' in respond_to_f.metadata
     assert 'respond_to' in respond_to_f.metadata['plugin_actions']
     assert 'regex' in respond_to_f.metadata['plugin_actions']['respond_to']
-    assert respond_to_f.metadata['plugin_actions']['respond_to']['regex'] == [re.compile(r'hello', re.IGNORECASE)]
+    assert respond_to_f.metadata['plugin_actions']['respond_to']['regex'] == [
+        re.compile(r'hello', re.IGNORECASE)]
+
+
+def test_schedule(schedule_f):
+    assert hasattr(schedule_f, 'metadata')
+    assert 'plugin_actions' in schedule_f.metadata
+    assert 'schedule' in schedule_f.metadata['plugin_actions']
+    assert schedule_f.metadata['plugin_actions']['schedule']['hour'] == '*/2'
+    assert schedule_f.metadata['plugin_actions']['schedule']['minute'] == 30
 
 
 def test_mulitple_decorators(multi_decorator_f):

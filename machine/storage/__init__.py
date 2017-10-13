@@ -1,5 +1,6 @@
 import dill
 
+from machine.singletons import Storage
 from machine.utils import sizeof_fmt
 
 
@@ -13,8 +14,7 @@ class PluginStorage:
 
     .. _Dill: https://pypi.python.org/pypi/dill
     """
-    def __init__(self, fq_plugin_name, storage_backend):
-        self._storage = storage_backend
+    def __init__(self, fq_plugin_name):
         self._fq_plugin_name = fq_plugin_name
 
     def _gen_unique_key(self, key):
@@ -34,7 +34,7 @@ class PluginStorage:
         """
         namespaced_key = self._namespace_key(key, shared)
         pickled_value = dill.dumps(value)
-        self._storage.set(namespaced_key, pickled_value, expires)
+        Storage.get_instance().set(namespaced_key, pickled_value, expires)
 
     def get(self, key, shared=False):
         """Retrieve data by key
@@ -44,7 +44,7 @@ class PluginStorage:
         :return: the data, or ``None`` if the key cannot be found/has expired
         """
         namespaced_key = self._namespace_key(key, shared)
-        value = self._storage.get(namespaced_key)
+        value = Storage.get_instance().get(namespaced_key)
         if value:
             return dill.loads(value)
         else:
@@ -64,7 +64,7 @@ class PluginStorage:
             expired.
         """
         namespaced_key = self._namespace_key(key, shared)
-        return self._storage.has(namespaced_key)
+        return Storage.get_instance().has(namespaced_key)
 
     def delete(self, key, shared=False):
         """Remove a key and its data from storage
@@ -74,14 +74,14 @@ class PluginStorage:
             namespace
         """
         namespaced_key = self._namespace_key(key, shared)
-        self._storage.delete(namespaced_key)
+        Storage.get_instance().delete(namespaced_key)
 
     def get_storage_size(self):
         """Calculate the total size of the storage
 
         :return: the total size of the storage in bytes (integer)
         """
-        return self._storage.size()
+        return Storage.get_instance().size()
 
     def get_storage_size_human(self):
         """Calculate the total size of the storage in human readable format

@@ -15,6 +15,7 @@ def process(event_type):
         RTM API
     :return: wrapped method
     """
+
     def process_decorator(f):
         @wraps(f)
         def wrapped_f(*args, **kwargs):
@@ -22,7 +23,8 @@ def process(event_type):
 
         wrapped_f.metadata = getattr(f, "metadata", {})
         wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['process'] = {}
+        wrapped_f.metadata['plugin_actions']['process'] = \
+            wrapped_f.metadata['plugin_actions'].get('process', {})
         wrapped_f.metadata['plugin_actions']['process']['event_type'] = event_type
         return wrapped_f
 
@@ -42,6 +44,7 @@ def listen_to(regex, flags=re.IGNORECASE):
     :param flags: regex flags to apply when matching
     :return: wrapped method
     """
+
     def listen_to_decorator(f):
         @wraps(f)
         def wrapped_f(*args, **kwargs):
@@ -74,6 +77,7 @@ def respond_to(regex, flags=re.IGNORECASE):
     :param flags: regex flags to apply when matching
     :return: wrapped method
     """
+
     def respond_to_decorator(f):
         @wraps(f)
         def wrapped_f(*args, **kwargs):
@@ -89,3 +93,42 @@ def respond_to(regex, flags=re.IGNORECASE):
         return wrapped_f
 
     return respond_to_decorator
+
+
+def schedule(year=None, month=None, day=None, week=None, day_of_week=None, hour=None, minute=None,
+             second=None, start_date=None, end_date=None, timezone=None):
+    """Schedule a function to be executed according to a crontab-like schedule
+
+    The decorated function will be executed according to the schedule provided. Slack Machine uses
+    APScheduler under the hood for scheduling. For more information on the interpretation of the
+    provided parameters, see :class:`CronTrigger<apscheduler:apscheduler.triggers.cron.CronTrigger>`
+
+    :param int|str year: 4-digit year
+    :param int|str month: month (1-12)
+    :param int|str day: day of the (1-31)
+    :param int|str week: ISO week (1-53)
+    :param int|str day_of_week: number or name of weekday (0-6 or mon,tue,wed,thu,fri,sat,sun)
+    :param int|str hour: hour (0-23)
+    :param int|str minute: minute (0-59)
+    :param int|str second: second (0-59)
+    :param datetime|str start_date: earliest possible date/time to trigger on (inclusive)
+    :param datetime|str end_date: latest possible date/time to trigger on (inclusive)
+    :param datetime.tzinfo|str timezone: time zone to use for the date/time calculations (defaults
+        to scheduler timezone)
+    """
+    kwargs = locals()
+
+    def schedule_decorator(f):
+        @wraps(f)
+        def wrapped_f(*args, **kwargs):
+            try:
+                f(*args, **kwargs)
+            except TypeError:  # apscheduler doesn't like a decorated function to be passed to a job
+                pass
+
+        wrapped_f.metadata = getattr(f, "metadata", {})
+        wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
+        wrapped_f.metadata['plugin_actions']['schedule'] = kwargs
+        return wrapped_f
+
+    return schedule_decorator
