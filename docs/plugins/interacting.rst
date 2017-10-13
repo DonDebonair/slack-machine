@@ -86,6 +86,20 @@ convenient properties about the message that triggered the function:
 
 	**text**: the contents of the original message
 
+Plugin properties
+-----------------
+
+The :py:class:`~machine.plugins.base.MachineBasePlugin` class every plugin extends, exposes 
+some properties about your Slack workspace. These properties are not filled when your 
+plugin is instantiated, but reflect the current status of the Slack client:
+
+	**users**: a list of User objects for users that Slack Machine knows about. This is usually 
+	all the active users in your Slack workspace
+
+	**channels**: a list of Channel objects for channels that Slack Machine knows about. This 
+	contains all the public channels in your Slack workspace, plus all private channels 
+	that your Slack Machine instance was invited to
+
 Sending messages without a msg object
 -------------------------------------
 
@@ -100,6 +114,44 @@ functions similar as those described before, but from your plugin itself:
 
 These behave similar to their :py:class:`~machine.plugins.base.Message` counterparts, except that 
 they require a channel id or name, or user id or name (in case of DM) to be passed in.
+
+Scheduling messages
+-------------------
+
+Sometimes you want to reply to a message, send a message to some channel, send a DM etc. but 
+you don't want to do it *now*. You want to do it in **the future**. Slack Machine provides 
+**scheduled** versions of many methods, both in the 
+:py:class:`~machine.plugins.base.MachineBasePlugin` all plugins extend from and in the 
+:py:class:`~machine.plugins.base.Message` object :py:meth:`~machine.plugins.decorators.respond_to` 
+and :py:meth:`~machine.plugins.decorators.listen_to` functions receive. These methods can be 
+recognized by their **_scheduled** prefix. They work almost the same as their regular counterparts, 
+except that they receive 1 extra argument: a :py:class:`datetime <datetime.datetime>` object that tells 
+Slack Machine *when* to send the message.
+
+Example:
+
+.. code-block:: python
+
+    @respond_to(r"greet me in the future")
+    def future(self, msg):
+        msg.say("command received!")
+        in_10_sec = datetime.now() + timedelta(seconds=10)
+        msg.reply_dm_scheduled(in_10_sec, "A Delayed Hello!")
+
+This function will send a greeting 10 seconds after it has received a message: 
+*@superbot greet me in the future*.
+
+There are a couple of caveats:
+
+	Scheduled versions of methods cannot reply to threads using ``in_thread`` or ``thread_ts``. 
+	This was done because it doesn't make sense to reply to a thread in the future. Threads 
+	are for interaction **now**.
+
+	You cannot schedule a reaction to a message. It doesn't make sense to react to a message 
+	in the future.
+
+For more information about scheduling message, have a look at the :ref:`api documentation`.
+
 
 
 

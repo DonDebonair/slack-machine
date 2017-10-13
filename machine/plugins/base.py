@@ -47,6 +47,16 @@ class MachineBasePlugin:
         return self._client.channels
 
     def at(self, user):
+        """Create a mention of the provided user
+
+        Create a mention of the provided user in the form of ``<@[user_id]>``. This method is
+        convenient when you want to include mentions in your message. This method does not send
+        a message, but should be used together with methods like
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.say`
+
+        :param user: user your want to mention
+        :return: user mention
+        """
         return self._client.fmt_mention(user)
 
     def say(self, channel, text, thread_ts=None):
