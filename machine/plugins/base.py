@@ -1,3 +1,6 @@
+from blinker import signal
+
+
 class MachineBasePlugin:
     """Base class for all Slack Machine plugins
 
@@ -195,6 +198,18 @@ class MachineBasePlugin:
         :param attachments: optional attachments (see `attachments`_)
         """
         self._client.send_dm_webapi_scheduled(when, user, text, attachments)
+
+    def emit(self, event, **kwargs):
+        """Emit an event
+
+        Emit an event that plugins can listen for. You can include arbitrary data as keyword
+        arguments.
+
+        :param event: name of the event
+        :param kwargs: any data you want to emit with the event
+        """
+        e = signal(event)
+        e.send(self, **kwargs)
 
 
 class Message:

@@ -1,11 +1,12 @@
 import re
 import pytest
-from machine.plugins.decorators import process, listen_to, respond_to, schedule
+from blinker import signal
+from machine.plugins.decorators import process, listen_to, respond_to, schedule, on
 
 
 @pytest.fixture
 def process_f():
-    @process(event_type='test_event')
+    @process(slack_event_type='test_event')
     def f(event):
         pass
 
@@ -49,6 +50,14 @@ def multi_decorator_f():
     return f
 
 
+@pytest.fixture
+def on_f():
+    @on('test_event')
+    def f(msg):
+        pass
+    return f
+
+
 def test_process(process_f):
     assert hasattr(process_f, 'metadata')
     assert 'plugin_actions' in process_f.metadata
@@ -89,3 +98,8 @@ def test_mulitple_decorators(multi_decorator_f):
     assert 'respond_to' in multi_decorator_f.metadata['plugin_actions']
     assert 'listen_to' in multi_decorator_f.metadata['plugin_actions']
     assert 'process' not in multi_decorator_f.metadata['plugin_actions']
+
+
+def test_on(on_f):
+    e = signal('test_event')
+    assert bool(e.receivers)

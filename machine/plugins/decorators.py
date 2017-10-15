@@ -1,9 +1,10 @@
+from blinker import signal
 from functools import wraps
 import re
 
 
-def process(event_type):
-    """Decorator for processing Slack events of a specific type
+def process(slack_event_type):
+    """Process Slack events of a specific type
 
     This decorator will enable a Plugin method to process `Slack events`_ of a specific type. The
     Plugin method will be called for each event of the specified type that the bot receives.
@@ -11,8 +12,8 @@ def process(event_type):
 
     .. _Slack events: https://api.slack.com/events
 
-    :param event_type: type of event the method needs to process. Can be any event supported by the
-        RTM API
+    :param slack_event_type: type of event the method needs to process. Can be any event supported
+        by the RTM API
     :return: wrapped method
     """
 
@@ -25,14 +26,14 @@ def process(event_type):
         wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
         wrapped_f.metadata['plugin_actions']['process'] = \
             wrapped_f.metadata['plugin_actions'].get('process', {})
-        wrapped_f.metadata['plugin_actions']['process']['event_type'] = event_type
+        wrapped_f.metadata['plugin_actions']['process']['event_type'] = slack_event_type
         return wrapped_f
 
     return process_decorator
 
 
 def listen_to(regex, flags=re.IGNORECASE):
-    """Decorator for listening to messages matching a regex pattern
+    """Listen to messages matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that match a regex pattern.
     The Plugin method will be called for each message that matches the specified regex pattern.
@@ -63,7 +64,7 @@ def listen_to(regex, flags=re.IGNORECASE):
 
 
 def respond_to(regex, flags=re.IGNORECASE):
-    """Decorator for listening to messages mentioning the bot and matching a regex pattern
+    """Listen to messages mentioning the bot and matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that are directed to the bot
     (ie. message starts by mentioning the bot) and match a regex pattern.
@@ -132,3 +133,22 @@ def schedule(year=None, month=None, day=None, week=None, day_of_week=None, hour=
         return wrapped_f
 
     return schedule_decorator
+
+
+def on(event):
+    """Listen for an event
+
+    The decorated function will be called whenever a plugin (or Slack Machine itself) emits an
+    event with the given name.
+
+    :param event: name of the event to listen for. Event names are global
+    """
+    def on_decorator(f):
+        @wraps(f)
+        def wrapped_f(*args, **kwargs):
+            return f(*args, **kwargs)
+
+        e = signal(event)
+        e.connect(wrapped_f)
+        return wrapped_f
+    return on_decorator

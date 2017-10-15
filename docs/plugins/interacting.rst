@@ -152,6 +152,23 @@ There are a couple of caveats:
 
 For more information about scheduling message, have a look at the :ref:`api documentation`.
 
+.. _emitting-events:
 
+Emitting events
+---------------
+
+Your plugin can emit arbitrary events that other plugins (or your own) can listen for. Events 
+are a convenient mechanism for exchanging data between plugins. Emitting an event is done with 
+:py:meth:`self.emit() <machine.plugins.base.MachineBasePlugin.emit>`. You have to provide a name 
+for the event you want to emit, so others can listen for an event by that name. You can optionally 
+provide extra data as keyword arguments.
+
+Example:
+
+.. code-block:: python
+
+    @respond_to(r"I have used the bathroom")
+    def broadcast_bathroom_usage(self, msg):
+        self.emit('bathroom_used', toilet_flushed=True)
 
 

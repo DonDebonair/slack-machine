@@ -13,7 +13,7 @@ class EventLoggerPlugin(MachineBasePlugin):
 
 class EchoPlugin(MachineBasePlugin):
 
-    @process(event_type='message')
+    @process(slack_event_type='message')
     def echo_message(self, event):
         logger.debug("Message received: %s", event)
         self.say(event['channel'], event['text'])

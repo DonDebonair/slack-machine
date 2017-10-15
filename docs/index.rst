@@ -43,6 +43,7 @@ Features
     - Listen and respond to any `Slack event`_ supported by the RTM API
     - Store and retrieve any kind of data in persistent storage (currently Redis and in-memory storage are supported)
     - Schedule actions and messages
+    - Emit and listen for events
 
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
@@ -53,7 +54,7 @@ Coming Soon
 """""""""""
 
 - Help texts for Plugins
-- Emit and listen for events
+- Support for Interactive Buttons
 - ... and much more
 
 User Guide
