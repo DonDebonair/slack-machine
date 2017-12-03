@@ -20,11 +20,13 @@ class MessagingClient:
     def send_scheduled(self, when, channel, text):
         args = [self, channel, text]
         kwargs = {'thread_ts': None}
+
         Scheduler.get_instance().add_job(MessagingClient.send, trigger='date', args=args,
                                          kwargs=kwargs, run_date=when)
 
     def send_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
         method = 'chat.postMessage'
+
         # This is the only way to conditionally add thread_ts
         kwargs = {
             'channel': channel,
@@ -32,13 +34,15 @@ class MessagingClient:
             'attachments': attachments,
             'as_user': True
         }
+
         if ephemeral_user:
             method = 'chat.postEphemeral'
             kwargs['user'] = ephemeral_user
         else:
             if thread_ts:
                 kwargs['thread_ts'] = thread_ts
-        Slack.get_instance().api_call(
+
+        return Slack.get_instance().api_call(
             method,
             **kwargs
         )
@@ -50,11 +54,12 @@ class MessagingClient:
             'thread_ts': None,
             'ephemeral_user': ephemeral_user
         }
+
         Scheduler.get_instance().add_job(MessagingClient.send_webapi, trigger='date', args=args,
                                          kwargs=kwargs, run_date=when)
 
     def react(self, channel, ts, emoji):
-        Slack.get_instance().api_call(
+        return Slack.get_instance().api_call(
             'reactions.add',
             name=emoji,
             channel=channel,
@@ -66,11 +71,13 @@ class MessagingClient:
             'im.open',
             user=user
         )
+
         return response['channel']['id']
 
     def send_dm(self, user, text):
         u = self.users.find(user)
         dm_channel = self.open_im(u.id)
+
         self.send(dm_channel, text)
 
     def send_dm_scheduled(self, when, user, text):
@@ -81,7 +88,8 @@ class MessagingClient:
     def send_dm_webapi(self, user, text, attachments=None):
         u = self.users.find(user)
         dm_channel = self.open_im(u.id)
-        Slack.get_instance().api_call(
+
+        return Slack.get_instance().api_call(
             'chat.postMessage',
             channel=dm_channel,
             text=text,
@@ -92,5 +100,6 @@ class MessagingClient:
     def send_dm_webapi_scheduled(self, when, user, text, attachments=None):
         args = [self, user, text]
         kwargs = {'attachments': attachments}
+
         Scheduler.get_instance().add_job(MessagingClient.send_dm_webapi, trigger='data', args=args,
                                          kwargs=kwargs)

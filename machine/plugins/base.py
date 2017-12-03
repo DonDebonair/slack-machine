@@ -75,6 +75,7 @@ class MachineBasePlugin:
             channel, or DM channel.
         :param text: message text
         :param thread_ts: optional timestamp of thread, to send a message in that thread
+        :returns: None
         """
         self._client.send(channel, text, thread_ts)
 
@@ -90,6 +91,7 @@ class MachineBasePlugin:
         :param channel: id or name of channel to send message to. Can be public or private (group)
             channel, or DM channel.
         :param text: message text
+        :returns: None
         """
         self._client.send_scheduled(when, channel, text)
 
@@ -111,8 +113,13 @@ class MachineBasePlugin:
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral_user: optional user name or id if the message needs to visible
             to a specific user only
+        :returns: Dictionary deserialized from `chat.postMessage`_ request, or `chat.postEphemeral`_
+            if `ephemeral_user` is True.
+
+        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
+        .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
-        self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
+        return self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
 
     def say_webapi_scheduled(self, when, channel, text, attachments, ephemeral_user):
         """Schedule a message to a channel and send it using the WebAPI
@@ -126,6 +133,7 @@ class MachineBasePlugin:
         :param attachments: optional attachments (see `attachments`_)
         :param ephemeral_user: optional user name or id if the message needs to visible
             to a specific user only
+        :returns: None
         """
         self._client.send_webapi_scheduled(when, channel, text, attachments, ephemeral_user)
 
@@ -139,8 +147,11 @@ class MachineBasePlugin:
             channel, or DM channel.
         :param ts: timestamp of the message to react to
         :param emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
+        :returns: Dictionary deserialized from `reactions.add`_ request.
+
+        .. _reactions.add: https://api.slack.com/methods/reactions.add
         """
-        self._client.react(channel, ts, emoji)
+        return self._client.react(channel, ts, emoji)
 
     def send_dm(self, user, text):
         """Send a Direct Message
@@ -153,6 +164,7 @@ class MachineBasePlugin:
 
         :param user: id or name of the user to send direct message to
         :param text: message text
+        :returns: None
         """
         self._client.send_dm(user, text)
 
@@ -166,6 +178,7 @@ class MachineBasePlugin:
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param user: id or name of the user to send direct message to
         :param text: message text
+        :returns: None
         """
         self._client.send_dm_scheduled(when, user, text)
 
@@ -181,8 +194,11 @@ class MachineBasePlugin:
         :param user: id or name of the user to send direct message to
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :returns: Dictionary deserialized from `chat.postMessage`_ request.
+
+        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        self._client.send_dm_webapi(user, text, attachments)
+        return self._client.send_dm_webapi(user, text, attachments)
 
     def send_dm_webapi_scheduled(self, when, user, text, attachments=None):
         """Schedule a Direct Message and send it using the WebAPI
@@ -196,6 +212,7 @@ class MachineBasePlugin:
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :returns: None
         """
         self._client.send_dm_webapi_scheduled(when, user, text, attachments)
 
@@ -207,6 +224,7 @@ class MachineBasePlugin:
 
         :param event: name of the event
         :param kwargs: any data you want to emit with the event
+        :returns: None
         """
         e = signal(event)
         e.send(self, **kwargs)
@@ -274,6 +292,7 @@ class Message:
 
         :param text: message text
         :param thread_ts: optional timestamp of thread, to send a message in that thread
+        :returns: None
         """
         self._client.send(self.channel.id, text, thread_ts)
 
@@ -285,6 +304,7 @@ class Message:
 
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
+        :returns: None
         """
         self._client.send_scheduled(when, self.channel.id, text)
 
@@ -304,12 +324,24 @@ class Message:
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
+        :returns: Dictionary deserialized from `chat.postMessage`_ request, or `chat.postEphemeral`_
+            if `ephemeral` is True.
+
+        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
+        .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         if ephemeral:
             ephemeral_user = self.sender.id
         else:
             ephemeral_user = None
-        self._client.send_webapi(self.channel.id, text, attachments, thread_ts, ephemeral_user)
+
+        return self._client.send_webapi(
+            self.channel.id,
+            text,
+            attachments,
+            thread_ts,
+            ephemeral_user,
+        )
 
     def say_webapi_scheduled(self, when, text, attachments=None, ephemeral=False):
         """Schedule a message and send it using the WebAPI
@@ -324,11 +356,13 @@ class Message:
         :param attachments: optional attachments (see `attachments`_)
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
+        :returns: None
         """
         if ephemeral:
             ephemeral_user = self.sender.id
         else:
             ephemeral_user = None
+
         self._client.send_webapi_scheduled(when, self.channel.id, text, attachments, ephemeral_user)
 
     def reply(self, text, in_thread=False):
@@ -338,6 +372,7 @@ class Message:
 
         :param text: message text
         :param in_thread: ``True/False`` wether to reply to the original message in-thread
+        :returns: None
         """
         if in_thread:
             self.say(text, thread_ts=self.thread_ts)
@@ -353,6 +388,7 @@ class Message:
 
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
+        :returns: None
         """
         self.say_scheduled(when, self._create_reply(text))
 
@@ -372,12 +408,17 @@ class Message:
         :param in_thread: ``True/False`` wether to reply to the original message in-thread
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
+        :returns: Dictionary deserialized from `chat.postMessage`_ request, or `chat.postEphemeral`_
+            if `ephemeral` is True.
+
+        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
+        .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         if in_thread and not ephemeral:
-            self.say_webapi(text, attachments=attachments, thread_ts=self.thread_ts)
+            return self.say_webapi(text, attachments=attachments, thread_ts=self.thread_ts)
         else:
             text = self._create_reply(text)
-            self.say_webapi(text, attachments=attachments, ephemeral=ephemeral)
+            return self.say_webapi(text, attachments=attachments, ephemeral=ephemeral)
 
     def reply_webapi_scheduled(self, when, text, attachments=None, ephemeral=False):
         """Schedule a reply and send it using the WebAPI
@@ -391,6 +432,7 @@ class Message:
         :param attachments: optional attachments (see `attachments`_)
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
+        :returns: None
         """
         self.say_webapi_scheduled(when, self._create_reply(text), attachments, ephemeral)
 
@@ -401,6 +443,7 @@ class Message:
         sending a message to it.
 
         :param text: message text
+        :returns: None
         """
         self._client.send_dm(self.sender.id, text)
 
@@ -412,6 +455,7 @@ class Message:
 
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
+        :returns: None
         """
         self._client.send_dm_scheduled(when, self.sender.id, text)
 
@@ -426,8 +470,11 @@ class Message:
 
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :returns: Dictionary deserialized from `chat.postMessage`_ request.
+
+        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        self._client.send_dm_webapi(self.sender.id, text, attachments)
+        return self._client.send_dm_webapi(self.sender.id, text, attachments)
 
     def reply_dm_webapi_scheduled(self, when, text, attachments=None):
         """Schedule a DM reply and send it using the WebAPI
@@ -440,6 +487,7 @@ class Message:
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :returns: None
         """
         self._client.send_dm_webapi_scheduled(when, self.sender.id, text, attachments)
 
@@ -449,8 +497,11 @@ class Message:
         Add a reaction to the original message
 
         :param emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
+        :returns: Dictionary deserialized from `reactions.add`_ request.
+
+        .. _reactions.add: https://api.slack.com/methods/reactions.add
         """
-        self._client.react(self.channel.id, self._msg_event['ts'], emoji)
+        return self._client.react(self.channel.id, self._msg_event['ts'], emoji)
 
     def _create_reply(self, text):
         chan = self._msg_event['channel']
