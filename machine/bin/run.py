@@ -2,6 +2,7 @@ import sys
 import os
 
 from machine import Machine
+from machine.utils.text import announce
 
 
 def main():
@@ -12,5 +13,5 @@ def main():
     try:
         bot.run()
     except (KeyboardInterrupt, SystemExit):
-        print("Thanks for playing!")
+        announce("Thanks for playing!")
         sys.exit(0)
