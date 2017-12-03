@@ -1,6 +1,6 @@
 -r requirements.txt
 check-manifest==0.36
-pyroma==2.2
+pyroma==2.3
 pytest==3.3.0
 pytest-mock==1.6.3
 tox==2.9.1
