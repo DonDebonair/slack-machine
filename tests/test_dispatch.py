@@ -33,7 +33,7 @@ def fake_plugin2(mocker, msg_client, storage):
     return plugin_instance
 
 @pytest.fixture
-def plugin_actions(mocker, fake_plugin, fake_plugin2):
+def plugin_actions(fake_plugin, fake_plugin2):
     respond_fn = getattr(fake_plugin, 'respond_function')
     listen_fn = getattr(fake_plugin, 'listen_function')
     process_fn = getattr(fake_plugin, 'process_function')

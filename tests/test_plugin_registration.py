@@ -2,16 +2,32 @@ import re
 import pytest
 
 from machine import Machine
+from machine.plugins.decorators import required_settings
 from machine.utils.collections import CaseInsensitiveDict
 
 
-@pytest.fixture()
+@pytest.fixture(scope='module')
 def settings():
     settings = CaseInsensitiveDict()
     settings['PLUGINS'] = ['tests.fake_plugins']
     settings['SLACK_API_TOKEN'] = 'xoxo-abc123'
     settings['STORAGE_BACKEND'] = 'machine.storage.backends.memory.MemoryStorage'
     return settings
+
+
+@pytest.fixture(scope='module')
+def settings_with_required(settings):
+    settings['setting_1'] = 'foo'
+    return settings
+
+
+@pytest.fixture(scope='module')
+def required_settings_class():
+    @required_settings(['setting_1', 'setting_2'])
+    class C:
+        pass
+
+    return C
 
 
 def test_load_and_register_plugins(settings):
@@ -62,3 +78,10 @@ def test_plugin_init(settings):
     actions = machine._plugin_actions
     plugin_cls = actions['catch_all']['tests.fake_plugins:FakePlugin2']['class']
     assert plugin_cls.x == 42
+
+
+def test_required_settings(settings_with_required, required_settings_class):
+    machine = Machine(settings=settings_with_required)
+    missing = machine._check_missing_settings(required_settings_class)
+    assert 'SETTING_1' not in missing
+    assert 'SETTING_2' in missing

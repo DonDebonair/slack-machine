@@ -1,5 +1,4 @@
 from blinker import signal
-from functools import wraps
 import re
 
 
@@ -18,16 +17,12 @@ def process(slack_event_type):
     """
 
     def process_decorator(f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            return f(*args, **kwargs)
-
-        wrapped_f.metadata = getattr(f, "metadata", {})
-        wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['process'] = \
-            wrapped_f.metadata['plugin_actions'].get('process', {})
-        wrapped_f.metadata['plugin_actions']['process']['event_type'] = slack_event_type
-        return wrapped_f
+        f.metadata = getattr(f, "metadata", {})
+        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
+        f.metadata['plugin_actions']['process'] = \
+            f.metadata['plugin_actions'].get('process', {})
+        f.metadata['plugin_actions']['process']['event_type'] = slack_event_type
+        return f
 
     return process_decorator
 
@@ -47,18 +42,14 @@ def listen_to(regex, flags=re.IGNORECASE):
     """
 
     def listen_to_decorator(f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            return f(*args, **kwargs)
-
-        wrapped_f.metadata = getattr(f, "metadata", {})
-        wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['listen_to'] = \
-            wrapped_f.metadata['plugin_actions'].get('listen_to', {})
-        wrapped_f.metadata['plugin_actions']['listen_to']['regex'] = \
-            wrapped_f.metadata['plugin_actions']['listen_to'].get('regex', [])
-        wrapped_f.metadata['plugin_actions']['listen_to']['regex'].append(re.compile(regex, flags))
-        return wrapped_f
+        f.metadata = getattr(f, "metadata", {})
+        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
+        f.metadata['plugin_actions']['listen_to'] = \
+            f.metadata['plugin_actions'].get('listen_to', {})
+        f.metadata['plugin_actions']['listen_to']['regex'] = \
+            f.metadata['plugin_actions']['listen_to'].get('regex', [])
+        f.metadata['plugin_actions']['listen_to']['regex'].append(re.compile(regex, flags))
+        return f
 
     return listen_to_decorator
 
@@ -80,18 +71,14 @@ def respond_to(regex, flags=re.IGNORECASE):
     """
 
     def respond_to_decorator(f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            return f(*args, **kwargs)
-
-        wrapped_f.metadata = getattr(f, "metadata", {})
-        wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['respond_to'] = \
-            wrapped_f.metadata['plugin_actions'].get('respond_to', {})
-        wrapped_f.metadata['plugin_actions']['respond_to']['regex'] = \
-            wrapped_f.metadata['plugin_actions']['respond_to'].get('regex', [])
-        wrapped_f.metadata['plugin_actions']['respond_to']['regex'].append(re.compile(regex, flags))
-        return wrapped_f
+        f.metadata = getattr(f, "metadata", {})
+        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
+        f.metadata['plugin_actions']['respond_to'] = \
+            f.metadata['plugin_actions'].get('respond_to', {})
+        f.metadata['plugin_actions']['respond_to']['regex'] = \
+            f.metadata['plugin_actions']['respond_to'].get('regex', [])
+        f.metadata['plugin_actions']['respond_to']['regex'].append(re.compile(regex, flags))
+        return f
 
     return respond_to_decorator
 
@@ -120,17 +107,10 @@ def schedule(year=None, month=None, day=None, week=None, day_of_week=None, hour=
     kwargs = locals()
 
     def schedule_decorator(f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            try:
-                f(*args, **kwargs)
-            except TypeError:  # apscheduler doesn't like a decorated function to be passed to a job
-                pass
-
-        wrapped_f.metadata = getattr(f, "metadata", {})
-        wrapped_f.metadata['plugin_actions'] = wrapped_f.metadata.get('plugin_actions', {})
-        wrapped_f.metadata['plugin_actions']['schedule'] = kwargs
-        return wrapped_f
+        f.metadata = getattr(f, "metadata", {})
+        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
+        f.metadata['plugin_actions']['schedule'] = kwargs
+        return f
 
     return schedule_decorator
 
@@ -143,12 +123,32 @@ def on(event):
 
     :param event: name of the event to listen for. Event names are global
     """
-    def on_decorator(f):
-        @wraps(f)
-        def wrapped_f(*args, **kwargs):
-            return f(*args, **kwargs)
 
+    def on_decorator(f):
         e = signal(event)
-        e.connect(wrapped_f)
-        return wrapped_f
+        e.connect(f)
+        return f
+
     return on_decorator
+
+
+def required_settings(settings):
+    """Specify a required setting for a plugin or plugin method
+
+    The settings specified with this decorator will be added to the required settings for the
+    plugin. If one or more settings have not been defined by the user, the plugin will not be
+    loaded and a warning will be written to the console upon startup.
+
+    :param settings: settings that are required (can be list of strings, or single string)
+    """
+
+    def required_settings_decorator(f_or_cls):
+        f_or_cls.metadata = getattr(f_or_cls, "metadata", {})
+        f_or_cls.metadata['required_settings'] = f_or_cls.metadata.get('required_settings', [])
+        if (isinstance(settings, list)):
+            f_or_cls.metadata['required_settings'].extend(settings)
+        elif (isinstance(settings, str)):
+            f_or_cls.metadata['required_settings'].append(settings)
+        return f_or_cls
+
+    return required_settings_decorator

@@ -5,7 +5,7 @@ from redis import StrictRedis
 
 from machine.storage.backends.redis import RedisStorage
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def redis_client():
     return MagicMock(spec=StrictRedis)
 

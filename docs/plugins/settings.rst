@@ -36,3 +36,27 @@ This can be used in a plugin, like this:
         ))
 
 The respond to a message *@superbot Hello!"* from **@john**, in this case would be: *Bonjour, @john!*
+
+Required settings
+-----------------
+
+If your plugin requires one or more settings to be defined in order to work, you can mark them as
+*required* with the :py:meth:`~machine.plugins.decorators.required_settings` decorator. This
+decorator takes a string or a list of strings as argument which can be one or more settings that
+are required by your plugin. Upon startup, Slack Machine will check if any of the settings that
+are marked as *required* by a plugin, have not been defined by the user. If it finds one or more
+missing settings, it will not load that particular plugin, and notify the user which settings are
+missing.
+
+The :py:meth:`~machine.plugins.decorators.required_settings` decorator can be applied to a plugin
+class and/or its methods. Note that if **any** of the required settings are missing, the plugin
+will not load as a whole, so none of the methods will be registered.
+
+Example:
+
+.. code-block:: python
+
+    @required_settings(['TODO_SERVICE_USERNAME', 'TODO_SERVICE_PASSWORD'])
+    class TodoPlugin(MachineBasePlugin):
+        ...
+

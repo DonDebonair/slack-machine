@@ -2,7 +2,7 @@ import sys
 import inspect
 import logging
 
-from clint.textui import puts, indent
+from clint.textui import puts, indent, colored
 from machine.settings import import_settings
 from machine.singletons import Slack, Scheduler, Storage
 from machine.storage import PluginStorage
@@ -10,7 +10,7 @@ from machine.utils.module_loading import import_string
 from machine.plugins.base import MachineBasePlugin
 from machine.dispatch import EventDispatcher
 from machine.slack import MessagingClient
-from machine.utils.text import show_valid, warn, error, announce
+from machine.utils.text import show_valid, show_invalid, warn, error, announce
 
 logger = logging.getLogger(__name__)
 
@@ -66,20 +66,46 @@ class Machine:
                         storage = PluginStorage(class_name)
                         instance = cls(self._settings, MessagingClient(),
                                        storage)
-                        instance.init()
-                        self._register_plugin(class_name, instance)
-                        show_valid(class_name)
+                        missing_settings = self._register_plugin(class_name, instance)
+                        if(missing_settings):
+                            show_invalid(class_name)
+                            with indent(4):
+                                error_msg = "The following settings are missing: {}".format(
+                                    ", ".join(missing_settings)
+                                )
+                                puts(colored.red(error_msg))
+                                puts(colored.red("This plugin will not be loaded!"))
+                            del instance
+                        else:
+                            instance.init()
+                            show_valid(class_name)
 
     def _register_plugin(self, plugin_class, cls_instance):
+        missing_settings = []
+        missing_settings.extend(self._check_missing_settings(cls_instance.__class__))
+        methods = inspect.getmembers(cls_instance, predicate=inspect.ismethod)
+        for _, fn in methods:
+            missing_settings.extend(self._check_missing_settings(fn))
+        if missing_settings:
+            return missing_settings
+
         if hasattr(cls_instance, 'catch_all'):
             self._plugin_actions['catch_all'][plugin_class] = {
                 'class': cls_instance,
                 'class_name': plugin_class,
                 'function': getattr(cls_instance, 'catch_all')
             }
-        for name, fn in inspect.getmembers(cls_instance, predicate=inspect.ismethod):
+        for name, fn in methods:
             if hasattr(fn, 'metadata'):
                 self._register_plugin_actions(plugin_class, fn.metadata, cls_instance, name, fn)
+
+    def _check_missing_settings(self, fn_or_class):
+        missing_settings = []
+        if hasattr(fn_or_class, 'metadata') and 'required_settings' in fn_or_class.metadata:
+            for setting in fn_or_class.metadata['required_settings']:
+                if setting not in self._settings:
+                    missing_settings.append(setting.upper())
+        return missing_settings
 
     def _register_plugin_actions(self, plugin_class, metadata, cls_instance, fn_name, fn):
         fq_fn_name = "{}.{}".format(plugin_class, fn_name)
