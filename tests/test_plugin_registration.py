@@ -56,3 +56,9 @@ def test_plugin_storage_fq_plugin_name(settings):
     plugin2_cls = actions['catch_all']['tests.fake_plugins:FakePlugin2']['class']
     assert plugin1_cls.storage._fq_plugin_name == 'tests.fake_plugins:FakePlugin'
     assert plugin2_cls.storage._fq_plugin_name == 'tests.fake_plugins:FakePlugin2'
+
+def test_plugin_init(settings):
+    machine = Machine(settings=settings)
+    actions = machine._plugin_actions
+    plugin_cls = actions['catch_all']['tests.fake_plugins:FakePlugin2']['class']
+    assert plugin_cls.x == 42

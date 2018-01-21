@@ -61,7 +61,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Slack Machine'
-copyright = '2017, {}'.format(machine.__author__)
+copyright = '2018, {}'.format(machine.__author__)
 author = machine.__author__
 
 # The version info for the project you're documenting, acts as replacement for

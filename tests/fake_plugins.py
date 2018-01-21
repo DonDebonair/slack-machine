@@ -18,5 +18,8 @@ class FakePlugin(MachineBasePlugin):
 
 class FakePlugin2(MachineBasePlugin):
 
+    def init(self):
+        self.x = 42
+
     def catch_all(self, event):
         pass

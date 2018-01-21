@@ -134,6 +134,8 @@ Example:
 
 .. _Crontab: http://www.adminschoice.com/crontab-quick-reference
 
+.. _listen-events:
+
 Events
 ------
 

@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class EventDispatcher:
-    RESPOND_MATCHER = re.compile(r'^(?:\<@(?P<atuser>\w+)\>:?|(?P<username>\w+):) ?(?P<text>.*)$')
+    RESPOND_MATCHER = re.compile(r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):) ?(?P<text>.*)$')
 
     def __init__(self, plugin_actions):
         self._client = Slack()

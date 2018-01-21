@@ -66,6 +66,7 @@ class Machine:
                         storage = PluginStorage(class_name)
                         instance = cls(self._settings, MessagingClient(),
                                        storage)
+                        instance.init()
                         self._register_plugin(class_name, instance)
                         show_valid(class_name)
 

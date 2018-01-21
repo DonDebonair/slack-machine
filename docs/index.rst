@@ -78,6 +78,7 @@ Writing Plugins
    plugins/interacting
    plugins/settings
    plugins/storage
+   plugins/misc
 
 API Docs
 --------

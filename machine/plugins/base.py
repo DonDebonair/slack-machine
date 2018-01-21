@@ -22,6 +22,18 @@ class MachineBasePlugin:
         self.settings = settings
         self._fq_name = "{}.{}".format(self.__module__, self.__class__.__name__)
 
+    def init(self):
+        """Initialize plugin
+
+        This method can be implemented by concrete plugin classes. It will be called **once**
+        for each plugin, when that plugin is first loaded. You can refer to settings via
+        ``self.settings``, and access storage through ``self.storage``, but the Slack client has
+        not been initialized yet, so you cannot send or process messages during initialization.
+
+        :return: None
+        """
+        pass
+
     @property
     def users(self):
         """Dictionary of all users in the Slack workspace

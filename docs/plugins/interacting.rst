@@ -6,18 +6,18 @@ How to interact
 Slack Machine provides several convenient ways to interact with channels and users in your Slack 
 workspace. To this end, two very similar sets of functions are exposed through two classes:
 
-	The :py:class:`~machine.plugins.base.MachineBasePlugin` class every plugin extends, provides 
-	methods to send messages to channels (public, private and DM), through the RTM API or using 
-	the WebAPI (for rich messages/attachment support). It also supports adding reactions to messages, 
-	replying in-thread, sending ephemeral messages to a channel (only visible to 1 user), and much 
-	more.
+    The :py:class:`~machine.plugins.base.MachineBasePlugin` class every plugin extends, provides
+    methods to send messages to channels (public, private and DM), through the RTM API or using
+    the WebAPI (for rich messages/attachment support). It also supports adding reactions to messages,
+    replying in-thread, sending ephemeral messages to a channel (only visible to 1 user), and much
+    more.
 
-	An instance of the :py:class:`~machine.plugins.base.Message` class is automatically supplied 
-	to your plugin functions when using the :py:meth:`~machine.plugins.decorators.respond_to` or 
-	:py:meth:`~machine.plugins.decorators.listen_to` decorators. It has a similar set of methods 
-	as the :py:class:`~machine.plugins.base.MachineBasePlugin` class, but without the need to 
-	manually specify the channel you want to talk to. It lets you send messages and reply to 
-	messages in the same channel the original message was received in.
+    An instance of the :py:class:`~machine.plugins.base.Message` class is automatically supplied
+    to your plugin functions when using the :py:meth:`~machine.plugins.decorators.respond_to` or
+    :py:meth:`~machine.plugins.decorators.listen_to` decorators. It has a similar set of methods
+    as the :py:class:`~machine.plugins.base.MachineBasePlugin` class, but without the need to
+    manually specify the channel you want to talk to. It lets you send messages and reply to
+    messages in the same channel the original message was received in.
 
 It is recommended to use the passed-in :py:class:`~machine.plugins.base.Message` object to 
 interact with channels and users, whenever you use the :py:meth:`~machine.plugins.decorators.respond_to` 
@@ -33,10 +33,10 @@ Responding to a message
 If your plugin receives a message through the :py:meth:`~machine.plugins.decorators.respond_to` or 
 :py:meth:`~machine.plugins.decorators.listen_to` decorators, the simplest way to reply is using 
 :py:meth:`msg.reply() <machine.plugins.base.Message.reply>`. It takes 2 parameters:
-	
-	**text**: the message you want to send
-	
-	**in_thread**: if Slack Machine should reply to the original message in-thread
+
+    **text**: the message you want to send
+
+    **in_thread**: if Slack Machine should reply to the original message in-thread
 
 :py:meth:`msg.reply() <machine.plugins.base.Message.reply>` will start the reply with a mention 
 of the sender of the original message.
@@ -55,11 +55,11 @@ response will be: *@john: I love you too!*
 You can also use :py:meth:`msg.reply_webapi() <machine.plugins.base.Message.reply_webapi>` instead, 
 which has 2 extra parameters that unlock 2 extra features:
 
-	**attachments**: add `attachments`_ to your message
+    **attachments**: add `attachments`_ to your message
 
-	**ephemeral**: if ``True``, the message will be visible only to the sender of the original message.
+    **ephemeral**: if ``True``, the message will be visible only to the sender of the original message.
 
-	.. _attachments: https://api.slack.com/docs/message-attachments
+    .. _attachments: https://api.slack.com/docs/message-attachments
 
 There are 2 more methods to respond to a message in the same channel: 
 :py:meth:`msg.say() <machine.plugins.base.Message.say>` and 
@@ -80,11 +80,11 @@ Message properties
 The :py:class:`~machine.plugins.base.Message` object your plugin function receives, has some 
 convenient properties about the message that triggered the function:
 
-	**sender**: a User object with information about the sender, such as their ``id`` and ``name``
+    **sender**: a User object with information about the sender, such as their ``id`` and ``name``
 
-	**channel**: a Channel object with information about the channel the message was received in
+    **channel**: a Channel object with information about the channel the message was received in
 
-	**text**: the contents of the original message
+    **text**: the contents of the original message
 
 Plugin properties
 -----------------
@@ -93,12 +93,12 @@ The :py:class:`~machine.plugins.base.MachineBasePlugin` class every plugin exten
 some properties about your Slack workspace. These properties are not filled when your 
 plugin is instantiated, but reflect the current status of the Slack client:
 
-	**users**: a list of User objects for users that Slack Machine knows about. This is usually 
-	all the active users in your Slack workspace
+    **users**: a list of User objects for users that Slack Machine knows about. This is usually
+    all the active users in your Slack workspace
 
-	**channels**: a list of Channel objects for channels that Slack Machine knows about. This 
-	contains all the public channels in your Slack workspace, plus all private channels 
-	that your Slack Machine instance was invited to
+    **channels**: a list of Channel objects for channels that Slack Machine knows about. This
+    contains all the public channels in your Slack workspace, plus all private channels
+    that your Slack Machine instance was invited to
 
 Sending messages without a msg object
 -------------------------------------
@@ -143,12 +143,12 @@ This function will send a greeting 10 seconds after it has received a message:
 
 There are a couple of caveats:
 
-	Scheduled versions of methods cannot reply to threads using ``in_thread`` or ``thread_ts``. 
-	This was done because it doesn't make sense to reply to a thread in the future. Threads 
-	are for interaction **now**.
+    Scheduled versions of methods cannot reply to threads using ``in_thread`` or ``thread_ts``.
+    This was done because it doesn't make sense to reply to a thread in the future. Threads
+    are for interaction **now**.
 
-	You cannot schedule a reaction to a message. It doesn't make sense to react to a message 
-	in the future.
+    You cannot schedule a reaction to a message. It doesn't make sense to react to a message
+    in the future.
 
 For more information about scheduling message, have a look at the :ref:`api documentation`.
 
@@ -158,7 +158,8 @@ Emitting events
 ---------------
 
 Your plugin can emit arbitrary events that other plugins (or your own) can listen for. Events 
-are a convenient mechanism for exchanging data between plugins. Emitting an event is done with 
+are a convenient mechanism for exchanging data between plugins and/or for a plugin to expose an
+api that other plugins can hook into. Emitting an event is done with
 :py:meth:`self.emit() <machine.plugins.base.MachineBasePlugin.emit>`. You have to provide a name 
 for the event you want to emit, so others can listen for an event by that name. You can optionally 
 provide extra data as keyword arguments.
@@ -171,4 +172,4 @@ Example:
     def broadcast_bathroom_usage(self, msg):
         self.emit('bathroom_used', toilet_flushed=True)
 
-
+You can read :ref:`listen-events` to see how your plugin can listen for events.
