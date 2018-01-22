@@ -1,6 +1,7 @@
 import sys
 import inspect
 import logging
+import dill
 
 from clint.textui import puts, indent, colored
 from machine.settings import import_settings
@@ -57,6 +58,10 @@ class Machine:
             self._dispatcher = EventDispatcher(self._plugin_actions)
 
     def load_plugins(self):
+        self._help = {
+            'human': {},
+            'robot': {}
+        }
         with indent(4):
             logger.debug("PLUGINS: %s", self._settings['PLUGINS'])
             for plugin in self._settings['PLUGINS']:
@@ -79,6 +84,7 @@ class Machine:
                         else:
                             instance.init()
                             show_valid(class_name)
+        self._storage.set('manual', dill.dumps(self._help))
 
     def _register_plugin(self, plugin_class, cls_instance):
         missing_settings = []
@@ -95,9 +101,16 @@ class Machine:
                 'class_name': plugin_class,
                 'function': getattr(cls_instance, 'catch_all')
             }
+        if cls_instance.__doc__:
+            class_help = cls_instance.__doc__.splitlines()[0]
+        else:
+            class_help = plugin_class
+        self._help['human'][class_help] = self._help.get(class_help, {})
+        self._help['robot'][class_help] = self._help.get(class_help, [])
         for name, fn in methods:
             if hasattr(fn, 'metadata'):
-                self._register_plugin_actions(plugin_class, fn.metadata, cls_instance, name, fn)
+                self._register_plugin_actions(plugin_class, fn.metadata, cls_instance, name, fn,
+                                              class_help)
 
     def _check_missing_settings(self, fn_or_class):
         missing_settings = []
@@ -107,8 +120,11 @@ class Machine:
                     missing_settings.append(setting.upper())
         return missing_settings
 
-    def _register_plugin_actions(self, plugin_class, metadata, cls_instance, fn_name, fn):
+    def _register_plugin_actions(self, plugin_class, metadata, cls_instance, fn_name, fn,
+                                 class_help):
         fq_fn_name = "{}.{}".format(plugin_class, fn_name)
+        if fn.__doc__:
+            self._help['human'][class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
         for action, config in metadata['plugin_actions'].items():
             if action == 'process':
                 event_type = config['event_type']
@@ -129,9 +145,29 @@ class Machine:
                     }
                     key = "{}-{}".format(fq_fn_name, regex.pattern)
                     self._plugin_actions[action][key] = event_handler
+                    self._help['robot'][class_help].append(self._parse_robot_help(regex, action))
             if action == 'schedule':
                 Scheduler.get_instance().add_job(fq_fn_name, trigger='cron', args=[cls_instance],
                                                  id=fq_fn_name, replace_existing=True, **config)
+
+    def _parse_human_help(self, doc):
+        summary = doc.splitlines()[0].split(':')
+        if len(summary) > 1:
+            command = summary[0].strip()
+            help = summary[1].strip()
+        else:
+            command = "??"
+            help = summary[0].strip()
+        return {
+            'command': command,
+            'help': help
+        }
+
+    def _parse_robot_help(self, regex, action):
+        if action == 'respond_to':
+            return "@botname {}".format(regex.pattern)
+        else:
+            return regex.pattern
 
     def run(self):
         announce("\nStarting Slack Machine:")

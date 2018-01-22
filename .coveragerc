@@ -1,5 +1,10 @@
 [run]
 source = machine
+omit =
+    # don't care about bundled plugins, they will not be tested
+    machine/plugins/builtin/*
+    # we won't test the run script
+    machine/bin/*
 
 [report]
 # Regexes for lines to exclude from consideration

@@ -10,6 +10,9 @@ class MessagingClient:
     def channels(self):
         return Slack.get_instance().server.channels
 
+    def retrieve_bot_info(self):
+        return Slack.get_instance().server.login_data['self']
+
     def fmt_mention(self, user):
         u = self.users.find(user)
         return "<@{}>".format(u.id)

@@ -61,6 +61,16 @@ class MachineBasePlugin:
         """
         return self._client.channels
 
+    def retrieve_bot_info(self):
+        """Information about the bot user in Slack
+
+        This will return a dictionary with information about the bot user in Slack that represents
+        Slack Machine
+
+        :return: Bot user
+        """
+        return self._client.retrieve_bot_info()
+
     def at(self, user):
         """Create a mention of the provided user
 
