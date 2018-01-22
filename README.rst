@@ -42,6 +42,7 @@ Features
       storage are supported)
     - Schedule actions and messages
     - Emit and listen for events
+    - Help texts for Plugins
 
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
@@ -51,7 +52,7 @@ Features
 Coming Soon
 """""""""""
 
-- Help texts for Plugins
+- Built in web server for webhooks
 - Support for Interactive Buttons
 - ... and much more
 
