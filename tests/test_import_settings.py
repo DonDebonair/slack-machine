@@ -9,7 +9,7 @@ def test_normal_import_settings():
     assert settings['PLUGINS'] == ['machine.plugins.builtin.general.PingPongPlugin',
                                    'machine.plugins.builtin.general.HelloPlugin',
                                    'machine.plugins.builtin.help.HelpPlugin',
-                                   'machine.plugins.builtin.fun.images.ImageSearchPlugin']
+                                   'machine.plugins.builtin.fun.memes.MemePlugin']
     assert 'SLACK_API_TOKEN' in settings
     assert settings['SLACK_API_TOKEN'] == 'xoxo-abc123'
     assert 'MY_PLUGIN_SETTING' in settings
@@ -24,7 +24,7 @@ def test_import_settings_non_existing_module():
     assert settings['PLUGINS'] == ['machine.plugins.builtin.general.PingPongPlugin',
                                    'machine.plugins.builtin.general.HelloPlugin',
                                    'machine.plugins.builtin.help.HelpPlugin',
-                                   'machine.plugins.builtin.fun.images.ImageSearchPlugin']
+                                   'machine.plugins.builtin.fun.memes.MemePlugin']
 
 
 def test_env_import_settings():
