@@ -9,7 +9,9 @@ logger = logging.getLogger(__name__)
 def import_settings(settings_module='local_settings'):
     default_settings = {
         'PLUGINS': ['machine.plugins.builtin.general.PingPongPlugin',
-                    'machine.plugins.builtin.general.HelloPlugin'],
+                    'machine.plugins.builtin.general.HelloPlugin',
+                    'machine.plugins.builtin.help.HelpPlugin',
+                    'machine.plugins.builtin.fun.images.ImageSearchPlugin'],
         'STORAGE_BACKEND': 'machine.storage.backends.memory.MemoryStorage'
     }
     settings = CaseInsensitiveDict(default_settings)
@@ -29,3 +31,6 @@ def import_settings(settings_module='local_settings'):
             settings[k] = v
 
     return (settings, found_local_settings)
+
+
+globals().update(import_settings()[0])
