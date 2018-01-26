@@ -14,7 +14,7 @@ class ImageSearchPlugin(MachineBasePlugin):
         results = self._search(query)
         if results:
             url = random.choice(results)
-            msg.say_(url)
+            msg.say(url)
         else:
             msg.say("Couldn't find anything! :cry:")
 
