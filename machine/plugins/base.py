@@ -285,6 +285,11 @@ class Message:
         return self._client.channels.find(self._msg_event['channel'])
 
     @property
+    def is_dm(self):
+        chan = self._msg_event['channel']
+        return not (chan.startswith('C') or chan.startswith('G'))
+
+    @property
     def text(self):
         """The body of the actual message
 
@@ -526,8 +531,7 @@ class Message:
         return self._client.react(self.channel.id, self._msg_event['ts'], emoji)
 
     def _create_reply(self, text):
-        chan = self._msg_event['channel']
-        if chan.startswith('C') or chan.startswith('G'):
+        if not self.is_dm:
             return "{}: {}".format(self.at_sender, text)
         else:
             return text

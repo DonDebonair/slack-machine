@@ -11,7 +11,7 @@ def import_settings(settings_module='local_settings'):
         'PLUGINS': ['machine.plugins.builtin.general.PingPongPlugin',
                     'machine.plugins.builtin.general.HelloPlugin',
                     'machine.plugins.builtin.help.HelpPlugin',
-                    'machine.plugins.builtin.fun.images.ImageSearchPlugin'],
+                    'machine.plugins.builtin.fun.memes.MemePlugin'],
         'STORAGE_BACKEND': 'machine.storage.backends.memory.MemoryStorage'
     }
     settings = CaseInsensitiveDict(default_settings)
