@@ -105,8 +105,8 @@ class Machine:
             class_help = cls_instance.__doc__.splitlines()[0]
         else:
             class_help = plugin_class
-        self._help['human'][class_help] = self._help.get(class_help, {})
-        self._help['robot'][class_help] = self._help.get(class_help, [])
+        self._help['human'][class_help] = self._help['human'].get(class_help, {})
+        self._help['robot'][class_help] = self._help['robot'].get(class_help, [])
         for name, fn in methods:
             if hasattr(fn, 'metadata'):
                 self._register_plugin_actions(plugin_class, fn.metadata, cls_instance, name, fn,
@@ -172,7 +172,10 @@ class Machine:
     def run(self):
         announce("\nStarting Slack Machine:")
         with indent(4):
-            self._client.rtm_connect()
+            connected = self._client.rtm_connect()
+            if not connected:
+                logger.error("Could not connect to Slack! Aborting...")
+                sys.exit(1)
             show_valid("Connected to Slack")
             Scheduler.get_instance().start()
             show_valid("Scheduler started")
