@@ -12,7 +12,8 @@ def import_settings(settings_module='local_settings'):
                     'machine.plugins.builtin.general.HelloPlugin',
                     'machine.plugins.builtin.help.HelpPlugin',
                     'machine.plugins.builtin.fun.memes.MemePlugin'],
-        'STORAGE_BACKEND': 'machine.storage.backends.memory.MemoryStorage'
+        'STORAGE_BACKEND': 'machine.storage.backends.memory.MemoryStorage',
+        'DISABLE_HTTP': False
     }
     settings = CaseInsensitiveDict(default_settings)
     try:

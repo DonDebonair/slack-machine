@@ -122,3 +122,6 @@ fabric.properties
 
 # Jupyter is only used to experiment
 *.ipynb
+
+# Pytest
+.pytest_cache

@@ -1,5 +1,6 @@
-from blinker import signal
 import re
+
+from blinker import signal
 
 
 def process(slack_event_type):
@@ -152,3 +153,24 @@ def required_settings(settings):
         return f_or_cls
 
     return required_settings_decorator
+
+
+def route(path, **kwargs):
+    """Define a http route that should trigger the function
+
+    The parameters to this decorator will be passed to the ``route`` function of Bottle
+
+    :param path: path to match
+    :param kwargs: additional keyword arguments to be passed to Bottle
+    """
+
+    def route_decorator(f):
+        f.metadata = getattr(f, "metadata", {})
+        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
+        f.metadata['plugin_actions']['route'] = \
+            f.metadata['plugin_actions'].get('route', [])
+        kwargs['path'] = path
+        f.metadata['plugin_actions']['route'].append(kwargs)
+        return f
+
+    return route_decorator

@@ -3,7 +3,7 @@ import inspect
 import pytest
 from blinker import signal
 from machine.plugins.decorators import process, listen_to, respond_to, schedule, on, \
-    required_settings
+    required_settings, route
 
 
 @pytest.fixture(scope='module')
@@ -97,6 +97,13 @@ def required_settings_class():
 
     return C
 
+@pytest.fixture(scope='module')
+def route_f():
+    @route('/test', method='POST')
+    def f():
+        pass
+    return f
+
 
 def test_process(process_f):
     assert hasattr(process_f, 'metadata')
@@ -176,3 +183,12 @@ def test_required_settings_for_class(required_settings_class):
     assert isinstance(required_settings_class.metadata['required_settings'], list)
     assert 'setting_1' in required_settings_class.metadata['required_settings']
     assert 'setting_2' in required_settings_class.metadata['required_settings']
+
+
+def test_route(route_f):
+    assert hasattr(route_f, 'metadata')
+    assert 'plugin_actions' in route_f.metadata
+    assert 'route' in route_f.metadata['plugin_actions']
+    assert len(route_f.metadata['plugin_actions']['route']) == 1
+    assert route_f.metadata['plugin_actions']['route'][0]['path'] == '/test'
+    assert route_f.metadata['plugin_actions']['route'][0]['method'] == 'POST'

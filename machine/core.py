@@ -1,16 +1,19 @@
-import sys
 import inspect
 import logging
-import dill
+import sys
+from threading import Thread
 
+import dill
 from clint.textui import puts, indent, colored
+import bottle
+
+from machine.dispatch import EventDispatcher
+from machine.plugins.base import MachineBasePlugin
 from machine.settings import import_settings
 from machine.singletons import Slack, Scheduler, Storage
+from machine.slack import MessagingClient
 from machine.storage import PluginStorage
 from machine.utils.module_loading import import_string
-from machine.plugins.base import MachineBasePlugin
-from machine.dispatch import EventDispatcher
-from machine.slack import MessagingClient
 from machine.utils.text import show_valid, show_invalid, warn, error, announce
 
 logger = logging.getLogger(__name__)
@@ -72,7 +75,7 @@ class Machine:
                         instance = cls(self._settings, MessagingClient(),
                                        storage)
                         missing_settings = self._register_plugin(class_name, instance)
-                        if(missing_settings):
+                        if (missing_settings):
                             show_invalid(class_name)
                             with indent(4):
                                 error_msg = "The following settings are missing: {}".format(
@@ -149,6 +152,9 @@ class Machine:
             if action == 'schedule':
                 Scheduler.get_instance().add_job(fq_fn_name, trigger='cron', args=[cls_instance],
                                                  id=fq_fn_name, replace_existing=True, **config)
+            if action == 'route':
+                for route_config in config:
+                    bottle.route(**route_config)(fn)
 
     def _parse_human_help(self, doc):
         summary = doc.splitlines()[0].split(':')
@@ -179,5 +185,13 @@ class Machine:
             show_valid("Connected to Slack")
             Scheduler.get_instance().start()
             show_valid("Scheduler started")
+            if not self._settings['DISABLE_HTTP']:
+                self._bottle_thread = Thread(
+                    target=bottle.run,
+                    kwargs=dict(host='0.0.0.0', port=8080)
+                )
+                self._bottle_thread.daemon = True
+                self._bottle_thread.start()
+                show_valid("Web server started")
             show_valid("Dispatcher started")
             self._dispatcher.start()
