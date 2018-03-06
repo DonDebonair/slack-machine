@@ -43,6 +43,7 @@ Features
     - Schedule actions and messages
     - Emit and listen for events
     - Help texts for Plugins
+    - Built in web server for webhooks
 
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
@@ -52,7 +53,6 @@ Features
 Coming Soon
 """""""""""
 
-- Built in web server for webhooks
 - Support for Interactive Buttons
 - ... and much more
 
