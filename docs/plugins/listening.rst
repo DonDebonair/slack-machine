@@ -170,3 +170,39 @@ Some things to be aware of:
 
 You can read :ref:`emitting-events` to learn how to emit events from your plugins.
 
+HTTP Listener
+-------------
+
+Slack Machine has a built-in HTTP server that can listen for incoming requests. `Bottle`_ is used
+for this feature. You can use the :py:meth:`~machine.plugins.decorators.route` decorator to mark
+functions in your plugin classes to listen for specific HTTP calls. The decorator accepts the same
+arguments as the `Bottle route()`_ decorator. You can return anything that Bottle view functions
+can return, because your functions will be delegated to the Bottle router.
+You can of course also use any of the features that the
+:py:class:`~machine.plugins.base.MachineBasePlugin` gives you, such as sending a message to a
+user or a channel.
+
+Example:
+
+.. code-block:: python
+
+    @route("/hello")
+    @route("/hello/<name>")
+    def my_exposed_function(self, name="World"):
+        self.say('my-channel', '{} is talking to me'.format(name))
+        return {"hello": name}
+
+    # listen to specific HTTP verbs
+    @route("/status", method=["POST", "GET"])
+    def my_other_function(self):
+        return {"status": "I'm a-okay!"}
+
+Slack Machine supports any of the server backends that `Bottle supports`_. You can set the name
+of the server backend you want in your settings as ``HTTP_SERVER_BACKEND``.
+
+If you don't need this functionality, you can disable the HTTP server by setting ``DISABLE_HTTP``
+to ``True`` in your settings.
+
+.. _Bottle: https://bottlepy.org
+.. _Bottle route(): https://bottlepy.org/docs/0.12/api.html#bottle.route
+.. _Bottle supports: https://bottlepy.org/docs/0.12/deployment.html#switching-the-server-backend

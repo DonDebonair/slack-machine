@@ -188,7 +188,8 @@ class Machine:
             if not self._settings['DISABLE_HTTP']:
                 self._bottle_thread = Thread(
                     target=bottle.run,
-                    kwargs=dict(host='0.0.0.0', port=8080)
+                    kwargs=dict(host='0.0.0.0', port=8080,
+                                server=self._settings['HTTP_SERVER_BACKEND'])
                 )
                 self._bottle_thread.daemon = True
                 self._bottle_thread.start()
