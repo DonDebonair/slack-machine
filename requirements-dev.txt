@@ -1,5 +1,5 @@
 -r requirements.txt
-check-manifest==0.36
+check-manifest==0.37
 pyroma==2.3
 pytest==3.5.0
 pytest-mock==1.7.1
