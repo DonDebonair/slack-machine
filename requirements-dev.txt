@@ -2,12 +2,12 @@
 check-manifest==0.36
 pyroma==2.3
 pytest==3.5.1
-pytest-mock==1.7.1
+pytest-mock==1.9.0
 tox==2.9.1
 flake8==3.5.0
 twine==1.11.0
 coverage==4.5.1
 pytest-cov==2.5.1
-Sphinx==1.7.2
+Sphinx==1.7.4
 sphinx-autobuild==0.7.1
 redis==2.10.6
