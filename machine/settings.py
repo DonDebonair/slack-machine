@@ -14,7 +14,9 @@ def import_settings(settings_module='local_settings'):
                     'machine.plugins.builtin.fun.memes.MemePlugin'],
         'STORAGE_BACKEND': 'machine.storage.backends.memory.MemoryStorage',
         'DISABLE_HTTP': False,
-        'HTTP_SERVER_BACKEND': 'wsgiref'
+        'HTTP_SERVER_HOST': '0.0.0.0',
+        'HTTP_SERVER_PORT': 8080,
+        'HTTP_SERVER_BACKEND': 'wsgiref',
     }
     settings = CaseInsensitiveDict(default_settings)
     try:

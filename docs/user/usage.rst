@@ -118,3 +118,27 @@ instance running on *localhost* on the default port, you would add this to your 
 .. _Redis: https://redis.io/
 
 That's all there is to it!
+
+HTTP Server
+"""""""""""
+
+Slack Machine has a built-in HTTP server which can be configured using the following settings:
+
+.. code-block:: python
+
+    # Should the HTTP server be enabled?
+    DISABLE_HTTP = False
+
+    # Which serving backend should `bottle` use?
+    HTTP_SERVER_BACKEND = 'wsgiref'
+
+    # Host address to listen on
+    HTTP_SERVER_HOST = '0.0.0.0'
+
+    # Host port to listen on
+    HTTP_SERVER_PORT = 8080
+
+
+For more information about possible values for ``HTTP_SERVER_BACKEND``, check out the `Bottle Server Backends`_ documentation.
+
+.. _Bottle Server Backends: https://bottlepy.org/docs/0.12/deployment.html#switching-the-server-backend
