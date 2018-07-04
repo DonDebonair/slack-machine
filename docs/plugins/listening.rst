@@ -203,6 +203,22 @@ of the server backend you want in your settings as ``HTTP_SERVER_BACKEND``.
 If you don't need this functionality, you can disable the HTTP server by setting ``DISABLE_HTTP``
 to ``True`` in your settings.
 
+The built-in HTTP server which can be configured using the following settings:
+
+.. code-block:: python
+
+    # Should the HTTP server be enabled?
+    DISABLE_HTTP = False
+
+    # Which serving backend should `bottle` use?
+    HTTP_SERVER_BACKEND = 'wsgiref'
+
+    # Host address to listen on
+    HTTP_SERVER_HOST = '0.0.0.0'
+
+    # Host port to listen on
+    HTTP_SERVER_PORT = 8080
+
 .. _Bottle: https://bottlepy.org
 .. _Bottle route(): https://bottlepy.org/docs/0.12/api.html#bottle.route
 .. _Bottle supports: https://bottlepy.org/docs/0.12/deployment.html#switching-the-server-backend
