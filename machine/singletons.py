@@ -9,8 +9,12 @@ from machine.utils.redis import gen_config_dict
 class Slack(metaclass=Singleton):
     def __init__(self):
         _settings, _ = import_settings()
-        self._client = SlackClient(
-            _settings['SLACK_API_TOKEN']) if 'SLACK_API_TOKEN' in _settings else None
+        slack_api_token = _settings.get('SLACK_API_TOKEN', None)
+        http_proxy = _settings.get('HTTP_PROXY', None)
+        https_proxy = _settings.get('HTTPS_PROXY', None)
+        proxies = {'http': http_proxy, 'https': https_proxy}
+
+        self._client = SlackClient(slack_api_token, proxies=proxies) if slack_api_token else None
 
     def __getattr__(self, item):
         return getattr(self._client, item)
