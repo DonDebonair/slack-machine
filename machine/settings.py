@@ -17,6 +17,8 @@ def import_settings(settings_module='local_settings'):
         'HTTP_SERVER_HOST': '0.0.0.0',
         'HTTP_SERVER_PORT': 8080,
         'HTTP_SERVER_BACKEND': 'wsgiref',
+        'HTTP_PROXY': '',
+        'HTTPS_PROXY': '',
     }
     settings = CaseInsensitiveDict(default_settings)
     try:

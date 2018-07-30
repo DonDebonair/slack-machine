@@ -27,6 +27,10 @@ to function.
 
 You can override the log level by setting ``LOGLEVEL``. By default this is set to ``"ERROR"``.
 
+If you want to use Slack Machine behind a proxy, you can use ``HTTP_PROXY`` and ``HTTPS_PROXY``.
+Be cautious, only http proxy is supported for now.
+
+
 Enabling plugins
 """"""""""""""""
 
