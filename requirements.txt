@@ -1,6 +1,6 @@
 slackclient==1.2.1
 dill==0.2.8.2
-apscheduler==3.5.1
+apscheduler==3.5.2
 blinker-alt==1.5
 clint==0.5.1
 bottle==0.12.13
