@@ -1,6 +1,8 @@
 import inspect
 import logging
 import sys
+import time
+import _thread
 from threading import Thread
 
 import dill
@@ -175,6 +177,12 @@ class Machine:
         else:
             return regex.pattern
 
+    def _keepalive(self):
+        while True:
+            time.sleep(self._settings['KEEP_ALIVE'])
+            self._client.server.send_to_websocket({'type': 'ping'})
+            logger.debug("Client Ping!")
+
     def run(self):
         announce("\nStarting Slack Machine:")
         with indent(4):
@@ -197,5 +205,10 @@ class Machine:
                 self._bottle_thread.daemon = True
                 self._bottle_thread.start()
                 show_valid("Web server started")
+
+            if self._settings['KEEP_ALIVE']:
+                _thread.start_new_thread(self._keepalive, tuple())
+                show_valid("Keepalive thread started [Interval: %ss]" % self._settings['KEEP_ALIVE'])
+
             show_valid("Dispatcher started")
             self._dispatcher.start()

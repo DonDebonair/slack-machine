@@ -30,6 +30,9 @@ You can override the log level by setting ``LOGLEVEL``. By default this is set t
 If you want to use Slack Machine behind a proxy, you can use ``HTTP_PROXY`` and ``HTTPS_PROXY``.
 Be cautious, only http proxy is supported for now.
 
+If you find you have issues with Slack Machine disconnecting, try enabling the keep alive
+feature by setting ``KEEP_ALIVE`` to an integer (interval in seconds to send keep alive pings).
+
 
 Enabling plugins
 """"""""""""""""
