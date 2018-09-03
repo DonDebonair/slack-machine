@@ -19,6 +19,7 @@ def import_settings(settings_module='local_settings'):
         'HTTP_SERVER_BACKEND': 'wsgiref',
         'HTTP_PROXY': '',
         'HTTPS_PROXY': '',
+        'KEEP_ALIVE': None
     }
     settings = CaseInsensitiveDict(default_settings)
     try:
@@ -36,7 +37,7 @@ def import_settings(settings_module='local_settings'):
             k = k[3:]
             settings[k] = v
 
-    return (settings, found_local_settings)
+    return settings, found_local_settings
 
 
 globals().update(import_settings()[0])
