@@ -1,7 +1,6 @@
 import re
 
 import pytest
-from apscheduler.schedulers.base import BaseScheduler
 
 from machine.slack import MessagingClient
 from machine.dispatch import EventDispatcher
@@ -14,9 +13,11 @@ from tests.fake_plugins import FakePlugin, FakePlugin2
 def msg_client(mocker):
     return mocker.MagicMock(spec=MessagingClient)
 
+
 @pytest.fixture
 def storage(mocker):
     return mocker.MagicMock(spec=MachineBaseStorage)
+
 
 @pytest.fixture
 def fake_plugin(mocker, msg_client, storage):
@@ -26,11 +27,13 @@ def fake_plugin(mocker, msg_client, storage):
     mocker.spy(plugin_instance, 'process_function')
     return plugin_instance
 
+
 @pytest.fixture
 def fake_plugin2(mocker, msg_client, storage):
     plugin_instance = FakePlugin2({}, msg_client, storage)
     mocker.spy(plugin_instance, 'catch_all')
     return plugin_instance
+
 
 @pytest.fixture
 def plugin_actions(fake_plugin, fake_plugin2):
@@ -74,6 +77,7 @@ def plugin_actions(fake_plugin, fake_plugin2):
     }
     return plugin_actions
 
+
 @pytest.fixture
 def dispatcher(mocker, plugin_actions):
     mocker.patch('machine.dispatch.ThreadPool', autospec=True)
@@ -85,6 +89,7 @@ def dispatcher(mocker, plugin_actions):
     mocker.patch.object(dispatch_instance, '_get_bot_name')
     dispatch_instance._get_bot_name.return_value = 'superbot'
     return dispatch_instance
+
 
 def test_handle_event_process(dispatcher, fake_plugin):
     some_event = {'type': 'some_event'}
@@ -98,6 +103,7 @@ def test_handle_event_catch_all(dispatcher, fake_plugin2):
     dispatcher.handle_event(any_event)
     fake_plugin2.catch_all.assert_called_once_with(any_event)
 
+
 def _assert_message(args, text):
     # called with 1 positional arg and 0 kw args
     assert len(args[0]) == 1
@@ -106,6 +112,7 @@ def _assert_message(args, text):
     assert isinstance(args[0][0], Message)
     # assert message equals expected text
     assert args[0][0].text == text
+
 
 def test_handle_event_listen_to(dispatcher, fake_plugin, fake_plugin2):
     msg_event = {'type': 'message', 'text': 'hi', 'channel': 'C1', 'user': 'user1'}
@@ -116,6 +123,7 @@ def test_handle_event_listen_to(dispatcher, fake_plugin, fake_plugin2):
     args = fake_plugin.listen_function.call_args
     _assert_message(args, 'hi')
 
+
 def test_handle_event_respond_to(dispatcher, fake_plugin, fake_plugin2):
     msg_event = {'type': 'message', 'text': '<@123> hello', 'channel': 'C1', 'user': 'user1'}
     dispatcher.handle_event(msg_event)
@@ -125,10 +133,11 @@ def test_handle_event_respond_to(dispatcher, fake_plugin, fake_plugin2):
     args = fake_plugin.respond_function.call_args
     _assert_message(args, 'hello')
 
+
 def test_check_bot_mention(dispatcher):
     normal_msg_event = {'text': 'hi', 'channel': 'C1'}
     event = dispatcher._check_bot_mention(normal_msg_event)
-    assert event == None
+    assert event is None
 
     mention_msg_event = {'text': '<@123> hi', 'channel': 'C1'}
     event = dispatcher._check_bot_mention(mention_msg_event)
@@ -144,7 +153,7 @@ def test_check_bot_mention(dispatcher):
 
     mention_msg_event_other_user = {'text': '<@456> hi', 'channel': 'C1'}
     event = dispatcher._check_bot_mention(mention_msg_event_other_user)
-    assert event == None
+    assert event is None
 
     mention_msg_event_dm = {'text': 'hi', 'channel': 'D1'}
     event = dispatcher._check_bot_mention(mention_msg_event_dm)

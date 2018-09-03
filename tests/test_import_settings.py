@@ -34,7 +34,7 @@ def test_env_import_settings():
         'SM_SLACK_API_TOKEN': 'xoxo-somethingelse'
     }):
         settings, found = import_settings('tests.local_test_settings')
-        assert found == True
+        assert found
         assert 'SETTING_1' in settings
         assert settings['SETTING_1'] == 'SETTING1'
         assert 'SETTING_2' not in settings

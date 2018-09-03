@@ -16,6 +16,7 @@ class FakePlugin(MachineBasePlugin):
     def process_function(self, event):
         pass
 
+
 class FakePlugin2(MachineBasePlugin):
 
     def init(self):

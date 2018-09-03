@@ -97,11 +97,13 @@ def required_settings_class():
 
     return C
 
+
 @pytest.fixture(scope='module')
 def route_f():
     @route('/test', method='POST')
     def f():
         pass
+
     return f
 
 

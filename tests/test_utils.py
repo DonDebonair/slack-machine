@@ -7,6 +7,7 @@ def test_Singleton():
     c2 = FakeSingleton()
     assert c == c2
 
+
 def test_CaseInsensitiveDict():
     d = CaseInsensitiveDict({'foo': 'bar'})
     assert 'foo' in d
