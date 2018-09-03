@@ -1,6 +1,5 @@
 sudo: false
 language: python
-python: 3.7
 matrix:
   include:
     - python: 3.4
@@ -12,6 +11,8 @@ matrix:
     - python: 3.7
       env: TOX_ENV=py37
     - python: 3.7
+      dist: xenial
+      sudo: true
       env: TOX_ENV=flake8
 cache: pip
 install:
