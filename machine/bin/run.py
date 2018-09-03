@@ -12,6 +12,6 @@ def main():
     bot = Machine()
     try:
         bot.run()
-    except (KeyboardInterrupt):
+    except KeyboardInterrupt:
         announce("Thanks for playing!")
         sys.exit(0)

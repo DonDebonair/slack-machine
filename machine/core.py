@@ -2,7 +2,6 @@ import inspect
 import logging
 import sys
 import time
-import _thread
 from threading import Thread
 
 import dill
@@ -57,16 +56,16 @@ class Machine:
                 'respond_to': {},
                 'catch_all': {}
             }
+            self._help = {
+                'human': {},
+                'robot': {}
+            }
             puts("Loading plugins...")
             self.load_plugins()
             logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
             self._dispatcher = EventDispatcher(self._plugin_actions)
 
     def load_plugins(self):
-        self._help = {
-            'human': {},
-            'robot': {}
-        }
         with indent(4):
             logger.debug("PLUGINS: %s", self._settings['PLUGINS'])
             for plugin in self._settings['PLUGINS']:
@@ -158,20 +157,22 @@ class Machine:
                 for route_config in config:
                     bottle.route(**route_config)(fn)
 
-    def _parse_human_help(self, doc):
+    @staticmethod
+    def _parse_human_help(doc):
         summary = doc.splitlines()[0].split(':')
         if len(summary) > 1:
             command = summary[0].strip()
-            help = summary[1].strip()
+            cmd_help = summary[1].strip()
         else:
             command = "??"
-            help = summary[0].strip()
+            cmd_help = summary[0].strip()
         return {
             'command': command,
-            'help': help
+            'help': cmd_help
         }
 
-    def _parse_robot_help(self, regex, action):
+    @staticmethod
+    def _parse_robot_help(regex, action):
         if action == 'respond_to':
             return "@botname {}".format(regex.pattern)
         else:
@@ -207,8 +208,12 @@ class Machine:
                 show_valid("Web server started")
 
             if self._settings['KEEP_ALIVE']:
-                _thread.start_new_thread(self._keepalive, tuple())
-                show_valid("Keepalive thread started [Interval: %ss]" % self._settings['KEEP_ALIVE'])
+                self._keep_alive_thread = Thread(target=self._keepalive)
+                self._keep_alive_thread.daemon = True
+                self._keep_alive_thread.start()
+                show_valid(
+                    "Keepalive thread started [Interval: %ss]" % self._settings['KEEP_ALIVE']
+                )
 
             show_valid("Dispatcher started")
             self._dispatcher.start()

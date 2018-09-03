@@ -48,7 +48,8 @@ class EventDispatcher:
     def _find_listeners(self, type):
         return [action for action in self._plugin_actions[type].values()]
 
-    def _gen_message(self, event, plugin_class_name):
+    @staticmethod
+    def _gen_message(event, plugin_class_name):
         return Message(MessagingClient(), event, plugin_class_name)
 
     def _get_bot_id(self):
