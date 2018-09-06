@@ -114,14 +114,23 @@ Out of the box, Slack Machine provides 2 options for storage backend:
 
   *Class*: ``machine.storage.backends.redis.RedisStorage``
 
-So if, for example, you want to configure Slack Machine to use Redis as a storage backend, with your Redis 
+- **HBase**: this backend stores data in `HBase`_. HBase is a columnar store. This backend is for
+advanced users only. You should only use it if you already have a HBase cluster running and cannot
+use Redis for some reason. This backend requires 2 variables to be set in your ``local_settings.py``:
+``HBASE_URL`` and ``HBASE_TABLE``.
+
+    *Class*: ``machine.storage.backends.hbase.HBaseStorage``
+
+So if, for example, you want to configure Slack Machine to use Redis as a storage backend, with your Redis
 instance running on *localhost* on the default port, you would add this to your ``local_settings.py``:
 
 .. code-block:: python
-    
+
     STORAGE_BACKEND = 'machine.storage.backends.redis.RedisStorage'
     REDIS_URL = redis://localhost:6379'
 
 .. _Redis: https://redis.io/
+
+.. _HBase: https://hbase.apache.org/
 
 That's all there is to it!

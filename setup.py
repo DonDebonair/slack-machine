@@ -79,7 +79,8 @@ setup(
     install_requires=dependencies,
     python_requires='~=3.3',
     extras_require={
-        'redis': ['redis', 'hiredis']
+        'redis': ['redis', 'hiredis'],
+        'hbase': ['Cython==0.28.5', 'happybase']
     },
     classifiers=[
         "Development Status :: 3 - Alpha",
