@@ -70,7 +70,7 @@ class Machine:
             logger.debug("PLUGINS: %s", self._settings['PLUGINS'])
             for plugin in self._settings['PLUGINS']:
                 for class_name, cls in import_string(plugin):
-                    if MachineBasePlugin in cls.__bases__ and cls is not MachineBasePlugin:
+                    if issubclass(cls, MachineBasePlugin) and cls is not MachineBasePlugin:
                         logger.debug("Found a Machine plugin: {}".format(plugin))
                         storage = PluginStorage(class_name)
                         instance = cls(self._settings, MessagingClient(),
