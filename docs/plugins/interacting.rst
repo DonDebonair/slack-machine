@@ -74,6 +74,20 @@ will open a DM convo between the sender of the original message and the bot (if 
 already) and send a message there. If the original message was already received in a DM channel, 
 this is no different than using ``reply()`` or ``reply_webapi()``.
 
+Alias Response
+!~~~~~~~~~~~~~
+
+The *ALIASES* configuration setting allows the bot to respond to a trigger symbol instead of a direct @botname.
+
+Example: 
+
+If `ALIASES='!,%'` was set in `local_settings.py` then a `@respond_to('Release the hounds')` decorator 
+would fire under the following conditions::
+
+  @botname release the hounds
+  !release the hounds
+  %release the hounds
+
 Message properties
 ------------------
 
