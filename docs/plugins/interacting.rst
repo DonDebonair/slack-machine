@@ -75,13 +75,13 @@ already) and send a message there. If the original message was already received 
 this is no different than using ``reply()`` or ``reply_webapi()``.
 
 Alias Response
-!~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 
 The *ALIASES* configuration setting allows the bot to respond to a trigger symbol instead of a direct @botname.
 
-Example: 
+Example:
 
-If `ALIASES='!,%'` was set in `local_settings.py` then a `@respond_to('Release the hounds')` decorator 
+If `ALIASES='!,%'` was set in `local_settings.py` then a `@respond_to('Release the hounds')` decorator
 would fire under the following conditions::
 
   @botname release the hounds
