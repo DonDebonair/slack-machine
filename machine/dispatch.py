@@ -19,10 +19,11 @@ class EventDispatcher:
         self._plugin_actions = plugin_actions
         self._pool = ThreadPool()
         alias_regex = ''
-        if getattr(_settings, 'ALIASES', None):
-            logger.info('using aliases %s', _settings.ALIASES)
+        if _settings.get('ALIASES', None):
+            logger.debug("Setting aliases to {}".format(_settings.get('ALIASES')))
+            logger.info('using aliases %s', _settings.get('ALIASES'))
             alias_regex = '|(?P<alias>{})'.format(
-                '|'.join([re.escape(s) for s in _settings.ALIASES.split(',')]))
+                '|'.join([re.escape(s) for s in _settings.get('ALIASES').split(',')]))
         self.RESPOND_MATCHER = re.compile(r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$'.format(alias_regex))
 
     def start(self):
