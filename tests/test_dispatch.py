@@ -78,7 +78,7 @@ def plugin_actions(fake_plugin, fake_plugin2):
     return plugin_actions
 
 
-@pytest.fixture(params=[None, {"ALIASES": "!,$"}], ids=["No Alias", "Aliases"])
+@pytest.fixture(params=[None, {"ALIASES": "!"}, {"ALIASES": "!,$"}], ids=["No Alias", "Alias", "Aliases"])
 def dispatcher(mocker, plugin_actions, request):
     mocker.patch('machine.dispatch.ThreadPool', autospec=True)
     mocker.patch('machine.singletons.SlackClient', autospec=True)
@@ -166,14 +166,16 @@ def test_check_bot_mention_alias(dispatcher):
 
     mention_msg_event_no_alias_1 = {'text': '!hi', 'channel': 'C1'}
     event = dispatcher._check_bot_mention(mention_msg_event_no_alias_1)
-    if dispatcher._aliases:
+    if dispatcher._aliases and '!' in dispatcher._aliases['ALIASES']:
         assert event == {'text': 'hi', 'channel': 'C1'}
     else:
         assert event is None
 
     mention_msg_event_no_alias_2 = {'text': '$hi', 'channel': 'C1'}
     event = dispatcher._check_bot_mention(mention_msg_event_no_alias_2)
-    if dispatcher._aliases:
+    if dispatcher._aliases and '$' in dispatcher._aliases['ALIASES']:
         assert event == {'text': 'hi', 'channel': 'C1'}
+    elif dispatcher._aliases and '!' in dispatcher._aliases['ALIASES']:
+        assert event is None
     else:
         assert event is None
