@@ -78,16 +78,17 @@ def plugin_actions(fake_plugin, fake_plugin2):
     return plugin_actions
 
 
-@pytest.fixture
-def dispatcher(mocker, plugin_actions):
+@pytest.fixture(params=[None, {"ALIASES": "!,$"}], ids=["No Alias", "Aliases"])
+def dispatcher(mocker, plugin_actions, request):
     mocker.patch('machine.dispatch.ThreadPool', autospec=True)
     mocker.patch('machine.singletons.SlackClient', autospec=True)
     mocker.patch('machine.singletons.BackgroundScheduler', autospec=True)
-    dispatch_instance = EventDispatcher(plugin_actions)
+    dispatch_instance = EventDispatcher(plugin_actions, request.param)
     mocker.patch.object(dispatch_instance, '_get_bot_id')
     dispatch_instance._get_bot_id.return_value = '123'
     mocker.patch.object(dispatch_instance, '_get_bot_name')
     dispatch_instance._get_bot_name.return_value = 'superbot'
+    dispatch_instance._aliases = request.param
     return dispatch_instance
 
 
@@ -135,6 +136,7 @@ def test_handle_event_respond_to(dispatcher, fake_plugin, fake_plugin2):
 
 
 def test_check_bot_mention(dispatcher):
+
     normal_msg_event = {'text': 'hi', 'channel': 'C1'}
     event = dispatcher._check_bot_mention(normal_msg_event)
     assert event is None
@@ -158,3 +160,20 @@ def test_check_bot_mention(dispatcher):
     mention_msg_event_dm = {'text': 'hi', 'channel': 'D1'}
     event = dispatcher._check_bot_mention(mention_msg_event_dm)
     assert event == {'text': 'hi', 'channel': 'D1'}
+
+
+def test_check_bot_mention_alias(dispatcher):
+
+    mention_msg_event_no_alias_1 = {'text': '!hi', 'channel': 'C1'}
+    event = dispatcher._check_bot_mention(mention_msg_event_no_alias_1)
+    if dispatcher._aliases:
+        assert event == {'text': 'hi', 'channel': 'C1'}
+    else:
+        assert event is None
+
+    mention_msg_event_no_alias_2 = {'text': '$hi', 'channel': 'C1'}
+    event = dispatcher._check_bot_mention(mention_msg_event_no_alias_2)
+    if dispatcher._aliases:
+        assert event == {'text': 'hi', 'channel': 'C1'}
+    else:
+        assert event is None

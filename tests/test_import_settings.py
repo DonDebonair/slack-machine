@@ -12,6 +12,8 @@ def test_normal_import_settings():
                                    'machine.plugins.builtin.fun.memes.MemePlugin']
     assert 'SLACK_API_TOKEN' in settings
     assert settings['SLACK_API_TOKEN'] == 'xoxo-abc123'
+    assert 'ALIASES' in settings
+    assert settings['ALIASES'] == '!,$'
     assert 'MY_PLUGIN_SETTING' in settings
     assert settings['MY_PLUGIN_SETTING'] == 'foobar'
     assert '_THIS_SHOULD_NOT_REGISTER' not in settings
@@ -31,7 +33,8 @@ def test_env_import_settings():
     with patch.dict('os.environ', {
         'SM_SETTING_1': 'SETTING1',
         'XM_SETTING_2': 'SETTING2',
-        'SM_SLACK_API_TOKEN': 'xoxo-somethingelse'
+        'SM_SLACK_API_TOKEN': 'xoxo-somethingelse',
+        'SM_ALIASES': '!,$'
     }):
         settings, found = import_settings('tests.local_test_settings')
         assert found
@@ -40,3 +43,4 @@ def test_env_import_settings():
         assert 'SETTING_2' not in settings
         assert 'SLACK_API_TOKEN' in settings
         assert settings['SLACK_API_TOKEN'] == 'xoxo-somethingelse'
+        assert settings['ALIASES'] == '!,$'
