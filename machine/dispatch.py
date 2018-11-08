@@ -6,25 +6,24 @@ from machine.singletons import Slack
 from machine.utils.pool import ThreadPool
 from machine.plugins.base import Message
 from machine.slack import MessagingClient
-from machine.settings import import_settings
 
 logger = logging.getLogger(__name__)
 
 
 class EventDispatcher:
 
-    def __init__(self, plugin_actions):
-        _settings, _ = import_settings()
+    def __init__(self, plugin_actions, settings=None):
+        self._settings = settings
         self._client = Slack()
         self._plugin_actions = plugin_actions
         self._pool = ThreadPool()
         alias_regex = ''
-        if _settings.get('ALIASES', None):
-            logger.debug("Setting aliases to {}".format(_settings.get('ALIASES')))
-            logger.info('using aliases %s', _settings.get('ALIASES'))
+        if self._settings.get('ALIASES', None):
+            logger.info("Setting aliases to {}".format(self._settings.get('ALIASES')))
             alias_regex = '|(?P<alias>{})'.format(
-                '|'.join([re.escape(s) for s in _settings.get('ALIASES').split(',')]))
-        self.RESPOND_MATCHER = re.compile(r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$'.format(alias_regex))
+                '|'.join([re.escape(s) for s in self._settings.get('ALIASES').split(',')]))
+        self.RESPOND_MATCHER = re.compile(
+            r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$'.format(alias_regex))
 
     def start(self):
         while True:
