@@ -63,7 +63,7 @@ class Machine:
             puts("Loading plugins...")
             self.load_plugins()
             logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
-            self._dispatcher = EventDispatcher(self._plugin_actions)
+            self._dispatcher = EventDispatcher(self._plugin_actions, self._settings)
 
     def load_plugins(self):
         with indent(4):

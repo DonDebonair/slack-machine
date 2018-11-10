@@ -14,8 +14,8 @@ The :py:meth:`~machine.plugins.decorators.respond_to` decorator tells Slack Mach
 for messages mentioning your bot and matching a specific pattern. Slack Machine will hear messages 
 sent in any channel or private group it is a member of. For a message to trigger a function 
 decorated by ``@respond_to(...)``, the message has to *start* with a mention of your 
-bot. The exception is direct messages sent to the bot, they don't have to include a mention 
-to trigger ``@respond_to``.
+bot or with any alias the user configured using the ``ALIASES`` setting. The exception is direct
+messages sent to the bot, they don't have to include a mention to trigger ``@respond_to``.
 
 ``@respond_to`` takes 2 parameters:
     

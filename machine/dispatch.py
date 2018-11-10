@@ -11,12 +11,18 @@ logger = logging.getLogger(__name__)
 
 
 class EventDispatcher:
-    RESPOND_MATCHER = re.compile(r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):) ?(?P<text>.*)$')
 
-    def __init__(self, plugin_actions):
+    def __init__(self, plugin_actions, settings=None):
         self._client = Slack()
         self._plugin_actions = plugin_actions
         self._pool = ThreadPool()
+        alias_regex = ''
+        if settings and "ALIASES" in settings:
+            logger.info("Setting aliases to {}".format(settings['ALIASES']))
+            alias_regex = '|(?P<alias>{})'.format(
+                '|'.join([re.escape(s) for s in settings['ALIASES'].split(',')]))
+        self.RESPOND_MATCHER = re.compile(
+            r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$'.format(alias_regex))
 
     def start(self):
         while True:
@@ -74,6 +80,10 @@ class EventDispatcher:
             atuser = matches.get('atuser')
             username = matches.get('username')
             text = matches.get('text')
+            alias = matches.get('alias')
+
+            if alias:
+                atuser = bot_id
 
             if atuser != bot_id and username != bot_name:
                 # a channel message at other user

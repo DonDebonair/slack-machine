@@ -33,6 +33,20 @@ Be cautious, only http proxy is supported for now.
 If you find you have issues with Slack Machine disconnecting, try enabling the keep alive
 feature by setting ``KEEP_ALIVE`` to an integer (interval in seconds to send keep alive pings).
 
+Setting aliases
+~~~~~~~~~~~~~~~
+
+The ``ALIASES`` configuration setting allows the bot to respond to a trigger symbol instead of a
+direct @botname.
+
+Example:
+
+If ``ALIASES='!,%'`` was set in ``local_settings.py`` then the bot would respond to the following
+phrases::
+
+    @botname release the hounds
+    !release the hounds
+    %release the hounds
 
 Enabling plugins
 """"""""""""""""
