@@ -11,5 +11,5 @@ pytest-cov==2.6.1
 Sphinx==1.8.3
 sphinx-autobuild==0.7.1
 redis==2.10.6
-Cython==0.29.2
+Cython==0.29.5
 happybase==1.1.0
