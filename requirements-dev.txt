@@ -8,7 +8,7 @@ flake8==3.5.0
 twine==1.12.1
 coverage==4.5.2
 pytest-cov==2.6.1
-Sphinx==1.8.3
+Sphinx==1.8.5
 sphinx-autobuild==0.7.1
 redis==2.10.6
 Cython==0.29.2
