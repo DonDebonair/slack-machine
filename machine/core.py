@@ -145,7 +145,8 @@ class Machine:
                         'class': cls_instance,
                         'class_name': plugin_class,
                         'function': fn,
-                        'regex': regex
+                        'regex': regex,
+                        'require_admin': config['require_admin']
                     }
                     key = "{}-{}".format(fq_fn_name, regex.pattern)
                     self._plugin_actions[action][key] = event_handler

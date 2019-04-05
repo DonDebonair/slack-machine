@@ -16,6 +16,7 @@ class EventDispatcher:
         self._client = Slack()
         self._plugin_actions = plugin_actions
         self._pool = ThreadPool()
+        self._settings = settings
         alias_regex = ''
         if settings and "ALIASES" in settings:
             logger.info("Setting aliases to {}".format(settings['ALIASES']))
@@ -101,4 +102,8 @@ class EventDispatcher:
             match = matcher.search(event.get('text', ''))
             if match:
                 message = self._gen_message(event, l['class_name'])
+                if l['require_admin'] and self._settings.get('ADMIN_USERS', False):
+                    if message.sender.name not in self._settings['ADMIN_USERS']:
+                        message.reply("Command requires admin privileges")
+                        return
                 l['function'](message, **match.groupdict())

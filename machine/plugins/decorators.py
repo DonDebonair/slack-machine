@@ -28,7 +28,7 @@ def process(slack_event_type):
     return process_decorator
 
 
-def listen_to(regex, flags=re.IGNORECASE):
+def listen_to(regex, flags=re.IGNORECASE, require_admin=False):
     """Listen to messages matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that match a regex pattern.
@@ -50,12 +50,13 @@ def listen_to(regex, flags=re.IGNORECASE):
         f.metadata['plugin_actions']['listen_to']['regex'] = \
             f.metadata['plugin_actions']['listen_to'].get('regex', [])
         f.metadata['plugin_actions']['listen_to']['regex'].append(re.compile(regex, flags))
+        f.metadata['plugin_actions']['listen_to']['require_admin'] = require_admin
         return f
 
     return listen_to_decorator
 
 
-def respond_to(regex, flags=re.IGNORECASE):
+def respond_to(regex, flags=re.IGNORECASE, require_admin=False):
     """Listen to messages mentioning the bot and matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that are directed to the bot
@@ -79,6 +80,7 @@ def respond_to(regex, flags=re.IGNORECASE):
         f.metadata['plugin_actions']['respond_to']['regex'] = \
             f.metadata['plugin_actions']['respond_to'].get('regex', [])
         f.metadata['plugin_actions']['respond_to']['regex'].append(re.compile(regex, flags))
+        f.metadata['plugin_actions']['respond_to']['require_admin'] = require_admin
         return f
 
     return respond_to_decorator
