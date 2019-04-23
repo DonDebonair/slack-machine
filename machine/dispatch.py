@@ -22,7 +22,11 @@ class EventDispatcher:
             alias_regex = '|(?P<alias>{})'.format(
                 '|'.join([re.escape(s) for s in settings['ALIASES'].split(',')]))
         self.RESPOND_MATCHER = re.compile(
-            r'^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$'.format(alias_regex))
+            r"^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$".format(
+                alias_regex
+            ),
+            re.DOTALL,
+        )
 
     def start(self):
         while True:
