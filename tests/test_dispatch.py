@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-from machine.slack import MessagingClient
+from machine.clients.slack import SlackClient
 from machine.dispatch import EventDispatcher
 from machine.plugins.base import Message
 from machine.storage.backends.base import MachineBaseStorage
@@ -11,7 +11,7 @@ from tests.fake_plugins import FakePlugin, FakePlugin2
 
 @pytest.fixture
 def msg_client(mocker):
-    return mocker.MagicMock(spec=MessagingClient)
+    return mocker.MagicMock(spec=SlackClient)
 
 
 @pytest.fixture

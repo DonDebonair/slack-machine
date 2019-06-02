@@ -59,7 +59,7 @@ class CaseInsensitiveDict(MutableMapping):
             in self._store.items()
         )
 
-    def __eq__(self, other):
+    def __eq__(self, other: Mapping) -> bool:
         if isinstance(other, Mapping):
             other = CaseInsensitiveDict(other)
         else:

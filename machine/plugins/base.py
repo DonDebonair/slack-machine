@@ -1,4 +1,15 @@
+from datetime import datetime
+from typing import Dict, Any, Optional, Union, List
+
 from blinker import signal
+from slack.web.classes.attachments import Attachment
+from slack.web.classes.blocks import Block
+
+from machine.clients.slack import SlackClient
+from machine.models import Channel
+from machine.models import User
+from machine.storage import PluginStorage
+from machine.utils.collections import CaseInsensitiveDict
 
 
 class MachineBasePlugin:
@@ -16,7 +27,7 @@ class MachineBasePlugin:
         specifically for their plugin.
     """
 
-    def __init__(self, settings, client, storage):
+    def __init__(self, client: SlackClient, settings: CaseInsensitiveDict, storage: PluginStorage):
         self._client = client
         self.storage = storage
         self.settings = settings
@@ -35,7 +46,7 @@ class MachineBasePlugin:
         pass
 
     @property
-    def users(self):
+    def users(self) -> Dict[str, User]:
         """Dictionary of all users in the Slack workspace
 
         :return: a dictionary of all users in the Slack workspace, where the key is the user id and
@@ -47,7 +58,7 @@ class MachineBasePlugin:
         return self._client.users
 
     @property
-    def channels(self):
+    def channels(self) -> Dict[str, Channel]:
         """List of all channels in the Slack workspace
 
         This is a list of all channels in the Slack workspace that the bot is aware of. This
@@ -61,7 +72,15 @@ class MachineBasePlugin:
         """
         return self._client.channels
 
-    def retrieve_bot_info(self):
+    def find_channel_by_name(self, channel_name: str) -> Optional[Channel]:
+        if channel_name.startswith('#'):
+            channel_name = channel_name[1:]
+        for c in self.channels.values():
+            if channel_name.lower() == c.name_normalized.lower():
+                return c
+
+    @property
+    def bot_info(self) -> Dict[str, str]:
         """Information about the bot user in Slack
 
         This will return a dictionary with information about the bot user in Slack that represents
@@ -69,9 +88,9 @@ class MachineBasePlugin:
 
         :return: Bot user
         """
-        return self._client.retrieve_bot_info()
+        return self._client.bot_info
 
-    def at(self, user):
+    def at(self, user: User) -> str:
         """Create a mention of the provided user
 
         Create a mention of the provided user in the form of ``<@[user_id]>``. This method is
@@ -82,56 +101,34 @@ class MachineBasePlugin:
         :param user: user your want to mention
         :return: user mention
         """
-        return self._client.fmt_mention(user)
+        return user.fmt_mention()
 
-    def say(self, channel, text, thread_ts=None):
+    def say(self, channel: Union[Channel, str], text: str,
+            attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+            blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+            thread_ts: Optional[str] = None, ephemeral_user: Union[User, str, None] = None,
+            **kwargs):
         """Send a message to a channel
 
-        Send a message to a channel using the RTM API. Only `basic Slack formatting`_ allowed.
-        For richer formatting using attachments, use
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.say_webapi`
-
-        .. _basic Slack formatting: https://api.slack.com/docs/message-formatting
-
-        :param channel: id or name of channel to send message to. Can be public or private (group)
-            channel, or DM channel.
-        :param text: message text
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :return: None
-        """
-        self._client.send(channel, text, thread_ts)
-
-    def say_scheduled(self, when, channel, text):
-        """Schedule a message to a channel
-
-        This is the scheduled version of
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
-        It behaves the same, but will send the message at the scheduled time.
-
-
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param channel: id or name of channel to send message to. Can be public or private (group)
-            channel, or DM channel.
-        :param text: message text
-        :return: None
-        """
-        self._client.send_scheduled(when, channel, text)
-
-    def say_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
-        """Send a message to a channel using the WebAPI
-
         Send a message to a channel using the WebAPI. Allows for rich formatting using
-        `attachments`_. Can also reply in-thread and send ephemeral messages, visible to only one
-        user.
+        `blocks`_ and/or `attachments`_. You can provide blocks and attachments as Python dicts or
+        you can use the `convenient classes`_ that the underlying slack client provides.
+        Can also reply in-thread and send ephemeral messages, visible to only one user.
         Ephemeral messages and threaded messages are mutually exclusive, and ``ephemeral_user``
         takes precedence over ``thread_ts``
+        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
+        `chat.postEphemeral`_ request.
 
         .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        .. _convenient classes:
+            https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
 
-        :param channel: id or name of channel to send message to. Can be public or private (group)
-            channel, or DM channel.
+        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
+            message to. Can be public or private (group) channel, or DM channel.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks` _)
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral_user: optional user name or id if the message needs to visible
             to a specific user only
@@ -141,32 +138,45 @@ class MachineBasePlugin:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
-        return self._client.send_webapi(channel, text, attachments, thread_ts, ephemeral_user)
+        return self._client.send(channel, text=text, attachments=attachments, blocks=blocks,
+                                 thread_ts=thread_ts, ephemeral_user=ephemeral_user, **kwargs)
 
-    def say_webapi_scheduled(self, when, channel, text, attachments, ephemeral_user):
-        """Schedule a message to a channel and send it using the WebAPI
+    def say_scheduled(self, when: datetime, channel: Union[Channel, str], text: str,
+                      attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                      blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+                      thread_ts: Optional[str] = None,
+                      ephemeral_user: Union[User, str, None] = None, **kwargs):
+        """Schedule a message to a channel
 
-        This is the scheduled version of
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.say_webapi`.
+        This is the scheduled version of :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
         It behaves the same, but will send the message at the scheduled time.
 
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
+            message to. Can be public or private (group) channel, or DM channel.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
-        :param ephemeral_user: optional user name or id if the message needs to visible
-            to a specific user only
+        :param blocks: optional blocks (see `blocks` _)
+        :param thread_ts: optional timestamp of thread, to send a message in that thread
+        :param ephemeral_user: optional :py:class:`~machine.models.user.User` object or id of user
+            if the message needs to visible to that specific user only
         :return: None
-        """
-        self._client.send_webapi_scheduled(when, channel, text, attachments, ephemeral_user)
 
-    def react(self, channel, ts, emoji):
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        self._client.send_scheduled(when, channel, text=text, attachments=attachments,
+                                    blocks=blocks, thread_ts=thread_ts,
+                                    ephemeral_user=ephemeral_user, **kwargs)
+
+    def react(self, channel: Union[Channel, str], ts: str, emoji: str):
         """React to a message in a channel
 
         Add a reaction to a message in a channel. What message to react to, is determined by the
         combination of the channel and the timestamp of the message.
 
-        :param channel: id or name of channel to send message to. Can be public or private (group)
-            channel, or DM channel.
+        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
+            message to. Can be public or private (group) channel, or DM channel.
         :param ts: timestamp of the message to react to
         :param emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
         :return: Dictionary deserialized from `reactions.add`_ request.
@@ -175,70 +185,55 @@ class MachineBasePlugin:
         """
         return self._client.react(channel, ts, emoji)
 
-    def send_dm(self, user, text):
+    def send_dm(self, user: Union[User, str], text: str,
+                attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
         """Send a Direct Message
 
-        Send a Direct Message to a user by opening a DM channel and sending a message to it.
-        Only `basic Slack formatting`_ allowed. For richer formatting using attachments, use
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm_webapi`
-
-        .. _basic Slack formatting: https://api.slack.com/docs/message-formatting
-
-        :param user: id or name of the user to send direct message to
-        :param text: message text
-        :return: None
-        """
-        self._client.send_dm(user, text)
-
-    def send_dm_scheduled(self, when, user, text):
-        """Schedule a Direct Message
-
-        This is the scheduled version of
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm`. It behaves the same, but will
-        send the DM at the scheduled time.
-
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param user: id or name of the user to send direct message to
-        :param text: message text
-        :return: None
-        """
-        self._client.send_dm_scheduled(when, user, text)
-
-    def send_dm_webapi(self, user, text, attachments=None):
-        """Send a Direct Message through the WebAPI
-
-        Send a Direct Message to a user by opening a DM channel and sending a message to it via
-        the WebAPI. Allows for rich formatting using
-        `attachments`_.
+        Send a Direct Message to a user by opening a DM channel and sending a message to it. Allows
+        for rich formatting using `blocks`_ and/or `attachments`_. You can provide blocks and
+        attachments as Python dicts or you can use the `convenient classes`_ that the underlying
+        slack client provides.
+        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ request.
 
         .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        .. _convenient classes:
+            https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
 
-        :param user: id or name of the user to send direct message to
+        :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks` _)
         :return: Dictionary deserialized from `chat.postMessage`_ request.
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        return self._client.send_dm_webapi(user, text, attachments)
+        return self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def send_dm_webapi_scheduled(self, when, user, text, attachments=None):
-        """Schedule a Direct Message and send it using the WebAPI
+    def send_dm_scheduled(self, when: datetime, user: Union[User, str], text: str,
+                          attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                          blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
+        """Schedule a Direct Message
 
         This is the scheduled version of
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm_webapi`. It behaves the same, but
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm`. It behaves the same, but
         will send the DM at the scheduled time.
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks` _)
         :return: None
-        """
-        self._client.send_dm_webapi_scheduled(when, user, text, attachments)
 
-    def emit(self, event, **kwargs):
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        self._client.send_dm_scheduled(when, user, text=text, attachments=attachments,
+                                       blocks=blocks, **kwargs)
+
+    def emit(self, event: str, **kwargs):
         """Emit an event
 
         Emit an event that plugins can listen for. You can include arbitrary data as keyword
@@ -263,34 +258,34 @@ class Message:
     right channel, replying to the sender, etc.
     """
 
-    def __init__(self, client, msg_event, plugin_class_name):
+    def __init__(self, client: SlackClient, msg_event: Dict[str, Any], plugin_class_name: str):
         self._client = client
         self._msg_event = msg_event
         self._fq_plugin_name = plugin_class_name
 
     @property
-    def sender(self):
+    def sender(self) -> User:
         """The sender of the message
 
         :return: the User the message was sent by
         """
-        return self._client.users.find(self._msg_event['user'])
+        return self._client.users[self._msg_event['user']]
 
     @property
-    def channel(self):
+    def channel(self) -> Channel:
         """The channel the message was sent to
 
         :return: the Channel the message was sent to
         """
-        return self._client.channels.find(self._msg_event['channel'])
+        return self._client.channels[self._msg_event['channel']]
 
     @property
-    def is_dm(self):
-        chan = self._msg_event['channel']
-        return not (chan.startswith('C') or chan.startswith('G'))
+    def is_dm(self) -> bool:
+        channel_id = self._msg_event['channel']
+        return not (channel_id.startswith('C') or channel_id.startswith('G'))
 
     @property
-    def text(self):
+    def text(self) -> str:
         """The body of the actual message
 
         :return: the body (text) of the actual message
@@ -298,7 +293,7 @@ class Message:
         return self._msg_event['text']
 
     @property
-    def at_sender(self):
+    def at_sender(self) -> str:
         """The sender of the message formatted as mention
 
         :return: a string representation of the sender of the message, formatted as `mention`_,
@@ -306,48 +301,32 @@ class Message:
 
         .. _mention: https://api.slack.com/docs/message-formatting#linking_to_channels_and_users
         """
-        return self._client.fmt_mention(self.sender)
+        return self.sender.fmt_mention()
 
-    def say(self, text, thread_ts=None):
+    def say(self, text: str,
+            attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+            blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+            thread_ts: Optional[str] = None, ephemeral: bool = False, **kwargs):
         """Send a new message to the channel the original message was received in
 
-        Send a new message to the channel the original message was received in, using the RTM API.
-        Only `basic Slack formatting`_ allowed. For richer formatting using attachments, use
-        :py:meth:`~machine.plugins.base.Message.say_webapi`
-
-        .. _basic Slack formatting: https://api.slack.com/docs/message-formatting
-
-        :param text: message text
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :return: None
-        """
-        self._client.send(self.channel.id, text, thread_ts)
-
-    def say_scheduled(self, when, text):
-        """Schedule a message
-
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
-        It behaves the same, but will send the message at the scheduled time.
-
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param text: message text
-        :return: None
-        """
-        self._client.send_scheduled(when, self.channel.id, text)
-
-    def say_webapi(self, text, attachments=None, thread_ts=None, ephemeral=False):
-        """Send a new message using the WebAPI to the channel the original message was received in
-
         Send a new message to the channel the original message was received in, using the WebAPI.
-        Allows for rich formatting using `attachments`_. Can also reply to a thread and send an
-        ephemeral message only visible to the sender of the original message.
-        Ephemeral messages and threaded messages are mutually exclusive, and ``ephemeral``
-        takes precedence over ``thread_ts``
+        Allows for rich formatting using `blocks`_ and/or `attachments`_. You can provide blocks
+        and attachments as Python dicts or you can use the `convenient classes`_ that the
+        underlying slack client provides.
+        Can also reply to a thread and send an ephemeral message only visible to the sender of the
+        original message. Ephemeral messages and threaded messages are mutually exclusive, and
+        ``ephemeral`` takes precedence over ``thread_ts``
+        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
+        `chat.postEphemeral`_ request.
 
         .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        .. _convenient classes:
+            https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
 
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
@@ -362,76 +341,74 @@ class Message:
         else:
             ephemeral_user = None
 
-        return self._client.send_webapi(
+        return self._client.send(
             self.channel.id,
-            text,
-            attachments,
-            thread_ts,
-            ephemeral_user,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            thread_ts=thread_ts,
+            ephemeral_user=ephemeral_user,
+            **kwargs
         )
 
-    def say_webapi_scheduled(self, when, text, attachments=None, ephemeral=False):
-        """Schedule a message and send it using the WebAPI
+    def say_scheduled(self, when: datetime, text: str,
+                      attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                      blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+                      thread_ts: Optional[str] = None, ephemeral: bool = False, **kwargs):
+        """Schedule a message
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say_webapi`.
-        It behaves the same, but will send the DM at the scheduled time.
-
-        .. _attachments: https://api.slack.com/docs/message-attachments
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
+        It behaves the same, but will send the message at the scheduled time.
 
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
         :return: None
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
         if ephemeral:
             ephemeral_user = self.sender.id
         else:
             ephemeral_user = None
 
-        self._client.send_webapi_scheduled(when, self.channel.id, text, attachments, ephemeral_user)
+        self._client.send_scheduled(when, self.channel.id, text=text,
+                                    attachments=attachments,
+                                    blocks=blocks,
+                                    thread_ts=thread_ts,
+                                    ephemeral_user=ephemeral_user,
+                                    **kwargs)
 
-    def reply(self, text, in_thread=False):
+    def reply(self, text,
+              attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+              blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+              in_thread: bool = False, ephemeral: bool = False, **kwargs):
         """Reply to the sender of the original message
 
-        Reply to the sender of the original message with a new message, mentioning that user.
-
-        :param text: message text
-        :param in_thread: ``True/False`` wether to reply to the original message in-thread
-        :return: None
-        """
-        if in_thread:
-            self.say(text, thread_ts=self.thread_ts)
-        else:
-            text = self._create_reply(text)
-            self.say(text)
-
-    def reply_scheduled(self, when, text):
-        """Schedule a reply
-
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
-        It behaves the same, but will send the reply at the scheduled time.
-
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param text: message text
-        :return: None
-        """
-        self.say_scheduled(when, self._create_reply(text))
-
-    def reply_webapi(self, text, attachments=None, in_thread=False, ephemeral=False):
-        """Reply to the sender of the original message using the WebAPI
-
-        Reply to the sender of the original message with a new message, mentioning that user. Uses
-        the WebAPI, so rich formatting using `attachments`_ is possible. Can also reply to a thread
-        and send an ephemeral message only visible to the sender of the original message.
-        Ephemeral messages and threaded messages are mutually exclusive, and ``ephemeral``
-        takes precedence over ``thread_ts``
+        Reply to the sender of the original message with a new message, mentioning that user. Rich
+        formatting using `blocks`_ and/or `attachments`_ is possible. You can provide blocks
+        and attachments as Python dicts or you can use the `convenient classes`_ that the
+        underlying slack client provides.
+        Can also reply to a thread and send an ephemeral message only visible to the sender of the
+        original message. In the case of in-thread response, the sender of the original message
+        will not be mentioned. Ephemeral messages and threaded messages are mutually exclusive,
+        and ``ephemeral`` takes precedence over ``thread_ts``
+        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
+        `chat.postEphemeral`_ request.
 
         .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        .. _convenient classes:
+            https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
 
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
         :param in_thread: ``True/False`` wether to reply to the original message in-thread
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
@@ -442,83 +419,89 @@ class Message:
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         if in_thread and not ephemeral:
-            return self.say_webapi(text, attachments=attachments, thread_ts=self.thread_ts)
+            return self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.thread_ts,
+                            **kwargs)
         else:
             text = self._create_reply(text)
-            return self.say_webapi(text, attachments=attachments, ephemeral=ephemeral)
+            return self.say(text, attachments=attachments, blocks=blocks, ephemeral=ephemeral,
+                            **kwargs)
 
-    def reply_webapi_scheduled(self, when, text, attachments=None, ephemeral=False):
-        """Schedule a reply and send it using the WebAPI
+    def reply_scheduled(self, when: datetime, text: str,
+                        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+                        in_thread: bool = False, ephemeral: bool = False, **kwargs):
+        """Schedule a reply and send it
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_webapi`.
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
         It behaves the same, but will send the reply at the scheduled time.
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :param in_thread: ``True/False`` wether to reply to the original message in-thread
         :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
         :return: None
-        """
-        self.say_webapi_scheduled(when, self._create_reply(text), attachments, ephemeral)
 
-    def reply_dm(self, text):
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        if in_thread and not ephemeral:
+            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks,
+                                      thread_ts=self.thread_ts, **kwargs)
+        else:
+            text = self._create_reply(text)
+            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks,
+                                      ephemeral=ephemeral, **kwargs)
+
+    def reply_dm(self, text: str,
+                 attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                 blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
         """Reply to the sender of the original message with a DM
 
         Reply in a Direct Message to the sender of the original message by opening a DM channel and
-        sending a message to it.
-
-        :param text: message text
-        :return: None
-        """
-        self._client.send_dm(self.sender.id, text)
-
-    def reply_dm_scheduled(self, when, text):
-        """Schedule a DM reply
-
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`. It
-        behaves the same, but will send the DM at the scheduled time.
-
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param text: message text
-        :return: None
-        """
-        self._client.send_dm_scheduled(when, self.sender.id, text)
-
-    def reply_dm_webapi(self, text, attachments=None):
-        """Reply to the sender of the original message with a DM using the WebAPI
-
-        Reply in a Direct Message to the sender of the original message by opening a DM channel and
-        sending a message to it via the WebAPI. Allows for rich formatting using
-        `attachments`_.
+        sending a message to it. Allows for rich formatting using `blocks`_ and/or `attachments`_.
+        You can provide blocks and attachments as Python dicts or you can use the
+        `convenient classes`_ that the underlying slack client provides.
+        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ request.
 
         .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        .. _convenient classes:
+            https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
 
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
         :return: Dictionary deserialized from `chat.postMessage`_ request.
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        return self._client.send_dm_webapi(self.sender.id, text, attachments)
+        return self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks,
+                                    **kwargs)
 
-    def reply_dm_webapi_scheduled(self, when, text, attachments=None):
-        """Schedule a DM reply and send it using the WebAPI
+    def reply_dm_scheduled(self, when: datetime, text: str,
+                           attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+                           blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
+        """Schedule a DM reply and send it
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm_webapi`.
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`.
         It behaves the same, but will send the DM at the scheduled time.
-
-        .. _attachments: https://api.slack.com/docs/message-attachments
 
         :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
         :return: None
-        """
-        self._client.send_dm_webapi_scheduled(when, self.sender.id, text, attachments)
 
-    def react(self, emoji):
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        self._client.send_dm_scheduled(when, self.sender.id, text=text, attachments=attachments,
+                                       blocks=blocks, **kwargs)
+
+    def react(self, emoji: str):
         """React to the original message
 
         Add a reaction to the original message
@@ -532,12 +515,12 @@ class Message:
 
     def _create_reply(self, text):
         if not self.is_dm:
-            return "{}: {}".format(self.at_sender, text)
+            return f"{self.at_sender}: {text}"
         else:
             return text
 
     @property
-    def thread_ts(self):
+    def thread_ts(self) -> str:
         """The timestamp of the original message
 
         :return: the timestamp of the original message
@@ -552,13 +535,13 @@ class Message:
     def __str__(self):
         return "Message '{}', sent by user @{} in channel #{}".format(
             self.text,
-            self.sender.name,
+            self.sender.profile.real_name,
             self.channel.name
         )
 
     def __repr__(self):
         return "Message(text={}, sender={}, channel={})".format(
             repr(self.text),
-            repr(self.sender.name),
+            repr(self.sender.profile.real_name),
             repr(self.channel.name)
         )

@@ -1,12 +1,14 @@
 import os
 import logging
 from importlib import import_module
+from typing import Tuple
+
 from machine.utils.collections import CaseInsensitiveDict
 
 logger = logging.getLogger(__name__)
 
 
-def import_settings(settings_module='local_settings'):
+def import_settings(settings_module='local_settings') -> Tuple[CaseInsensitiveDict, bool]:
     default_settings = {
         'PLUGINS': ['machine.plugins.builtin.general.PingPongPlugin',
                     'machine.plugins.builtin.general.HelloPlugin',

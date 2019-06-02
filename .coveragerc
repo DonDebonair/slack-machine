@@ -5,6 +5,8 @@ omit =
     machine/plugins/builtin/*
     # we won't test the run script
     machine/bin/*
+    # we don't care about vendored libs
+    machine/vendor/*
 
 [report]
 # Regexes for lines to exclude from consideration

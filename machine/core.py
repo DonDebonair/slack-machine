@@ -2,22 +2,33 @@ import inspect
 import logging
 import sys
 import time
+from typing import Callable
 from threading import Thread
 
 import dill
 from clint.textui import puts, indent, colored
+from slack import RTMClient
+
 from machine.vendor import bottle
 
 from machine.dispatch import EventDispatcher
 from machine.plugins.base import MachineBasePlugin
 from machine.settings import import_settings
-from machine.singletons import Slack, Scheduler, Storage
-from machine.slack import MessagingClient
+from machine.clients.singletons.scheduling import Scheduler
+from machine.clients.singletons.storage import Storage
+from machine.clients.slack import SlackClient
+from machine.clients.singletons.slack import LowLevelSlackClient
 from machine.storage import PluginStorage
 from machine.utils.module_loading import import_string
 from machine.utils.text import show_valid, show_invalid, warn, error, announce
 
 logger = logging.getLogger(__name__)
+
+
+def callable_with_sanitized_event(fn: Callable):
+    def sanitzed_call(**payload):
+        return fn(payload['data'])
+    return sanitzed_call
 
 
 class Machine:
@@ -45,7 +56,7 @@ class Machine:
             if 'SLACK_API_TOKEN' not in self._settings:
                 error("No SLACK_API_TOKEN found in settings! I need that to work...")
                 sys.exit(1)
-            self._client = Slack()
+            self._client = LowLevelSlackClient()
             puts("Initializing storage using backend: {}".format(self._settings['STORAGE_BACKEND']))
             self._storage = Storage.get_instance()
             logger.debug("Storage initialized!")
@@ -60,10 +71,10 @@ class Machine:
                 'human': {},
                 'robot': {}
             }
+            self._dispatcher = EventDispatcher(self._plugin_actions, self._settings)
             puts("Loading plugins...")
             self.load_plugins()
             logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
-            self._dispatcher = EventDispatcher(self._plugin_actions, self._settings)
 
     def load_plugins(self):
         with indent(4):
@@ -73,8 +84,7 @@ class Machine:
                     if issubclass(cls, MachineBasePlugin) and cls is not MachineBasePlugin:
                         logger.debug("Found a Machine plugin: {}".format(plugin))
                         storage = PluginStorage(class_name)
-                        instance = cls(self._settings, MessagingClient(),
-                                       storage)
+                        instance = cls(SlackClient(), self._settings, storage)
                         missing_settings = self._register_plugin(class_name, instance)
                         if missing_settings:
                             show_invalid(class_name)
@@ -99,12 +109,6 @@ class Machine:
         if missing_settings:
             return missing_settings
 
-        if hasattr(cls_instance, 'catch_all'):
-            self._plugin_actions['catch_all'][plugin_class] = {
-                'class': cls_instance,
-                'class_name': plugin_class,
-                'function': getattr(cls_instance, 'catch_all')
-            }
         if cls_instance.__doc__:
             class_help = cls_instance.__doc__.splitlines()[0]
         else:
@@ -132,13 +136,7 @@ class Machine:
         for action, config in metadata['plugin_actions'].items():
             if action == 'process':
                 event_type = config['event_type']
-                event_handlers = self._plugin_actions['process'].get(event_type, {})
-                event_handlers[fq_fn_name] = {
-                    'class': cls_instance,
-                    'class_name': plugin_class,
-                    'function': fn
-                }
-                self._plugin_actions['process'][event_type] = event_handlers
+                RTMClient.on(event=event_type, callback=callable_with_sanitized_event(fn))
             if action == 'respond_to' or action == 'listen_to':
                 for regex in config['regex']:
                     event_handler = {
@@ -181,16 +179,12 @@ class Machine:
     def _keepalive(self):
         while True:
             time.sleep(self._settings['KEEP_ALIVE'])
-            self._client.server.send_to_websocket({'type': 'ping'})
+            self._client.ping()
             logger.debug("Client Ping!")
 
     def run(self):
         announce("\nStarting Slack Machine:")
         with indent(4):
-            connected = self._client.rtm_connect()
-            if not connected:
-                logger.error("Could not connect to Slack! Aborting...")
-                sys.exit(1)
             show_valid("Connected to Slack")
             Scheduler.get_instance().start()
             show_valid("Scheduler started")
