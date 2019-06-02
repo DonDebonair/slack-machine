@@ -10,24 +10,27 @@ class MessagingClient:
     def channels(self):
         return Slack.get_instance().server.channels
 
-    def retrieve_bot_info(self):
+    @staticmethod
+    def retrieve_bot_info():
         return Slack.get_instance().server.login_data['self']
 
     def fmt_mention(self, user):
         u = self.users.find(user)
         return "<@{}>".format(u.id)
 
-    def send(self, channel, text, thread_ts=None):
+    @staticmethod
+    def send(channel, text, thread_ts=None):
         Slack.get_instance().rtm_send_message(channel, text, thread_ts)
 
     def send_scheduled(self, when, channel, text):
         args = [self, channel, text]
         kwargs = {'thread_ts': None}
 
-        Scheduler.get_instance().add_job(MessagingClient.send, trigger='date', args=args,
+        Scheduler.get_instance().add_job(trigger='date', args=args,
                                          kwargs=kwargs, run_date=when)
 
-    def send_webapi(self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
+    @staticmethod
+    def send_webapi(channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
         method = 'chat.postMessage'
 
         # This is the only way to conditionally add thread_ts
@@ -58,10 +61,11 @@ class MessagingClient:
             'ephemeral_user': ephemeral_user
         }
 
-        Scheduler.get_instance().add_job(MessagingClient.send_webapi, trigger='date', args=args,
+        Scheduler.get_instance().add_job(trigger='date', args=args,
                                          kwargs=kwargs, run_date=when)
 
-    def react(self, channel, ts, emoji):
+    @staticmethod
+    def react(channel, ts, emoji):
         return Slack.get_instance().api_call(
             'reactions.add',
             name=emoji,
@@ -69,7 +73,8 @@ class MessagingClient:
             timestamp=ts
         )
 
-    def open_im(self, user):
+    @staticmethod
+    def open_im(user):
         response = Slack.get_instance().api_call(
             'im.open',
             user=user

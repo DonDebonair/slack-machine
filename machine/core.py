@@ -76,7 +76,7 @@ class Machine:
                         instance = cls(self._settings, MessagingClient(),
                                        storage)
                         missing_settings = self._register_plugin(class_name, instance)
-                        if (missing_settings):
+                        if missing_settings:
                             show_invalid(class_name)
                             with indent(4):
                                 error_msg = "The following settings are missing: {}".format(

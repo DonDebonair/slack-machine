@@ -38,6 +38,3 @@ def import_settings(settings_module='local_settings'):
             settings[k] = v
 
     return settings, found_local_settings
-
-
-globals().update(import_settings()[0])
