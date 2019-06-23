@@ -3,4 +3,4 @@ dill==0.2.9
 apscheduler==3.6.0
 blinker-alt==1.5
 clint==0.5.1
-bottle==0.12.16
+bottle==0.12.17
