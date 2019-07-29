@@ -6,7 +6,7 @@ pytest==5.0.1
 tox==3.13.1
 flake8==3.7.8
 twine==1.13.0
-coverage==4.5.3
+coverage==4.5.4
 pytest-cov==2.7.1
 Sphinx==2.1.2
 sphinx-autobuild==0.7.1
