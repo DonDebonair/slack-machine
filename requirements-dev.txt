@@ -10,6 +10,6 @@ coverage==4.5.4
 pytest-cov==2.7.1
 Sphinx==2.1.2
 sphinx-autobuild==0.7.1
-redis==3.3.6
+redis==3.3.7
 Cython==0.29.13
 happybase==1.2.0
