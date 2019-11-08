@@ -9,7 +9,10 @@ class MemoryStorage(MachineBaseStorage):
         super().__init__(settings)
         self._storage = {}
 
-    def get(self, key):
+    async def connect(self):
+        pass
+
+    async def get(self, key):
         stored = self._storage.get(key, None)
         if not stored:
             return None
@@ -20,14 +23,14 @@ class MemoryStorage(MachineBaseStorage):
             else:
                 return stored[0]
 
-    def set(self, key, value, expires=None):
+    async def set(self, key, value, expires=None):
         if expires:
             expires_at = datetime.utcnow() + timedelta(seconds=expires)
         else:
             expires_at = None
         self._storage[key] = (value, expires_at)
 
-    def has(self, key):
+    async def has(self, key):
         stored = self._storage.get(key, None)
         if not stored:
             return False
@@ -38,8 +41,8 @@ class MemoryStorage(MachineBaseStorage):
             else:
                 return True
 
-    def delete(self, key):
+    async def delete(self, key):
         del self._storage[key]
 
-    def size(self):
+    async def size(self):
         return sys.getsizeof(self._storage)  # pragma: no cover

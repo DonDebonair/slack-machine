@@ -1,47 +1,69 @@
-from unittest.mock import MagicMock
+# -*- coding: utf-8 -*-
 
+from unittest import mock
+
+import aioredis
 import pytest
-from redis import StrictRedis
 
 from machine.storage.backends.redis import RedisStorage
 
+from tests.helpers import async_test, make_coroutine_mock
+from tests.helpers.expect import ExpectMock, expect
 
-@pytest.fixture(scope='module')
+
+@pytest.fixture(scope="module")
 def redis_client():
-    return MagicMock(spec=StrictRedis)
+    return ExpectMock(spec=aioredis.Redis)
 
 
 @pytest.fixture
-def redis_storage(mocker, redis_client):
-    mocker.patch('machine.storage.backends.redis.StrictRedis', autospec=True)
-    settings = {'REDIS_URL': 'redis://nohost:1234'}
+def redis_storage(expect, redis_client):
+    create_redis_pool = mock.patch(
+        "machine.storage.backends.redis.aioredis.create_redis_pool"
+    )
+    create_redis_pool.return_value = redis_client
+    settings = {"REDIS_URL": "redis://nohost:1234"}
     storage = RedisStorage(settings)
     storage._redis = redis_client
     return storage
 
 
-def test_set(redis_storage, redis_client):
-    redis_storage.set('key1', 'value1')
-    redis_client.set.assert_called_with('SM:key1', 'value1', None)
-    redis_storage.set('key2', 'value2', 42)
-    redis_client.set.assert_called_with('SM:key2', 'value2', 42)
+@async_test
+async def test_set(redis_storage, redis_client):
+    redis_client.set.expect("SM:key1", "value1", None).returns(
+        make_coroutine_mock(None)
+    )
+    redis_client.set.expect("SM:key2", "value2", 42).returns(make_coroutine_mock(None))
+
+    await redis_storage.set("key1", "value1")
+    await redis_storage.set("key2", "value2", 42)
 
 
-def test_get(redis_storage, redis_client):
-    redis_storage.get('key1')
-    redis_client.get.assert_called_with('SM:key1')
+@async_test
+async def test_get(redis_storage, redis_client):
+    redis_client.get.expect("SM:key1").returns(make_coroutine_mock(None))
+
+    await redis_storage.get("key1")
 
 
-def test_has(redis_storage, redis_client):
-    redis_storage.has('key1')
-    redis_client.exists.assert_called_with('SM:key1')
+@async_test
+async def test_has(redis_storage, redis_client):
+    redis_client.exists.expect("SM:key1").returns(make_coroutine_mock(None))
+
+    await redis_storage.has("key1")
 
 
-def test_delete(redis_storage, redis_client):
-    redis_storage.delete('key1')
-    redis_client.delete.assert_called_with('SM:key1')
+@async_test
+async def test_delete(redis_storage, redis_client):
+    redis_client.delete.expect("SM:key1").returns(make_coroutine_mock(None))
+
+    await redis_storage.delete("key1")
 
 
-def test_size(redis_storage, redis_client):
-    redis_storage.size()
-    redis_client.info.assert_called_with('memory')
+@async_test
+async def test_size(redis_storage, redis_client):
+    redis_client.info.expect("memory").returns(
+        make_coroutine_mock({"used_memory": "haha all of it"})
+    )
+
+    await redis_storage.size()

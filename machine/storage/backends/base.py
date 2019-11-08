@@ -11,7 +11,14 @@ class MachineBaseStorage:
     def __init__(self, settings):
         self.settings = settings
 
-    def get(self, key):
+    async def connect(self):
+        """ Used when initializing asynchronous libraries (ie., aioredis)
+            that need to be awaited to connect or create clients (ex: `aioredis.create_pool`)
+        """
+
+        raise NotImplementedError
+
+    async def get(self, key):
         """Retrieve data by key
 
         :param key: key for which to retrieve data
@@ -20,7 +27,7 @@ class MachineBaseStorage:
         """
         raise NotImplementedError
 
-    def set(self, key, value, expires=None):
+    async def set(self, key, value, expires=None):
         """Store data by key
 
         :param key: the key under which to store the data
@@ -30,14 +37,14 @@ class MachineBaseStorage:
         """
         raise NotImplementedError
 
-    def delete(self, key):
+    async def delete(self, key):
         """Delete data by key
 
         :param key: key for which to delete the data
         """
         raise NotImplementedError
 
-    def has(self, key):
+    async def has(self, key):
         """Check if the key exists
 
         :param key: key to check
@@ -45,7 +52,7 @@ class MachineBaseStorage:
         """
         raise NotImplementedError
 
-    def size(self):
+    async def size(self):
         """Calculate the total size of the storage
 
         :return: total size of storage in bytes (integer)

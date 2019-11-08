@@ -1,0 +1,48 @@
+default_language_version:
+  python: python3.7
+
+fail_fast: true
+
+repos:
+- repo: https://github.com/ambv/black
+  rev: 19.3b0
+  hooks:
+  - id: black
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v2.2.3
+  hooks:
+  - id: check-added-large-files
+  - id: check-ast
+  - id: check-case-conflict
+  - id: check-merge-conflict
+  - id: check-symlinks
+  - id: check-yaml
+    args:
+    - --unsafe
+  - id: debug-statements
+  - id: end-of-file-fixer
+  - id: fix-encoding-pragma
+  - id: flake8
+    args:
+    - --exclude=docs/*,tests/*
+    - --max-line-length=131
+    - --ignore=E203
+  - id: forbid-new-submodules
+  - id: mixed-line-ending
+    args:
+    - --fix=lf
+  - id: no-commit-to-branch
+    args:
+    - -b master
+  - id: trailing-whitespace
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks
+  rev: v1.1.6
+  hooks:
+    - id: remove-tabs
+
+- repo: https://github.com/Lucas-C/pre-commit-hooks-safety
+  rev: v1.1.0
+  hooks:
+  - id: python-safety-dependencies-check

@@ -1,7 +1,9 @@
-import collections
+# -*- coding: utf-8 -*-
+
+from collections.abc import Mapping, MutableMapping
 
 
-class CaseInsensitiveDict(collections.MutableMapping):
+class CaseInsensitiveDict(MutableMapping):
     """
     A case-insensitive ``dict``-like object.
     Implements all methods and operations of
@@ -53,14 +55,10 @@ class CaseInsensitiveDict(collections.MutableMapping):
 
     def lower_items(self):
         """Like iteritems(), but with all lowercase keys."""
-        return (
-            (lowerkey, keyval[1])
-            for (lowerkey, keyval)
-            in self._store.items()
-        )
+        return ((lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items())
 
     def __eq__(self, other):
-        if isinstance(other, collections.Mapping):
+        if isinstance(other, Mapping):
             other = CaseInsensitiveDict(other)
         else:
             return NotImplemented
@@ -72,4 +70,4 @@ class CaseInsensitiveDict(collections.MutableMapping):
         return CaseInsensitiveDict(self._store.values())
 
     def __repr__(self):
-        return '%s(%r)' % (self.__class__.__name__, dict(self.items()))
+        return "%s(%r)" % (self.__class__.__name__, dict(self.items()))

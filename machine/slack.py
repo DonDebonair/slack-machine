@@ -1,113 +1,111 @@
-from machine.singletons import Slack, Scheduler
+# -*- coding: utf-8 -*-
+
+from datetime import datetime
+from typing import Optional, Sequence
+
+from async_lru import alru_cache
+from slack.web.slack_response import SlackResponse
+
+from machine.singletons import Scheduler, Slack
+from machine.utils.aio import run_coro_until_complete
 
 
 class MessagingClient:
-    @property
-    def users(self):
-        return Slack.get_instance().server.users
-
-    @property
-    def channels(self):
-        return Slack.get_instance().server.channels
+    @staticmethod
+    def retrieve_bot_info() -> Optional[dict]:
+        return Slack.get_instance().login_data.get("self")
 
     @staticmethod
-    def retrieve_bot_info():
-        return Slack.get_instance().server.login_data['self']
-
-    def fmt_mention(self, user):
-        u = self.users.find(user)
-        return "<@{}>".format(u.id)
-
-    @staticmethod
-    def send(channel, text, thread_ts=None):
-        Slack.get_instance().rtm_send_message(channel, text, thread_ts)
-
-    def send_scheduled(self, when, channel, text):
-        args = [self, channel, text]
-        kwargs = {'thread_ts': None}
-
-        Scheduler.get_instance().add_job(trigger='date', args=args,
-                                         kwargs=kwargs, run_date=when)
-
-    @staticmethod
-    def send_webapi(channel, text, attachments=None, thread_ts=None, ephemeral_user=None):
-        method = 'chat.postMessage'
-
-        # This is the only way to conditionally add thread_ts
-        kwargs = {
-            'channel': channel,
-            'text': text,
-            'attachments': attachments,
-            'as_user': True
+    async def send(
+        channel_id: str,
+        text: str,
+        *,
+        attachments: Optional[Sequence[dict]] = None,
+        thread_ts: Optional[str] = None,
+        ephemeral_user: Optional[str] = None,
+    ) -> SlackResponse:
+        method = "chat.postEphemeral" if ephemeral_user else "chat.postMessage"
+        payload = {
+            "channel": channel_id,
+            "text": text,
+            "blocks": attachments,
+            "as_user": True,
         }
 
         if ephemeral_user:
-            method = 'chat.postEphemeral'
-            kwargs['user'] = ephemeral_user
+            payload["user"] = ephemeral_user
         else:
             if thread_ts:
-                kwargs['thread_ts'] = thread_ts
+                payload["thread_ts"] = thread_ts
 
-        return Slack.get_instance().api_call(
-            method,
-            **kwargs
-        )
-
-    def send_webapi_scheduled(self, when, channel, text, attachments=None, ephemeral_user=None):
-        args = [self, channel, text]
-        kwargs = {
-            'attachments': attachments,
-            'thread_ts': None,
-            'ephemeral_user': ephemeral_user
-        }
-
-        Scheduler.get_instance().add_job(trigger='date', args=args,
-                                         kwargs=kwargs, run_date=when)
+        return await Slack.get_instance().web.api_call(method, json=payload)
 
     @staticmethod
-    def react(channel, ts, emoji):
-        return Slack.get_instance().api_call(
-            'reactions.add',
-            name=emoji,
-            channel=channel,
-            timestamp=ts
-        )
+    async def react(channel_id: str, ts: str, emoji: str) -> SlackResponse:
+        payload = {"name": emoji, "channel": channel_id, "timestamp": ts}
+
+        return await Slack.get_instance().web.api_call("reactions.add", json=payload)
 
     @staticmethod
-    def open_im(user):
-        response = Slack.get_instance().api_call(
-            'im.open',
-            user=user
+    async def open_im(user_id: str) -> str:
+        response = await Slack.get_instance().web.api_call(
+            "im.open", json={"user": user_id}
+        )
+        return response["channel"]["id"]
+
+    @property
+    def channels(self) -> SlackResponse:
+        return run_coro_until_complete(self.get_channels())
+
+    @property
+    def users(self) -> SlackResponse:
+        return run_coro_until_complete(self.get_users())
+
+    async def get_channels(self) -> SlackResponse:
+        return await Slack.get_instance().web.channels_list()
+
+    @alru_cache(maxsize=32)
+    async def find_channel_by_id(self, channel_id: str) -> Optional[dict]:
+        for channel in (await self.get_channels())["channels"]:
+            if channel["id"] == channel_id:
+                return channel
+
+        return None
+
+    async def get_users(self) -> SlackResponse:
+        return list(await Slack.get_instance().web.users_list())
+
+    @alru_cache(maxsize=32)
+    async def find_user_by_id(self, user_id: str) -> Optional[dict]:
+        for user in (await self.get_users())["members"]:
+            if user["id"] == user_id:
+                return user
+
+        return None
+
+    def fmt_mention(self, user: dict) -> str:
+        return f"<@{user['id']}>"
+
+    def send_scheduled(self, when: datetime, channel_id: str, text: str, **kwargs):
+        args = [channel_id, text]
+        Scheduler.get_instance().add_job(
+            MessagingClient.send,
+            trigger="date",
+            args=args,
+            kwargs=kwargs,
+            run_date=when,
         )
 
-        return response['channel']['id']
+    async def send_dm(self, user_id: str, text: str, **kwargs) -> SlackResponse:
+        dm_channel = await self.open_im(user_id)
+        return await self.send(dm_channel, text=text, **kwargs)
 
-    def send_dm(self, user, text):
-        u = self.users.find(user)
-        dm_channel = self.open_im(u.id)
-
-        self.send(dm_channel, text)
-
-    def send_dm_scheduled(self, when, user, text):
-        args = [self, user, text]
-        Scheduler.get_instance().add_job(MessagingClient.send_dm, trigger='date', args=args,
-                                         run_date=when)
-
-    def send_dm_webapi(self, user, text, attachments=None):
-        u = self.users.find(user)
-        dm_channel = self.open_im(u.id)
-
-        return Slack.get_instance().api_call(
-            'chat.postMessage',
-            channel=dm_channel,
-            text=text,
-            attachments=attachments,
-            as_user=True
+    def send_dm_scheduled(self, when: datetime, user_id: str, text: str, **kwargs):
+        args = [self, user_id, text]
+        Scheduler.get_instance().add_job(
+            MessagingClient.send_dm,
+            trigger="date",
+            args=args,
+            kwargs=kwargs,
+            run_date=when,
         )
-
-    def send_dm_webapi_scheduled(self, when, user, text, attachments=None):
-        args = [self, user, text]
-        kwargs = {'attachments': attachments}
-
-        Scheduler.get_instance().add_job(MessagingClient.send_dm_webapi, trigger='data', args=args,
-                                         kwargs=kwargs)
