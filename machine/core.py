@@ -17,7 +17,7 @@ from machine.settings import import_settings
 from machine.singletons import Slack, Scheduler, Storage
 from machine.slack import MessagingClient
 from machine.storage import PluginStorage
-from machine.utils import aio, collections, log_propagate
+from machine.utils import collections, log_propagate
 from machine.utils.module_loading import import_string
 
 __all__ = ["Machine", "start"]
@@ -73,7 +73,6 @@ class Machine:
 
     _help: Mapping[str, dict] = {"human": {}, "robot": {}}
     _http_app: Optional[Application] = None
-    _http_runner: Optional[AppRunner] = None
     _plugin_actions: Mapping[str, dict] = {
         "process": {},
         "listen_to": {},
@@ -102,14 +101,14 @@ class Machine:
             logger.error("No SLACK_API_TOKEN found in settings! I need that to work...")
             sys.exit(1)
 
-        self._client = Slack(loop=self._loop)
+        self._client = Slack(settings=self._settings, loop=self._loop)
 
         logger.info(
             "Initializing storage using backend: {}".format(
                 self._settings["STORAGE_BACKEND"]
             )
         )
-        self._storage = Storage()
+        self._storage = Storage(settings=self._settings)
         logger.debug("Storage initialized!")
 
         self._loop.run_until_complete(self._storage.connect())
@@ -160,9 +159,13 @@ class Machine:
         logger.info("Starting Slack Machine")
         self._dispatcher.start()
 
+        Scheduler(settings=self._settings, loop=self._loop).start()
+        logger.info("Scheduler started!")
+
         keepaliver: Optional[asyncio.Task] = None
+        runner: Optional[AppRunner] = None
         try:
-            await aio.join([self._start_scheduler(), self._start_http_server()])
+            runner = await self._start_http_server()
             # Launch the keepaliver task, keeping a handle to it
             # in the current context so it can be cancelled later.
             keepaliver = await self._start_keepaliver()
@@ -178,29 +181,25 @@ class Machine:
                 keepaliver.cancel()
 
             # Clean up/shut down the aiohttp AppRunner
-            if self._http_runner is not None:
-                await self._http_runner.cleanup()
+            if runner is not None:
+                await runner.cleanup()
 
-    async def _start_scheduler(self):
-        logger.info("Starting scheduler...")
-        Scheduler(loop=self._loop).start()
-
-    async def _start_http_server(self):
+    async def _start_http_server(self) -> Optional[AppRunner]:
         if self._http_app is not None:
             http_host = self._settings.get("HTTP_SERVER_HOST", "127.0.0.1")
             http_port = int(self._settings.get("HTTP_SERVER_PORT", 3000))
             logger.info(f"Starting web server on {http_host}:{http_port}...")
 
-            self._http_runner = AppRunner(self._http_app)
-            await self._http_runner.setup()
+            runner = AppRunner(self._http_app)
+            await runner.setup()
 
-            site = TCPSite(self._http_runner, http_host, http_port)
+            site = TCPSite(runner, http_host, http_port)
             await site.start()
 
-        logger.debug("Started web server!")
+            return runner
 
     async def _start_keepaliver(self):
-        interval = self._settings["KEEP_ALIVE"]
+        interval = self._settings.get("KEEP_ALIVE", 30)
         if interval:
             logger.info(f"Starting keepaliver... [Interval: {interval}s]")
             return asyncio.create_task(self._keepaliver(interval))

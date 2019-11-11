@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import asyncio
+from typing import Optional
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from slack import RTMClient, WebClient
 
-from machine.settings import import_settings
 from machine.utils import Singleton
 from machine.utils.module_loading import import_string
 from machine.utils.readonly_proxy import ReadonlyProxy
@@ -17,14 +17,18 @@ from machine.utils.redis import gen_config_dict
 class Slack(metaclass=Singleton):
     __slots__ = "_login_data", "_rtm_client", "_web_client"
 
-    def __init__(self, loop=None):
+    def __init__(
+        self, settings: dict = None, loop: Optional[asyncio.AbstractEventLoop] = None
+    ):
         if not loop:
             loop = asyncio.get_event_loop()
 
-        _settings, _ = import_settings()
-        slack_api_token = _settings.get("SLACK_API_TOKEN", None)
-        http_proxy = _settings.get("HTTP_PROXY", None)
-        https_proxy = _settings.get("HTTPS_PROXY", None)
+        if settings is None:
+            raise ValueError("Expected a settings dictionary, got None")
+
+        slack_api_token = settings.get("SLACK_API_TOKEN", None)
+        http_proxy = settings.get("HTTP_PROXY", None)
+        https_proxy = settings.get("HTTPS_PROXY", None)
 
         self._login_data = None
         self._rtm_client = RTMClient(
@@ -61,14 +65,18 @@ class Scheduler(metaclass=Singleton):
     """ Configures an `asyncio`-compatible scheduler instance.
     """
 
-    def __init__(self, loop=None):
+    def __init__(
+        self, settings: dict = None, loop: Optional[asyncio.AbstractEventLoop] = None
+    ):
         if not loop:
             loop = asyncio.get_event_loop()
 
-        _settings, _ = import_settings()
+        if settings is None:
+            raise ValueError("Expected a settings dictionary, got None")
+
         self._scheduler = AsyncIOScheduler(event_loop=loop)
-        if "REDIS_URL" in _settings:
-            redis_config = gen_config_dict(_settings)
+        if "REDIS_URL" in settings:
+            redis_config = gen_config_dict(settings)
             self._scheduler.add_jobstore("redis", **redis_config)
 
     def __getattr__(self, item):
@@ -80,10 +88,12 @@ class Scheduler(metaclass=Singleton):
 
 
 class Storage(metaclass=Singleton):
-    def __init__(self):
-        _settings, _ = import_settings()
-        _, cls = import_string(_settings["STORAGE_BACKEND"])[0]
-        self._storage = cls(_settings)
+    def __init__(self, settings: dict = None):
+        if settings is None:
+            raise ValueError("Expected a settings dictionary, got None")
+
+        _, cls = import_string(settings["STORAGE_BACKEND"])[0]
+        self._storage = cls(settings)
 
     def __getattr__(self, item):
         return getattr(self._storage, item)

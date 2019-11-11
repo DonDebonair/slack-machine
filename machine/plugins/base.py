@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from aiohttp.web import Application
-from blinker import signal
+from asyncblink import signal
 
 
 class MachineBasePlugin:

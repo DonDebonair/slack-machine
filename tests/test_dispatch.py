@@ -9,9 +9,15 @@ from machine.slack import MessagingClient
 from machine.dispatch import EventDispatcher
 from machine.message import Message
 from machine.storage.backends.base import MachineBaseStorage
+from machine.settings import import_settings
 
 from tests.fake_plugins import FakePlugin
 from tests.helpers import async_test
+
+
+@pytest.fixture
+def settings():
+    return import_settings("tests.local_test_settings")
 
 
 @pytest.fixture
