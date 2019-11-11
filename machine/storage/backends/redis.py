@@ -35,7 +35,7 @@ class RedisStorage(MachineBaseStorage):
 
     async def set(self, key, value, expires=None):
         self._ensure_connected()
-        await self._redis.set(self._prefix(key), value, expires)
+        await self._redis.set(self._prefix(key), value, expire=expires)
 
     async def delete(self, key):
         self._ensure_connected()

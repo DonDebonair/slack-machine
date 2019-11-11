@@ -30,13 +30,15 @@ def redis_storage(expect, redis_client):
 
 @async_test
 async def test_set(redis_storage, redis_client):
-    redis_client.set.expect("SM:key1", "value1", None).returns(
+    redis_client.set.expect("SM:key1", "value1", expire=None).returns(
         make_coroutine_mock(None)
     )
-    redis_client.set.expect("SM:key2", "value2", 42).returns(make_coroutine_mock(None))
+    redis_client.set.expect("SM:key2", "value2", expire=42).returns(
+        make_coroutine_mock(None)
+    )
 
-    await redis_storage.set("key1", "value1")
-    await redis_storage.set("key2", "value2", 42)
+    await redis_storage.set("key1", "value1", expires=None)
+    await redis_storage.set("key2", "value2", expires=42)
 
 
 @async_test
