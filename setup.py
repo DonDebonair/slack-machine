@@ -77,7 +77,7 @@ setup(
     setup_requires=['pytest-runner'],
     tests_require=['pytest', 'pytest-cov', 'coverage'],
     install_requires=dependencies,
-    python_requires='~=3.3',
+    python_requires='~=3.6',
     extras_require={
         'redis': ['redis', 'hiredis'],
         'hbase': ['Cython==0.29.6', 'happybase']

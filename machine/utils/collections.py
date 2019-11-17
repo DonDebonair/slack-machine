@@ -1,7 +1,7 @@
-import collections
+from collections.abc import MutableMapping, Mapping
 
 
-class CaseInsensitiveDict(collections.MutableMapping):
+class CaseInsensitiveDict(MutableMapping):
     """
     A case-insensitive ``dict``-like object.
     Implements all methods and operations of
@@ -60,7 +60,7 @@ class CaseInsensitiveDict(collections.MutableMapping):
         )
 
     def __eq__(self, other):
-        if isinstance(other, collections.Mapping):
+        if isinstance(other, Mapping):
             other = CaseInsensitiveDict(other)
         else:
             return NotImplemented
