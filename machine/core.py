@@ -6,7 +6,7 @@ from threading import Thread
 
 import dill
 from clint.textui import puts, indent, colored
-import bottle
+from machine.vendor import bottle
 
 from machine.dispatch import EventDispatcher
 from machine.plugins.base import MachineBasePlugin
