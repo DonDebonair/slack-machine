@@ -5,7 +5,7 @@ pytest-mock==1.11.2
 pytest==5.2.4
 tox==3.14.1
 flake8==3.7.9
-twine==2.0.0
+twine==3.0.0
 coverage==4.5.4
 pytest-cov==2.7.1
 Sphinx==2.2.1
