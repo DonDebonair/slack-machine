@@ -30,7 +30,7 @@ class EventDispatcher:
 
     def start(self):
         while True:
-            for event in self._client.rtm_read():
+            for event in self._client.run_on():
                 self._pool.add_task(self.handle_event, event)
             time.sleep(.1)
 

@@ -187,7 +187,7 @@ class Machine:
     def run(self):
         announce("\nStarting Slack Machine:")
         with indent(4):
-            connected = self._client.rtm_connect()
+            connected = self._client.start()
             if not connected:
                 logger.error("Could not connect to Slack! Aborting...")
                 sys.exit(1)
