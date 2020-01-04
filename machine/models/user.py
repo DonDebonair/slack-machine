@@ -14,8 +14,6 @@ class Profile:
     display_name: str
     real_name_normalized: str
     display_name_normalized: str
-    email: Optional[str]
-    image_original: Optional[str]
     image_24: str
     image_32: str
     image_48: str
@@ -23,6 +21,8 @@ class Profile:
     image_192: str
     image_512: str
     team: str
+    email: Optional[str] = None
+    image_original: Optional[str] = None
 
 
 @dataclass(frozen=True)
@@ -34,27 +34,27 @@ class User:
     team_id: str
     name: str
     deleted: bool
-    color: Optional[str]
-    real_name: Optional[str]
-    tz: Optional[str]
-    tz_label: Optional[str]
-    tz_offset: Optional[int]
     profile: Profile
-    is_admin: Optional[bool]
-    is_owner: Optional[bool]
-    is_primary_owner: Optional[bool]
-    is_restricted: Optional[bool]
-    is_ultra_restricted: Optional[bool]
     is_bot: bool
-    is_stranger: Optional[bool]
     updated: int
     is_app_user: bool
-    has_2fa: Optional[bool]
-    locale: Optional[str]
+    color: Optional[str] = None
+    real_name: Optional[str] = None
+    tz: Optional[str] = None
+    tz_label: Optional[str] = None
+    tz_offset: Optional[int] = None
+    is_admin: Optional[bool] = None
+    is_owner: Optional[bool] = None
+    is_primary_owner: Optional[bool] = None
+    is_restricted: Optional[bool] = None
+    is_ultra_restricted: Optional[bool] = None
+    is_stranger: Optional[bool] = None
+    has_2fa: Optional[bool] = None
+    locale: Optional[str] = None
 
     @staticmethod
     def from_api_response(user_reponse: Dict[str, Any]) -> 'User':
-        return from_dict(data_class=User, data=user_reponse)
+        return from_dict(data_class=User, data=user_reponse) # pragma: no cover
 
     def fmt_mention(self) -> str:
         return "<@{}>".format(self.id)

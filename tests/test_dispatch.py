@@ -6,7 +6,8 @@ from machine.clients.slack import SlackClient
 from machine.dispatch import EventDispatcher
 from machine.plugins.base import Message
 from machine.storage.backends.base import MachineBaseStorage
-from tests.fake_plugins import FakePlugin, FakePlugin2
+from machine.utils.collections import CaseInsensitiveDict
+from tests.fake_plugins import FakePlugin
 
 
 @pytest.fixture
@@ -21,7 +22,7 @@ def storage(mocker):
 
 @pytest.fixture
 def fake_plugin(mocker, msg_client, storage):
-    plugin_instance = FakePlugin({}, msg_client, storage)
+    plugin_instance = FakePlugin(msg_client, CaseInsensitiveDict(), storage)
     mocker.spy(plugin_instance, 'respond_function')
     mocker.spy(plugin_instance, 'listen_function')
     mocker.spy(plugin_instance, 'process_function')
@@ -29,26 +30,11 @@ def fake_plugin(mocker, msg_client, storage):
 
 
 @pytest.fixture
-def fake_plugin2(mocker, msg_client, storage):
-    plugin_instance = FakePlugin2({}, msg_client, storage)
-    mocker.spy(plugin_instance, 'catch_all')
-    return plugin_instance
-
-
-@pytest.fixture
-def plugin_actions(fake_plugin, fake_plugin2):
+def plugin_actions(fake_plugin):
     respond_fn = getattr(fake_plugin, 'respond_function')
     listen_fn = getattr(fake_plugin, 'listen_function')
     process_fn = getattr(fake_plugin, 'process_function')
-    catch_all_fn = getattr(fake_plugin2, 'catch_all')
     plugin_actions = {
-        'catch_all': {
-            'TestPlugin2': {
-                'class': fake_plugin2,
-                'class_name': 'tests.fake_plugins.FakePlugin2',
-                'function': catch_all_fn
-            }
-        },
         'listen_to': {
             'TestPlugin.listen_function-hi': {
                 'class': fake_plugin,
@@ -80,9 +66,8 @@ def plugin_actions(fake_plugin, fake_plugin2):
 
 @pytest.fixture(params=[None, {"ALIASES": "!"}, {"ALIASES": "!,$"}], ids=["No Alias", "Alias", "Aliases"])
 def dispatcher(mocker, plugin_actions, request):
-    mocker.patch('machine.dispatch.ThreadPool', autospec=True)
-    mocker.patch('machine.singletons.SlackClient', autospec=True)
-    mocker.patch('machine.singletons.BackgroundScheduler', autospec=True)
+    mocker.patch('machine.clients.singletons.slack.LowLevelSlackClient', autospec=True)
+    mocker.patch('machine.clients.singletons.scheduling.BackgroundScheduler', autospec=True)
     dispatch_instance = EventDispatcher(plugin_actions, request.param)
     mocker.patch.object(dispatch_instance, '_get_bot_id')
     dispatch_instance._get_bot_id.return_value = '123'
@@ -90,19 +75,6 @@ def dispatcher(mocker, plugin_actions, request):
     dispatch_instance._get_bot_name.return_value = 'superbot'
     dispatch_instance._aliases = request.param
     return dispatch_instance
-
-
-def test_handle_event_process(dispatcher, fake_plugin):
-    some_event = {'type': 'some_event'}
-    dispatcher.handle_event(some_event)
-    assert fake_plugin.process_function.call_count == 1
-    fake_plugin.process_function.assert_called_once_with(some_event)
-
-
-def test_handle_event_catch_all(dispatcher, fake_plugin2):
-    any_event = {'type': 'foobar'}
-    dispatcher.handle_event(any_event)
-    fake_plugin2.catch_all.assert_called_once_with(any_event)
 
 
 def _assert_message(args, text):
@@ -115,20 +87,18 @@ def _assert_message(args, text):
     assert args[0][0].text == text
 
 
-def test_handle_event_listen_to(dispatcher, fake_plugin, fake_plugin2):
-    msg_event = {'type': 'message', 'text': 'hi', 'channel': 'C1', 'user': 'user1'}
-    dispatcher.handle_event(msg_event)
-    fake_plugin2.catch_all.assert_called_once_with(msg_event)
+def test_handle_event_listen_to(dispatcher, fake_plugin):
+    msg_event = {'data': {'type': 'message', 'text': 'hi', 'channel': 'C1', 'user': 'user1'}}
+    dispatcher.handle_message(**msg_event)
     assert fake_plugin.listen_function.call_count == 1
     assert fake_plugin.respond_function.call_count == 0
     args = fake_plugin.listen_function.call_args
     _assert_message(args, 'hi')
 
 
-def test_handle_event_respond_to(dispatcher, fake_plugin, fake_plugin2):
-    msg_event = {'type': 'message', 'text': '<@123> hello', 'channel': 'C1', 'user': 'user1'}
-    dispatcher.handle_event(msg_event)
-    fake_plugin2.catch_all.assert_called_once_with(msg_event)
+def test_handle_event_respond_to(dispatcher, fake_plugin):
+    msg_event = {'data': {'type': 'message', 'text': '<@123> hello', 'channel': 'C1', 'user': 'user1'}}
+    dispatcher.handle_message(**msg_event)
     assert fake_plugin.respond_function.call_count == 1
     assert fake_plugin.listen_function.call_count == 0
     args = fake_plugin.respond_function.call_args

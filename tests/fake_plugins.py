@@ -22,5 +22,6 @@ class FakePlugin2(MachineBasePlugin):
     def init(self):
         self.x = 42
 
-    def catch_all(self, event):
+    @listen_to(r'doit')
+    def another_listen_function(self, msg):
         pass

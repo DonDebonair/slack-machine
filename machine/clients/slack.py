@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def id_for_user(user: Union[User, str]) -> str:
-    logger.debug("User: %s" % user)
     if isinstance(user, User):
         return user.id
     else:
@@ -48,6 +47,7 @@ class SlackClient:
             kwargs['blocks'] = extract_json(kwargs['blocks'])
         if 'ephemeral_user' in kwargs and kwargs['ephemeral_user'] is not None:
             ephemeral_user_id = id_for_user(kwargs['ephemeral_user'])
+            del kwargs['ephemeral_user']
             return LowLevelSlackClient.get_instance().web_client.chat_postEphemeral(
                 channel=channel_id,
                 user=ephemeral_user_id,

@@ -2,7 +2,8 @@ import logging
 from typing import Callable, Dict, List
 import asyncio
 
-from slack import RTMClient, WebClient
+from slack.web.client import WebClient
+from slack.rtm.client import RTMClient
 
 from machine.models import User
 from machine.models import Channel

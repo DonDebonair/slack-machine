@@ -35,15 +35,7 @@ def test_load_and_register_plugins(settings):
     actions = machine._plugin_actions
 
     # Test general structure of _plugin_actions
-    assert set(actions.keys()) == {'process', 'listen_to', 'respond_to', 'catch_all'}
-
-    # Test registration of process actions
-    assert 'some_event' in actions['process']
-    assert 'tests.fake_plugins:FakePlugin.process_function' in actions['process']['some_event']
-    assert 'class' in actions['process']['some_event'][
-        'tests.fake_plugins:FakePlugin.process_function']
-    assert 'function' in actions['process']['some_event'][
-        'tests.fake_plugins:FakePlugin.process_function']
+    assert set(actions.keys()) == {'listen_to', 'respond_to'}
 
     # Test registration of respond_to actions
     respond_to_key = 'tests.fake_plugins:FakePlugin.respond_function-hello'
@@ -61,19 +53,12 @@ def test_load_and_register_plugins(settings):
     assert 'regex' in actions['listen_to'][listen_to_key]
     assert actions['listen_to'][listen_to_key]['regex'] == re.compile('hi', re.IGNORECASE)
 
-    # Test registration of catch_all actions
-    assert 'tests.fake_plugins:FakePlugin2' in actions['catch_all']
-    assert 'tests.fake_plugins:FakePlugin' not in actions['catch_all']
-    assert 'class' in actions['catch_all']['tests.fake_plugins:FakePlugin2']
-    assert 'function' in actions['catch_all']['tests.fake_plugins:FakePlugin2']
-
 
 def test_plugin_storage_fq_plugin_name(settings):
     machine = Machine(settings=settings)
     actions = machine._plugin_actions
-    plugin1_cls = actions['respond_to']['tests.fake_plugins:FakePlugin.respond_function-hello'][
-        'class']
-    plugin2_cls = actions['catch_all']['tests.fake_plugins:FakePlugin2']['class']
+    plugin1_cls = actions['respond_to']['tests.fake_plugins:FakePlugin.respond_function-hello']['class']
+    plugin2_cls = actions['listen_to']['tests.fake_plugins:FakePlugin2.another_listen_function-doit']['class']
     assert plugin1_cls.storage._fq_plugin_name == 'tests.fake_plugins:FakePlugin'
     assert plugin2_cls.storage._fq_plugin_name == 'tests.fake_plugins:FakePlugin2'
 
@@ -81,7 +66,7 @@ def test_plugin_storage_fq_plugin_name(settings):
 def test_plugin_init(settings):
     machine = Machine(settings=settings)
     actions = machine._plugin_actions
-    plugin_cls = actions['catch_all']['tests.fake_plugins:FakePlugin2']['class']
+    plugin_cls = actions['listen_to']['tests.fake_plugins:FakePlugin2.another_listen_function-doit']['class']
     assert plugin_cls.x == 42
 
 

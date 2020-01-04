@@ -62,7 +62,6 @@ class Machine:
             logger.debug("Storage initialized!")
 
             self._plugin_actions = {
-                'process': {},
                 'listen_to': {},
                 'respond_to': {}
             }

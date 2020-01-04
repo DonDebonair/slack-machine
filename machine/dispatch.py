@@ -7,7 +7,6 @@ from slack import RTMClient
 from machine.clients.singletons.slack import LowLevelSlackClient
 from machine.clients.slack import SlackClient
 from machine.plugins.base import Message
-from machine.utils.pool import ThreadPool
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +16,6 @@ class EventDispatcher:
     def __init__(self, plugin_actions, settings=None):
         self._client = LowLevelSlackClient()
         self._plugin_actions = plugin_actions
-        self._pool = ThreadPool()
         alias_regex = ''
         if settings and "ALIASES" in settings:
             logger.info("Setting aliases to {}".format(settings['ALIASES']))
