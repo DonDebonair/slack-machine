@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 
 from dacite import from_dict
 
@@ -13,6 +13,9 @@ class PurposeTopic:
 
 @dataclass(frozen=True)
 class Channel:
+    """
+    Channel model that represents a channel object from the Slack API
+    """
     id: str
     name: str
     is_channel: bool
@@ -32,5 +35,5 @@ class Channel:
     previous_names: List[str]
 
     @staticmethod
-    def from_api_response(user_reponse: Dict) -> 'Channel':
+    def from_api_response(user_reponse: Dict[str, Any]) -> 'Channel':
         return from_dict(data_class=Channel, data=user_reponse)

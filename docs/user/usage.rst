@@ -33,6 +33,15 @@ Be cautious, only http proxy is supported for now.
 If you find you have issues with Slack Machine disconnecting, try enabling the keep alive
 feature by setting ``KEEP_ALIVE`` to an integer (interval in seconds to send keep alive pings).
 
+Using environment variables for configuration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For some configuration, it can be a security consideration not to store them in your source code
+(i.e. ``local_settings.py``) Slack Machine allows you to provide any setting - both built-in and
+for plugins - as environment variables. This is done by prefixing the setting name with ``SM_``.
+Example: ``SM_SLACK_API_TOKEN`` as environment variable can be used to set the ``SLACK_API_TOKEN``
+setting instead of having to put it in the ``local_settings.py``.
+
 Setting aliases
 ~~~~~~~~~~~~~~~
 
@@ -56,8 +65,6 @@ Slack Machine comes with a few simple built-in plugins:
 - **HelloPlugin**: responds in kind when users greet the bot with "hello" or "hi" (only when the 
   bot is mentioned)
 - **PingPongPlugin**: responds to "ping" with "pong" and vice versa (listens regardless of mention)
-- **EventLoggerPlugin**: logs all events the bot receives to the console (only when ``LOGLEVEL`` is 
-  set to ``"DEBUG"``)
 - **EchoPlugin**: replies to any message the bot hears, with exactly the same message. The bot will 
   reply to the same channel the original message was heard in
 
@@ -71,7 +78,7 @@ For example, to enable all built-in Slack Machine plugins, your ``local_settings
 
 .. code-block:: python
     
-    SLACK_API_TOKEN = 'xox-my-slack-token'
+    SLACK_API_TOKEN = 'xoxb-my-slack-token'
     PLUGINS = [
         'machine.plugins.builtin.general.PingPongPlugin',
         'machine.plugins.builtin.general.HelloPlugin',

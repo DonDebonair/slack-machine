@@ -39,7 +39,6 @@ class EventDispatcher:
         logger.debug("Server Pong!")
 
     def handle_message(self, **payload):
-        logger.debug(payload)
         # Handle message listeners
         event = payload['data']
         if 'user' in event and not event['user'] == self._get_bot_id():
@@ -56,7 +55,6 @@ class EventDispatcher:
 
     @staticmethod
     def _gen_message(event, plugin_class_name):
-        logger.debug("Event for generated message: %s" % event)
         return Message(SlackClient(), event, plugin_class_name)
 
     def _get_bot_id(self) -> str:

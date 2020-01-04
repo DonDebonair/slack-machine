@@ -37,7 +37,8 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
-    'sphinx.ext.intersphinx'
+    'sphinx.ext.intersphinx',
+    'sphinx_autodoc_typehints'
 ]
 
 autodoc_member_order = 'bysource'
@@ -62,7 +63,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Slack Machine'
-copyright = '2018, {}'.format(machine.__author__)
+copyright = '2019, {}'.format(machine.__author__)
 author = machine.__author__
 
 # The version info for the project you're documenting, acts as replacement for
@@ -193,7 +194,8 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+
 def setup(app):
-    app.add_stylesheet('css/custom.css') 
+    app.add_stylesheet('css/custom.css')
 
 

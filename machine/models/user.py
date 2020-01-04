@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Dict
+from typing import Optional, Dict, Any
 
 from dacite import from_dict
 
@@ -27,6 +27,9 @@ class Profile:
 
 @dataclass(frozen=True)
 class User:
+    """
+    User model that represents a user object from the Slack API
+    """
     id: str
     team_id: str
     name: str
@@ -50,7 +53,7 @@ class User:
     locale: Optional[str]
 
     @staticmethod
-    def from_api_response(user_reponse: Dict) -> 'User':
+    def from_api_response(user_reponse: Dict[str, Any]) -> 'User':
         return from_dict(data_class=User, data=user_reponse)
 
     def fmt_mention(self) -> str:

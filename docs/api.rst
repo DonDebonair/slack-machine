@@ -31,6 +31,19 @@ These are the decorators you can use to have Slack Machine respond to specific t
 .. automodule:: machine.plugins.decorators
    :members:
 
+Models
+------
+
+These classes represent base objects from the Slack API
+
+.. autoclass:: machine.models.user.User
+   :members:
+   :undoc-members:
+
+.. autoclass:: machine.models.channel.Channel
+   :members:
+   :undoc-members:
+
 Storage
 -------
 

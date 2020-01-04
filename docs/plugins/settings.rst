@@ -7,7 +7,7 @@ All settings that are defined, either from the Slack Machine defaults or in ``lo
 are available to plugins through the ``self.settings`` field. This is a dictionary with all 
 settings indexed by their name. Next to ``local_settings.py``, users can also specify settings 
 with environment variables. Slack Machine will automatically translate any environment variable 
-with the format ``SM_<SETTINGNAME>`` to a setting with name ``SETTINGNAME``, overriding a setting 
+with the format ``SM_<SETTING-NAME>`` to a setting with name ``SETTING-NAME``, overriding a setting
 with the same name from ``local_settings.py`` or the default settings.
 
 So an environment variable ``SM_SLACK_API_TOKEN`` will result in a setting ``SLACK_API_TOKEN``.

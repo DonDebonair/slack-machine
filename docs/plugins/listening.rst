@@ -107,13 +107,6 @@ added to a message, and will match that reaction:
 As you can see, ``@process`` gives you a lot of flexibility by allowing you to process any 
 event Slack Machine does not provide a specific decorator for.
 
-Catch all
----------
-
-Slack Machine also provides a way to listen to **all events** that Slack produces. Your plugin 
-should implement a method ``catch_all`` that takes one parameter. That function will be called 
-for each event, with the received event.
-
 Take action on a Schedule
 -------------------------
 

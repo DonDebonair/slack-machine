@@ -56,6 +56,8 @@ decided not to go with each of them:
   comes closests to what I want, both in terms of feature set and plugin API. Sadly, it only 
   supports HipChat (`for the time being`_, anyways), and I personally found the code quite hard 
   to read.
+  Update: Will now also supports Slack. But I feel that a framework specialized in a specific
+  chat platforms is better than a framework trying to support different platforms.
 
 So, in the end I decided that writing a full-featured, easy-to-extend Slack bot, written in Python, 
 would be cool new project to take up.

@@ -52,27 +52,33 @@ Example:
 If this function is triggered by a message *@superbot I love you*, sent by **@john**, the 
 response will be: *@john: I love you too!*
 
-You can also use :py:meth:`msg.reply_webapi() <machine.plugins.base.Message.reply_webapi>` instead, 
-which has 2 extra parameters that unlock 2 extra features:
+:py:meth:`msg.reply() <machine.plugins.base.Message.reply>` will use the `Slack WebAPI`_ to send
+messages, which means you can send richly formatted messages using `blocks`_ and/or `attachments`_.
 
-    **attachments**: add `attachments`_ to your message
+The underlying Python slackclient that Slack Machine uses, provides some `convenience classes`_ that
+can help with creating blocks or attachments. All Slack Machine methods that can be used to send messages,
+accept lists of Block objects and/or Attachment objects from the aforementioned convience classes.
+
+This method has 2 extra parameters that unlock 2 extra features:
 
     **ephemeral**: if ``True``, the message will be visible only to the sender of the original message.
 
-    .. _attachments: https://api.slack.com/docs/message-attachments
+    **in_thread**: this will send the message in a thread instead of to the main channel
 
-There are 2 more methods to respond to a message in the same channel: 
-:py:meth:`msg.say() <machine.plugins.base.Message.say>` and 
-:py:meth:`msg.say_webapi() <machine.plugins.base.Message.say_webapi>`. 
-These are very similar to their ``reply`` counterparts, with the exception that these won't 
-mention the sender of the original message.
+    .. _Slack WebAPI: https://api.slack.com/web
+    .. _attachments: https://api.slack.com/docs/message-attachments
+    .. _blocks: https://api.slack.com/reference/block-kit/blocks
+    .. _convenience classes: https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+
+There is 1 more method to respond to a message in the same channel:
+:py:meth:`msg.say() <machine.plugins.base.Message.say>` is very similar to its ``reply`` counterpart,
+with the exception that it won't mention the sender of the original message.
 
 If you want to reply to the sender of the original message in a DM instead of in the original 
-channel, you can use the :py:meth:`msg.reply_dm() <machine.plugins.base.Message.reply_dm>` or 
-:py:meth:`msg.reply_dm_webapi() <machine.plugins.base.Message.reply_dm_webapi>` methods. This 
-will open a DM convo between the sender of the original message and the bot (if it doesn't exist 
+channel, you can use the :py:meth:`msg.reply_dm() <machine.plugins.base.Message.reply_dm>` methods.
+This will open a DM convo between the sender of the original message and the bot (if it doesn't exist
 already) and send a message there. If the original message was already received in a DM channel, 
-this is no different than using ``reply()`` or ``reply_webapi()``.
+this is no different than using ``reply()``.
 
 Message properties
 ------------------
@@ -80,7 +86,8 @@ Message properties
 The :py:class:`~machine.plugins.base.Message` object your plugin function receives, has some 
 convenient properties about the message that triggered the function:
 
-    **sender**: a User object with information about the sender, such as their ``id`` and ``name``
+    **sender**: a :py:class:`~machine.models.user.User` object with information about the sender,
+    such as their ``id`` and ``name``
 
     **channel**: a Channel object with information about the channel the message was received in
 
@@ -93,27 +100,27 @@ The :py:class:`~machine.plugins.base.MachineBasePlugin` class every plugin exten
 some properties about your Slack workspace. These properties are not filled when your 
 plugin is instantiated, but reflect the current status of the Slack client:
 
-    **users**: a list of User objects for users that Slack Machine knows about. This is usually
-    all the active users in your Slack workspace
+    **users**: a dict of user ids and the associated :py:class:`~machine.models.user.User` objects
+    for all users that Slack Machine knows about. This is usually all the active users in your Slack
+    workspace. This data structure is filled when Slack Machine starts and is automatically updated
+    whenever a new user joins or the properties of a user change.
 
-    **channels**: a list of Channel objects for channels that Slack Machine knows about. This
-    contains all the public channels in your Slack workspace, plus all private channels
-    that your Slack Machine instance was invited to
+    **channels**: a dict of channel ids and the associated :py:class:`~machine.models.channel.Channel`
+    objects for channels that Slack Machine knows about. This contains all the public channels in your
+    Slack workspace, plus all private channels that your Slack Machine instance was invited to.
 
 Sending messages without a msg object
 -------------------------------------
 
 There are situations in which you want to send messages to users/channels, but there is no 
-original message to respond to. For example when implementing a ``catch_all`` method, or when 
-using the :py:meth:`~machine.plugins.decorators.process` decorator. In this case you can call 
+original message to respond to. For example when implementing your own event listener using
+the :py:meth:`~machine.plugins.decorators.process` decorator. In this case you can call
 functions similar as those described before, but from your plugin itself: 
 :py:meth:`self.say() <machine.plugins.base.MachineBasePlugin.say>`, 
-:py:meth:`self.say_webapi() <machine.plugins.base.MachineBasePlugin.say_webapi>`, 
-:py:meth:`self.send_dm() <machine.plugins.base.MachineBasePlugin.send_dm>` and 
-:py:meth:`self.send_dm_webapi() <machine.plugins.base.MachineBasePlugin.send_dm_webapi>`.
+:py:meth:`self.send_dm() <machine.plugins.base.MachineBasePlugin.send_dm>` and
 
 These behave similar to their :py:class:`~machine.plugins.base.Message` counterparts, except that 
-they require a channel id or name, or user id or name (in case of DM) to be passed in.
+they require a channel id or object, or user id or object (in case of DM) to be passed in.
 
 Scheduling messages
 -------------------
@@ -141,11 +148,7 @@ Example:
 This function will send a greeting 10 seconds after it has received a message: 
 *@superbot greet me in the future*.
 
-There are a couple of caveats:
-
-    Scheduled versions of methods cannot reply to threads using ``in_thread`` or ``thread_ts``.
-    This was done because it doesn't make sense to reply to a thread in the future. Threads
-    are for interaction **now**.
+There is one caveat:
 
     You cannot schedule a reaction to a message. It doesn't make sense to react to a message
     in the future.

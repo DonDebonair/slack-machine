@@ -50,10 +50,7 @@ class MachineBasePlugin:
         """Dictionary of all users in the Slack workspace
 
         :return: a dictionary of all users in the Slack workspace, where the key is the user id and
-            the value is a User object (see the source code of `User`_ in the underlying Slack
-            client library)
-
-        .. _User: https://github.com/slackapi/python-slackclient/blob/master/slackclient/user.py
+            the value is a :py:class:`~machine.models.user.User` object
         """
         return self._client.users
 
@@ -65,10 +62,8 @@ class MachineBasePlugin:
         includes all public channels, all private channels the bot is a member of and all DM
         channels the bot is a member of.
 
-        :return: a list of all channels in the Slack workspace, where each channel is a Channel
-            object (see the source code of `Channel`_ in the underlying Slack client library)
-
-        .. _Channel: https://github.com/slackapi/python-slackclient/blob/master/slackclient/channel.py # NOQA
+        :return: a list of all channels in the Slack workspace, where each channel is a
+            :py:class:`~machine.models.channel.Channel` object
         """
         return self._client.channels
 
@@ -128,7 +123,7 @@ class MachineBasePlugin:
             message to. Can be public or private (group) channel, or DM channel.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks` _)
+        :param blocks: optional blocks (see `blocks`_)
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral_user: optional user name or id if the message needs to visible
             to a specific user only
@@ -156,7 +151,7 @@ class MachineBasePlugin:
             message to. Can be public or private (group) channel, or DM channel.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks` _)
+        :param blocks: optional blocks (see `blocks`_)
         :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral_user: optional :py:class:`~machine.models.user.User` object or id of user
             if the message needs to visible to that specific user only
@@ -204,7 +199,7 @@ class MachineBasePlugin:
         :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks` _)
+        :param blocks: optional blocks (see `blocks`_)
         :return: Dictionary deserialized from `chat.postMessage`_ request.
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
@@ -224,7 +219,7 @@ class MachineBasePlugin:
         :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks` _)
+        :param blocks: optional blocks (see `blocks`_)
         :return: None
 
         .. _attachments: https://api.slack.com/docs/message-attachments
