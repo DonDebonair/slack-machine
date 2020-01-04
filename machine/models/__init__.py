@@ -1,2 +1,2 @@
-from .channel import Channel
-from .user import User
+from .channel import Channel  # noqa
+from .user import User  # noqa
