@@ -5,12 +5,6 @@ from machine.plugins.decorators import process
 logger = logging.getLogger(__name__)
 
 
-class EventLoggerPlugin(MachineBasePlugin):
-
-    def catch_all(self, event):
-        logger.debug("Event received: %s", event)
-
-
 class EchoPlugin(MachineBasePlugin):
 
     @process(slack_event_type='message')

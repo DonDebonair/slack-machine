@@ -64,8 +64,7 @@ class Machine:
             self._plugin_actions = {
                 'process': {},
                 'listen_to': {},
-                'respond_to': {},
-                'catch_all': {}
+                'respond_to': {}
             }
             self._help = {
                 'human': {},
