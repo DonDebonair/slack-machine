@@ -2,8 +2,7 @@ import pytest
 
 from machine.models.user import User, Profile
 from machine.models.channel import Channel
-from machine.clients.slack import id_for_channel, id_for_user, SlackClient
-from machine.clients.singletons.slack import LowLevelSlackClient
+from machine.clients.slack import id_for_channel, id_for_user
 
 
 @pytest.fixture

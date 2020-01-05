@@ -21,6 +21,20 @@ Slack Machine is a framework that helps you develop your Slack team into a ChatO
 
 .. image:: extra/logo.png
 
+*Warning*
+---------
+
+As of v0.19 there are some breaking changes! If you're using v0.18.2 or older, you might have to
+make some changes to your slack bot built with Slack Machine and/or Slack Machine plugins. The
+following changes are non-backwards compatible:
+
+- The ``catch_all`` method has been removed from the base plugin class. You can still respond to specific event types
+  using the ``@process`` decorator
+- The ``*_webapi`` methods to send messages do not exist anymore, use the regular counterparts instead. All messages
+  are now sent using the Slack WebAPI. The RTM API is still used for listening to messages and events.
+- ``self.users`` and ``self.channels`` now return different objects than before. See API documentation for more details.
+  These properties should behave more consistently however, even in workspaces with many users.
+
 Features
 --------
 
@@ -35,11 +49,12 @@ Features
     - Respond to messages in channels, groups and direct message conversations
     - Respond with Emoji
     - Respond in threads
+    - Responde with ephemeral messages
     - Send DMs to any user
     - Support for `message attachments`_
+    - Support for `blocks`_
     - Listen and respond to any `Slack event`_ supported by the RTM API
-    - Store and retrieve any kind of data in persistent storage (currently Redis and in-memory
-      storage are supported)
+    - Store and retrieve any kind of data in persistent storage (currently Redis and in-memory storage are supported)
     - Schedule actions and messages
     - Emit and listen for events
     - Help texts for Plugins
@@ -48,6 +63,7 @@ Features
 .. _Slack RTM API: https://api.slack.com/rtm
 .. _Slack Web API: https://api.slack.com/web
 .. _message attachments: https://api.slack.com/docs/message-attachments
+.. _blocks: https://api.slack.com/reference/block-kit/blocks
 .. _Slack event: https://api.slack.com/events
 
 Coming Soon
