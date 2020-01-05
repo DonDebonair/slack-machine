@@ -83,7 +83,7 @@ setup(
         'hbase': ['Cython==0.29.6', 'happybase']
     },
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 3 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",

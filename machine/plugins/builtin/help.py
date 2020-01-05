@@ -19,7 +19,7 @@ class HelpPlugin(MachineBasePlugin):
 
     @respond_to(r'^robot help$')
     def robot_help(self, msg):
-        "robot help: display regular expressions that the bot responds to"
+        """robot help: display regular expressions that the bot responds to"""
         robot_manual = self.storage.get('manual', shared=True)['robot']
         help_text = "This is what triggers me:\n\n"
         help_text += "\n\n".join([self._gen_class_robot_help(cls, regexes)
@@ -42,5 +42,5 @@ class HelpPlugin(MachineBasePlugin):
         return help_text
 
     def _gen_bot_regex(self, regex):
-        bot_name = self.retrieve_bot_info()['name']
+        bot_name = self.bot_info['name']
         return "\t`{}`".format(regex.replace("@botname", "@" + bot_name))

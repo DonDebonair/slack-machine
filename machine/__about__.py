@@ -7,11 +7,11 @@ __title__ = "slack-machine"
 __description__ = "A sexy, simple, yet powerful and extendable Slack bot"
 __uri__ = "https://github.com/DandyDev/slack-machine"
 
-__version_info__ = (0, 19, 0)
+__version_info__ = (0, 19, 1)
 __version__ = '.'.join(map(str, __version_info__))
 
 __author__ = "Daan Debie"
-__email__ = "debie.daan@gmail.com"
+__email__ = "daan@dv.email"
 
 __license__ = "MIT"
-__copyright__ = "Copyright 2018 {}".format(__author__)
+__copyright__ = "Copyright 2020 {}".format(__author__)

@@ -38,7 +38,7 @@ Features
     - Respond to messages in channels, groups and direct message conversations
     - Respond with Emoji
     - Respond in threads
-    - Responde with ephemeral messages
+    - Respond with ephemeral messages
     - Send DMs to any user
     - Support for `message attachments`_
     - Support for `blocks`_
