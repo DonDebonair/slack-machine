@@ -392,7 +392,7 @@ class Message:
         Can also reply to a thread and send an ephemeral message only visible to the sender of the
         original message. In the case of in-thread response, the sender of the original message
         will not be mentioned. Ephemeral messages and threaded messages are mutually exclusive,
-        and ``ephemeral`` takes precedence over ``thread_ts``
+        and ``ephemeral`` takes precedence over ``in_thread``
         Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
         `chat.postEphemeral`_ request.
 
@@ -414,7 +414,7 @@ class Message:
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         if in_thread and not ephemeral:
-            return self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.thread_ts,
+            return self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.ts,
                             **kwargs)
         else:
             text = self._create_reply(text)
@@ -515,17 +515,12 @@ class Message:
             return text
 
     @property
-    def thread_ts(self) -> str:
-        """The timestamp of the original message
+    def ts(self) -> str:
+        """The timestamp of the message
 
-        :return: the timestamp of the original message
+        :return: the timestamp of the message
         """
-        try:
-            thread_ts = self._msg_event['thread_ts']
-        except KeyError:
-            thread_ts = self._msg_event['ts']
-
-        return thread_ts
+        return self._msg_event['ts']
 
     def __str__(self):
         return "Message '{}', sent by user @{} in channel #{}".format(
