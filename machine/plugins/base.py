@@ -549,6 +549,7 @@ class Message:
 
         return thread_ts
 
+    @property
     def in_thread(self):
         """Is message in a thread
 
