@@ -522,6 +522,14 @@ class Message:
         """
         return self._msg_event['ts']
 
+    @property
+    def in_thread(self):
+        """Is message in a thread
+
+        :return: bool
+        """
+        return 'thread_ts' in self._msg_event
+
     def __str__(self):
         return "Message '{}', sent by user @{} in channel #{}".format(
             self.text,
