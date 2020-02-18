@@ -15,7 +15,7 @@ class HelpPlugin(MachineBasePlugin):
         help_text += "\n\n".join(
             [self._gen_class_help_text(cls, fn) for cls, fn in manual.items() if fn]
         )
-        await msg.say(help_text)
+        await msg.reply(help_text, ephemeral=True)
 
     @respond_to(r"^robot help$")
     async def robot_help(self, msg):
@@ -28,7 +28,7 @@ class HelpPlugin(MachineBasePlugin):
                 for cls, regexes in robot_manual.items()
             ]
         )
-        await msg.say(help_text)
+        await msg.reply(help_text, ephemeral=True)
 
     def _gen_class_help_text(self, class_help, fn_helps):
         help_text = "*{}:*\n".format(class_help)
