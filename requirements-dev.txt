@@ -1,7 +1,7 @@
 -r requirements.txt
 check-manifest==0.41
 pyroma==2.6
-pytest==5.3.5
+pytest==5.4.1
 pytest-mock==2.0.0
 tox==3.14.4
 flake8==3.7.9
