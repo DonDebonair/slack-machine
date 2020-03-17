@@ -6,7 +6,7 @@ pytest-mock==2.0.0
 tox==3.14.4
 flake8==3.7.9
 twine==3.1.1
-coverage==5.0.3
+coverage==5.0.4
 pytest-cov==2.8.1
 Sphinx==2.4.4
 sphinx-autobuild==0.7.1
