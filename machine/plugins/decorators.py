@@ -1,7 +1,7 @@
 import re
 
 from blinker import signal
-
+from machine.plugins.builtin import admin
 
 def process(slack_event_type):
     """Process Slack events of a specific type
@@ -174,3 +174,45 @@ def route(path, **kwargs):
         return f
 
     return route_decorator
+
+
+def rbac_require_any_role(required_roles=[]):
+    def middle(func):
+        def wrapper(self, msg, **kwargs):
+            if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles):
+                return func(self, msg, **kwargs)
+            else:
+                msg.say(
+                    "I'm sorry, but you don't have access to that command",
+                    ephemeral=True
+                )
+                admin.notify_admins(
+                    self,
+                    f'Attempt to execute unauthorized command',
+                    f'User {msg.at_sender} tried to execute the following command:'
+                    f'```{msg.text}``` but lacks _one_ of these roles: {", ".join([f"`{role}`" for role in required_roles])}'
+                )
+                return
+        return wrapper
+    return middle
+
+
+def rbac_require_all_roles(required_roles=[]):
+    def middle(func):
+        def wrapper(self, msg, **kwargs):
+            if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
+                return func(self, msg, **kwargs)
+            else:
+                msg.say(
+                    "I'm sorry, but you don't have access to that command",
+                    ephemeral=True
+                )
+                admin.notify_admins(
+                    self,
+                    f'Attempt to execute unauthorized command',
+                    f'User {msg.at_sender} tried to execute the following command:'
+                    f'```{msg.text}``` but lacks _all_ of these roles: {", ".join([f"`{role}`" for role in required_roles])}'
+                )
+                return
+        return wrapper
+    return middle
