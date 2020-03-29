@@ -49,9 +49,9 @@ class MemePlugin(MachineBasePlugin):
                 ["\t_{}_: '{}'".format(url.rsplit('/', 1)[1], description) for description, url in
                  templates.items()]
             )
-            msg.say_webapi(message, ephemeral=ephemeral)
+            msg.say(message, ephemeral=ephemeral)
         else:
-            msg.say_webapi("It seems I cannot find the memes you're looking for :cry:",
+            msg.say("It seems I cannot find the memes you're looking for :cry:",
                            ephemeral=ephemeral)
 
     def _memegen_api_request(self, path):
