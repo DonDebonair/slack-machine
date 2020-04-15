@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 from dacite import from_dict
 
@@ -29,10 +29,10 @@ class Channel:
     is_member: bool
     is_private: bool
     is_mpim: bool
-    members: List[str]
+    members: Optional[List[str]]
     topic: PurposeTopic
     purpose: PurposeTopic
-    previous_names: List[str]
+    previous_names: Optional[List[str]]
 
     @staticmethod
     def from_api_response(user_reponse: Dict[str, Any]) -> 'Channel':
