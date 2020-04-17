@@ -52,7 +52,7 @@ class MemePlugin(MachineBasePlugin):
             msg.say(message, ephemeral=ephemeral)
         else:
             msg.say("It seems I cannot find the memes you're looking for :cry:",
-                           ephemeral=ephemeral)
+                    ephemeral=ephemeral)
 
     def _memegen_api_request(self, path):
         url = self._base_url + path.lower()
