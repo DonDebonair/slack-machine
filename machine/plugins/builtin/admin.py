@@ -1,6 +1,6 @@
 import logging
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import respond_to, required_settings, rbac_require_any_role
+from machine.plugins.decorators import respond_to, required_settings, require_any_role
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ class RBACPlugin(MachineBasePlugin):
     """Role based access control"""
 
     @respond_to(regex=r'^grant\s+role\s+(?P<role>\w+)\s+to\s+<@(?P<user_id>\w+)>$')
-    @rbac_require_any_role(['root', 'admin'])
+    @require_any_role(['root', 'admin'])
     def grant_role_to_user(self, msg, role, user_id):
         """grant role <role> to @user"""
         if role == 'root':
@@ -56,7 +56,7 @@ class RBACPlugin(MachineBasePlugin):
         msg.say(f'Role `{role}` has been granted to <@{user_id}>')
 
     @respond_to(regex=r'^revoke\s+role\s+(?P<role>\w+)\s+from\s+<@(?P<user_id>\w+)>$')
-    @rbac_require_any_role(['root', 'admin'])
+    @require_any_role(['root', 'admin'])
     def revoke_role_from_user(self, msg, role, user_id):
         """revoke role <role> from @user"""
         assigned_roles = role_assignments_by_role(self, role)
@@ -68,7 +68,7 @@ class RBACPlugin(MachineBasePlugin):
             msg.say(f'Role <@{user_id}> does not have role `{role}`')
 
     @respond_to(regex=r'^who\s+has\s+role\s+(?P<role>\w+)')
-    @rbac_require_any_role(['root', 'admin'])
+    @require_any_role(['root', 'admin'])
     def who_has_role(self, msg, role):
         """who has role <role>"""
         assigned_roles = role_assignments_by_role(self, role)

@@ -176,7 +176,7 @@ def route(path, **kwargs):
     return route_decorator
 
 
-def rbac_require_any_role(required_roles=[]):
+def require_any_role(required_roles=[]):
     def middle(func):
         def wrapper(self, msg, **kwargs):
             if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles):
@@ -197,7 +197,7 @@ def rbac_require_any_role(required_roles=[]):
     return middle
 
 
-def rbac_require_all_roles(required_roles=[]):
+def require_all_roles(required_roles=[]):
     def middle(func):
         def wrapper(self, msg, **kwargs):
             if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
