@@ -2,7 +2,7 @@
 check-manifest==0.41
 pyroma==2.6
 pytest==5.4.1
-pytest-mock==3.0.0
+pytest-mock==3.1.0
 tox==3.14.6
 flake8==3.7.9
 twine==3.1.1
