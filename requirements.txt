@@ -4,5 +4,5 @@ apscheduler==3.6.3
 blinker-alt==1.5
 clint==0.5.1
 dataclasses==0.7 ; python_version<'3.7'
-dacite==1.4.0
+dacite==1.5.0
 requests==2.23.0
