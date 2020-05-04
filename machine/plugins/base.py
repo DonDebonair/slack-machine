@@ -65,7 +65,10 @@ class MachineBasePlugin:
         :return: a list of all channels in the Slack workspace, where each channel is a
             :py:class:`~machine.models.channel.Channel` object
         """
-        return self._client.channels
+        try:
+            return self._client.channels
+        except:
+            return None
 
     def find_channel_by_name(self, channel_name: str) -> Optional[Channel]:
         if channel_name.startswith('#'):
@@ -336,6 +339,17 @@ class Message:
         else:
             ephemeral_user = None
 
+        if self.channel is None:
+            return self._client.send_dm(
+                self.sender.id,
+                text=text,
+                attachments=attachments,
+                blocks=blocks,
+                thread_ts=thread_ts,
+                ephemeral_user=ephemeral_user,
+                **kwargs
+            )
+            
         return self._client.send(
             self.channel.id,
             text=text,
