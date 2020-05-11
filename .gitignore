@@ -125,3 +125,5 @@ fabric.properties
 
 # Pytest
 .pytest_cache
+
+.vscode

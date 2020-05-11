@@ -17,7 +17,7 @@ from machine.settings import import_settings
 from machine.singletons import Slack, Scheduler, Storage
 from machine.slack import MessagingClient
 from machine.storage import PluginStorage
-from machine.utils import collections, log_propagate
+from machine.utils import collections, find_shortest_indent, log_propagate
 from machine.utils.module_loading import import_string
 
 __all__ = ["Machine", "start"]
@@ -221,10 +221,12 @@ class Machine:
                 "class_name": plugin_class,
                 "function": getattr(cls_instance, "catch_all"),
             }
+
         if cls_instance.__doc__:
             class_help = cls_instance.__doc__.splitlines()[0]
         else:
             class_help = plugin_class
+
         self._help["human"][class_help] = self._help["human"].get(class_help, {})
         self._help["robot"][class_help] = self._help["robot"].get(class_help, [])
         for name, fn in methods:
@@ -285,14 +287,33 @@ class Machine:
 
     @staticmethod
     def _parse_human_help(doc):
-        summary = doc.splitlines()[0].split(":")
+        doclines = doc.splitlines()
+        summary = doclines[0].split(":")
+
+        if len(doclines) > 1:
+            description = doclines[1:]
+            try:
+                # Trim off leading/trailing lines if they are empty
+                if description[0].strip() == "":
+                    description = description[1:]
+                if description[-1].strip() == "":
+                    description = description[:-1]
+
+                desc_min_indent = find_shortest_indent(description)
+                description = [line[desc_min_indent:] for line in description]
+            except IndexError:
+                pass
+        else:
+            description = None
+
         if len(summary) > 1:
             command = summary[0].strip()
-            cmd_help = summary[1].strip()
+            summary = summary[1].strip()
         else:
             command = "??"
-            cmd_help = summary[0].strip()
-        return {"command": command, "help": cmd_help}
+            summary = summary[0].strip()
+
+        return {"command": command, "summary": summary, "description": description}
 
     @staticmethod
     def _parse_robot_help(regex, action):

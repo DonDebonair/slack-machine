@@ -10,12 +10,14 @@ from machine.plugins.decorators import listen_to, respond_to
 class PingPongPlugin(MachineBasePlugin):
     """Playing Ping Pong"""
 
+    @respond_to(r"^ping$")
     @listen_to(r"^ping$")
     async def listen_to_ping(self, msg: Message):
         """ping: serving the ball"""
         logger.debug("Ping received with msg: {}", msg)
         await msg.say("pong")
 
+    @respond_to(r"^pong$")
     @listen_to(r"^pong$")
     async def listen_to_pong(self, msg: Message):
         """pong: returning the ball"""
