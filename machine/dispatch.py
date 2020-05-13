@@ -128,12 +128,16 @@ class EventDispatcher:
 
     async def _dispatch_listeners(self, listeners, event):
         handlers = []
-        for l in listeners:
-            matcher = l["regex"]
-            match = matcher.search(event.get("text", ""))
+        for listener in listeners:
+            matcher = listener["regex"]
+            text = event.get("text", "")
+            if listener["lstrip"]:
+                text = text.lstrip()
+
+            match = matcher.search(text)
             if match:
-                message = self._gen_message(event, l["class_name"])
-                handlers.append(l["function"](message, **match.groupdict()))
+                message = self._gen_message(event, listener["class_name"])
+                handlers.append(listener["function"](message, **match.groupdict()))
 
         if handlers:
             await asyncio.gather(*handlers)

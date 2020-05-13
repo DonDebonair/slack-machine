@@ -12,7 +12,6 @@ from machine.storage.backends.base import MachineBaseStorage
 from machine.settings import import_settings
 
 from tests.fake_plugins import FakePlugin
-from tests.helpers import async_test
 
 
 @pytest.fixture
@@ -51,6 +50,7 @@ def plugin_actions(fake_plugin):
                 "class_name": "tests.fake_plugins.FakePlugin",
                 "function": listen_fn,
                 "regex": re.compile("hi", re.IGNORECASE),
+                "lstrip": True,
             }
         },
         "respond_to": {
@@ -59,6 +59,7 @@ def plugin_actions(fake_plugin):
                 "class_name": "tests.fake_plugins.FakePlugin",
                 "function": respond_fn,
                 "regex": re.compile("hello", re.IGNORECASE),
+                "lstrip": True,
             }
         },
         "process": {
@@ -94,7 +95,7 @@ def dispatcher(mocker, plugin_actions, request):
     return dispatch_instance
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_handle_event_process(dispatcher, fake_plugin):
     await dispatcher.handle_event("some_event", data={})
     assert fake_plugin.process_function.call_count == 1
@@ -111,7 +112,7 @@ def _assert_message(args, text):
     assert args[0][0].text == text
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_handle_event_listen_to(dispatcher, fake_plugin):
     msg_event = {"text": "hi", "channel": "C1", "user": "user1"}
     await dispatcher.handle_event("message", data=msg_event)
@@ -121,7 +122,7 @@ async def test_handle_event_listen_to(dispatcher, fake_plugin):
     _assert_message(args, "hi")
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_handle_event_respond_to(dispatcher, fake_plugin):
     msg_event = {"text": "<@123> hello", "channel": "C1", "user": "user1"}
     await dispatcher.handle_event("message", data=msg_event)

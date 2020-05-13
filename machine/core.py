@@ -269,6 +269,7 @@ class Machine:
                         "class_name": plugin_class,
                         "function": fn,
                         "regex": regex,
+                        "lstrip": config["lstrip"],
                     }
                     key = "{}-{}".format(fq_fn_name, regex.pattern)
                     self._plugin_actions[action][key] = event_handler

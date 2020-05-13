@@ -10,13 +10,12 @@ from machine.plugins.decorators import respond_to
 class HelpPlugin(MachineBasePlugin):
     """Getting Help"""
 
-    @respond_to(r"^help(?:\s+?(?P<topic>\w+)?)?")
+    @respond_to(r"^help(?:\s+?(?P<topic>.+)?)?")
     async def help(self, msg: Message, topic: Optional[str]):
         """ help [topic]: display this help text or display the manual for a topic/command
         """
 
         manual = (await self.storage.get("manual", shared=True))["human"]
-        print(f"Topic {topic}")
         if not topic:
             help_text = self._gen_manual_overview(manual)
         else:

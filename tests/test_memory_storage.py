@@ -5,15 +5,13 @@ import pytest
 
 from machine.storage.backends.memory import MemoryStorage
 
-from tests.helpers import async_test
-
 
 @pytest.fixture
 def memory_storage():
     return MemoryStorage({})
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_store_retrieve_values(memory_storage):
     assert memory_storage._storage == {}
     await memory_storage.set("key1", "value1")
@@ -21,7 +19,7 @@ async def test_store_retrieve_values(memory_storage):
     assert (await memory_storage.get("key1")) == "value1"
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_delete_values(memory_storage):
     assert memory_storage._storage == {}
     await memory_storage.set("key1", "value1")
@@ -34,7 +32,7 @@ async def test_delete_values(memory_storage):
     assert memory_storage._storage == {"key1": ("value1", None)}
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_expire_values(memory_storage, mocker):
     assert memory_storage._storage == {}
     mocked_dt = mocker.patch("machine.storage.backends.memory.datetime", autospec=True)
@@ -48,7 +46,7 @@ async def test_expire_values(memory_storage, mocker):
     assert (await memory_storage.get("key1")) is None
 
 
-@async_test
+@pytest.mark.asyncio
 async def test_inclusion(memory_storage):
     assert memory_storage._storage == {}
     await memory_storage.set("key1", "value1")

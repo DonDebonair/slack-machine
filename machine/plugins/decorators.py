@@ -30,7 +30,7 @@ def process(slack_event_type):
     return process_decorator
 
 
-def listen_to(regex, flags=re.IGNORECASE):
+def listen_to(regex, flags=re.IGNORECASE, lstrip: bool = True):
     """Listen to messages matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that match a regex pattern.
@@ -46,22 +46,20 @@ def listen_to(regex, flags=re.IGNORECASE):
 
     def listen_to_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["listen_to"] = f.metadata["plugin_actions"].get(
-            "listen_to", {}
-        )
-        f.metadata["plugin_actions"]["listen_to"]["regex"] = f.metadata[
-            "plugin_actions"
-        ]["listen_to"].get("regex", [])
+        f.metadata.setdefault("plugin_actions", {})
+        f.metadata["plugin_actions"].setdefault("listen_to", {})
+        f.metadata["plugin_actions"]["listen_to"].setdefault("regex", [])
+
         f.metadata["plugin_actions"]["listen_to"]["regex"].append(
             re.compile(regex, flags)
         )
+        f.metadata["plugin_actions"]["listen_to"]["lstrip"] = lstrip
         return f
 
     return listen_to_decorator
 
 
-def respond_to(regex, flags=re.IGNORECASE):
+def respond_to(regex, flags=re.IGNORECASE, lstrip: bool = True):
     """Listen to messages mentioning the bot and matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that are directed to the bot
@@ -79,16 +77,14 @@ def respond_to(regex, flags=re.IGNORECASE):
 
     def respond_to_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["respond_to"] = f.metadata["plugin_actions"].get(
-            "respond_to", {}
-        )
-        f.metadata["plugin_actions"]["respond_to"]["regex"] = f.metadata[
-            "plugin_actions"
-        ]["respond_to"].get("regex", [])
+        f.metadata.setdefault("plugin_actions", {})
+        f.metadata["plugin_actions"].setdefault("respond_to", {})
+        f.metadata["plugin_actions"]["respond_to"].setdefault("regex", [])
+
         f.metadata["plugin_actions"]["respond_to"]["regex"].append(
             re.compile(regex, flags)
         )
+        f.metadata["plugin_actions"]["respond_to"]["lstrip"] = lstrip
         return f
 
     return respond_to_decorator
@@ -130,7 +126,9 @@ def schedule(
 
     def schedule_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata.setdefault("plugin_actions", {})
+        f.metadata["plugin_actions"].setdefault("respond_to", {})
+
         f.metadata["plugin_actions"]["schedule"] = kwargs
         return f
 
@@ -166,9 +164,8 @@ def required_settings(settings):
 
     def required_settings_decorator(f_or_cls):
         f_or_cls.metadata = getattr(f_or_cls, "metadata", {})
-        f_or_cls.metadata["required_settings"] = f_or_cls.metadata.get(
-            "required_settings", []
-        )
+        f_or_cls.metadata.setdefault("required_settings", [])
+
         if isinstance(settings, list):
             f_or_cls.metadata["required_settings"].extend(settings)
         elif isinstance(settings, str):
@@ -189,10 +186,9 @@ def route(path, **kwargs):
 
     def route_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["route"] = f.metadata["plugin_actions"].get(
-            "route", []
-        )
+        f.metadata.setdefault("plugin_actions", {})
+        f.metadata["plugin_actions"].setdefault("route", [])
+
         kwargs["path"] = path
         f.metadata["plugin_actions"]["route"].append(kwargs)
         return f
