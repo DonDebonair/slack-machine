@@ -73,7 +73,7 @@ class MessagingClient:
         return None
 
     async def get_users(self) -> SlackResponse:
-        return list(await Slack.get_instance().web.users_list())
+        return await Slack.get_instance().web.users_list()
 
     @alru_cache(maxsize=32)
     async def find_user_by_id(self, user_id: str) -> Optional[dict]:
