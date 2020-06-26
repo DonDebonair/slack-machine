@@ -12,5 +12,5 @@ Sphinx==3.1.1
 sphinx-autobuild==0.7.1
 sphinx-autodoc-typehints==1.11.0
 redis==3.5.2
-Cython==0.29.19
+Cython==0.29.20
 happybase==1.2.0
