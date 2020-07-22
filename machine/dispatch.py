@@ -93,9 +93,9 @@ class EventDispatcher:
         return event
 
     def _dispatch_listeners(self, listeners: List[Dict[str, Any]], event: Dict[str, Any]):
-        for l in listeners:
-            matcher = l['regex']
+        for listener in listeners:
+            matcher = listener['regex']
             match = matcher.search(event.get('text', ''))
             if match:
-                message = self._gen_message(event, l['class_name'])
-                l['function'](message, **match.groupdict())
+                message = self._gen_message(event, listener['class_name'])
+                listener['function'](message, **match.groupdict())

@@ -19,7 +19,7 @@ class ImageSearchPlugin(MachineBasePlugin):
             url = random.choice(results)
             msg.say(url)
         else:
-            msg.say("Couldn't find any results for ''! :cry:".format(query))
+            msg.say("Couldn't find any results for '{}'! :cry:".format(query))
 
     @respond_to(r'animate(?: me)? (?P<query>.+)')
     def animate_me(self, msg, query):
@@ -29,7 +29,7 @@ class ImageSearchPlugin(MachineBasePlugin):
             url = random.choice(results)
             msg.say(url)
         else:
-            msg.say("Couldn't find any results for ''! :cry:".format(query))
+            msg.say("Couldn't find any results for '{}'! :cry:".format(query))
 
     def _search(self, query, animated=False):
         query_params = {

@@ -66,8 +66,7 @@ def plugin_actions(fake_plugin):
 
 @pytest.fixture(params=[None, {"ALIASES": "!"}, {"ALIASES": "!,$"}], ids=["No Alias", "Alias", "Aliases"])
 def dispatcher(mocker, plugin_actions, request):
-    mocker.patch('machine.clients.singletons.slack.LowLevelSlackClient', autospec=True)
-    mocker.patch('machine.clients.singletons.scheduling.BackgroundScheduler', autospec=True)
+    mocker.patch('machine.dispatch.LowLevelSlackClient', autospec=True)
     dispatch_instance = EventDispatcher(plugin_actions, request.param)
     mocker.patch.object(dispatch_instance, '_get_bot_id')
     dispatch_instance._get_bot_id.return_value = '123'

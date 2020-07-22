@@ -68,7 +68,8 @@ class LowLevelSlackClient(metaclass=Singleton):
         logger.debug("Users: %s" % ", ".join([f"{u.profile.display_name}|{u.profile.real_name}"
                                               for u in self._users.values()]))
         # Build channel cache
-        all_channels = call_paginated_endpoint(self.web_client.conversations_list, 'channels', types='public_channel,private_channel')
+        all_channels = call_paginated_endpoint(self.web_client.conversations_list, 'channels',
+                                               types='public_channel,private_channel')
         for c in all_channels:
             self._register_channel(c)
         logger.debug("Number of channels found: %s" % len(self._channels))

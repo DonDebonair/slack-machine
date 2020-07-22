@@ -7,11 +7,15 @@ from machine.utils.collections import CaseInsensitiveDict
 
 
 @pytest.fixture(scope='module')
-def settings():
+def settings(module_mocker):
     settings = CaseInsensitiveDict()
     settings['PLUGINS'] = ['tests.fake_plugins']
     settings['SLACK_API_TOKEN'] = 'xoxo-abc123'
     settings['STORAGE_BACKEND'] = 'machine.storage.backends.memory.MemoryStorage'
+    slack_settings = module_mocker.patch('machine.clients.singletons.slack.import_settings')
+    storage_settings = module_mocker.patch('machine.clients.singletons.storage.import_settings')
+    slack_settings.return_value = (settings, True)
+    storage_settings.return_value = (settings, True)
     return settings
 
 
@@ -26,7 +30,6 @@ def required_settings_class():
     @required_settings(['setting_1', 'setting_2'])
     class C:
         pass
-
     return C
 
 
