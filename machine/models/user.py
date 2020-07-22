@@ -33,7 +33,7 @@ class User:
     id: str
     team_id: str
     name: str
-    deleted: bool
+    deleted: Optional[bool]
     profile: Profile
     is_bot: bool
     updated: int
