@@ -69,11 +69,11 @@ class LowLevelSlackClient(metaclass=Singleton):
                                               for u in self._users.values()]))
         # Build channel cache
         all_channels = call_paginated_endpoint(self.web_client.conversations_list, 'channels',
-                                               types='public_channel,private_channel')
+                                               types='public_channel,private_channel,mpim,im')
         for c in all_channels:
             self._register_channel(c)
         logger.debug("Number of channels found: %s" % len(self._channels))
-        logger.debug("Channels: %s" % ", ".join([c.name for c in self._channels.values()]))
+        logger.debug("Channels: %s" % ", ".join([c.identifier for c in self._channels.values()]))
 
     def _on_team_join(self, **payload):
         user = self._register_user(payload['data']['user'])
@@ -111,7 +111,9 @@ class LowLevelSlackClient(metaclass=Singleton):
         RTMClient.on(event='open', callback=self._on_open)
         RTMClient.on(event='team_join', callback=self._on_team_join)
         RTMClient.on(event='channel_created', callback=self._on_channel_created)
+        RTMClient.on(event='im_created', callback=self._on_channel_created)
         RTMClient.on(event='channel_deleted', callback=self._on_channel_deleted)
+        RTMClient.on(event='im_close', callback=self._on_channel_deleted)
         RTMClient.on(event='channel_rename', callback=self._on_channel_updated)
         RTMClient.on(event='channel_archive', callback=self._on_channel_updated)
         RTMClient.on(event='channel_unarchive', callback=self._on_channel_updated)

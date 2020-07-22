@@ -531,11 +531,18 @@ class Message:
         return 'thread_ts' in self._msg_event
 
     def __str__(self):
-        return "Message '{}', sent by user @{} in channel #{}".format(
-            self.text,
-            self.sender.profile.real_name,
-            self.channel.name
-        )
+        if self.channel.is_im:
+            message = "Message '{}', sent by user @{} in DM".format(
+                self.text,
+                self.sender.profile.real_name
+            )
+        else:
+            message = "Message '{}', sent by user @{} in channel #{}".format(
+                self.text,
+                self.sender.profile.real_name,
+                self.channel.name
+            )
+        return message
 
     def __repr__(self):
         return "Message(text={}, sender={}, channel={})".format(
