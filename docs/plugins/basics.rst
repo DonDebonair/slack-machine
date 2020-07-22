@@ -3,23 +3,23 @@
 Plugin Basics
 =============
 
-Writing plugins for Slack Machine is easy. To show you *how* easy, we'll build and run a simple 
-plugin from start to finish. To be able to follow this guide, you have to have 
+Writing plugins for Slack Machine is easy. To show you *how* easy, we'll build and run a simple
+plugin from start to finish. To be able to follow this guide, you have to have
 :ref:`installed and configured <installation>` Slack Machine first!
 
 The Base class for plugins
 --------------------------
 
-Plugins in Slack Machine are classes that subclass :py:class:`~machine.plugins.base.MachineBasePlugin`. 
-Inheriting from this class tells Slack Machine that we're dealing with a plugin. But that's not even 
-the most exciting part! With this base class, your plugin immediately has a lot of functionality at 
-its disposal that makes it super easy to do anything from talking to channels, responding to messages, 
+Plugins in Slack Machine are classes that subclass :py:class:`~machine.plugins.base.MachineBasePlugin`.
+Inheriting from this class tells Slack Machine that we're dealing with a plugin. But that's not even
+the most exciting part! With this base class, your plugin immediately has a lot of functionality at
+its disposal that makes it super easy to do anything from talking to channels, responding to messages,
 sending DMs, and much more!
 
 The decorators
 --------------
 
-Being able to talk in Slack is only half the story for plugins. The functions in your plugin have to 
+Being able to talk in Slack is only half the story for plugins. The functions in your plugin have to
 be triggered somehow. Slack Machine provides :ref:`decorators-section` for that.
 You can decorate the functions in your plugin class to tell them what they should react to.
 
@@ -32,8 +32,8 @@ We're going to create a plugin that listens for `The Answer`_, and responds in k
 
 .. _The Answer: http://hitchhikers.wikia.com/wiki/42
 
-In the root of your bot (where your ``local_settings.py`` lives), create a *plugins* folder. 
-In it, create an ``__init__.py`` (so your *plugins* folder becomes a package) and a file named 
+In the root of your bot (where your ``local_settings.py`` lives), create a *plugins* folder.
+In it, create an ``__init__.py`` (so your *plugins* folder becomes a package) and a file named
 ``hitchhikers.py``.
 
 Your folder structure should look like this:
@@ -49,7 +49,7 @@ Step 2: Adding the code
 -----------------------
 
 First, we should import the :py:class:`~machine.plugins.base.MachineBasePlugin` in our code, and
-the decorator to listen for specific messages. Then we can create our plugin class that includes 
+the decorator to listen for specific messages. Then we can create our plugin class that includes
 a function that listens for The Answer, and responds to it:
 
 .. code-block:: python

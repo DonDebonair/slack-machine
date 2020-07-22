@@ -3,7 +3,7 @@
 Installation
 ============
 
-This part of the documentation helps you install Slack Machine with the least amount of friction, 
+This part of the documentation helps you install Slack Machine with the least amount of friction,
 or the most amount of flexibility.
 
 Installing the easy way with pip
@@ -23,7 +23,7 @@ It is **strongly recommended** that you install ``slack-machine`` inside a `virt
 Installing from source
 ----------------------
 
-If you are adventurous, want to modify the core of your Slack Machine instance and want maximum 
+If you are adventurous, want to modify the core of your Slack Machine instance and want maximum
 flexibility, you can also install from source. This way, you can enjoy the latest and greatest!
 
 You can either clone the public repository:

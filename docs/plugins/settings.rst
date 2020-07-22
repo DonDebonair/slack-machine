@@ -3,10 +3,10 @@
 Plugin Settings
 ===============
 
-All settings that are defined, either from the Slack Machine defaults or in ``local_settings.py`` 
-are available to plugins through the ``self.settings`` field. This is a dictionary with all 
-settings indexed by their name. Next to ``local_settings.py``, users can also specify settings 
-with environment variables. Slack Machine will automatically translate any environment variable 
+All settings that are defined, either from the Slack Machine defaults or in ``local_settings.py``
+are available to plugins through the ``self.settings`` field. This is a dictionary with all
+settings indexed by their name. Next to ``local_settings.py``, users can also specify settings
+with environment variables. Slack Machine will automatically translate any environment variable
 with the format ``SM_<SETTING-NAME>`` to a setting with name ``SETTING-NAME``, overriding a setting
 with the same name from ``local_settings.py`` or the default settings.
 
@@ -59,4 +59,3 @@ Example:
     @required_settings(['TODO_SERVICE_USERNAME', 'TODO_SERVICE_PASSWORD'])
     class TodoPlugin(MachineBasePlugin):
         ...
-

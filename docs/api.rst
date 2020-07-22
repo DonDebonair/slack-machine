@@ -3,8 +3,8 @@
 API Documentation
 =================
 
-This is the API documentation of all the classes and functions relevant for Plugin development. 
-The rest of the code deals with the internal workings of Slack Machine and is very much an 
+This is the API documentation of all the classes and functions relevant for Plugin development.
+The rest of the code deals with the internal workings of Slack Machine and is very much an
 implementation detail and subject to change. Therefore it is not documented.
 
 Plugin classes
@@ -25,7 +25,7 @@ The following 2 classes form the basis for Plugin development.
 Decorators
 ----------
 
-These are the decorators you can use to have Slack Machine respond to specific things 
+These are the decorators you can use to have Slack Machine respond to specific things
 (events, messages, etc.)
 
 .. automodule:: machine.plugins.decorators
@@ -47,7 +47,7 @@ These classes represent base objects from the Slack API
 Storage
 -------
 
-Storage is exposed to plugins through the ``self.storage`` field. The following class implements 
+Storage is exposed to plugins through the ``self.storage`` field. The following class implements
 the interface plugins can use to interact with the storage backend.
 
 .. autoclass:: machine.storage.PluginStorage

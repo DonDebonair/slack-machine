@@ -1,4 +1,4 @@
-div.body p, div.body dd, 
+div.body p, div.body dd,
 div.body li, div.body blockquote {
 	hyphens: manual;
 }

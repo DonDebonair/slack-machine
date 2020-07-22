@@ -21,7 +21,7 @@ Slack Machine
 .. image:: https://codecov.io/gh/DandyDev/slack-machine/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/DandyDev/slack-machine
 
-Slack Machine is a sexy, simple, yet powerful and extendable Slack bot. More than just a bot, 
+Slack Machine is a sexy, simple, yet powerful and extendable Slack bot. More than just a bot,
 Slack Machine is a framework that helps you develop your Slack workspace into a ChatOps powerhouse.
 
 Features
