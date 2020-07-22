@@ -19,8 +19,8 @@ def import_settings(settings_module='local_settings') -> Tuple[CaseInsensitiveDi
         'HTTP_SERVER_HOST': '0.0.0.0',
         'HTTP_SERVER_PORT': 8080,
         'HTTP_SERVER_BACKEND': 'wsgiref',
-        'HTTP_PROXY': '',
-        'HTTPS_PROXY': '',
+        'HTTP_PROXY': None,
+        'HTTPS_PROXY': None,
         'KEEP_ALIVE': None
     }
     settings = CaseInsensitiveDict(default_settings)
