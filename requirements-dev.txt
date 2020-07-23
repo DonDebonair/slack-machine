@@ -3,7 +3,7 @@ check-manifest==0.42
 pyroma==2.6
 pytest==5.4.3
 pytest-mock==3.2.0
-tox==3.17.1
+tox==3.18.0
 flake8==3.8.3
 twine==3.2.0
 coverage==5.2
@@ -12,6 +12,5 @@ Sphinx==3.1.2
 sphinx-autobuild==0.7.1
 redis==3.5.3
 sphinx-autodoc-typehints==1.11.0
-redis==3.5.3
 Cython==0.29.21
 happybase==1.2.0
