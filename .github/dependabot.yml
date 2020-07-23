@@ -1,0 +1,10 @@
+version: 2
+updates:
+  # Enable version updates for npm
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
