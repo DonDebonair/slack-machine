@@ -56,7 +56,7 @@ class Machine:
             if 'SLACK_API_TOKEN' not in self._settings:
                 error("No SLACK_API_TOKEN found in settings! I need that to work...")
                 sys.exit(1)
-            self._client = LowLevelSlackClient()
+            self._client = LowLevelSlackClient(settings=self._settings)
             puts("Initializing storage using backend: {}".format(self._settings['STORAGE_BACKEND']))
             self._storage = Storage.get_instance()
             logger.debug("Storage initialized!")

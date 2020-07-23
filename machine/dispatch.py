@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class EventDispatcher:
 
     def __init__(self, plugin_actions, settings=None):
-        self._client = LowLevelSlackClient()
+        self._client = LowLevelSlackClient(settings=settings)
         self._plugin_actions = plugin_actions
         alias_regex = ''
         if settings and "ALIASES" in settings:

@@ -26,8 +26,8 @@ def call_paginated_endpoint(endpoint: Callable, field: str, **kwargs) -> List:
 
 
 class LowLevelSlackClient(metaclass=Singleton):
-    def __init__(self):
-        _settings, _ = import_settings()
+    def __init__(self, settings=None):
+        _settings = settings
         slack_api_token = _settings.get('SLACK_API_TOKEN', None)
         http_proxy = _settings.get('HTTP_PROXY', None)
         self.rtm_client = RTMClient(token=slack_api_token, proxy=http_proxy)
