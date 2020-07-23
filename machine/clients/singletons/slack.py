@@ -84,7 +84,7 @@ class LowLevelSlackClient(metaclass=Singleton):
         logger.debug("User changed: %s" % user)
 
     def _on_channel_created(self, **payload):
-        channel_resp = self.web_client.channels_info(channel=payload['data']['channel']['id'])
+        channel_resp = self.web_client.conversations_info(channel=payload['data']['channel']['id'])
         channel = self._register_channel(channel_resp['channel'])
         logger.debug("Channel created: %s" % channel)
 
@@ -94,7 +94,7 @@ class LowLevelSlackClient(metaclass=Singleton):
             channel_id = data['channel']['id']
         else:
             channel_id = data['channel']
-        channel_resp = self.web_client.channels_info(channel=channel_id)
+        channel_resp = self.web_client.conversations_info(channel=channel_id)
         channel = self._register_channel(channel_resp['channel'])
         logger.debug("Channel updated: %s" % channel)
 
