@@ -7,19 +7,19 @@ from dacite import from_dict
 @dataclass(frozen=True)
 class Profile:
     avatar_hash: str
-    status_text: str
-    status_emoji: str
-    status_expiration: int
+    status_text: Optional[str]
+    status_emoji: Optional[str]
+    status_expiration: Optional[int]
     real_name: str
     display_name: str
     real_name_normalized: str
     display_name_normalized: str
-    image_24: str
-    image_32: str
-    image_48: str
-    image_72: str
-    image_192: str
-    image_512: str
+    image_24: Optional[str]
+    image_32: Optional[str]
+    image_48: Optional[str]
+    image_72: Optional[str]
+    image_192: Optional[str]
+    image_512: Optional[str]
     team: str
     email: Optional[str] = None
     image_original: Optional[str] = None
@@ -31,7 +31,7 @@ class User:
     User model that represents a user object from the Slack API
     """
     id: str
-    team_id: str
+    team_id: Optional[str]
     name: str
     deleted: Optional[bool]
     profile: Profile
