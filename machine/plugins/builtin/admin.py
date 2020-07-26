@@ -46,7 +46,7 @@ class RBACPlugin(MachineBasePlugin):
     @respond_to(regex=r'^grant\s+role\s+(?P<role>\w+)\s+to\s+<@(?P<user_id>\w+)>$')
     @require_any_role(['root', 'admin'])
     def grant_role_to_user(self, msg, role, user_id):
-        """grant role <role> to @user"""
+        """grant role <role> to <user>: Grant role"""
         if role == 'root':
             msg.say("Sorry, role `root` can only be granted via static configuration")
             return
@@ -58,7 +58,7 @@ class RBACPlugin(MachineBasePlugin):
     @respond_to(regex=r'^revoke\s+role\s+(?P<role>\w+)\s+from\s+<@(?P<user_id>\w+)>$')
     @require_any_role(['root', 'admin'])
     def revoke_role_from_user(self, msg, role, user_id):
-        """revoke role <role> from @user"""
+        """revoke role <role> from <user>: Revoke role"""
         assigned_roles = role_assignments_by_role(self, role)
         if user_id in assigned_roles:
             del assigned_roles[user_id]
@@ -70,7 +70,7 @@ class RBACPlugin(MachineBasePlugin):
     @respond_to(regex=r'^who\s+has\s+role\s+(?P<role>\w+)')
     @require_any_role(['root', 'admin'])
     def who_has_role(self, msg, role):
-        """who has role <role>"""
+        """who has role <role>: List users with role"""
         assigned_roles = role_assignments_by_role(self, role)
         if len(assigned_roles):
             msg.say(
