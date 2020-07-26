@@ -20,7 +20,7 @@ def matching_roles_by_user_id(self, user_id, roles):
     for role in roles:
         assigned_roles = role_assignments_by_role(self, role)
         if assigned_roles and user_id in assigned_roles:
-            matching_roles = matching_roles + 1
+            matching_roles += 1
 
     return matching_roles
 

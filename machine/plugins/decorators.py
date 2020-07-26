@@ -177,6 +177,13 @@ def route(path, **kwargs):
 
 
 def require_any_role(required_roles=[]):
+    """Specify required roles for a plugin method
+
+    To use the plugin method where this decorator is applied, the user must have
+    at least one of the listed roles.
+
+    :param required_roles: list of roles required to use the plugin method
+    """
     def middle(func):
         def wrapper(self, msg, **kwargs):
             if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles):
@@ -198,6 +205,13 @@ def require_any_role(required_roles=[]):
 
 
 def require_all_roles(required_roles=[]):
+    """Specify required roles for a plugin method
+
+    To use the plugin method where this decorator is applied, the user must have
+    all of the listed roles.
+
+    :param required_roles: list of roles required to use the plugin method
+    """
     def middle(func):
         def wrapper(self, msg, **kwargs):
             if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
