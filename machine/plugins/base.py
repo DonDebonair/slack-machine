@@ -89,7 +89,7 @@ class MachineBasePlugin:
         return self._client.fmt_mention(user["id"])
 
     async def say(
-        self, channel, text, attachments=None, thread_ts=None, ephemeral_user=None
+        self, channel, text, *, attachments=None, thread_ts=None, ephemeral_user=None
     ):
         """Send a message to a channel using the WebAPI
 
@@ -115,7 +115,11 @@ class MachineBasePlugin:
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         return await self._client.send(
-            channel, text, attachments, thread_ts, ephemeral_user
+            channel,
+            text,
+            attachments=attachments,
+            thread_ts=thread_ts,
+            ephemeral_user=ephemeral_user,
         )
 
     def say_scheduled(self, when, channel, text, attachments, ephemeral_user):
@@ -166,7 +170,7 @@ class MachineBasePlugin:
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        return self._client.send_dm(user, text, attachments)
+        return await self._client.send_dm(user, text, attachments)
 
     def send_dm_scheduled(self, when, user, text, attachments=None):
         """Schedule a Direct Message and send it using the WebAPI
