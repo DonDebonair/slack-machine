@@ -114,7 +114,7 @@ class MachineBasePlugin:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
-        return await self._client.send_webapi(
+        return await self._client.send(
             channel, text, attachments, thread_ts, ephemeral_user
         )
 
