@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 class MachineBaseStorage:
     """Base class for storage backends
 
@@ -8,6 +9,7 @@ class MachineBaseStorage:
     - Serialization/Deserialization of data
     - Namespacing of keys (so data stored by different plugins doesn't clash)
     """
+
     def __init__(self, settings):
         self.settings = settings
 
@@ -16,7 +18,7 @@ class MachineBaseStorage:
             that need to be awaited to connect or create clients (ex: `aioredis.create_pool`)
         """
 
-        raise NotImplementedError
+        raise NotImplementedError()
 
     async def get(self, key):
         """Retrieve data by key
@@ -25,7 +27,7 @@ class MachineBaseStorage:
         :return: the raw data for the provided key, as (byte)string. Should return ``None`` when
             the key is unknown or the data has expired.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     async def set(self, key, value, expires=None):
         """Store data by key
@@ -35,14 +37,14 @@ class MachineBaseStorage:
         :param expires: optional expiration time in seconds, after which the data should not be
             returned any more.
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     async def delete(self, key):
         """Delete data by key
 
         :param key: key for which to delete the data
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     async def has(self, key):
         """Check if the key exists
@@ -50,11 +52,19 @@ class MachineBaseStorage:
         :param key: key to check
         :return: ``True/False`` wether the key exists
         """
-        raise NotImplementedError
+        raise NotImplementedError()
 
     async def size(self):
         """Calculate the total size of the storage
 
         :return: total size of storage in bytes (integer)
         """
-        raise NotImplementedError
+        raise NotImplementedError()
+
+    async def find_keys(self, pattern):
+        """ Find matching keys based on a glob pattern.
+
+        :param pattern: pattern to search for
+        :return: Iterable over matching keys
+        """
+        raise NotImplementedError()

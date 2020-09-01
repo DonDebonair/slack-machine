@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import aioredis
+import itertools
 
 from machine.storage.backends.base import MachineBaseStorage
 
@@ -44,7 +45,20 @@ class RedisStorage(MachineBaseStorage):
     async def size(self):
         self._ensure_connected()
         info = await self._redis.info("memory")
-        return info["used_memory"]
+        return info["memory"]["used_memory"]
+
+    async def find_keys(self, pattern):
+        self._ensure_connected()
+        pattern = self._prefix(pattern)
+        return itertools.chain.from_iterable(
+            [page async for page in self._scan_iter(pattern)]
+        )
+
+    async def _scan_iter(self, pattern):
+        cursor = b"0"
+        while cursor:
+            cursor, keys = await self._redis.scan(cursor=cursor, match=pattern)
+            yield keys
 
 
 class NotConnectedError(Exception):

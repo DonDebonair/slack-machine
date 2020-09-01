@@ -1,5 +1,7 @@
+# -*- coding: utf-8 -*-
 import sys
 from datetime import datetime, timedelta
+from fnmatch import fnmatchcase
 
 from machine.storage.backends.base import MachineBaseStorage
 
@@ -46,3 +48,6 @@ class MemoryStorage(MachineBaseStorage):
 
     async def size(self):
         return sys.getsizeof(self._storage)  # pragma: no cover
+
+    async def find_keys(self, pattern):
+        return filter(lambda key: fnmatchcase(key, pattern), self._storage.keys())

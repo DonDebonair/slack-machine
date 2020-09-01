@@ -31,7 +31,7 @@ class PluginStorage:
         :param key: the key under which to store the data
         :param value: the data to store
         :param expires: optional number of seconds after which the data is expired
-        :param shared: ``True/False`` wether this data should be shared by other plugins.  Use with
+        :param shared: ``True/False`` whether this data should be shared by other plugins.  Use with
             care, because it pollutes the global namespace of the storage.
         """
         namespaced_key = self._namespace_key(key, shared)
@@ -42,7 +42,7 @@ class PluginStorage:
         """Retrieve data by key
 
         :param key: key for the data to retrieve
-        :param shared: ``True/False`` wether to retrieve data from the shared (global) namespace.
+        :param shared: ``True/False`` whether to retrieve data from the shared (global) namespace.
         :return: the data, or ``None`` if the key cannot be found/has expired
         """
         namespaced_key = self._namespace_key(key, shared)
@@ -61,8 +61,8 @@ class PluginStorage:
         ``self.storage.has('key', shared=False)``
 
         :param key: key to check
-        :param shared: ``True/False`` wether to check in the shared (global) namespace
-        :return: ``True/False`` wether the key exists. Can only return ``True`` if the key has not
+        :param shared: ``True/False`` whether to check in the shared (global) namespace
+        :return: ``True/False`` whether the key exists. Can only return ``True`` if the key has not
             expired.
         """
         namespaced_key = self._namespace_key(key, shared)
@@ -72,11 +72,22 @@ class PluginStorage:
         """Remove a key and its data from storage
 
         :param key: key to remove
-        :param shared: ``True/False`` wether the key to remove should be in the shared (global)
+        :param shared: ``True/False`` whether the key to remove should be in the shared (global)
             namespace
         """
         namespaced_key = self._namespace_key(key, shared)
         await Storage.get_instance().delete(namespaced_key)
+
+    async def find_keys(self, pattern, shared=False):
+        """ Find all keys matching the pattern.
+
+            :param pattern: pattern to search for
+            :param shared: ``True/False`` whether the search should occur on the shared (global)
+                namespace
+            :return: iterable over matching keys
+        """
+        namespaced_ptn = self._namespace_key(pattern, shared)
+        return await Storage.get_instance().find_keys(namespaced_ptn)
 
     async def get_storage_size(self):
         """Calculate the total size of the storage

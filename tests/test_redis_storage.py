@@ -65,7 +65,7 @@ async def test_delete(redis_storage, redis_client):
 @pytest.mark.asyncio
 async def test_size(redis_storage, redis_client):
     redis_client.info.expect("memory").returns(
-        make_awaitable_result({"used_memory": "haha all of it"})
+        make_awaitable_result({"memory": {"used_memory": "haha all of it"}})
     )
 
     await redis_storage.size()
