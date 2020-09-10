@@ -24,6 +24,9 @@ class RedisStorage(MachineBaseStorage):
             raise NotConnectedError()
 
     def _prefix(self, key):
+        if key.startswith(self._key_prefix):
+            return key
+
         return "{}:{}".format(self._key_prefix, key)
 
     async def has(self, key):
