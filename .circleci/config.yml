@@ -5,7 +5,6 @@ workflows:
   workflow:
     jobs:
     - lint-flake8
-    - test-python37
     - test-python38
 
 commands:
@@ -14,7 +13,7 @@ commands:
     parameters:
       env:
         type: "string"
-        default: "py37"
+        default: "py38"
     steps:
     - restore_cache:
         keys:
@@ -53,15 +52,6 @@ executors:
       PYTHON_VERSION: "<< parameters.version >>"
 
 jobs:
-  test-python37:
-    executor:
-      name: "python"
-      version: "3.7"
-    steps:
-    - checkout
-    - tox:
-        env: py37
-
   test-python38:
     executor:
       name: "python"

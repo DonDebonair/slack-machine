@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
+import asyncio
 import time
+from inspect import isawaitable, iscoroutinefunction
 from unittest.mock import call
 
 import pytest
@@ -99,3 +101,44 @@ def test_ignore_unused_calls(expect: ExpectMockFixture):
     sleep.expect(1).returns(True)
     assert time.sleep(0.5)
     expect.check_for_unused_mock_calls()
+
+
+@pytest.mark.asyncio
+async def test_expect_asyncio(expect: ExpectMockFixture):
+    sleep = expect.patch_async("asyncio.sleep")
+    sleep.expect(1).returns(True)
+    assert asyncio.iscoroutinefunction(asyncio.sleep)
+    awaitable = asyncio.sleep(1)
+    assert isawaitable(awaitable)
+    assert (await awaitable) == True
+    expect.check_for_unused_mock_calls()
+
+
+def test_wildcard_calls(expect: ExpectMockFixture):
+    somefn = ExpectMock()
+    somefn.expect("a", ..., "c").returns(1)
+    somefn.expect(..., "b", "d").returns(2)
+
+    assert somefn("a", 3, "c") == 1
+    assert somefn(1, "b", "d") == 2
+    expect.check_for_unused_mock_calls()
+
+
+def test_wildcard_calls_always(expect: ExpectMockFixture):
+    sleep = expect.patch("time.sleep")
+    sleep.expect(...).returns(15, always=True)
+
+    assert time.sleep(1) == 15
+    assert time.sleep(15) == 15
+    expect.check_for_unused_mock_calls()
+
+
+@pytest.mark.asyncio
+async def test_async_mock_drill(expect: ExpectMockFixture):
+    item = expect.AsyncExpectMock()
+    item.otherthing.function.expect("a", "b").returns(10)
+
+    with pytest.raises(NoExpectationForCall):
+        await item.otherthing.function("b", "c")
+
+    assert (await item.otherthing.function("a", "b")) == 10

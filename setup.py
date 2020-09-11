@@ -86,7 +86,7 @@ setup(
         "coverage",
     ],
     install_requires=dependencies,
-    python_requires="~=3.3",
+    python_requires="~=3.8",
     extras_require={"redis": ["aioredis"]},
     classifiers=[
         "Development Status :: 3 - Alpha",

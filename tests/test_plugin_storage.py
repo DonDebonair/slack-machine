@@ -58,3 +58,23 @@ async def test_delete(plugin_storage, storage_backend):
     await plugin_storage.delete("key1")
     assert (await plugin_storage.has("key1")) == False
     assert expected_key not in storage_backend._storage
+
+
+@pytest.mark.asyncio
+async def test_find_keys(plugin_storage, storage_backend):
+    await plugin_storage.set("ns:key1", "1")
+    await plugin_storage.set("ns:key2", "2")
+    await plugin_storage.set("ms:key3", "3")
+    assert list(await plugin_storage.find_keys("ns:*")) == [
+        "tests.fake_plugin.FakePlugin:ns:key1",
+        "tests.fake_plugin.FakePlugin:ns:key2",
+    ]
+
+
+@pytest.mark.asyncio
+async def test_get__raw_keys(plugin_storage, storage_backend):
+    await plugin_storage.set("ns:key1", "1")
+    await plugin_storage.set("ns:key2", "2")
+    await plugin_storage.set("ms:key3", "3")
+    for key in await plugin_storage.find_keys("ns:*"):
+        assert plugin_storage.has(key)
