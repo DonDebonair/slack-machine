@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Dict, Any, Optional
 
 from dacite import from_dict, Config
 
@@ -20,7 +20,7 @@ class Channel:
     name: Optional[str]
     is_channel: Optional[bool]
     created: int
-    creator: Union[str, None]
+    creator: creator: Optional[str]
     is_archived: bool
     is_general: Optional[bool]
     name_normalized: Optional[str]
