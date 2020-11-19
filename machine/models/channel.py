@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Union
 
-from dacite import from_dict
+from dacite import from_dict, Config
 
 
 @dataclass(frozen=True)
@@ -20,7 +20,7 @@ class Channel:
     name: Optional[str]
     is_channel: Optional[bool]
     created: int
-    creator: Optional[str]
+    creator: Union[str, None]
     is_archived: bool
     is_general: Optional[bool]
     name_normalized: Optional[str]
@@ -47,4 +47,6 @@ class Channel:
 
     @staticmethod
     def from_api_response(user_reponse: Dict[str, Any]) -> 'Channel':
-        return from_dict(data_class=Channel, data=user_reponse)
+        config = Config()
+        config.check_types = False
+        return from_dict(data_class=Channel, data=user_reponse, config=config)
