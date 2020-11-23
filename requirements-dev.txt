@@ -11,6 +11,6 @@ pytest-cov==2.10.1
 Sphinx==3.3.1
 sphinx-autobuild==2020.9.1
 redis==3.5.3
-sphinx-autodoc-typehints==1.11.0
+sphinx-autodoc-typehints==1.11.1
 Cython==0.29.21
 happybase==1.2.0
