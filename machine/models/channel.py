@@ -7,7 +7,7 @@ from dacite import from_dict
 @dataclass(frozen=True)
 class PurposeTopic:
     value: str
-    creator: str
+    creator: Optional[str]
     last_set: int
 
 
