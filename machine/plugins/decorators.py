@@ -199,7 +199,7 @@ def require_any_role(required_roles=[]):
                     f'User {msg.at_sender} tried to execute the following command:'
                     f'```{msg.text}``` but lacks _one_ of these roles: {", ".join([f"`{role}`" for role in required_roles])}'
                 )
-                return
+
         # Copy any existing docs and metadata from container function to
         # generated function
         wrapper.__doc__ = func.__doc__
