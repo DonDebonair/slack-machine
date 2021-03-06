@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 def role_assignments_by_role(self, role):
     roles = self.storage.get(f'rbac:role:{role}', shared=True)
-    roles = roles if roles else {}
+    roles = roles or {}
     if role == 'root':
         roles = {
             self.settings['RBAC_ROLE_ROOT']: 1
