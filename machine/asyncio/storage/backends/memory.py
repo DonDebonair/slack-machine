@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime, timedelta
-from typing import Any, Tuple
+from typing import Any, Tuple, Mapping
 
 from machine.asyncio.storage.backends.base import MachineBaseStorage
 
@@ -10,7 +10,7 @@ from machine.asyncio.storage.backends.base import MachineBaseStorage
 class MemoryStorage(MachineBaseStorage):
     _storage: dict[str, Tuple[bytes, datetime | None]]
 
-    def __init__(self, settings: dict[str, Any]):
+    def __init__(self, settings: Mapping[str, Any]):
         super().__init__(settings)
         self._storage = {}
 

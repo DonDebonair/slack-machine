@@ -65,7 +65,7 @@ class Machine:
                 sys.exit(1)
 
             # Setup storage
-            self._setup_storage()
+            await self._setup_storage()
 
             # Setup Slack clients
             await self._setup_slack_clients()
@@ -98,12 +98,13 @@ class Machine:
         puts("Settings loaded!")
         return found_local_settings
 
-    def _setup_storage(self) -> None:
+    async def _setup_storage(self) -> None:
         assert self._settings is not None
         storage_backend = self._settings.get("STORAGE_BACKEND", "machine.storage.backends.memory.MemoryStorage")
         logger.debug("Initializing storage backend %s...", storage_backend)
         _, cls = import_string(storage_backend)[0]
         self._storage_backend = cls(self._settings)
+        await self._storage_backend.init()
         logger.debug("Storage backend %s initialized!", storage_backend)
 
     async def _setup_slack_clients(self) -> None:

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Mapping
 
 from redis.asyncio import Redis
 
@@ -11,7 +11,7 @@ from machine.asyncio.storage.backends.base import MachineBaseStorage
 class RedisStorage(MachineBaseStorage):
     _redis: Redis
 
-    def __init__(self, settings: dict[str, Any]):
+    def __init__(self, settings: Mapping[str, Any]):
         super().__init__(settings)
         self._key_prefix = settings.get("REDIS_KEY_PREFIX", "SM")
         redis_config = gen_config_dict(settings)

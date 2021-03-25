@@ -63,9 +63,12 @@ types-requests = "^2.28.8"
 mkdocstrings = {extras = ["python"], version = "^0.19.0"}
 mkdocs-material = "^8.4.0"
 flake8 = "<4.0.1"
+aioboto3 = "^10.0.0"
+types-aiobotocore = {extras = ["essential"], version = "^2.3.4"}
 
 [tool.poetry.extras]
 redis = ["redis", "hiredis"]
+dynamodb = ["boto3", "aioboto3"]
 
 [tool.poetry.scripts]
 slack-machine = 'machine.bin.run:main'
