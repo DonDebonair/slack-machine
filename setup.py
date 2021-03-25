@@ -80,7 +80,8 @@ setup(
     python_requires='~=3.6',
     extras_require={
         'redis': ['redis', 'hiredis'],
-        'hbase': ['Cython==0.29.6', 'happybase']
+        'hbase': ['Cython==0.29.6', 'happybase'],
+        'dynamodb': ['boto3==1.17.36', 'moto==1.3.15']
     },
     classifiers=[
         "Development Status :: 4 - Beta",
