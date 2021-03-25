@@ -1,6 +1,6 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Mapping
 
 
 class MachineBaseStorage(ABC):
@@ -14,10 +14,14 @@ class MachineBaseStorage(ABC):
     - Namespacing of keys (so data stored by different plugins doesn't clash)
     """
 
-    settings: dict[str, Any]
+    settings: Mapping[str, Any]
 
-    def __init__(self, settings: dict[str, Any]):
+    def __init__(self, settings: Mapping[str, Any]):
         self.settings = settings
+
+    async def init(self) -> None:
+        """Initialize the storage backend"""
+        pass
 
     @abstractmethod
     async def get(self, key: str) -> bytes | None:

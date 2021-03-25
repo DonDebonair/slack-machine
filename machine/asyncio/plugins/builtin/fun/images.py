@@ -1,3 +1,4 @@
+from __future__ import annotations
 import logging
 import random
 
@@ -11,7 +12,9 @@ logger = logging.getLogger(__name__)
 
 
 def _make_blocks(search_string: str, image_url: str) -> list[Block]:
-    blocks = [ImageBlock(image_url=image_url, alt_text=search_string, title=PlainTextObject(text=search_string))]
+    blocks: list[Block] = [
+        ImageBlock(image_url=image_url, alt_text=search_string, title=PlainTextObject(text=search_string))
+    ]
     return blocks
 
 

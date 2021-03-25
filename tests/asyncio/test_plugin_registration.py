@@ -42,7 +42,7 @@ def required_settings_class():
 async def test_load_and_register_plugins(settings, slack_client):
     machine = Machine(settings=settings)
     machine._client = slack_client
-    machine._setup_storage()
+    await machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
 
@@ -71,7 +71,7 @@ async def test_load_and_register_plugins(settings, slack_client):
 async def test_plugin_storage_fq_plugin_name(settings, slack_client):
     machine = Machine(settings=settings)
     machine._client = slack_client
-    machine._setup_storage()
+    await machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
     plugin1_cls = actions.respond_to["tests.asyncio.fake_plugins:FakePlugin.respond_function-hello"].class_
@@ -84,7 +84,7 @@ async def test_plugin_storage_fq_plugin_name(settings, slack_client):
 async def test_plugin_init(settings, slack_client):
     machine = Machine(settings=settings)
     machine._client = slack_client
-    machine._setup_storage()
+    await machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
     plugin_cls = actions.listen_to["tests.asyncio.fake_plugins:FakePlugin2.another_listen_function-doit"].class_
