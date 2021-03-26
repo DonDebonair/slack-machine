@@ -68,7 +68,7 @@ Slack Machine comes with a few simple built-in plugins:
 - **EchoPlugin**: replies to any message the bot hears, with exactly the same message. The bot will
   reply to the same channel the original message was heard in
 
-By default, **HelloPlugin** and **PingPonPlugin** are enabled.
+By default, **HelloPlugin** and **PingPongPlugin** are enabled.
 
 You can specify which plugins Slack Machine should load, by setting the ``PLUGINS`` variable in
 ``local_settings.py`` to a list of fully qualified classes or modules that contain plugins.
@@ -156,7 +156,7 @@ Out of the box, Slack Machine provides 2 options for storage backend:
   - ``DYNAMODB_KEY_PREFIX``: an optional prefix to use within the key lookup. Defaults to `SM:`
   - ``DYNAMODB_TABLE_NAME``: specifies the table to use in DynamoDB. Defaults to `slack-machine-state`
   - ``DYNAMODB_CREATE_TABLE``: optionally -create- the table to be used in DynamoDB. Defaults to `False`
-  - ``DYNAMODB_CLIENT``: if custom configuration is needed for the DynamoDB client, an optional [boto3](https://aws.amazon.com/sdk-for-python/) client can be specified here
+  - ``DYNAMODB_CLIENT``: if custom configuration is needed for the DynamoDB client, an optional [boto3](https://aws.amazon.com/sdk-for-python) client can be specified here
   
   *Class*: ``machine.storage.backends.dynamodb.DynamoDBStorage``
 
