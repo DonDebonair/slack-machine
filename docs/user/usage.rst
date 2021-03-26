@@ -136,11 +136,11 @@ Out of the box, Slack Machine provides 2 options for storage backend:
   *Class*: ``machine.storage.backends.redis.RedisStorage``
 
 - **HBase**: this backend stores data in `HBase`_. HBase is a columnar store. This backend is for
-advanced users only. You should only use it if you already have a HBase cluster running and cannot
-use Redis for some reason. This backend requires 2 variables to be set in your ``local_settings.py``:
-``HBASE_URL`` and ``HBASE_TABLE``.
+  advanced users only. You should only use it if you already have a HBase cluster running and cannot
+  use Redis for some reason. This backend requires 2 variables to be set in your ``local_settings.py``:
+  ``HBASE_URL`` and ``HBASE_TABLE``.
 
-   *Class*: ``machine.storage.backends.hbase.HBaseStorage``
+  *Class*: ``machine.storage.backends.hbase.HBaseStorage``
     
 - **DynamoDB**: this backend stores data in `DynamoDB`. DynamoDB is a managed NoSQL datastore on 
   AWS that, among other things, allows for easy persistance of objects by key. The DynamoDB backend
