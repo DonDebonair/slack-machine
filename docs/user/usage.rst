@@ -142,10 +142,10 @@ Out of the box, Slack Machine provides 2 options for storage backend:
 
   *Class*: ``machine.storage.backends.hbase.HBaseStorage``
     
-- **DynamoDB**: this backend stores data in `DynamoDB`. DynamoDB is a managed NoSQL datastore on 
+- **DynamoDB**: this backend stores data in `DynamoDB`. `DynamoDB`_ is a managed NoSQL datastore on 
   AWS that, among other things, allows for easy persistance of objects by key. The DynamoDB backend
   requires either a set of valid AWS account credentials, or a locally running DynamoDB test bed, 
-  such as the one included in [localstack](https://github.com/localstack/localstack). This backend
+  such as the one included in `localstack`_. This backend
   requires only the environment variables or path-based AWS credentials that are normally used to
   access AWS endpoints. The following are optional parameters that can be set in your ``local_settings.py``
   or `SM_` environment variable slack-machine settings:
@@ -156,7 +156,7 @@ Out of the box, Slack Machine provides 2 options for storage backend:
   - ``DYNAMODB_KEY_PREFIX``: an optional prefix to use within the key lookup. Defaults to `SM:`
   - ``DYNAMODB_TABLE_NAME``: specifies the table to use in DynamoDB. Defaults to `slack-machine-state`
   - ``DYNAMODB_CREATE_TABLE``: optionally -create- the table to be used in DynamoDB. Defaults to `False`
-  - ``DYNAMODB_CLIENT``: if custom configuration is needed for the DynamoDB client, an optional [boto3](https://aws.amazon.com/sdk-for-python) client can be specified here
+  - ``DYNAMODB_CLIENT``: if custom configuration is needed for the DynamoDB client, an optional `boto3`_ client can be specified here
   
   *Class*: ``machine.storage.backends.dynamodb.DynamoDBStorage``
 
@@ -172,6 +172,10 @@ instance running on *localhost* on the default port, you would add this to your 
 
 .. _HBase: https://hbase.apache.org/
 
-.. DynamoDB: https://aws.amazon.com/dynamodb/
+.. _DynamoDB: https://aws.amazon.com/dynamodb/
+
+.. _localstack: https://github.com/localstack/localstack
+
+.. _boto3: https://aws.amazon.com/sdk-for-python
 
 That's all there is to it!
