@@ -186,7 +186,7 @@ If you wish to share the powers of root you can enable the RBAC admin plugin
 to users you trust.
 
 The RBAC plugin provides you with three new commands that lets you lookup, grant
-and revoke roles to users: *@superbot who has role admin*, *@superbot grant
+and revoke roles to users: *@superbot who has role admin*, *@superbot grant role
 admin to @trusted_user*, *@superbot revoke role admin from @trusted_user*.
 
 Her is an example of a command that requires either the *admin* or *channel*
