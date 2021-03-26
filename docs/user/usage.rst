@@ -140,7 +140,25 @@ advanced users only. You should only use it if you already have a HBase cluster 
 use Redis for some reason. This backend requires 2 variables to be set in your ``local_settings.py``:
 ``HBASE_URL`` and ``HBASE_TABLE``.
 
-    *Class*: ``machine.storage.backends.hbase.HBaseStorage``
+   *Class*: ``machine.storage.backends.hbase.HBaseStorage``
+    
+- **DynamoDB**: this backend stores data in `DynamoDB`. DynamoDB is a managed NoSQL datastore on 
+  AWS that, among other things, allows for easy persistance of objects by key. The DynamoDB backend
+  requires either a set of valid AWS account credentials, or a locally running DynamoDB test bed, 
+  such as the one included in [localstack](https://github.com/localstack/localstack). This backend
+  requires only the environment variables or path-based AWS credentials that are normally used to
+  access AWS endpoints. The following are optional parameters that can be set in your ``local_settings.py``
+  or `SM_` environment variable slack-machine settings:
+  
+  Optional parameters:
+  
+  - ``DYNAMODB_ENDPOINT_URL``: specifies an optional alternate endpoint, for local bot testing
+  - ``DYNAMODB_KEY_PREFIX``: an optional prefix to use within the key lookup. Defaults to `SM:`
+  - ``DYNAMODB_TABLE_NAME``: specifies the table to use in DynamoDB. Defaults to `slack-machine-state`
+  - ``DYNAMODB_CREATE_TABLE``: optionally -create- the table to be used in DynamoDB. Defaults to `False`
+  - ``DYNAMODB_CLIENT``: if custom configuration is needed for the DynamoDB client, an optional [boto3](https://aws.amazon.com/sdk-for-python/) client can be specified here
+  
+  *Class*: ``machine.storage.backends.dynamodb.DynamoDBStorage``
 
 So if, for example, you want to configure Slack Machine to use Redis as a storage backend, with your Redis
 instance running on *localhost* on the default port, you would add this to your ``local_settings.py``:
@@ -153,5 +171,7 @@ instance running on *localhost* on the default port, you would add this to your 
 .. _Redis: https://redis.io/
 
 .. _HBase: https://hbase.apache.org/
+
+.. DynamoDB: https://aws.amazon.com/dynamodb/
 
 That's all there is to it!
