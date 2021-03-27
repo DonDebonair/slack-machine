@@ -40,6 +40,18 @@ class MachineBasePlugin:
         for each plugin, when that plugin is first loaded. You can refer to settings via
         ``self.settings``, and access storage through ``self.storage``, but the Slack client has
         not been initialized yet, so you cannot send or process messages during initialization.
+        For initialization after the Slack client use ``init_final``
+
+        :return: None
+        """
+        pass
+
+    def init_final(self):
+        """Final initialization of plugin
+
+        This method can be implemented by concrete plugin classes. It will be called **once**
+        for each plugin, **after** that the Slack client has been initialized. You can refer to
+        settings via ``self.settings``, and access storage through ``self.storage``.
 
         :return: None
         """

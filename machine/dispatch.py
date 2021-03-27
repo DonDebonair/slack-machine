@@ -28,10 +28,10 @@ class EventDispatcher:
             re.DOTALL,
         )
 
-    def start(self):
+    def start(self, plugins):
         RTMClient.on(event='pong', callback=self.pong)
         RTMClient.on(event='message', callback=self.handle_message)
-        self._client.start()
+        self._client.start(plugins)
 
     def pong(self, **kwargs):
         logger.debug("Server Pong!")

@@ -5,6 +5,9 @@ import asyncio
 from slack.web.client import WebClient
 from slack.rtm.client import RTMClient
 
+from clint.textui import puts
+from machine.utils.text import show_valid
+
 from machine.models import User
 from machine.models import Channel
 from machine.settings import import_settings
@@ -75,6 +78,11 @@ class LowLevelSlackClient(metaclass=Singleton):
         logger.debug("Number of channels found: %s" % len(self._channels))
         logger.debug("Channels: %s" % ", ".join([c.identifier for c in self._channels.values()]))
 
+        puts("Final initialization of plugins...")
+        for instance, class_name in self._plugins:
+            instance.init_final()
+            show_valid(class_name)
+
     def _on_team_join(self, **payload):
         user = self._register_user(payload['data']['user'])
         logger.debug("User joined team: %s" % user)
@@ -107,7 +115,8 @@ class LowLevelSlackClient(metaclass=Singleton):
     def bot_info(self) -> Dict[str, str]:
         return self._bot_info
 
-    def start(self):
+    def start(self, plugins):
+        self._plugins = plugins
         RTMClient.on(event='open', callback=self._on_open)
         RTMClient.on(event='team_join', callback=self._on_team_join)
         RTMClient.on(event='channel_created', callback=self._on_channel_created)
