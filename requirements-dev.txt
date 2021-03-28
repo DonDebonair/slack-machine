@@ -1,6 +1,6 @@
 -r requirements.txt
 check-manifest==0.45
-pyroma==2.6
+pyroma==3.1
 pytest==6.2.2
 pytest-mock==3.3.1
 tox==3.20.1
@@ -12,5 +12,5 @@ Sphinx==3.5.3
 sphinx-autobuild==2020.9.1
 redis==3.5.3
 sphinx-autodoc-typehints==1.11.1
-Cython==0.29.21
+Cython==0.29.22
 happybase==1.2.0
