@@ -7,7 +7,7 @@ tox==3.20.1
 flake8==3.8.4
 twine==3.4.1
 coverage==5.5
-pytest-cov==2.10.1
+pytest-cov==2.11.1
 Sphinx==3.5.3
 sphinx-autobuild==2020.9.1
 redis==3.5.3
