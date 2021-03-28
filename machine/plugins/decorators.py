@@ -1,7 +1,9 @@
 import re
 
 from blinker import signal
+
 from machine.plugins.builtin import admin
+
 
 def process(slack_event_type):
     """Process Slack events of a specific type
@@ -184,6 +186,7 @@ def require_any_role(required_roles=[]):
 
     :param required_roles: list of roles required to use the plugin method
     """
+
     def middle(func):
         def wrapper(self, msg, **kwargs):
             if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles):
@@ -193,11 +196,12 @@ def require_any_role(required_roles=[]):
                     "I'm sorry, but you don't have access to that command",
                     ephemeral=True
                 )
+                role_string = ", ".join([f"`{role}`" for role in required_roles])
                 admin.notify_admins(
                     self,
-                    f'Attempt to execute unauthorized command',
-                    f'User {msg.at_sender} tried to execute the following command:'
-                    f'```{msg.text}``` but lacks _one_ of these roles: {", ".join([f"`{role}`" for role in required_roles])}'
+                    "Attempt to execute unauthorized command",
+                    f"User {msg.at_sender} tried to execute the following command:"
+                    f"```{msg.text}``` but lacks _one_ of these roles: {role_string}"
                 )
 
         # Copy any existing docs and metadata from container function to
@@ -205,6 +209,7 @@ def require_any_role(required_roles=[]):
         wrapper.__doc__ = func.__doc__
         wrapper.metadata = getattr(func, "metadata", {})
         return wrapper
+
     return middle
 
 
@@ -216,25 +221,30 @@ def require_all_roles(required_roles=[]):
 
     :param required_roles: list of roles required to use the plugin method
     """
+
     def middle(func):
         def wrapper(self, msg, **kwargs):
-            if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
+            if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(
+                    required_roles):
                 return func(self, msg, **kwargs)
             else:
                 msg.say(
                     "I'm sorry, but you don't have access to that command",
                     ephemeral=True
                 )
+                role_string = ", ".join([f"`{role}`" for role in required_roles])
                 admin.notify_admins(
                     self,
-                    f'Attempt to execute unauthorized command',
-                    f'User {msg.at_sender} tried to execute the following command:'
-                    f'```{msg.text}``` but lacks _all_ of these roles: {", ".join([f"`{role}`" for role in required_roles])}'
+                    "Attempt to execute unauthorized command",
+                    f"User {msg.at_sender} tried to execute the following command:"
+                    f"```{msg.text}``` but lacks _all_ of these roles: {role_string}"
                 )
                 return
+
         # Copy any existing docs and metadata from container function to
         # generated function
         wrapper.__doc__ = func.__doc__
         wrapper.metadata = getattr(func, "metadata", {})
         return wrapper
+
     return middle

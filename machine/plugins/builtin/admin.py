@@ -26,7 +26,7 @@ def matching_roles_by_user_id(self, user_id, roles):
 
 
 def notify_admins(self, title, message, icon='warning', color='#ff0000'):
-    roots  = role_assignments_by_role(self, 'root')
+    roots = role_assignments_by_role(self, 'root')
     admins = role_assignments_by_role(self, 'admin')
 
     admins_to_be_notified = {**admins, **roots}
@@ -53,7 +53,7 @@ class RBACPlugin(MachineBasePlugin):
         roles = role_assignments_by_role(self, role)
         roles[user_id] = 1
         self.storage.set(f'rbac:role:{role}', roles, shared=True)
-        msg.say(f'Role `{role}` has been granted to <@{user_id}>')
+        msg.say(f"Role `{role}` has been granted to <@{user_id}>")
 
     @respond_to(regex=r'^revoke\s+role\s+(?P<role>\w+)\s+from\s+<@(?P<user_id>\w+)>$')
     @require_any_role(['root', 'admin'])
@@ -63,9 +63,9 @@ class RBACPlugin(MachineBasePlugin):
         if user_id in assigned_roles:
             del assigned_roles[user_id]
             self.storage.set(f'rbac:role:{role}', assigned_roles, shared=True)
-            msg.say(f'Role `{role}` has been revoked from <@{user_id}>')
+            msg.say(f"Role `{role}` has been revoked from <@{user_id}>")
         else:
-            msg.say(f'Role <@{user_id}> does not have role `{role}`')
+            msg.say(f"Role <@{user_id}> does not have role `{role}`")
 
     @respond_to(regex=r'^who\s+has\s+role\s+(?P<role>\w+)')
     @require_any_role(['root', 'admin'])
@@ -73,8 +73,9 @@ class RBACPlugin(MachineBasePlugin):
         """who has role <role>: List users with role"""
         assigned_roles = role_assignments_by_role(self, role)
         if len(assigned_roles):
+            users_string = ", ".join([f"<@{user_id}>" for user_id in assigned_roles.keys()])
             msg.say(
-                f'Role `{role}` has been granted to {", ".join([f"<@{user_id}>" for user_id in assigned_roles.keys()])}'
+                f"Role `{role}` has been granted to {users_string}"
             )
         else:
-            msg.say(f'No one have been assigned role `{role}`')
+            msg.say(f"No one have been assigned role `{role}`")
