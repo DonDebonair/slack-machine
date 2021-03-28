@@ -6,9 +6,9 @@ pytest-mock==3.3.1
 tox==3.20.1
 flake8==3.8.4
 twine==3.2.0
-coverage==5.3
+coverage==5.5
 pytest-cov==2.10.1
-Sphinx==3.3.1
+Sphinx==3.5.3
 sphinx-autobuild==2020.9.1
 redis==3.5.3
 sphinx-autodoc-typehints==1.11.1
