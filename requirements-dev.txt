@@ -12,5 +12,5 @@ Sphinx==3.5.3
 sphinx-autobuild==2020.9.1
 redis==3.5.3
 sphinx-autodoc-typehints==1.11.1
-Cython==0.29.21
+Cython==0.29.22
 happybase==1.2.0
