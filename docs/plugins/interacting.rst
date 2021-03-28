@@ -160,12 +160,13 @@ For more information about scheduling message, have a look at the :ref:`api docu
 Protecting messages
 -------------------
 
-Sometimes you may want to restrict your bot, so it will only react to certain
-users.
+Sometimes you may want to restrict certain commands in your bot, so they can only be invoked
+by certain users.
 
-To use these restrictions you must appoint one user to be *root*. For security
-reasons there can be only one *root* user, and it must be configured
-``local_settings.py``. That way you will never loose control over your bot.
+To use these restrictions you must appoint one user to be the *root user*. For security
+reasons there can be only one *root user*, and it must be configured through
+``local_settings.py`` or environment variables. That way you will never loose control
+over your bot.
 
 To enable all the role based features, your ``local_settings.py`` would look
 something like this:
@@ -173,7 +174,7 @@ something like this:
 .. code-block:: python
 
     SLACK_API_TOKEN = 'xoxb-my-slack-token'
-    RBAC_ROLE_ROOT = 'U0000007'
+    ROOT_USER = 'U0000007'
     PLUGINS = [
         'machine.plugins.builtin.admin.RBACPlugin',
     ]
@@ -189,8 +190,12 @@ The RBAC plugin provides you with three new commands that lets you lookup, grant
 and revoke roles to users: *@superbot who has role admin*, *@superbot grant role
 admin to @trusted_user*, *@superbot revoke role admin from @trusted_user*.
 
-Her is an example of a command that requires either the *admin* or *channel*
-role:
+Now you can decorate certain functions in your plugin with the
+:py:meth:`~machine.plugins.decorators.require_any_role` or
+:py:meth:`~machine.plugins.decorators.require_all_roles` decorators to make them only usable by
+users with certain roles.
+
+Her is an example of a command that requires either the *admin* or *channel* role:
 
 .. code-block:: python
 

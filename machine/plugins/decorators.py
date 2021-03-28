@@ -2,7 +2,7 @@ import re
 
 from blinker import signal
 
-from machine.plugins.builtin import admin
+from machine.plugins.builtin.admin_utils import matching_roles_by_user_id, notify_admins
 
 
 def process(slack_event_type):
@@ -178,7 +178,7 @@ def route(path, **kwargs):
     return route_decorator
 
 
-def require_any_role(required_roles=[]):
+def require_any_role(required_roles=None):
     """Specify required roles for a plugin method
 
     To use the plugin method where this decorator is applied, the user must have
@@ -187,9 +187,11 @@ def require_any_role(required_roles=[]):
     :param required_roles: list of roles required to use the plugin method
     """
 
+    required_roles = required_roles if required_roles else []
+
     def middle(func):
         def wrapper(self, msg, **kwargs):
-            if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles):
+            if matching_roles_by_user_id(self, msg.sender.id, required_roles):
                 return func(self, msg, **kwargs)
             else:
                 msg.say(
@@ -197,7 +199,7 @@ def require_any_role(required_roles=[]):
                     ephemeral=True
                 )
                 role_string = ", ".join([f"`{role}`" for role in required_roles])
-                admin.notify_admins(
+                notify_admins(
                     self,
                     "Attempt to execute unauthorized command",
                     f"User {msg.at_sender} tried to execute the following command:"
@@ -213,7 +215,7 @@ def require_any_role(required_roles=[]):
     return middle
 
 
-def require_all_roles(required_roles=[]):
+def require_all_roles(required_roles=None):
     """Specify required roles for a plugin method
 
     To use the plugin method where this decorator is applied, the user must have
@@ -222,9 +224,11 @@ def require_all_roles(required_roles=[]):
     :param required_roles: list of roles required to use the plugin method
     """
 
+    required_roles = required_roles if required_roles else []
+
     def middle(func):
         def wrapper(self, msg, **kwargs):
-            if admin.matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(
+            if matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(
                     required_roles):
                 return func(self, msg, **kwargs)
             else:
@@ -233,7 +237,7 @@ def require_all_roles(required_roles=[]):
                     ephemeral=True
                 )
                 role_string = ", ".join([f"`{role}`" for role in required_roles])
-                admin.notify_admins(
+                notify_admins(
                     self,
                     "Attempt to execute unauthorized command",
                     f"User {msg.at_sender} tried to execute the following command:"
