@@ -135,7 +135,7 @@ class Machine:
             if action == 'process':
                 event_type = config['event_type']
                 RTMClient.on(event=event_type, callback=callable_with_sanitized_event(fn))
-            if action == 'respond_to' or action == 'listen_to':
+            if action in ['respond_to', 'listen_to']:
                 for regex in config['regex']:
                     event_handler = {
                         'class': cls_instance,

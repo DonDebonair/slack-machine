@@ -40,12 +40,12 @@ class EventDispatcher:
         # Handle message listeners
         event = payload['data']
         if 'user' in event and not event['user'] == self._get_bot_id():
+            listeners = self._find_listeners('listen_to')
             respond_to_msg = self._check_bot_mention(event)
             if respond_to_msg:
-                listeners = self._find_listeners('respond_to')
+                listeners += self._find_listeners('respond_to')
                 self._dispatch_listeners(listeners, respond_to_msg)
             else:
-                listeners = self._find_listeners('listen_to')
                 self._dispatch_listeners(listeners, event)
 
     def _find_listeners(self, _type):

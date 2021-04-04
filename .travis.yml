@@ -12,7 +12,11 @@ matrix:
       dist: xenial
       sudo: true
       env: TOX_ENV=py38
-    - python: 3.8
+    - python: 3.9
+      dist: xenial
+      sudo: true
+      env: TOX_ENV=py39
+    - python: 3.9
       dist: xenial
       sudo: true
       env: TOX_ENV=flake8
