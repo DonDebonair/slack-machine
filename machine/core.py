@@ -7,7 +7,7 @@ from threading import Thread
 
 import dill
 from clint.textui import puts, indent, colored
-from slack import RTMClient
+from slack_sdk.rtm import RTMClient
 
 from machine.vendor import bottle
 

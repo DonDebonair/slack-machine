@@ -2,7 +2,7 @@ import logging
 import re
 from typing import Any, Dict, Optional, List
 
-from slack import RTMClient
+from slack_sdk.rtm import RTMClient
 
 from machine.clients.singletons.slack import LowLevelSlackClient
 from machine.clients.slack import SlackClient

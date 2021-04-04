@@ -1,5 +1,5 @@
 dill==0.3.3
-slackclient==2.9.3
+slack_sdk==3.4.2
 apscheduler==3.6.3
 blinker-alt==1.5
 clint==0.5.1
