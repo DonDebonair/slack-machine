@@ -39,8 +39,8 @@ class EventDispatcher:
     def handle_message(self, **payload):
         # Handle message listeners
         event = payload['data']
-        # Handle message subtypes like 'message_changed'
-        if 'subtype' in event:
+        # Handle message subtype 'message_changed' to allow the bot to respond to edits
+        if 'subtype' in event and event['subtype'] == 'message_changed':
             event = event['message']
             event['channel'] = payload['data'].get('channel', '')
         if 'user' in event and not event['user'] == self._get_bot_id():
