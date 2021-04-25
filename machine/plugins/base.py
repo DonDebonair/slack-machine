@@ -444,7 +444,7 @@ class Message:
         """
         if in_thread and not ephemeral:
             return self.say_scheduled(when, text, attachments=attachments, blocks=blocks,
-                                      thread_ts=self.thread_ts, **kwargs)
+                                      thread_ts=self.ts, **kwargs)
         else:
             text = self._create_reply(text)
             return self.say_scheduled(when, text, attachments=attachments, blocks=blocks,
