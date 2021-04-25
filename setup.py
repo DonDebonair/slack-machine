@@ -80,7 +80,7 @@ setup(
     python_requires='~=3.6',
     extras_require={
         'redis': ['redis', 'hiredis'],
-        'hbase': ['Cython==0.29.22', 'happybase']
+        'hbase': ['Cython==0.29.23', 'happybase']
     },
     classifiers=[
         "Development Status :: 4 - Beta",
