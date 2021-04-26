@@ -1,8 +1,8 @@
 dill==0.3.3
 slack_sdk==3.4.2
-apscheduler==3.6.3
+apscheduler==3.7.0
 blinker-alt==1.5
 clint==0.5.1
 dataclasses==0.7 ; python_version<'3.7'
-dacite==1.5.1
-requests==2.25.0
+dacite==1.6.0
+requests==2.25.1

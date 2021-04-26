@@ -75,7 +75,7 @@ class SlackClient:
 
     def open_im(self, user: Union[User, str]) -> str:
         user_id = id_for_user(user)
-        response = LowLevelSlackClient.get_instance().web_client.im_open(user=user_id)
+        response = LowLevelSlackClient.get_instance().web_client.conversations_open(users=user_id)
         return response['channel']['id']
 
     def send_dm(self, user: Union[User, str], text: str, **kwargs):

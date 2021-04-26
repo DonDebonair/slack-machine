@@ -1,6 +1,10 @@
 Slack Machine
 =============
 
+.. image:: https://badges.gitter.im/slack-machine/lobby.svg
+   :alt: Join the chat at https://gitter.im/slack-machine/lobby
+   :target: https://gitter.im/slack-machine/lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge
+
 .. image:: https://img.shields.io/pypi/v/slack-machine.svg
     :target: https://pypi.python.org/pypi/slack-machine
 

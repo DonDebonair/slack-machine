@@ -111,6 +111,8 @@ class LowLevelSlackClient(metaclass=Singleton):
         RTMClient.on(event='open', callback=self._on_open)
         RTMClient.on(event='team_join', callback=self._on_team_join)
         RTMClient.on(event='channel_created', callback=self._on_channel_created)
+        RTMClient.on(event='group_joined', callback=self._on_channel_created)
+        RTMClient.on(event='mpim_joined', callback=self._on_channel_created)
         RTMClient.on(event='im_created', callback=self._on_channel_created)
         RTMClient.on(event='channel_deleted', callback=self._on_channel_deleted)
         RTMClient.on(event='im_close', callback=self._on_channel_deleted)
