@@ -39,6 +39,10 @@ class EventDispatcher:
     def handle_message(self, **payload):
         # Handle message listeners
         event = payload['data']
+        # Also account for changed messages
+        if 'message' in event:
+            event['user'] = event['message']['user']
+            event['text'] = event['message']['text']
         if 'user' in event and not event['user'] == self._get_bot_id():
             listeners = self._find_listeners('listen_to')
             respond_to_msg = self._check_bot_mention(event)
