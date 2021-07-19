@@ -32,7 +32,6 @@ class Channel:
     is_group: Optional[bool]
     is_im: Optional[bool]
     user: Optional[str]
-    num_members: Optional[int]
     topic: Optional[PurposeTopic]
     purpose: Optional[PurposeTopic]
     previous_names: Optional[List[str]]
@@ -48,8 +47,6 @@ class Channel:
     @property
     def members(self) -> Optional[List[str]]:
         """Get the member IDs for the given users."""
-        if not self.num_members:
-            return None
         if not self._members:
             self._load_members()
         return self._members
@@ -64,7 +61,6 @@ class Channel:
         self._members.clear()
         for member in all_members:
             self._members.append(member)
-
 
     @staticmethod
     def from_api_response(user_reponse: Dict[str, Any]) -> 'Channel':
