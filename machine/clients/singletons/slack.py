@@ -34,7 +34,7 @@ class LowLevelSlackClient(metaclass=Singleton):
         self.web_client = WebClient(token=slack_api_token, proxy=http_proxy)
         self._bot_info = {}
         self._users = {}
-        self._channels = {}
+        self._channels: Dict[str, Channel] = {}
 
     @staticmethod
     def get_instance() -> 'LowLevelSlackClient':
@@ -103,6 +103,19 @@ class LowLevelSlackClient(metaclass=Singleton):
         del self._channels[payload['data']['channel']]
         logger.debug("Channel %s deleted" % channel.name)
 
+    def _on_member_left_channel(self, **payload):
+        channel = self._channels[payload['data']['channel']]
+        channel._members.remove(payload['data']['user'])
+        logger.debug('Member left channel %s', channel.name)
+
+    def _on_member_joined_channel(self, **payload):
+        channel = self._channels[payload['data']['channel']]
+        # Since the member list is cached on first query, only update the cache if the list has been
+        #  retrieved at least once.
+        if channel._members:
+            channel._members.append(payload['data']['user'])
+        logger.debug('Member joined %s', channel.name)
+
     @property
     def bot_info(self) -> Dict[str, str]:
         return self._bot_info
@@ -119,6 +132,8 @@ class LowLevelSlackClient(metaclass=Singleton):
         RTMClient.on(event='channel_rename', callback=self._on_channel_updated)
         RTMClient.on(event='channel_archive', callback=self._on_channel_updated)
         RTMClient.on(event='channel_unarchive', callback=self._on_channel_updated)
+        RTMClient.on(event='member_joined_channel', callback=self._on_member_joined_channel)
+        RTMClient.on(event='member_left_channel', callback=self._on_member_left_channel)
         RTMClient.on(event='user_change', callback=self._on_user_change)
         self.rtm_client.start()
 
