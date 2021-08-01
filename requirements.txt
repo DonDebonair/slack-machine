@@ -1,4 +1,4 @@
-dill==0.3.3
+dill==0.3.4
 slackclient==2.9.3
 apscheduler==3.7.0
 blinker-alt==1.5
