@@ -15,8 +15,8 @@ Slack Machine
 .. image:: https://img.shields.io/pypi/pyversions/slack-machine.svg
     :target: https://pypi.python.org/pypi/slack-machine
 
-.. image:: https://github.com/DandyDev/slack-machine/workflows/CI/badge.svg?branch=master
-    :target: https://github.com/DandyDev/slack-machine/actions?workflow=CI
+.. image:: https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml
     :alt: CI Status
 
 .. image:: https://codecov.io/gh/DandyDev/slack-machine/branch/master/graph/badge.svg
