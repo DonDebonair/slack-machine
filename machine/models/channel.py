@@ -3,6 +3,7 @@ from typing import List, Dict, Any, Optional
 
 from dacite import from_dict
 
+
 @dataclass(frozen=True)
 class PurposeTopic:
     value: str
