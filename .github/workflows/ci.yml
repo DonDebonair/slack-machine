@@ -25,3 +25,24 @@ jobs:
         pip install tox tox-gh-actions
     - name: Run tests with tox
       run: tox
+    - name: Upload Unit Test Results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: Unit test results ${{ matrix.python-version }}
+        path: pytest.xml
+  publish-test-results:
+    name: Publish unit test results
+    needs: tests
+    runs-on: ubuntu-latest
+    # the build-and-test job might be skipped, we don't need to run this job then
+    if: success() || failure()
+    steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v2
+      with:
+        path: artifacts
+    - name: Publish test results
+      uses: EnricoMi/publish-unit-test-result-action@v1
+      with:
+        files: artifacts/**/*.xml

@@ -125,3 +125,4 @@ fabric.properties
 
 # Pytest
 .pytest_cache
+pytest.xml
