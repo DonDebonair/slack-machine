@@ -63,7 +63,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'Slack Machine'
-copyright = '2019, {}'.format(machine.__author__)
+copyright = '2021, {}'.format(machine.__author__)
 author = machine.__author__
 
 # The version info for the project you're documenting, acts as replacement for
@@ -196,4 +196,4 @@ texinfo_documents = [
 
 
 def setup(app):
-    app.add_stylesheet('css/custom.css')
+    app.add_css_file('css/custom.css')
