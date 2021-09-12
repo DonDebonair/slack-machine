@@ -25,6 +25,11 @@ jobs:
         pip install tox tox-gh-actions
     - name: Run tests with tox
       run: tox
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v2
+      if: ${{ matrix.python-version == '3.9' }}
+      with:
+        fail_ci_if_error: true
     - name: Upload Unit Test Results
       if: always()
       uses: actions/upload-artifact@v2
