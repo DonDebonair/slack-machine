@@ -9,6 +9,7 @@ on:
 
 jobs:
   tests:
+    name: Run Unit Tests
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -36,18 +37,13 @@ jobs:
       with:
         name: Unit test results ${{ matrix.python-version }}
         path: pytest.xml
-  publish-test-results:
-    name: Publish unit test results
+  upload-event-file:
+    name: Upload Event File
     needs: tests
     runs-on: ubuntu-latest
-    # the build-and-test job might be skipped, we don't need to run this job then
-    if: success() || failure()
     steps:
-    - name: Download artifacts
-      uses: actions/download-artifact@v2
-      with:
-        path: artifacts
-    - name: Publish test results
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      with:
-        files: artifacts/**/*.xml
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: Event File
+          path: ${{ github.event_path }}
