@@ -1,3 +1,5 @@
+name: Publish Test Results
+
 on:
   workflow_run:
     workflows: ["CI"]
