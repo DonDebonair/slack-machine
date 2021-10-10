@@ -7,7 +7,7 @@ tox==3.24.3
 tox-gh-actions==2.8.1
 flake8==3.9.2
 twine==3.4.2
-coverage==5.5
+coverage==6.0.1
 pytest-cov==3.0.0
 Sphinx==4.2.0
 sphinx-autobuild==2021.3.14
