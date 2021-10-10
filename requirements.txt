@@ -1,6 +1,6 @@
 dill==0.3.4
 slackclient==2.9.3
-apscheduler==3.7.0
+apscheduler==3.8.0
 blinker-alt==1.5
 clint==0.5.1
 dataclasses==0.7 ; python_version<'3.7'
