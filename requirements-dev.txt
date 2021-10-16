@@ -5,7 +5,7 @@ pytest==6.2.5
 pytest-mock==3.6.1
 tox==3.24.4
 tox-gh-actions==2.8.1
-flake8==3.9.2
+flake8==4.0.1
 twine==3.4.2
 coverage==6.0.2
 pytest-cov==3.0.0
