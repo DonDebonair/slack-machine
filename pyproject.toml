@@ -1,0 +1,68 @@
+[tool.poetry]
+name = "slack-machine"
+version = "0.23.0"
+description = "A sexy, simple, yet powerful and extendable Slack bot"
+authors = ["Daan Debie <daan@dv.email>"]
+license = "MIT"
+repository = "https://github.com/DandyDev/slack-machine"
+homepage = "https://github.com/DandyDev/slack-machine"
+documentation = "https://slack-machine.readthedocs.io/"
+readme = "README.rst"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Communications :: Chat",
+    "Topic :: Internet",
+    "Topic :: Office/Business"
+]
+packages = [
+    { include = "machine" }
+]
+include = ["extra/logo.png", "run_dev.py", "README.rst", "LICENSE"]
+
+[tool.poetry.dependencies]
+python = "^3.6.1"
+dill = "^0.3.4"
+slackclient = "^2.9.3"
+APScheduler = "^3.8.0"
+blinker-alt = "^1.5"
+clint = "^0.5.1"
+dacite = "^1.6.0"
+requests = "^2.26.0"
+dataclasses = { version = "^0.8", python = ">=3.6,<3.7" }
+
+[tool.poetry.dev-dependencies]
+pyroma = "^3.2"
+pytest = "^6.2.5"
+pytest-mock = "^3.6.1"
+tox = "^3.24.4"
+tox-gh-actions = "^2.8.1"
+flake8 = "^4.0.1"
+coverage = "^6.0.1"
+redis = "^3.5.3"
+Cython = "^0.29.24"
+happybase = "^1.2.0"
+pre-commit = "^2.15.0"
+pytest-cov = "^3.0.0"
+Sphinx = "^4.2.0"
+sphinx-autobuild = "^2021.3.14"
+sphinx-autodoc-typehints = "^1.12.0"
+
+[tool.pytest.ini_options]
+addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine tests"
+filterwarnings = [
+    "ignore:invalid escape sequence::bottle",
+    "ignore:Using or importing the ABCs::bottle"
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

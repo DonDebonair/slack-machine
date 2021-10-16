@@ -1,0 +1,11 @@
+[flake8]
+exclude =
+    .git,
+    .tox,
+    .eggs,
+    docs,
+    __pycache__,
+    dist,
+    build,
+    tests
+max-line-length=100

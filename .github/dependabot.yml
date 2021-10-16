@@ -1,6 +1,6 @@
 version: 2
 updates:
-  - package-ecosystem: "pip"
+  - package-ecosystem: "poetry"
     directory: "/"
     schedule:
       interval: "daily"
@@ -8,3 +8,7 @@ updates:
       prefix: "chore"
       include: "scope"
     open-pull-requests-limit: 10
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
