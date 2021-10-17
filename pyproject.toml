@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "slack-machine"
-version = "0.23.1"
+version = "0.23.2"
 description = "A sexy, simple, yet powerful and extendable Slack bot"
 authors = ["Daan Debie <daan@dv.email>"]
 license = "MIT"
@@ -58,6 +58,10 @@ sphinx-autodoc-typehints = "^1.12.0"
 
 [tool.poetry.extras]
 redis = ["redis", "hiredis"]
+
+[tool.poetry.scripts]
+slack-machine = 'machine.bin.run:main'
+
 
 [tool.pytest.ini_options]
 addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine tests"
