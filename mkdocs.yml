@@ -1,0 +1,65 @@
+site_name: Slack Machine
+repo_url: https://github.com/DandyDev/slack-machine
+repo_name: DandyDev/slack-machine
+theme:
+  name: material
+  icon:
+    repo: fontawesome/brands/github
+  font:
+    text: Quicksand
+  palette:
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      primary: deep purple
+      accent: purple
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      media: "(prefers-color-scheme: dark)"
+      primary: purple
+      accent: purple
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+  features:
+    - navigation.expand
+    - navigation.instant
+    - navigation.tracking
+nav:
+  - 'index.md'
+  - 'user/intro.md'
+  - 'user/install.md'
+  - 'user/usage.md'
+  - 'Plugins':
+      - 'plugins/basics.md'
+      - 'plugins/listening.md'
+      - 'plugins/interacting.md'
+      - 'plugins/settings.md'
+      - 'plugins/storage.md'
+      - 'plugins/misc.md'
+  - 'api.md'
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.details
+  - pymdownx.snippets
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          selection:
+            docstring_style: restructured-text
+          rendering:
+            show_root_heading: yes
+            show_signature_annotations: yes
+            members_order: source
+          import:
+            - https://docs.python.org/dev/objects.inv

@@ -18,6 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Communications :: Chat",
     "Topic :: Internet",
@@ -32,7 +33,7 @@ include = ["extra/logo.png", "run_dev.py", "README.rst", "LICENSE"]
 python = "^3.6.1"
 dill = "^0.3.4"
 slackclient = "^2.9.3"
-APScheduler = "^3.8.0"
+APScheduler = "^3.8.1"
 blinker-alt = "^1.5"
 clint = "^0.5.1"
 dacite = "^1.6.0"
@@ -47,7 +48,7 @@ pytest = "^6.2.5"
 pytest-mock = "^3.6.1"
 tox = "^3.24.4"
 tox-gh-actions = "^2.8.1"
-flake8 = "^4.0.1"
+flake8 = "<4.0.0"
 coverage = "^6.1.2"
 redis = ">=3.5.3,<5.0.0"
 pre-commit = "^2.15.0"
@@ -55,6 +56,10 @@ pytest-cov = "^3.0.0"
 Sphinx = "^4.3.0"
 sphinx-autobuild = "^2021.3.14"
 sphinx-autodoc-typehints = "^1.12.0"
+Markdown = "^3.3.6"
+mkdocs-material = "8.0.0b2"
+hiredis = "^2.0.0"
+mkdocstrings = "^0.16.2"
 
 [tool.poetry.extras]
 redis = ["redis", "hiredis"]
