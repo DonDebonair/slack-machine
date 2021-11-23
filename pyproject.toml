@@ -6,8 +6,8 @@ authors = ["Daan Debie <daan@dv.email>"]
 license = "MIT"
 repository = "https://github.com/DandyDev/slack-machine"
 homepage = "https://github.com/DandyDev/slack-machine"
-documentation = "https://slack-machine.readthedocs.io/"
-readme = "README.rst"
+documentation = "https://dandydev.github.io/slack-machine/"
+readme = "README.md"
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
@@ -27,7 +27,7 @@ classifiers = [
 packages = [
     { include = "machine" }
 ]
-include = ["extra/logo.png", "run_dev.py", "README.rst", "LICENSE"]
+include = ["extra/logo.png", "run_dev.py", "README.md", "LICENSE"]
 
 [tool.poetry.dependencies]
 python = "^3.6.1"
