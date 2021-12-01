@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "slack-machine"
-version = "0.23.2"
+version = "0.24.0"
 description = "A sexy, simple, yet powerful and extendable Slack bot"
 authors = ["Daan Debie <daan@dv.email>"]
 license = "MIT"
@@ -32,7 +32,6 @@ include = ["extra/logo.png", "run_dev.py", "README.md", "LICENSE"]
 [tool.poetry.dependencies]
 python = "^3.6.1"
 dill = "^0.3.4"
-slackclient = "^2.9.3"
 APScheduler = "^3.8.1"
 blinker-alt = "^1.5"
 clint = "^0.5.1"
@@ -41,6 +40,7 @@ requests = "^2.26.0"
 dataclasses = { version = "^0.8", python = ">=3.6,<3.7" }
 redis = {version = ">=3.5.3,<5.0.0", optional = true}
 hiredis = {version = "^2.0.0", optional = true}
+slack-sdk = "^3.12.0"
 
 [tool.poetry.dev-dependencies]
 pyroma = "^3.2"

@@ -87,8 +87,8 @@ def _assert_message(args, text):
 
 
 def test_handle_event_listen_to(dispatcher, fake_plugin):
-    msg_event = {'data': {'type': 'message', 'text': 'hi', 'channel': 'C1', 'user': 'user1'}}
-    dispatcher.handle_message(**msg_event)
+    msg_event = {'type': 'message', 'text': 'hi', 'channel': 'C1', 'user': 'user1'}
+    dispatcher.handle_message(None, msg_event)
     assert fake_plugin.listen_function.call_count == 1
     assert fake_plugin.respond_function.call_count == 0
     args = fake_plugin.listen_function.call_args
@@ -96,8 +96,8 @@ def test_handle_event_listen_to(dispatcher, fake_plugin):
 
 
 def test_handle_event_respond_to(dispatcher, fake_plugin):
-    msg_event = {'data': {'type': 'message', 'text': '<@123> hello', 'channel': 'C1', 'user': 'user1'}}
-    dispatcher.handle_message(**msg_event)
+    msg_event = {'type': 'message', 'text': '<@123> hello', 'channel': 'C1', 'user': 'user1'}
+    dispatcher.handle_message(None, msg_event)
     assert fake_plugin.respond_function.call_count == 1
     assert fake_plugin.listen_function.call_count == 0
     args = fake_plugin.respond_function.call_args

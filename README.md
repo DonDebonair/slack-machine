@@ -15,22 +15,12 @@ develop your Slack team into a ChatOps powerhouse.
 
 ## *Warning*
 
-As of v0.19 there are some breaking changes! If you\'re using v0.18.2 or
-older, you might have to make some changes to your slack bot built with
-Slack Machine and/or Slack Machine plugins. The following changes are
-non-backwards compatible:
+As of v0.24.0 Python 3.6 support has been dropped. Python 3.6 is EOL on 2021-12-23, which is 3
+weeks from now at the time of writing (2021-12-1). I just switched to a new Macbook Pro M1 on which
+I cannot build and test for Python 3.6 easily anymore, so I'm dropping support.
 
--   The `catch_all` method has been removed from the base plugin class.
-    You can still respond to specific event types using the `@process`
-    decorator
--   The `*_webapi` methods to send messages do not exist anymore, use
-    the regular counterparts instead. All messages are now sent using
-    the Slack WebAPI. The RTM API is still used for listening to
-    messages and events.
--   `self.users` and `self.channels` now return different objects than
-    before. See API documentation for more details. These properties
-    should behave more consistently however, even in workspaces with
-    many users.
+This does not mean that Slack Machine won't work with Python 3.6 anymore. For now, there are no
+specific features being used from Python 3.7 or higher.
 
 ## Features
 

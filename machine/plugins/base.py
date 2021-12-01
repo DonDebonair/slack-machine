@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Dict, Any, Optional, Union, List
 
 from blinker import signal
-from slack.web.classes.attachments import Attachment
-from slack.web.classes.blocks import Block
+from slack_sdk.models.attachments import Attachment
+from slack_sdk.models.blocks import Block
 
 from machine.clients.slack import SlackClient
 from machine.models import Channel

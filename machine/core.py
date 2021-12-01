@@ -7,7 +7,7 @@ from threading import Thread
 
 import dill
 from clint.textui import puts, indent, colored
-from slack import RTMClient
+from slack_sdk.rtm_v2 import RTMClient
 
 from machine.vendor import bottle
 
@@ -26,8 +26,8 @@ logger = logging.getLogger(__name__)
 
 
 def callable_with_sanitized_event(fn: Callable):
-    def sanitzed_call(**payload):
-        return fn(payload['data'])
+    def sanitzed_call(client: RTMClient, event: dict):
+        return fn(event)
     return sanitzed_call
 
 
@@ -134,7 +134,7 @@ class Machine:
         for action, config in metadata['plugin_actions'].items():
             if action == 'process':
                 event_type = config['event_type']
-                RTMClient.on(event=event_type, callback=callable_with_sanitized_event(fn))
+                self._client.rtm_client.on(event_type)(callable_with_sanitized_event(fn))
             if action in ['respond_to', 'listen_to']:
                 for regex in config['regex']:
                     event_handler = {
