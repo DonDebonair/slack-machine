@@ -54,7 +54,7 @@ redis = ">=3.5.3,<5.0.0"
 pre-commit = "^2.15.0"
 pytest-cov = "^3.0.0"
 Markdown = "^3.3.6"
-mkdocs-material = "8.0.4"
+mkdocs-material = "8.1.5"
 mkdocstrings = "^0.16.2"
 
 [tool.poetry.extras]
