@@ -316,7 +316,7 @@ python-versions = ">=3.5"
 name = "importlib-metadata"
 version = "4.8.2"
 description = "Read metadata from Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -492,7 +492,7 @@ python-versions = "*"
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -591,7 +591,7 @@ Markdown = ">=3.2"
 name = "pyparsing"
 version = "3.0.6"
 description = "Python parsing module"
-category = "dev"
+category = "main"
 optional = false
 python-versions = ">=3.6"
 
@@ -731,17 +731,20 @@ pyyaml = "*"
 
 [[package]]
 name = "redis"
-version = "4.0.2"
+version = "4.1.2"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-deprecated = "*"
+deprecated = ">=1.2.3"
+importlib-metadata = {version = ">=1.0", markers = "python_version < \"3.8\""}
+packaging = ">=20.4"
 
 [package.extras]
 hiredis = ["hiredis (>=1.0.0)"]
+ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"]
 
 [[package]]
 name = "requests"
@@ -838,7 +841,7 @@ testing = ["flake8 (>=3,<4)", "pytest-cov (>=2,<3)", "pytest-mock (>=2,<3)", "bl
 name = "typing-extensions"
 version = "3.10.0.2"
 description = "Backported and Experimental Type Hints for Python 3.5+"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -1384,8 +1387,8 @@ pyyaml-env-tag = [
     {file = "pyyaml_env_tag-0.1.tar.gz", hash = "sha256:70092675bda14fdec33b31ba77e7543de9ddc88f2e5b99160396572d11525bdb"},
 ]
 redis = [
-    {file = "redis-4.0.2-py3-none-any.whl", hash = "sha256:c8481cf414474e3497ec7971a1ba9b998c8efad0f0d289a009a5bbef040894f9"},
-    {file = "redis-4.0.2.tar.gz", hash = "sha256:ccf692811f2c1fc7a92b466aa2599e4a6d2d73d5f736a2c70be600657c0da34a"},
+    {file = "redis-4.1.2-py3-none-any.whl", hash = "sha256:f13eea4254e302485add677cadedaf1305c1b3a4e07535e23b7b239798ce9301"},
+    {file = "redis-4.1.2.tar.gz", hash = "sha256:bf86397be532fc0a888d5976a5313a3a70d8f912d52bc0c09bffda4b8425a1d4"},
 ]
 requests = [
     {file = "requests-2.26.0-py2.py3-none-any.whl", hash = "sha256:6c1246513ecd5ecd4528a0906f910e8f0f9c6b8ec72030dc9fd154dc1a6efd24"},
