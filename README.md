@@ -6,6 +6,7 @@
 [![image](https://img.shields.io/pypi/pyversions/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
 [![CI Status](https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml/badge.svg)](https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml)
 [![image](https://codecov.io/gh/DandyDev/slack-machine/branch/master/graph/badge.svg)](https://codecov.io/gh/DandyDev/slack-machine)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDandyDev%2Fslack-machine.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FDandyDev%2Fslack-machine?ref=badge_shield)
 
 Slack Machine is a sexy, simple, yet powerful and extendable Slack bot.
 More than just a bot, Slack Machine is a framework that helps you
@@ -90,3 +91,7 @@ You can find the documentation for Slack Machine here: https://dandydev.github.i
 
 Go read it to learn how to properly configure Slack Machine, write
 plugins, and more!
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FDandyDev%2Fslack-machine.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FDandyDev%2Fslack-machine?ref=badge_large)
