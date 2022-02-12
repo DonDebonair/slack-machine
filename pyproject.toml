@@ -44,7 +44,7 @@ slack-sdk = "^3.12.0"
 
 [tool.poetry.dev-dependencies]
 pyroma = "^3.2"
-pytest = "^6.2.5"
+pytest = "^7.0.1"
 pytest-mock = "^3.6.1"
 tox = "^3.24.4"
 tox-gh-actions = "^2.8.1"
