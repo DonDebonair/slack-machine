@@ -774,7 +774,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "slack-sdk"
-version = "3.14.1"
+version = "3.15.0"
 description = "The Slack API Platform SDK for Python"
 category = "main"
 optional = false
@@ -1400,8 +1400,8 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 slack-sdk = [
-    {file = "slack_sdk-3.14.1-py2.py3-none-any.whl", hash = "sha256:b1a007072d2e98978cf906ff3452641ea4ab185e4eddbc27b087bbd9a8043ff0"},
-    {file = "slack_sdk-3.14.1.tar.gz", hash = "sha256:306d3647509fcfbd4ebe5dba19386ead329e85d297366805dbeac543bbd60904"},
+    {file = "slack_sdk-3.15.0-py2.py3-none-any.whl", hash = "sha256:c13daa11871904b2001b0c145bef535ea6e3033f0e524c6784dc8b8bdbaf3060"},
+    {file = "slack_sdk-3.15.0.tar.gz", hash = "sha256:232a713bce4f856ae87dfa4ac19f493ffbcba7fed5ec584a57f5f34d313c2377"},
 ]
 toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
