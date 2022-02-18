@@ -1,0 +1,109 @@
+name: Python library
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  COVER_PACKAGE: machine
+  CACHE_VER: 1
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        python: ["3.8", "3.9"]
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Venv cache
+      uses: actions/cache@v2
+      id: venv-cache
+      with:
+        path: "venv"
+        key: venv-${{ matrix.python }}-${{ env.CACHE_VER }}-${{ hashFiles('requirements.txt', 'setup.py') }}
+    - name: Wheel cache
+      uses: actions/cache@v2
+      id: wheel-cache
+      with:
+        path: "wheel"
+        key: wheels-${{ matrix.python }}-${{ env.CACHE_VER }}-${{ hashFiles('requirements.txt', 'setup.py') }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Set up build environment
+      if: steps.venv-cache.outputs.cache-hit != 'true'
+      run: |
+        sudo apt-get update && sudo apt-get install -y \
+          build-essential \
+          linux-headers-generic \
+          python3-dev \
+          libssl-dev \
+          curl \
+          git \
+          openssh-client
+        pip install virtualenv ply setuptools wheel tox codecov
+        virtualenv ./venv
+        source ./venv/bin/activate
+        pip install -U pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+    - name: Build wheels
+      if: steps.wheel-cache.outputs.cache-hit != 'true'
+      run: |
+        source ./venv/bin/activate
+        mkdir -p ./wheel
+        pip wheel -f ./wheel -w ./wheel -r ./requirements.txt
+
+    - name: Build dists
+      run: |
+        source ./venv/bin/activate
+        mkdir -p ./dist
+        python ./setup.py build bdist_wheel -d ./dist
+
+    - name: Upload dists
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist-${{ matrix.python }}
+        path: dist
+
+  test:
+    strategy:
+      matrix:
+        python: ["3.8", "3.9"]
+
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python }}
+
+    - name: Venv cache
+      uses: actions/cache@v2
+      id: venv-cache
+      with:
+        path: "venv"
+        key: venv-${{ matrix.python }}-${{ env.CACHE_VER }}-${{ hashFiles('requirements.txt', 'setup.py') }}
+
+    - name: Test with pytest
+      run: |
+        source ./venv/bin/activate
+        mkdir ./reports
+        pytest --cov=${{ env.COVER_PACKAGE }} --cov-report=term-missing --cov-report=html:./reports/coverage/ --junitxml=./reports/junit.xml ./tests
+
+    - name: Upload test reports
+      uses: actions/upload-artifact@v2
+      with:
+        name: test-reports-${{ matrix.python }}
+        path: ./reports

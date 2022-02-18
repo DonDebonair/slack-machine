@@ -77,11 +77,8 @@ class MessagingClient:
 
     @alru_cache(maxsize=32)
     async def find_user_by_id(self, user_id: str) -> Optional[dict]:
-        for user in (await self.get_users())["members"]:
-            if user["id"] == user_id:
-                return user
-
-        return None
+        user_response = await Slack.get_instance().web.users_info(user=user_id)
+        return user_response.get("user")
 
     def fmt_mention(self, user: dict) -> str:
         return f"<@{user['id']}>"
