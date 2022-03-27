@@ -16,7 +16,7 @@ class EventDispatcher:
         self._plugin_actions = plugin_actions
         alias_regex = ''
         if settings and "ALIASES" in settings:
-            logger.info("Setting aliases to {}".format(settings['ALIASES']))
+            logger.info("Setting aliases to %s", settings['ALIASES'])
             alias_regex = '|(?P<alias>{})'.format(
                 '|'.join([re.escape(s) for s in settings['ALIASES'].split(',')]))
         self.RESPOND_MATCHER = re.compile(
