@@ -80,7 +80,7 @@ class Machine:
             for plugin in self._settings['PLUGINS']:
                 for class_name, cls in import_string(plugin):
                     if issubclass(cls, MachineBasePlugin) and cls is not MachineBasePlugin:
-                        logger.debug("Found a Machine plugin: {}".format(plugin))
+                        logger.debug("Found a Machine plugin: %s", plugin)
                         storage = PluginStorage(class_name)
                         instance = cls(SlackClient(), self._settings, storage)
                         missing_settings = self._register_plugin(class_name, instance)
