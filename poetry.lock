@@ -611,16 +611,19 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyroma"
-version = "3.2"
+version = "3.3"
 description = "Test your project's packaging friendliness"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = "*"
 
 [package.dependencies]
 docutils = "*"
 pygments = "*"
 requests = "*"
+
+[package.extras]
+test = ["pytest", "pytest-cov", "setuptools (>=60)"]
 
 [[package]]
 name = "pytest"
@@ -955,7 +958,7 @@ redis = ["redis", "hiredis"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "38a4d0105fbe251e6d7edd4ffdb89cd338cd33fa813a9443bcc899138d9e671b"
+content-hash = "bc8334dc751f71a6e03320ddf26af53cef8095c217a3f62f3bf7223a03638c3a"
 
 [metadata.files]
 apscheduler = [
@@ -1334,8 +1337,8 @@ pyparsing = [
     {file = "pyparsing-3.0.6.tar.gz", hash = "sha256:d9bdec0013ef1eb5a84ab39a3b3868911598afa494f5faa038647101504e2b81"},
 ]
 pyroma = [
-    {file = "pyroma-3.2-py3-none-any.whl", hash = "sha256:0fba67322913026091590e68e0d9e0d4fbd6420fcf34d315b2ad6985ab104d65"},
-    {file = "pyroma-3.2.tar.gz", hash = "sha256:f8c181e0d5d292f11791afc18f7d0218a83c85cf64d6f8fb1571ce9d29a24e4a"},
+    {file = "pyroma-3.3-py2.py3-none-any.whl", hash = "sha256:4729cb7020201793f050ac446d1e9e6e4ed10a55a9f4c59034b89d334de66428"},
+    {file = "pyroma-3.3.tar.gz", hash = "sha256:78df2f1617ced9a9a1d114918fc4650ad0e3892d238017dee842ed859967b0fe"},
 ]
 pytest = [
     {file = "pytest-7.0.1-py3-none-any.whl", hash = "sha256:9ce3ff477af913ecf6321fe337b93a2c0dcf2a0a1439c43f5452112c1e4280db"},
