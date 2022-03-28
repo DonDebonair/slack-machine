@@ -249,14 +249,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "docutils"
-version = "0.18.1"
-description = "Docutils -- Python Documentation Utilities"
-category = "dev"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
-
-[[package]]
 name = "filelock"
 version = "3.4.0"
 description = "A platform independent file lock."
@@ -610,19 +602,6 @@ python-versions = ">=3.6"
 diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
-name = "pyroma"
-version = "3.2"
-description = "Test your project's packaging friendliness"
-category = "dev"
-optional = false
-python-versions = ">=3.6"
-
-[package.dependencies]
-docutils = "*"
-pygments = "*"
-requests = "*"
-
-[[package]]
 name = "pytest"
 version = "7.0.1"
 description = "pytest: simple powerful testing with Python"
@@ -955,7 +934,7 @@ redis = ["redis", "hiredis"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6.1"
-content-hash = "38a4d0105fbe251e6d7edd4ffdb89cd338cd33fa813a9443bcc899138d9e671b"
+content-hash = "e3aacfa4269c4f2cf37e88b0e6a4b0e862f5b598225f5bb15fef6eda457008e4"
 
 [metadata.files]
 apscheduler = [
@@ -1102,10 +1081,6 @@ dill = [
 distlib = [
     {file = "distlib-0.3.3-py2.py3-none-any.whl", hash = "sha256:c8b54e8454e5bf6237cc84c20e8264c3e991e824ef27e8f1e81049867d861e31"},
     {file = "distlib-0.3.3.zip", hash = "sha256:d982d0751ff6eaaab5e2ec8e691d949ee80eddf01a62eaa96ddb11531fe16b05"},
-]
-docutils = [
-    {file = "docutils-0.18.1-py2.py3-none-any.whl", hash = "sha256:23010f129180089fbcd3bc08cfefccb3b890b0050e1ca00c867036e9d161b98c"},
-    {file = "docutils-0.18.1.tar.gz", hash = "sha256:679987caf361a7539d76e584cbeddc311e3aee937877c87346f31debc63e9d06"},
 ]
 filelock = [
     {file = "filelock-3.4.0-py3-none-any.whl", hash = "sha256:2e139a228bcf56dd8b2274a65174d005c4a6b68540ee0bdbb92c76f43f29f7e8"},
@@ -1332,10 +1307,6 @@ pymdown-extensions = [
 pyparsing = [
     {file = "pyparsing-3.0.6-py3-none-any.whl", hash = "sha256:04ff808a5b90911829c55c4e26f75fa5ca8a2f5f36aa3a51f68e27033341d3e4"},
     {file = "pyparsing-3.0.6.tar.gz", hash = "sha256:d9bdec0013ef1eb5a84ab39a3b3868911598afa494f5faa038647101504e2b81"},
-]
-pyroma = [
-    {file = "pyroma-3.2-py3-none-any.whl", hash = "sha256:0fba67322913026091590e68e0d9e0d4fbd6420fcf34d315b2ad6985ab104d65"},
-    {file = "pyroma-3.2.tar.gz", hash = "sha256:f8c181e0d5d292f11791afc18f7d0218a83c85cf64d6f8fb1571ce9d29a24e4a"},
 ]
 pytest = [
     {file = "pytest-7.0.1-py3-none-any.whl", hash = "sha256:9ce3ff477af913ecf6321fe337b93a2c0dcf2a0a1439c43f5452112c1e4280db"},
