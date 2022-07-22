@@ -7,7 +7,7 @@ from machine.models import User
 from machine.models.channel import Channel
 from machine.clients.singletons.slack import LowLevelSlackClient
 
-from slack.web.classes import extract_json
+from slack_sdk.models import extract_json
 
 logger = logging.getLogger(__name__)
 

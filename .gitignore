@@ -63,7 +63,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+olddocs/_build/
 
 # PyBuilder
 target/
@@ -125,3 +125,7 @@ fabric.properties
 
 # Pytest
 .pytest_cache
+pytest.xml
+
+# we don't need setup.py anymore because we use poetry, but we generate it so we can install slack-machine as editable
+setup.py

@@ -2,8 +2,6 @@ import logging
 import re
 from typing import Any, Dict, Optional, List
 
-from slack import RTMClient
-
 from machine.clients.singletons.slack import LowLevelSlackClient
 from machine.clients.slack import SlackClient
 from machine.plugins.base import Message
@@ -18,7 +16,7 @@ class EventDispatcher:
         self._plugin_actions = plugin_actions
         alias_regex = ''
         if settings and "ALIASES" in settings:
-            logger.info("Setting aliases to {}".format(settings['ALIASES']))
+            logger.info("Setting aliases to %s", settings['ALIASES'])
             alias_regex = '|(?P<alias>{})'.format(
                 '|'.join([re.escape(s) for s in settings['ALIASES'].split(',')]))
         self.RESPOND_MATCHER = re.compile(
@@ -29,20 +27,21 @@ class EventDispatcher:
         )
 
     def start(self):
-        RTMClient.on(event='pong', callback=self.pong)
-        RTMClient.on(event='message', callback=self.handle_message)
+        self._client.rtm_client.on('pong')(self.pong)
+        self._client.rtm_client.on('message')(
+            lambda client, event: self.handle_message(client, event))
         self._client.start()
 
-    def pong(self, **kwargs):
+    @staticmethod
+    def pong(client, event):
         logger.debug("Server Pong!")
 
-    def handle_message(self, **payload):
+    def handle_message(self, client, event):
         # Handle message listeners
-        event = payload['data']
-        # Also account for changed messages
-        if 'message' in event:
-            event['user'] = event['message']['user']
-            event['text'] = event['message']['text']
+        # Handle message subtype 'message_changed' to allow the bot to respond to edits
+        if 'subtype' in event and event['subtype'] == 'message_changed':
+            event = event['message']
+            event['channel'] = event.get('channel', '')
         if 'user' in event and not event['user'] == self._get_bot_id():
             listeners = self._find_listeners('listen_to')
             respond_to_msg = self._check_bot_mention(event)
@@ -60,7 +59,7 @@ class EventDispatcher:
         return Message(SlackClient(), event, plugin_class_name)
 
     def _get_bot_id(self) -> str:
-        return self._client.bot_info['id']
+        return self._client.bot_info['user_id']
 
     def _get_bot_name(self) -> str:
         return self._client.bot_info['name']

@@ -1,0 +1,76 @@
+[tool.poetry]
+name = "slack-machine"
+version = "0.25.0"
+description = "A sexy, simple, yet powerful and extendable Slack bot"
+authors = ["Daan Debie <daan@dv.email>"]
+license = "MIT"
+repository = "https://github.com/DandyDev/slack-machine"
+homepage = "https://github.com/DandyDev/slack-machine"
+documentation = "https://dandydev.github.io/slack-machine/"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Communications :: Chat",
+    "Topic :: Internet",
+    "Topic :: Office/Business"
+]
+packages = [
+    { include = "machine" }
+]
+include = ["extra/logo.png", "run_dev.py", "README.md", "LICENSE"]
+
+[tool.poetry.dependencies]
+python = "^3.6.1"
+dill = "^0.3.4"
+APScheduler = "^3.8.1"
+blinker-alt = "^1.5"
+clint = "^0.5.1"
+dacite = "^1.6.0"
+requests = "^2.26.0"
+dataclasses = { version = "^0.8", python = ">=3.6,<3.7" }
+redis = {version = ">=3.5.3,<5.0.0", optional = true}
+hiredis = {version = "^2.0.0", optional = true}
+slack-sdk = "^3.12.0"
+
+[tool.poetry.dev-dependencies]
+pyroma = "^3.2"
+pytest = "^7.0.1"
+pytest-mock = "^3.6.1"
+tox = "^3.24.5"
+tox-gh-actions = "^2.9.1"
+flake8 = "<4.0.0"
+coverage = "^6.2"
+redis = ">=3.5.3,<5.0.0"
+pre-commit = "^2.17.0"
+pytest-cov = "^3.0.0"
+Markdown = "^3.3.6"
+mkdocs-material = "8.2.7"
+mkdocstrings = "^0.16.2"
+
+[tool.poetry.extras]
+redis = ["redis", "hiredis"]
+
+[tool.poetry.scripts]
+slack-machine = 'machine.bin.run:main'
+
+
+[tool.pytest.ini_options]
+addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine tests"
+filterwarnings = [
+    "ignore:invalid escape sequence::bottle",
+    "ignore:Using or importing the ABCs::bottle"
+]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

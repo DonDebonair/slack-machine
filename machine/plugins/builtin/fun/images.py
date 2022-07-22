@@ -52,8 +52,7 @@ class ImageSearchPlugin(MachineBasePlugin):
             response = r.json()
             results = [result["link"] for result in response["items"] if "items" in response]
         else:
-            logger.warning("An error occurred while searching! Status code: %s, response: %s" % (
-                r.status_code, r.text
-            ))
+            logger.warning("An error occurred while searching! Status code: %s, response: %s",
+                           r.status_code, r.text)
             results = []
         return results

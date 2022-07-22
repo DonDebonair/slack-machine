@@ -1,8 +1,0 @@
-- ~Align method signatures in SlackClient (ie. `**kwargs` vs named kwargs)~
-- ~Add blocks support~
-- ~Update docstrings~
-- Create better `Message` class so we don't need to access raw dict attributes
-- Move to async operation using asyncio
-- Add typings and check with MyPy
-- Upgrade to Python 3.8 (fix locale bug in tox?)
-- Move to Poetry

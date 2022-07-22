@@ -2,8 +2,8 @@ from datetime import datetime
 from typing import Dict, Any, Optional, Union, List
 
 from blinker import signal
-from slack.web.classes.attachments import Attachment
-from slack.web.classes.blocks import Block
+from slack_sdk.models.attachments import Attachment
+from slack_sdk.models.blocks import Block
 
 from machine.clients.slack import SlackClient
 from machine.models import Channel
@@ -68,10 +68,15 @@ class MachineBasePlugin:
         return self._client.channels
 
     def find_channel_by_name(self, channel_name: str) -> Optional[Channel]:
+        """Find a channel by its name, irrespective of a preceding pound symbol. This does not include DMs.
+
+        :param channel_name: The name of the channel to retrieve.
+        :return: The channel if found, None otherwise.
+        """
         if channel_name.startswith('#'):
             channel_name = channel_name[1:]
         for c in self.channels.values():
-            if channel_name.lower() == c.name_normalized.lower():
+            if c.name_normalized and channel_name.lower() == c.name_normalized.lower():
                 return c
 
     @property
