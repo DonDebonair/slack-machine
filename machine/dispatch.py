@@ -40,8 +40,9 @@ class EventDispatcher:
         # Handle message listeners
         # Handle message subtype 'message_changed' to allow the bot to respond to edits
         if 'subtype' in event and event['subtype'] == 'message_changed':
+            channel = event.get('channel', '')
             event = event['message']
-            event['channel'] = event.get('channel', '')
+            event['channel'] = channel
         if 'user' in event and not event['user'] == self._get_bot_id():
             listeners = self._find_listeners('listen_to')
             respond_to_msg = self._check_bot_mention(event)
@@ -70,7 +71,6 @@ class EventDispatcher:
         bot_name = self._get_bot_name()
         bot_id = self._get_bot_id()
         m = self.RESPOND_MATCHER.match(full_text)
-
         if channel[0] == 'C' or channel[0] == 'G':
             if not m:
                 return None
