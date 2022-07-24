@@ -1,4 +1,6 @@
 [flake8]
+max-line-length = 120
+extend-ignore = E203
 exclude =
     .git,
     .tox,
@@ -8,4 +10,3 @@ exclude =
     dist,
     build,
     tests
-max-line-length=100
