@@ -1,12 +1,10 @@
 from __future__ import annotations
 import re
-import sys
 from dataclasses import dataclass, field
-from typing import Callable, TypeVar, Union
-if sys.version_info >= (3, 8):
-    from typing import Protocol
-else:
-    from typing_extensions import Protocol
+from typing import Callable, TypeVar, Union, cast
+
+from typing_extensions import Protocol
+from typing_extensions import ParamSpec
 
 
 @dataclass
@@ -22,6 +20,7 @@ class Metadata:
     required_settings: list[str] = field(default_factory=list)
 
 
+P = ParamSpec("P")
 F = TypeVar("F", bound=Callable[..., None])
 
 
@@ -30,7 +29,7 @@ class DecoratedPluginFunc(Protocol[F]):
     metadata: Metadata
 
 
-def process(slack_event_type: str) -> Callable[..., Callable[..., None]]:
+def process(slack_event_type: str) -> Callable[[Callable[P, None]], DecoratedPluginFunc[F]]:
     """Process Slack events of a specific type
 
     This decorator will enable a Plugin method to process `Slack events`_ of a specific type. The
@@ -44,7 +43,8 @@ def process(slack_event_type: str) -> Callable[..., Callable[..., None]]:
     :return: wrapped method
     """
 
-    def process_decorator(f: F) -> DecoratedPluginFunc[F]:
+    def process_decorator(f: Callable[P, None]) -> DecoratedPluginFunc[F]:
+        f = cast(DecoratedPluginFunc, f)
         f.metadata = getattr(f, "metadata", Metadata())
         f.metadata.plugin_actions.process.append(slack_event_type)
         return f
