@@ -40,7 +40,8 @@ def plugin_actions(fake_plugin):
                 'class': fake_plugin,
                 'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': listen_fn,
-                'regex': re.compile('hi', re.IGNORECASE)
+                'regex': re.compile('hi', re.IGNORECASE),
+                'handle_changed_message': True
             }
         },
         'respond_to': {
@@ -48,7 +49,8 @@ def plugin_actions(fake_plugin):
                 'class': fake_plugin,
                 'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': respond_fn,
-                'regex': re.compile('hello', re.IGNORECASE)
+                'regex': re.compile('hello', re.IGNORECASE),
+                'handle_changed_message': False
             }
         },
         'process': {
@@ -103,6 +105,13 @@ def test_handle_event_respond_to(dispatcher, fake_plugin):
     args = fake_plugin.respond_function.call_args
     _assert_message(args, 'hello')
 
+def test_handle_event_changed_message(dispatcher, fake_plugin):
+    msg_event = {'type': 'message', 'message': {'text': 'hey there', 'user': 'user1'}, 'channel': 'C1', 'subtype': 'message_changed'}
+    dispatcher.handle_message(None, msg_event)
+    assert fake_plugin.respond_function.call_count == 0
+    assert fake_plugin.listen_function.call_count == 1
+    args = fake_plugin.listen_function.call_args
+    _assert_message(args, 'hey there')
 
 def test_check_bot_mention(dispatcher):
 
