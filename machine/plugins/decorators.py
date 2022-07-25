@@ -53,10 +53,12 @@ def listen_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
             f.metadata['plugin_actions']['listen_to'].get('params', {})
         f.metadata['plugin_actions']['listen_to']['params']['regex'] = \
             f.metadata['plugin_actions']['listen_to']['params'].get('regex', [])
-        f.metadata['plugin_actions']['listen_to']['params']['regex'].append(re.compile(regex, flags))
+        f.metadata['plugin_actions']['listen_to']['params']['regex'] \
+            .append(re.compile(regex, flags))
         f.metadata['plugin_actions']['listen_to']['params']['handle_changed_message'] = \
             f.metadata['plugin_actions']['listen_to']['params'].get('handle_changed_message', [])
-        f.metadata['plugin_actions']['listen_to']['params']['handle_changed_message'].append(handle_changed_message)
+        f.metadata['plugin_actions']['listen_to']['params']['handle_changed_message'] \
+            .append(handle_changed_message)
         return f
 
     return listen_to_decorator
@@ -87,10 +89,12 @@ def respond_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
             f.metadata['plugin_actions']['respond_to'].get('params', {})
         f.metadata['plugin_actions']['respond_to']['params']['regex'] = \
             f.metadata['plugin_actions']['respond_to']['params'].get('regex', [])
-        f.metadata['plugin_actions']['respond_to']['params']['regex'].append(re.compile(regex, flags))
+        f.metadata['plugin_actions']['respond_to']['params']['regex'] \
+            .append(re.compile(regex, flags))
         f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'] = \
             f.metadata['plugin_actions']['respond_to']['params'].get('handle_changed_message', [])
-        f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'].append(handle_changed_message)
+        f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'] \
+            .append(handle_changed_message)
         return f
 
     return respond_to_decorator

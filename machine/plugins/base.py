@@ -263,7 +263,6 @@ class Message:
         self._msg_event = msg_event
         self._fq_plugin_name = plugin_class_name
 
-
     @property
     def subtype(self) -> str:
         """The subtype of the message, if applicable

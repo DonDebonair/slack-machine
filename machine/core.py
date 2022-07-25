@@ -148,7 +148,8 @@ class Machine:
                     }
                     key = "{}-{}-{}".format(fq_fn_name, regex.pattern, handle_changed_message)
                     self._plugin_actions[action][key] = event_handler
-                    self._help['robot'][class_help].append(self._parse_robot_help(regex, handle_changed_message, action))
+                    self._help['robot'][class_help].append(self._parse_robot_help(regex,
+                                                           handle_changed_message, action))
             if action == 'schedule':
                 Scheduler.get_instance().add_job(fq_fn_name, trigger='cron', args=[cls_instance],
                                                  id=fq_fn_name, replace_existing=True, **config)
@@ -173,9 +174,11 @@ class Machine:
     @staticmethod
     def _parse_robot_help(regex, handle_changed_message, action):
         if action == 'respond_to':
-            return "@botname {}{}".format(regex.pattern, " [includes changed messages]" if handle_changed_message else "")
+            return "@botname {}{}".format(
+                regex.pattern, " [includes changed messages]" if handle_changed_message else "")
         else:
-            return "{}{}".format(regex.pattern, " [includes changed messages]" if handle_changed_message else "")
+            return "{}{}".format(
+                regex.pattern, " [includes changed messages]" if handle_changed_message else "")
 
     def _keepalive(self):
         while True:
