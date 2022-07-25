@@ -43,6 +43,7 @@ class EventDispatcher:
             channel = event.get('channel', '')
             event = event['message']
             event['channel'] = channel
+            event['subtype'] = 'message_changed'
         if 'user' in event and not event['user'] == self._get_bot_id():
             listeners = self._find_listeners('listen_to')
             respond_to_msg = self._check_bot_mention(event)
@@ -99,9 +100,10 @@ class EventDispatcher:
         for listener in listeners:
             matcher = listener['params']['regex']
             # Check if this is a message subtype, and if so, if the listener should handle it
-            if listener['params']['handle_changed_message'] and 'subtype' in event and event['subtype'] == 'message_changed':
-                # Check the new message text for a match
-                match = matcher.search(event['message'].get('text', ''))
+            if 'subtype' in event and event['subtype'] == 'message_changed':
+                if listener['params']['handle_changed_message']:
+                    # Check the new message text for a match only if this listener should handle changed messages
+                    match = matcher.search(event.get('text', ''))
             else:
                 match = matcher.search(event.get('text', ''))
             if match:
