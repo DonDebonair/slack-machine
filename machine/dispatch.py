@@ -102,7 +102,7 @@ class EventDispatcher:
             # Check if this is a message subtype, and if so, if the listener should handle it
             if 'subtype' in event and event['subtype'] == 'message_changed':
                 if listener['params']['handle_changed_message']:
-                    # Check the new message text for a match 
+                    # Check the new message text for a match
                     # only if this listener should handle changed messages
                     match = matcher.search(event.get('text', ''))
             else:
