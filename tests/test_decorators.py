@@ -134,7 +134,7 @@ def test_respond_to(respond_to_f):
     assert 'respond_to' in respond_to_f.metadata['plugin_actions']
     assert 'params' in respond_to_f.metadata['plugin_actions']['respond_to']
     assert 'regex' in respond_to_f.metadata['plugin_actions']['respond_to']['params']
-    assert respond_to_f.metadata['plugin_actions']['respond_to']['regex'] == [
+    assert respond_to_f.metadata['plugin_actions']['respond_to']['params']['regex'] == [
         re.compile(r'hello', re.IGNORECASE)]
     assert 'handle_changed_message' in respond_to_f.metadata['plugin_actions']['respond_to']['params']
     assert respond_to_f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'] == [

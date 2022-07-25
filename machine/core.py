@@ -138,7 +138,7 @@ class Machine:
             if action in ['respond_to', 'listen_to']:
                 for i in range(0, len(config['params']['regex'])):
                     regex = config['params']['regex'][i]
-                    handle_changed_message = config['params']['regex'][i]
+                    handle_changed_message = config['params']['handle_changed_message'][i]
                     event_handler = {
                         'class': cls_instance,
                         'class_name': plugin_class,
