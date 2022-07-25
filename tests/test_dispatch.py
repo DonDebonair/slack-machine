@@ -36,7 +36,7 @@ def plugin_actions(fake_plugin):
     process_fn = getattr(fake_plugin, 'process_function')
     plugin_actions = {
         'listen_to': {
-            'TestPlugin.listen_function-hi': {
+            'TestPlugin.listen_function-hi-True': {
                 'class': fake_plugin,
                 'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': listen_fn,
@@ -47,7 +47,7 @@ def plugin_actions(fake_plugin):
             }
         },
         'respond_to': {
-            'TestPlugin.respond_function-hello': {
+            'TestPlugin.respond_function-hello-False': {
                 'class': fake_plugin,
                 'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': respond_fn,

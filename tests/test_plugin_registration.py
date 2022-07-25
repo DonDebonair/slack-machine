@@ -41,7 +41,7 @@ def test_load_and_register_plugins(settings):
     assert set(actions.keys()) == {'listen_to', 'respond_to'}
 
     # Test registration of respond_to actions
-    respond_to_key = 'tests.fake_plugins:FakePlugin.respond_function-hello'
+    respond_to_key = 'tests.fake_plugins:FakePlugin.respond_function-hello-False'
     assert respond_to_key in actions['respond_to']
     assert 'class' in actions['respond_to'][respond_to_key]
     assert 'function' in actions['respond_to'][respond_to_key]
@@ -49,7 +49,7 @@ def test_load_and_register_plugins(settings):
     assert actions['respond_to'][respond_to_key]['regex'] == re.compile('hello', re.IGNORECASE)
 
     # Test registration of listen_to actions
-    listen_to_key = 'tests.fake_plugins:FakePlugin.listen_function-hi'
+    listen_to_key = 'tests.fake_plugins:FakePlugin.listen_function-hi-False'
     assert listen_to_key in actions['listen_to']
     assert 'class' in actions['listen_to'][listen_to_key]
     assert 'function' in actions['listen_to'][listen_to_key]
@@ -60,8 +60,8 @@ def test_load_and_register_plugins(settings):
 def test_plugin_storage_fq_plugin_name(settings):
     machine = Machine(settings=settings)
     actions = machine._plugin_actions
-    plugin1_cls = actions['respond_to']['tests.fake_plugins:FakePlugin.respond_function-hello']['class']
-    plugin2_cls = actions['listen_to']['tests.fake_plugins:FakePlugin2.another_listen_function-doit']['class']
+    plugin1_cls = actions['respond_to']['tests.fake_plugins:FakePlugin.respond_function-hello-False']['class']
+    plugin2_cls = actions['listen_to']['tests.fake_plugins:FakePlugin2.another_listen_function-doit-False']['class']
     assert plugin1_cls.storage._fq_plugin_name == 'tests.fake_plugins:FakePlugin'
     assert plugin2_cls.storage._fq_plugin_name == 'tests.fake_plugins:FakePlugin2'
 
@@ -69,7 +69,7 @@ def test_plugin_storage_fq_plugin_name(settings):
 def test_plugin_init(settings):
     machine = Machine(settings=settings)
     actions = machine._plugin_actions
-    plugin_cls = actions['listen_to']['tests.fake_plugins:FakePlugin2.another_listen_function-doit']['class']
+    plugin_cls = actions['listen_to']['tests.fake_plugins:FakePlugin2.another_listen_function-doit-False']['class']
     assert plugin_cls.x == 42
 
 

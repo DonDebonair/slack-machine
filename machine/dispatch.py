@@ -97,9 +97,9 @@ class EventDispatcher:
 
     def _dispatch_listeners(self, listeners: List[Dict[str, Any]], event: Dict[str, Any]):
         for listener in listeners:
-            matcher = listener['regex']
+            matcher = listener['params']['regex']
             # Check if this is a message subtype, and if so, if the listener should handle it
-            if listener['handle_changed_message'] and 'subtype' in event and event['subtype'] == 'message_changed':
+            if listener['params']['handle_changed_message'] and 'subtype' in event and event['subtype'] == 'message_changed':
                 # Check the new message text for a match
                 match = matcher.search(event['message'].get('text', ''))
             else:
