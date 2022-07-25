@@ -119,7 +119,7 @@ def test_listen_to(listen_to_f):
     assert hasattr(listen_to_f, 'metadata')
     assert 'plugin_actions' in listen_to_f.metadata
     assert 'listen_to' in listen_to_f.metadata['plugin_actions']
-    assert 'params' in listen_to_f.metadata['plugin_actions']
+    assert 'params' in listen_to_f.metadata['plugin_actions']['listen_to']
     assert 'regex' in listen_to_f.metadata['plugin_actions']['listen_to']['params']
     assert listen_to_f.metadata['plugin_actions']['listen_to']['params']['regex'] == [
         re.compile(r'hello', re.IGNORECASE)]
