@@ -9,17 +9,23 @@ from clint.textui import puts, indent
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 
+from machine_v2.clients.slack import SlackClient
+
 
 class Machine:
     _socket_mode_client: SocketModeClient
+    _settings: Optional[Dict[str, Any]] = None
 
     def __init__(self, settings: Optional[Dict[str, Any]] = None):
+        if settings:
+            self._settings = settings
+
+    async def setup(self):
         announce("Initializing Slack Machine:")
 
         with indent(4):
             puts("Loading settings...")
-            if settings:
-                self._settings = settings
+            if self._settings is not None:
                 found_local_settings = True
             else:
                 self._settings, found_local_settings = import_settings()
@@ -32,6 +38,7 @@ class Machine:
                 format=fmt,
                 datefmt=date_fmt,
             )
+            logging.getLogger("slack_sdk.socket_mode.aiohttp").setLevel(logging.INFO)
             if not found_local_settings:
                 warn("No local_settings found! Are you sure this is what you want?")
             if 'SLACK_APP_TOKEN' not in self._settings:
@@ -41,10 +48,13 @@ class Machine:
                 error("No SLACK_BOT_TOKEN found in settings! I need that to work...")
                 sys.exit(1)
 
+            self._socket_mode_client = SocketModeClient(
+                app_token=self._settings['SLACK_APP_TOKEN'],
+                web_client=AsyncWebClient(token=self._settings["SLACK_BOT_TOKEN"])
+            )
+
     async def run(self):
         announce("\nStarting Slack Machine:")
-        with indent(4):
-            show_valid("Connected to Slack")
 
         from slack_sdk.socket_mode.response import SocketModeResponse
         from slack_sdk.socket_mode.request import SocketModeRequest
@@ -103,16 +113,17 @@ class Machine:
                     response = SocketModeResponse(envelope_id=req.envelope_id)
                     await client.send_socket_mode_response(response)
 
-        self._socket_mode_client = SocketModeClient(
-            app_token=self._settings['SLACK_APP_TOKEN'],  # xapp-A111-222-xyz
-            web_client=AsyncWebClient(token=self._settings["SLACK_BOT_TOKEN"])
-        )
-
         # Add a new listener to receive messages from Slack
         # You can add more listeners like this
         self._socket_mode_client.socket_mode_request_listeners.append(process)
+        client = SlackClient(self._socket_mode_client)
+        await client.setup()
         # Establish a WebSocket connection to the Socket Mode servers
         await self._socket_mode_client.connect()
+
+        with indent(4):
+            show_valid("Connected to Slack")
+
         # Just not to stop this process
         await asyncio.sleep(float("inf"))
 
