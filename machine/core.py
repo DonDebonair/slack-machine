@@ -136,7 +136,9 @@ class Machine:
                 event_type = config['event_type']
                 self._client.rtm_client.on(event_type)(callable_with_sanitized_event(fn))
             if action in ['respond_to', 'listen_to']:
-                for regex, handle_changed_message in zip(config['regex'], config['handle_changed_message']):
+                for i in range(0, len(config['params']['regex'])):
+                    regex = config['params']['regex'][i]
+                    handle_changed_message = config['params']['regex'][i]
                     event_handler = {
                         'class': cls_instance,
                         'class_name': plugin_class,
