@@ -110,12 +110,12 @@ def test_handle_event_respond_to(dispatcher, fake_plugin):
     _assert_message(args, 'hello')
 
 def test_handle_event_changed_message(dispatcher, fake_plugin):
-    msg_event = {'type': 'message', 'message': {'text': 'hey there', 'user': 'user1'}, 'channel': 'C1', 'subtype': 'message_changed'}
+    msg_event = {'type': 'message', 'message': {'text': 'hi', 'user': 'user1'}, 'channel': 'C1', 'subtype': 'message_changed'}
     dispatcher.handle_message(None, msg_event)
     assert fake_plugin.respond_function.call_count == 0
     assert fake_plugin.listen_function.call_count == 1
     args = fake_plugin.listen_function.call_args
-    _assert_message(args, 'hey there')
+    _assert_message(args, 'hi')
 
 def test_check_bot_mention(dispatcher):
 
