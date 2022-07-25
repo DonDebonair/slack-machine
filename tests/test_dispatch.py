@@ -40,8 +40,10 @@ def plugin_actions(fake_plugin):
                 'class': fake_plugin,
                 'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': listen_fn,
-                'regex': re.compile('hi', re.IGNORECASE),
-                'handle_changed_message': True
+                'params': {
+                    'regex': re.compile('hi', re.IGNORECASE),
+                    'handle_changed_message': True
+                }
             }
         },
         'respond_to': {
@@ -49,8 +51,10 @@ def plugin_actions(fake_plugin):
                 'class': fake_plugin,
                 'class_name': 'tests.fake_plugins.FakePlugin',
                 'function': respond_fn,
-                'regex': re.compile('hello', re.IGNORECASE),
-                'handle_changed_message': False
+                'params': {
+                    'regex': re.compile('hello', re.IGNORECASE),
+                    'handle_changed_message': False
+                }
             }
         },
         'process': {

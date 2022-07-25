@@ -119,18 +119,26 @@ def test_listen_to(listen_to_f):
     assert hasattr(listen_to_f, 'metadata')
     assert 'plugin_actions' in listen_to_f.metadata
     assert 'listen_to' in listen_to_f.metadata['plugin_actions']
-    assert 'regex' in listen_to_f.metadata['plugin_actions']['listen_to']
-    assert listen_to_f.metadata['plugin_actions']['listen_to']['regex'] == [
+    assert 'params' in listen_to_f.metadata['plugin_actions']
+    assert 'regex' in listen_to_f.metadata['plugin_actions']['listen_to']['params']
+    assert listen_to_f.metadata['plugin_actions']['listen_to']['params']['regex'] == [
         re.compile(r'hello', re.IGNORECASE)]
+    assert 'handle_changed_message' in listen_to_f.metadata['plugin_actions']['listen_to']['params']
+    assert listen_to_f.metadata['plugin_actions']['listen_to']['params']['handle_changed_message'] == [
+        False]
 
 
 def test_respond_to(respond_to_f):
     assert hasattr(respond_to_f, 'metadata')
     assert 'plugin_actions' in respond_to_f.metadata
     assert 'respond_to' in respond_to_f.metadata['plugin_actions']
-    assert 'regex' in respond_to_f.metadata['plugin_actions']['respond_to']
+    assert 'params' in respond_to_f.metadata['plugin_actions']['respond_to']
+    assert 'regex' in respond_to_f.metadata['plugin_actions']['respond_to']['params']
     assert respond_to_f.metadata['plugin_actions']['respond_to']['regex'] == [
         re.compile(r'hello', re.IGNORECASE)]
+    assert 'handle_changed_message' in respond_to_f.metadata['plugin_actions']['respond_to']['params']
+    assert respond_to_f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'] == [
+        False]
 
 
 def test_schedule(schedule_f):
