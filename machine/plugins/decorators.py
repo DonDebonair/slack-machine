@@ -40,24 +40,19 @@ def listen_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching
+    :param handle_changed_message: should changed messages be handled by this function
     :return: wrapped method
     """
 
     def listen_to_decorator(f):
+        config = {"regex": re.compile(regex, flags), "handle_changed_message": handle_changed_message}
         f.metadata = getattr(f, "metadata", {})
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['listen_to'] = \
-            f.metadata['plugin_actions'].get('listen_to', {})
-        f.metadata['plugin_actions']['listen_to']['params'] = \
-            f.metadata['plugin_actions']['listen_to'].get('params', {})
-        f.metadata['plugin_actions']['listen_to']['params']['regex'] = \
-            f.metadata['plugin_actions']['listen_to']['params'].get('regex', [])
-        f.metadata['plugin_actions']['listen_to']['params']['regex'] \
-            .append(re.compile(regex, flags))
-        f.metadata['plugin_actions']['listen_to']['params']['handle_changed_message'] = \
-            f.metadata['plugin_actions']['listen_to']['params'].get('handle_changed_message', [])
-        f.metadata['plugin_actions']['listen_to']['params']['handle_changed_message'] \
-            .append(handle_changed_message)
+        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata["plugin_actions"]["listen_to"] = f.metadata["plugin_actions"].get("listen_to", {})
+        f.metadata["plugin_actions"]["listen_to"]["configs"] = f.metadata["plugin_actions"]["listen_to"].get(
+            "configs", []
+        )
+        f.metadata["plugin_actions"]["listen_to"]["configs"].append(config)
         return f
 
     return listen_to_decorator
@@ -76,33 +71,19 @@ def respond_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching
+    :param handle_changed_message: should changed messages be handled by this function
     :return: wrapped method
     """
 
     def respond_to_decorator(f):
+        config = {"regex": re.compile(regex, flags), "handle_changed_message": handle_changed_message}
         f.metadata = getattr(f, "metadata", {})
-<<<<<<< HEAD
         f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
         f.metadata["plugin_actions"]["respond_to"] = f.metadata["plugin_actions"].get("respond_to", {})
-        f.metadata["plugin_actions"]["respond_to"]["regex"] = f.metadata["plugin_actions"]["respond_to"].get(
-            "regex", []
+        f.metadata["plugin_actions"]["respond_to"]["configs"] = f.metadata["plugin_actions"]["respond_to"].get(
+            "configs", []
         )
-        f.metadata["plugin_actions"]["respond_to"]["regex"].append(re.compile(regex, flags))
-=======
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['respond_to'] = \
-            f.metadata['plugin_actions'].get('respond_to', {})
-        f.metadata['plugin_actions']['respond_to']['params'] = \
-            f.metadata['plugin_actions']['respond_to'].get('params', {})
-        f.metadata['plugin_actions']['respond_to']['params']['regex'] = \
-            f.metadata['plugin_actions']['respond_to']['params'].get('regex', [])
-        f.metadata['plugin_actions']['respond_to']['params']['regex'] \
-            .append(re.compile(regex, flags))
-        f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'] = \
-            f.metadata['plugin_actions']['respond_to']['params'].get('handle_changed_message', [])
-        f.metadata['plugin_actions']['respond_to']['params']['handle_changed_message'] \
-            .append(handle_changed_message)
->>>>>>> 7c0a07c (feat: add support for 'message_changed' subtype for 'message' events)
+        f.metadata["plugin_actions"]["respond_to"]["configs"].append(config)
         return f
 
     return respond_to_decorator

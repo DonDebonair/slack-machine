@@ -40,7 +40,8 @@ def plugin_actions(fake_plugin):
                 "class": fake_plugin,
                 "class_name": "tests.fake_plugins.FakePlugin",
                 "function": listen_fn,
-                "params": {"regex": re.compile("hi", re.IGNORECASE), "handle_changed_message": True},
+                "regex": re.compile("hi", re.IGNORECASE),
+                "handle_changed_message": True,
             }
         },
         "respond_to": {
@@ -48,7 +49,8 @@ def plugin_actions(fake_plugin):
                 "class": fake_plugin,
                 "class_name": "tests.fake_plugins.FakePlugin",
                 "function": respond_fn,
-                "params": {"regex": re.compile("hello", re.IGNORECASE), "handle_changed_message": False},
+                "regex": re.compile("hello", re.IGNORECASE),
+                "handle_changed_message": False,
             }
         },
         "process": {
@@ -64,7 +66,10 @@ def plugin_actions(fake_plugin):
     return plugin_actions
 
 
-@pytest.fixture(params=[None, {"ALIASES": "!"}, {"ALIASES": "!,$"}], ids=["No Alias", "Alias", "Aliases"])
+@pytest.fixture(
+    params=[None, {"ALIASES": "!"}, {"ALIASES": "!,$"}],
+    ids=["No Alias", "Alias", "Aliases"],
+)
 def dispatcher(mocker, plugin_actions, request):
     mocker.patch("machine.dispatch.LowLevelSlackClient", autospec=True)
     dispatch_instance = EventDispatcher(plugin_actions, request.param)
@@ -96,7 +101,12 @@ def test_handle_event_listen_to(dispatcher, fake_plugin):
 
 
 def test_handle_event_respond_to(dispatcher, fake_plugin):
-    msg_event = {"type": "message", "text": "<@123> hello", "channel": "C1", "user": "user1"}
+    msg_event = {
+        "type": "message",
+        "text": "<@123> hello",
+        "channel": "C1",
+        "user": "user1",
+    }
     dispatcher.handle_message(None, msg_event)
     assert fake_plugin.respond_function.call_count == 1
     assert fake_plugin.listen_function.call_count == 0
