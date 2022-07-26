@@ -68,7 +68,8 @@ class MachineBasePlugin:
         return self._client.channels
 
     def find_channel_by_name(self, channel_name: str) -> Optional[Channel]:
-        """Find a channel by its name, irrespective of a preceding pound symbol. This does not include DMs.
+        """Find a channel by its name, irrespective of a preceding pound symbol. This does not
+        include DMs.
 
         :param channel_name: The name of the channel to retrieve.
         :return: The channel if found, None otherwise.
@@ -304,8 +305,8 @@ class Message:
 
         :return: the subtype of the message, if applicable
         """
-        if 'subtype' in self._msg_event:
-            return self._msg_event['subtype']
+        if "subtype" in self._msg_event:
+            return self._msg_event["subtype"]
         else:
             return None
 

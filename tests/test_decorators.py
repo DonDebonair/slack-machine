@@ -25,7 +25,7 @@ def listen_to_f():
 
 @pytest.fixture(scope="module")
 def respond_to_f():
-    @respond_to(r"hello", re.IGNORECASE)
+    @respond_to(r"hello", re.IGNORECASE, handle_changed_message=True)
     def f(msg):
         pass
 
@@ -118,26 +118,26 @@ def test_listen_to(listen_to_f):
     assert hasattr(listen_to_f, "metadata")
     assert "plugin_actions" in listen_to_f.metadata
     assert "listen_to" in listen_to_f.metadata["plugin_actions"]
-    assert "params" in listen_to_f.metadata["plugin_actions"]["listen_to"]
-    assert "regex" in listen_to_f.metadata["plugin_actions"]["listen_to"]["params"]
-    assert listen_to_f.metadata["plugin_actions"]["listen_to"]["params"]["regex"] == [
-        re.compile(r"hello", re.IGNORECASE)
-    ]
-    assert "handle_changed_message" in listen_to_f.metadata["plugin_actions"]["listen_to"]["params"]
-    assert listen_to_f.metadata["plugin_actions"]["listen_to"]["params"]["handle_changed_message"] == [False]
+    assert "configs" in listen_to_f.metadata["plugin_actions"]["listen_to"]
+    assert len(listen_to_f.metadata["plugin_actions"]["listen_to"]["configs"]) == 1
+    config = listen_to_f.metadata["plugin_actions"]["listen_to"]["configs"][0]
+    assert "regex" in config
+    assert config["regex"] == re.compile(r"hello", re.IGNORECASE)
+    assert "handle_changed_message" in config
+    assert config["handle_changed_message"] is False
 
 
 def test_respond_to(respond_to_f):
     assert hasattr(respond_to_f, "metadata")
     assert "plugin_actions" in respond_to_f.metadata
     assert "respond_to" in respond_to_f.metadata["plugin_actions"]
-    assert "params" in respond_to_f.metadata["plugin_actions"]["respond_to"]
-    assert "regex" in respond_to_f.metadata["plugin_actions"]["respond_to"]["params"]
-    assert respond_to_f.metadata["plugin_actions"]["respond_to"]["params"]["regex"] == [
-        re.compile(r"hello", re.IGNORECASE)
-    ]
-    assert "handle_changed_message" in respond_to_f.metadata["plugin_actions"]["respond_to"]["params"]
-    assert respond_to_f.metadata["plugin_actions"]["respond_to"]["params"]["handle_changed_message"] == [False]
+    assert "configs" in respond_to_f.metadata["plugin_actions"]["respond_to"]
+    assert len(respond_to_f.metadata["plugin_actions"]["respond_to"]["configs"]) == 1
+    config = respond_to_f.metadata["plugin_actions"]["respond_to"]["configs"][0]
+    assert "regex" in config
+    assert config["regex"] == re.compile(r"hello", re.IGNORECASE)
+    assert "handle_changed_message" in config
+    assert config["handle_changed_message"] is True
 
 
 def test_schedule(schedule_f):
