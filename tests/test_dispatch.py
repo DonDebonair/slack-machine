@@ -36,19 +36,19 @@ def plugin_actions(fake_plugin):
     process_fn = getattr(fake_plugin, "process_function")
     plugin_actions = {
         "listen_to": {
-            "TestPlugin.listen_function-hi": {
+            "TestPlugin.listen_function-hi-True": {
                 "class": fake_plugin,
                 "class_name": "tests.fake_plugins.FakePlugin",
                 "function": listen_fn,
-                "regex": re.compile("hi", re.IGNORECASE),
+                "params": {"regex": re.compile("hi", re.IGNORECASE), "handle_changed_message": True},
             }
         },
         "respond_to": {
-            "TestPlugin.respond_function-hello": {
+            "TestPlugin.respond_function-hello-False": {
                 "class": fake_plugin,
                 "class_name": "tests.fake_plugins.FakePlugin",
                 "function": respond_fn,
-                "regex": re.compile("hello", re.IGNORECASE),
+                "params": {"regex": re.compile("hello", re.IGNORECASE), "handle_changed_message": False},
             }
         },
         "process": {
@@ -102,6 +102,20 @@ def test_handle_event_respond_to(dispatcher, fake_plugin):
     assert fake_plugin.listen_function.call_count == 0
     args = fake_plugin.respond_function.call_args
     _assert_message(args, "hello")
+
+
+def test_handle_event_changed_message(dispatcher, fake_plugin):
+    msg_event = {
+        "type": "message",
+        "message": {"text": "hi", "user": "user1"},
+        "channel": "C1",
+        "subtype": "message_changed",
+    }
+    dispatcher.handle_message(None, msg_event)
+    assert fake_plugin.respond_function.call_count == 0
+    assert fake_plugin.listen_function.call_count == 1
+    args = fake_plugin.listen_function.call_args
+    _assert_message(args, "hi")
 
 
 def test_check_bot_mention(dispatcher):

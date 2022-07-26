@@ -126,11 +126,21 @@ class Machine:
                 event_type = config["event_type"]
                 self._client.rtm_client.on(event_type)(callable_with_sanitized_event(fn))
             if action in ["respond_to", "listen_to"]:
-                for regex in config["regex"]:
-                    event_handler = {"class": cls_instance, "class_name": plugin_class, "function": fn, "regex": regex}
-                    key = f"{fq_fn_name}-{regex.pattern}"
+                for i in range(0, len(config["params"]["regex"])):
+                    regex = config["params"]["regex"][i]
+                    handle_changed_message = config["params"]["handle_changed_message"][i]
+                    event_handler = {
+                        "class": cls_instance,
+                        "class_name": plugin_class,
+                        "function": fn,
+                        "regex": regex,
+                        "handle_changed_message": handle_changed_message,
+                    }
+                    key = "{}-{}-{}".format(fq_fn_name, regex.pattern, handle_changed_message)
                     self._plugin_actions[action][key] = event_handler
-                    self._help["robot"][class_help].append(self._parse_robot_help(regex, action))
+                    self._help["robot"][class_help].append(
+                        self._parse_robot_help(regex, handle_changed_message, action)
+                    )
             if action == "schedule":
                 Scheduler.get_instance().add_job(
                     fq_fn_name, trigger="cron", args=[cls_instance], id=fq_fn_name, replace_existing=True, **config
@@ -151,11 +161,13 @@ class Machine:
         return {"command": command, "help": cmd_help}
 
     @staticmethod
-    def _parse_robot_help(regex, action):
+    def _parse_robot_help(regex, handle_changed_message, action):
         if action == "respond_to":
-            return f"@botname {regex.pattern}"
+            return "@botname {}{}".format(
+                regex.pattern, " [includes changed messages]" if handle_changed_message else ""
+            )
         else:
-            return regex.pattern
+            return "{}{}".format(regex.pattern, " [includes changed messages]" if handle_changed_message else "")
 
     def _keepalive(self):
         while True:
