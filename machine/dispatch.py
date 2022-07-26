@@ -34,11 +34,13 @@ class EventDispatcher:
     def handle_message(self, client, event):
         # Handle message listeners
         # Handle message subtype 'message_changed' to allow the bot to respond to edits
-        if "subtype" in event and event["subtype"] == "message_changed":
-            event = event["message"]
-            event["channel"] = event.get("channel", "")
-        if "user" in event and not event["user"] == self._get_bot_id():
-            listeners = self._find_listeners("listen_to")
+        if 'subtype' in event and event['subtype'] == 'message_changed':
+            channel = event.get('channel', '')
+            event = event['message']
+            event['channel'] = channel
+            event['subtype'] = 'message_changed'
+        if 'user' in event and not event['user'] == self._get_bot_id():
+            listeners = self._find_listeners('listen_to')
             respond_to_msg = self._check_bot_mention(event)
             if respond_to_msg:
                 listeners += self._find_listeners("respond_to")
@@ -92,8 +94,15 @@ class EventDispatcher:
 
     def _dispatch_listeners(self, listeners: List[Dict[str, Any]], event: Dict[str, Any]):
         for listener in listeners:
-            matcher = listener["regex"]
-            match = matcher.search(event.get("text", ""))
+            matcher = listener['params']['regex']
+            # Check if this is a message subtype, and if so, if the listener should handle it
+            if 'subtype' in event and event['subtype'] == 'message_changed':
+                if listener['params']['handle_changed_message']:
+                    # Check the new message text for a match
+                    # only if this listener should handle changed messages
+                    match = matcher.search(event.get('text', ''))
+            else:
+                match = matcher.search(event.get('text', ''))
             if match:
                 message = self._gen_message(event, listener["class_name"])
                 listener["function"](message, **match.groupdict())

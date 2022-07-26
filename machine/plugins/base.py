@@ -299,6 +299,17 @@ class Message:
         self._fq_plugin_name = plugin_class_name
 
     @property
+    def subtype(self) -> str:
+        """The subtype of the message, if applicable
+
+        :return: the subtype of the message, if applicable
+        """
+        if 'subtype' in self._msg_event:
+            return self._msg_event['subtype']
+        else:
+            return None
+
+    @property
     def sender(self) -> User:
         """The sender of the message
 
