@@ -115,8 +115,8 @@ class Machine:
 
         # Add a new listener to receive messages from Slack
         # You can add more listeners like this
-        self._socket_mode_client.socket_mode_request_listeners.append(process)
         client = SlackClient(self._socket_mode_client)
+        client.register_handler(process)
         await client.setup()
         # Establish a WebSocket connection to the Socket Mode servers
         await self._socket_mode_client.connect()
