@@ -1,6 +1,6 @@
 from __future__ import annotations
+
 import logging
-from datetime import datetime
 from typing import Dict, Union, Callable, Awaitable, Any
 
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
@@ -9,26 +9,10 @@ from slack_sdk.socket_mode.async_listeners import AsyncSocketModeRequestListener
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
 
-from machine.clients.singletons.scheduling import Scheduler
-from machine_v2.models import User
 from machine_v2.models import Channel
-from machine.clients.singletons.slack import LowLevelSlackClient
-
-from slack_sdk.models import extract_json
+from machine_v2.models import User
 
 logger = logging.getLogger(__name__)
-
-
-async def call_paginated_endpoint(endpoint: Callable[..., Awaitable], field: str, **kwargs) -> list[dict[str, Any]]:
-    collection = []
-    response = await endpoint(limit=2, **kwargs)
-    collection.extend(response[field])
-    next_cursor = response["response_metadata"].get("next_cursor")
-    while next_cursor:
-        response = await endpoint(limit=2, cursor=next_cursor, **kwargs)
-        collection.extend(response[field])
-        next_cursor = response["response_metadata"].get("next_cursor")
-    return collection
 
 
 def id_for_user(user: Union[User, str]) -> str:
@@ -198,46 +182,28 @@ class SlackClient:
     def bot_info(self) -> dict[str, Any]:
         return self._bot_info
 
-    def send(self, channel: Union[Channel, str], text: str, **kwargs: Any):
+    async def send(self, channel: Union[Channel, str], text: str, **kwargs: Any):
         channel_id = id_for_channel(channel)
-        if "attachments" in kwargs and kwargs["attachments"] is not None:
-            kwargs["attachments"] = extract_json(kwargs["attachments"])
-        if "blocks" in kwargs and kwargs["blocks"] is not None:
-            kwargs["blocks"] = extract_json(kwargs["blocks"])
         if "ephemeral_user" in kwargs and kwargs["ephemeral_user"] is not None:
             ephemeral_user_id = id_for_user(kwargs["ephemeral_user"])
             del kwargs["ephemeral_user"]
-            return LowLevelSlackClient.get_instance().web_client.chat_postEphemeral(
+            return await self._client.web_client.chat_postEphemeral(
                 channel=channel_id, user=ephemeral_user_id, text=text, **kwargs
             )
         else:
-            return LowLevelSlackClient.get_instance().web_client.chat_postMessage(
-                channel=channel_id, text=text, **kwargs
-            )
+            return await self._client.web_client.chat_postMessage(channel=channel_id, text=text, **kwargs)
 
-    def send_scheduled(self, when: datetime, channel: Union[Channel, str], text: str, **kwargs):
-        args = [self, channel, text]
-
-        Scheduler.get_instance().add_job(SlackClient.send, trigger="date", args=args, kwargs=kwargs, run_date=when)
-
-    def react(self, channel: Union[Channel, str], ts: str, emoji: str):
+    async def react(self, channel: Union[Channel, str], ts: str, emoji: str):
         channel_id = id_for_channel(channel)
-        return LowLevelSlackClient.get_instance().web_client.reactions_add(name=emoji, channel=channel_id, timestamp=ts)
+        return await self._client.web_client.reactions_add(name=emoji, channel=channel_id, timestamp=ts)
 
-    def open_im(self, user: Union[User, str]) -> str:
+    async def open_im(self, user: Union[User, str]) -> str:
         user_id = id_for_user(user)
-        response = LowLevelSlackClient.get_instance().web_client.conversations_open(users=user_id)
+        response = await self._client.web_client.conversations_open(users=user_id)
         return response["channel"]["id"]
 
-    def send_dm(self, user: Union[User, str], text: str, **kwargs):
+    async def send_dm(self, user: Union[User, str], text: str, **kwargs):
         user_id = id_for_user(user)
-        dm_channel_id = self.open_im(user_id)
+        dm_channel_id = await self.open_im(user_id)
 
-        return LowLevelSlackClient.get_instance().web_client.chat_postMessage(
-            channel=dm_channel_id, text=text, as_user=True, **kwargs
-        )
-
-    def send_dm_scheduled(self, when: datetime, user, text: str, **kwargs):
-        args = [self, user, text]
-
-        Scheduler.get_instance().add_job(SlackClient.send_dm, trigger="date", args=args, kwargs=kwargs, run_date=when)
+        return await self._client.web_client.chat_postMessage(channel=dm_channel_id, text=text, as_user=True, **kwargs)
