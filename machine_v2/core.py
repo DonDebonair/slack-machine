@@ -1,22 +1,24 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import sys
-from typing import Dict, Optional, Any
+
+from clint.textui import puts, indent
+from slack_sdk.socket_mode.aiohttp import SocketModeClient
+from slack_sdk.web.async_client import AsyncWebClient
 
 from machine.settings import import_settings
+from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.text import show_valid, warn, error, announce
-from clint.textui import puts, indent
-from slack_sdk.web.async_client import AsyncWebClient
-from slack_sdk.socket_mode.aiohttp import SocketModeClient
-
 from machine_v2.clients.slack import SlackClient
 
 
 class Machine:
     _socket_mode_client: SocketModeClient
-    _settings: Optional[Dict[str, Any]] = None
+    _settings: CaseInsensitiveDict | None = None
 
-    def __init__(self, settings: Optional[Dict[str, Any]] = None):
+    def __init__(self, settings: CaseInsensitiveDict | None = None):
         if settings:
             self._settings = settings
 
