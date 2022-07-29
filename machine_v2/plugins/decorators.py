@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 import re
 from dataclasses import dataclass, field
-from typing import Callable, TypeVar, Union, cast
+from typing import Callable, Union, cast
 
-from typing_extensions import Protocol
 from typing_extensions import ParamSpec
+from typing_extensions import Protocol
 
 
 @dataclass
@@ -21,15 +22,16 @@ class Metadata:
 
 
 P = ParamSpec("P")
-F = TypeVar("F", bound=Callable[..., None])
 
 
-class DecoratedPluginFunc(Protocol[F]):
-    __call__: F
+class DecoratedPluginFunc(Protocol[P]):
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> None:
+        ...
+
     metadata: Metadata
 
 
-def process(slack_event_type: str) -> Callable[[Callable[P, None]], DecoratedPluginFunc[F]]:
+def process(slack_event_type: str) -> Callable[[Callable[P, None]], DecoratedPluginFunc[P, None]]:
     """Process Slack events of a specific type
 
     This decorator will enable a Plugin method to process `Slack events`_ of a specific type. The
@@ -43,7 +45,7 @@ def process(slack_event_type: str) -> Callable[[Callable[P, None]], DecoratedPlu
     :return: wrapped method
     """
 
-    def process_decorator(f: Callable[P, None]) -> DecoratedPluginFunc[F]:
+    def process_decorator(f: Callable[P, None]) -> DecoratedPluginFunc[P, None]:
         f = cast(DecoratedPluginFunc, f)
         f.metadata = getattr(f, "metadata", Metadata())
         f.metadata.plugin_actions.process.append(slack_event_type)
@@ -52,7 +54,9 @@ def process(slack_event_type: str) -> Callable[[Callable[P, None]], DecoratedPlu
     return process_decorator
 
 
-def listen_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE) -> Callable[..., Callable[..., None]]:
+def listen_to(
+    regex: str, flags: re.RegexFlag | int = re.IGNORECASE
+) -> Callable[[Callable[P, None]], DecoratedPluginFunc[P, None]]:
     """Listen to messages matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that match a regex pattern.
@@ -66,7 +70,8 @@ def listen_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE) -> Callable
     :return: wrapped method
     """
 
-    def listen_to_decorator(f: F) -> DecoratedPluginFunc[F]:
+    def listen_to_decorator(f: Callable[P, None]) -> DecoratedPluginFunc[P, None]:
+        f = cast(DecoratedPluginFunc, f)
         f.metadata = getattr(f, "metadata", Metadata())
         f.metadata.plugin_actions.listen_to.append(re.compile(regex, flags))
         return f
@@ -74,7 +79,9 @@ def listen_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE) -> Callable
     return listen_to_decorator
 
 
-def respond_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE) -> Callable[..., Callable[..., None]]:
+def respond_to(
+    regex: str, flags: re.RegexFlag | int = re.IGNORECASE
+) -> Callable[[Callable[P, None]], DecoratedPluginFunc[P, None]]:
     """Listen to messages mentioning the bot and matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that are directed to the bot
@@ -90,7 +97,8 @@ def respond_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE) -> Callabl
     :return: wrapped method
     """
 
-    def respond_to_decorator(f: F) -> DecoratedPluginFunc[F]:
+    def respond_to_decorator(f: Callable[P, None]) -> DecoratedPluginFunc[P, None]:
+        f = cast(DecoratedPluginFunc, f)
         f.metadata = getattr(f, "metadata", Metadata())
         f.metadata.plugin_actions.respond_to.append(re.compile(regex, flags))
         return f
@@ -98,7 +106,7 @@ def respond_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE) -> Callabl
     return respond_to_decorator
 
 
-def required_settings(settings: Union[list[str], str]) -> Callable[..., Callable[..., None]]:
+def required_settings(settings: Union[list[str], str]) -> Callable[[Callable[P, None]], DecoratedPluginFunc[P, None]]:
     """Specify a required setting for a plugin or plugin method
 
     The settings specified with this decorator will be added to the required settings for the
@@ -108,7 +116,8 @@ def required_settings(settings: Union[list[str], str]) -> Callable[..., Callable
     :param settings: settings that are required (can be list of strings, or single string)
     """
 
-    def required_settings_decorator(f_or_cls: F) -> DecoratedPluginFunc[F]:
+    def required_settings_decorator(f_or_cls: Callable[P, None]) -> DecoratedPluginFunc[P, None]:
+        f_or_cls = cast(DecoratedPluginFunc, f_or_cls)
         f_or_cls.metadata = getattr(f_or_cls, "metadata", Metadata())
         if isinstance(settings, list):
             f_or_cls.metadata.required_settings.extend(settings)

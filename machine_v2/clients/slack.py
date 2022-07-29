@@ -1,13 +1,14 @@
 from __future__ import annotations
 
 import logging
-from typing import Dict, Union, Callable, Awaitable, Any
+from typing import Callable, Awaitable, Any
 
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.async_listeners import AsyncSocketModeRequestListener
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
+from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
 from machine_v2.models import Channel
 from machine_v2.models import User
@@ -15,14 +16,14 @@ from machine_v2.models import User
 logger = logging.getLogger(__name__)
 
 
-def id_for_user(user: Union[User, str]) -> str:
+def id_for_user(user: User | str) -> str:
     if isinstance(user, User):
         return user.id
     else:
         return user
 
 
-def id_for_channel(channel: Union[Channel, str]) -> str:
+def id_for_channel(channel: Channel | str) -> str:
     if isinstance(channel, Channel):
         return channel.id
     else:
@@ -38,13 +39,14 @@ class SlackClient:
     def __init__(self, client: SocketModeClient):
         self._client = client
         self._users = {}
-        self._channels: Dict[str, Channel] = {}
+        self._channels: dict[str, Channel] = {}
 
     def register_handler(
         self,
-        handler: Union[
-            AsyncSocketModeRequestListener,
-            Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]],
+        handler: AsyncSocketModeRequestListener
+        | Callable[
+            [AsyncBaseSocketModeClient, SocketModeRequest],
+            Awaitable[None],
         ],
     ):
         self._client.socket_mode_request_listeners.append(handler)
@@ -171,18 +173,18 @@ class SlackClient:
         del self._channels[event["old_channel_id"]]
 
     @property
-    def users(self) -> Dict[str, User]:
+    def users(self) -> dict[str, User]:
         return self._users
 
     @property
-    def channels(self) -> Dict[str, Channel]:
+    def channels(self) -> dict[str, Channel]:
         return self._channels
 
     @property
     def bot_info(self) -> dict[str, Any]:
         return self._bot_info
 
-    async def send(self, channel: Union[Channel, str], text: str, **kwargs: Any):
+    async def send(self, channel: Channel | str, text: str, **kwargs: Any) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         if "ephemeral_user" in kwargs and kwargs["ephemeral_user"] is not None:
             ephemeral_user_id = id_for_user(kwargs["ephemeral_user"])
@@ -193,16 +195,16 @@ class SlackClient:
         else:
             return await self._client.web_client.chat_postMessage(channel=channel_id, text=text, **kwargs)
 
-    async def react(self, channel: Union[Channel, str], ts: str, emoji: str):
+    async def react(self, channel: Channel | str, ts: str, emoji: str) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.reactions_add(name=emoji, channel=channel_id, timestamp=ts)
 
-    async def open_im(self, user: Union[User, str]) -> str:
+    async def open_im(self, user: User | str) -> str:
         user_id = id_for_user(user)
         response = await self._client.web_client.conversations_open(users=user_id)
         return response["channel"]["id"]
 
-    async def send_dm(self, user: Union[User, str], text: str, **kwargs):
+    async def send_dm(self, user: User | str, text: str, **kwargs) -> AsyncSlackResponse:
         user_id = id_for_user(user)
         dm_channel_id = await self.open_im(user_id)
 
