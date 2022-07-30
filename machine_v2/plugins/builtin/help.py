@@ -20,7 +20,7 @@ class HelpPlugin(MachineBasePlugin):
     @respond_to(r'^robot help$')
     async def robot_help(self, msg: Message):
         """robot help: display regular expressions that the bot responds to"""
-        robot_manual = self.storage.get('manual', shared=True)['robot']
+        robot_manual = (await self.storage.get('manual', shared=True))['robot']
         help_text = "This is what triggers me:\n\n"
         help_text += "\n\n".join([self._gen_class_robot_help(cls, regexes)
                                   for cls, regexes in robot_manual.items()])

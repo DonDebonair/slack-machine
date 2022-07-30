@@ -13,7 +13,6 @@ def main():
     bot = Machine()
     loop = asyncio.get_event_loop()
     try:
-        loop.run_until_complete(bot.setup())
         loop.run_until_complete(bot.run())
     except KeyboardInterrupt:
         loop.run_until_complete(bot.close())

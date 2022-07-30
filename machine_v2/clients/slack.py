@@ -51,7 +51,7 @@ class SlackClient:
     ):
         self._client.socket_mode_request_listeners.append(handler)
 
-    async def _process(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest):
+    async def _process_users_channels(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest):
         logger.debug("Request of type %s with payload %s", req.type, req.payload)
         if req.type == "events_api":
             event = req.payload["event"]
@@ -85,7 +85,7 @@ class SlackClient:
     async def setup(self):
         # Setup handlers
         # TODO: use partial?
-        self.register_handler(lambda client, req: self._process(client, req))
+        self.register_handler(lambda client, req: self._process_users_channels(client, req))
 
         # Get bot info
         auth_info = await self._client.web_client.auth_test()
