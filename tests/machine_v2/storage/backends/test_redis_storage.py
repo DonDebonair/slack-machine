@@ -17,11 +17,9 @@ def redis_client(mocker):
 
 @pytest.fixture
 def redis_storage(mocker, redis_client):
-    # mocker.patch('machine_v2.storage.backends.redis.Redis', autospec=True)
     settings = {'REDIS_URL': 'redis://nohost:1234'}
     storage = RedisStorage(settings)
     storage._redis = redis_client
-    print(f"************ redis_storage: {storage}")
     return storage
 
 
