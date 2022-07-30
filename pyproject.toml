@@ -79,7 +79,7 @@ experimental-string-processing = true
 
 [tool.pytest.ini_options]
 mock_use_standalone_module = true
-addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine --cov=machine_v2 tests"
+addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine --cov=machine_v2"
 filterwarnings = [
     "ignore:invalid escape sequence::bottle",
     "ignore:Using or importing the ABCs::bottle"
