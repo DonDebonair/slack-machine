@@ -27,6 +27,6 @@ class MessageHandler:
 
 @dataclass
 class RegisteredActions:
-    listen_to: list[MessageHandler] = field(default_factory=list)
-    respond_to: list[MessageHandler] = field(default_factory=list)
-    process: dict[str, list[Callable[[str], None]]] = field(default_factory=dict)
+    listen_to: dict[str, MessageHandler] = field(default_factory=dict)
+    respond_to: dict[str, MessageHandler] = field(default_factory=dict)
+    process: dict[str, dict[str, Callable[[str], None]]] = field(default_factory=dict)
