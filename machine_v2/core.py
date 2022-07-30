@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 
 class Machine:
     _socket_mode_client: SocketModeClient
-    _client: SlackClient
+    _client: SlackClient | None
     _storage_backend: MachineBaseStorage
     _settings: CaseInsensitiveDict | None = None
     _help: Manual
@@ -40,6 +40,7 @@ class Machine:
             self._settings = settings
         self._help = Manual(human={}, robot={})
         self._registered_actions = RegisteredActions()
+        self._client = None
 
     def _setup_logging(self):
         fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
@@ -173,24 +174,43 @@ class Machine:
         if fn.__doc__:
             self._help.human[class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
         for regex in metadata.plugin_actions.listen_to:
-            self._register_message_handler("listen_to", cls_instance, plugin_class_name, fn, regex, class_help)
+            self._register_message_handler(
+                type_="listen_to",
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                regex=regex,
+                class_help=class_help,
+            )
         for regex in metadata.plugin_actions.respond_to:
-            self._register_message_handler("respond_to", cls_instance, plugin_class_name, fn, regex, class_help)
+            self._register_message_handler(
+                type_="respond_to",
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                regex=regex,
+                class_help=class_help,
+            )
         for event in metadata.plugin_actions.process:
-            self._registered_actions.process[event] = self._registered_actions.process.get(event, [])
-            self._registered_actions.process[event].append(fn)
+            self._registered_actions.process[event] = self._registered_actions.process.get(event, {})
+            key = f"{fq_fn_name}-{event}"
+            self._registered_actions.process[event][key] = fn
 
     def _register_message_handler(
         self,
         type_: str,
         class_: MachineBasePlugin,
         class_name: str,
+        fq_fn_name: str,
         function: Callable[..., None],
         regex: re.Pattern,
         class_help: str,
     ):
         handler = MessageHandler(class_=class_, class_name=class_name, function=function, regex=regex)
-        getattr(self._registered_actions, type_).append(handler)
+        key = f"{fq_fn_name}-{regex.pattern}"
+        getattr(self._registered_actions, type_)[key] = handler
         self._help.robot[class_help].append(self._parse_robot_help(regex, type_))
 
     @staticmethod

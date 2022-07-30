@@ -3,15 +3,15 @@ import pytest
 from machine_v2.storage.backends.redis import RedisStorage
 
 
-@pytest.fixture()
-def redis_client(mocker):
-    redis_client = mocker.async_stub(name="Redis")
-    redis_client.set = mocker.async_stub(name="set")
-    redis_client.get = mocker.async_stub(name="get")
-    redis_client.has = mocker.async_stub(name="has")
-    redis_client.exists = mocker.async_stub(name="exists")
-    redis_client.delete = mocker.async_stub(name="delete")
-    redis_client.info = mocker.async_stub(name="info")
+@pytest.fixture(scope="module")
+def redis_client(module_mocker):
+    redis_client = module_mocker.async_stub(name="Redis")
+    redis_client.set = module_mocker.async_stub(name="set")
+    redis_client.get = module_mocker.async_stub(name="get")
+    redis_client.has = module_mocker.async_stub(name="has")
+    redis_client.exists = module_mocker.async_stub(name="exists")
+    redis_client.delete = module_mocker.async_stub(name="delete")
+    redis_client.info = module_mocker.async_stub(name="info")
     return redis_client
 
 
