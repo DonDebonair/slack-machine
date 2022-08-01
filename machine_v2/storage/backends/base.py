@@ -64,3 +64,8 @@ class MachineBaseStorage(ABC):
         :return: total size of storage in bytes (integer)
         """
         ...
+
+    @abstractmethod
+    async def close(self) -> None:
+        """Close the storage backend"""
+        ...

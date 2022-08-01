@@ -10,8 +10,6 @@ from typing import Callable, cast
 import dill
 from clint.textui import puts, indent, colored
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
-from slack_sdk.socket_mode.request import SocketModeRequest
-from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.web.async_client import AsyncWebClient
 
 from machine.settings import import_settings
@@ -19,6 +17,7 @@ from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.module_loading import import_string
 from machine.utils.text import show_valid, warn, error, announce, show_invalid
 from machine_v2.clients.slack import SlackClient
+from machine_v2.handlers import create_message_handler
 from machine_v2.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions
 from machine_v2.plugins.base import MachineBasePlugin
 from machine_v2.plugins.decorators import DecoratedPluginFunc, Metadata
@@ -107,11 +106,12 @@ class Machine:
             await self._setup_slack_clients()
 
             # Load plugins
-            self._load_plugins()
+            await self._load_plugins()
             logger.debug("Registered plugin actions: %s", self._registered_actions)
             logger.debug("Plugin help: %s", self._help)
 
-    def _load_plugins(self):
+    # TODO: factor out plugin registration in separate class / set of functions
+    async def _load_plugins(self):
         with indent(4):
             logger.debug("PLUGINS: %s", self._settings["PLUGINS"])
             for plugin in self._settings["PLUGINS"]:
@@ -131,7 +131,7 @@ class Machine:
                         else:
                             instance.init()
                             show_valid(class_name)
-        self._storage_backend.set("manual", dill.dumps(self._help))
+        await self._storage_backend.set("manual", dill.dumps(self._help))
 
     def _register_plugin(self, plugin_class_name: str, cls_instance: MachineBasePlugin) -> list[str] | None:
         missing_settings = []
@@ -236,47 +236,13 @@ class Machine:
 
         await self._setup()
 
-        # Use async method
-        async def process(client: SocketModeClient, req: SocketModeRequest):
-            if req.type == "events_api":
-                # Acknowledge the request anyway
-                response = SocketModeResponse(envelope_id=req.envelope_id)
-                # Don't forget having await for method calls
-                await client.send_socket_mode_response(response)
+        bot_id = self._client.bot_info["user_id"]
+        bot_name = self._client.bot_info["name"]
+        message_handler = create_message_handler(
+            self._registered_actions, self._settings, bot_id, bot_name, self._client
+        )
 
-                # Add a reaction to the message if it's a new message
-                if req.payload["event"]["type"] == "message" and req.payload["event"].get("subtype") is None:
-                    await client.web_client.reactions_add(
-                        name="eyes",
-                        channel=req.payload["event"]["channel"],
-                        timestamp=req.payload["event"]["ts"],
-                    )
-            if req.type == "interactive" and req.payload.get("type") == "shortcut":
-                if req.payload["callback_id"] == "hello-shortcut":
-                    # Acknowledge the request
-                    response = SocketModeResponse(envelope_id=req.envelope_id)
-                    await client.send_socket_mode_response(response)
-                    # Open a welcome modal
-                    await client.web_client.views_open(
-                        trigger_id=req.payload["trigger_id"],
-                        view={
-                            "type": "modal",
-                            "callback_id": "hello-modal",
-                            "title": {"type": "plain_text", "text": "Greetings!"},
-                            "submit": {"type": "plain_text", "text": "Good Bye"},
-                            "blocks": [{"type": "section", "text": {"type": "mrkdwn", "text": "Hello!"}}],
-                        },
-                    )
-
-            if req.type == "interactive" and req.payload.get("type") == "view_submission":
-                if req.payload["view"]["callback_id"] == "hello-modal":
-                    # Acknowledge the request and close the modal
-                    response = SocketModeResponse(envelope_id=req.envelope_id)
-                    await client.send_socket_mode_response(response)
-
-        # Add a new listener to receive messages from Slack
-        # You can add more listeners like this
-        self._client.register_handler(process)
+        self._client.register_handler(message_handler)
         # Establish a WebSocket connection to the Socket Mode servers
         await self._socket_mode_client.connect()
 
@@ -287,4 +253,5 @@ class Machine:
         await asyncio.sleep(float("inf"))
 
     async def close(self):
-        await self._socket_mode_client.close()
+        closables = [self._socket_mode_client.close(), self._storage_backend.close()]
+        await asyncio.gather(*closables)

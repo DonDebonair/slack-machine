@@ -31,10 +31,11 @@ def required_settings_class():
     return C
 
 
-def test_load_and_register_plugins(settings):
+@pytest.mark.asyncio
+async def test_load_and_register_plugins(settings):
     machine = Machine(settings=settings)
     machine._setup_storage()
-    machine._load_plugins()
+    await machine._load_plugins()
     actions = machine._registered_actions
 
     # Test general structure of _plugin_actions
@@ -53,10 +54,11 @@ def test_load_and_register_plugins(settings):
     assert actions.listen_to[listen_to_key].regex == re.compile('hi', re.IGNORECASE)
 
 
-def test_plugin_storage_fq_plugin_name(settings):
+@pytest.mark.asyncio
+async def test_plugin_storage_fq_plugin_name(settings):
     machine = Machine(settings=settings)
     machine._setup_storage()
-    machine._load_plugins()
+    await machine._load_plugins()
     actions = machine._registered_actions
     plugin1_cls = actions.respond_to['tests.machine_v2.fake_plugins:FakePlugin.respond_function-hello'].class_
     plugin2_cls = actions.listen_to['tests.machine_v2.fake_plugins:FakePlugin2.another_listen_function-doit'].class_
@@ -64,10 +66,11 @@ def test_plugin_storage_fq_plugin_name(settings):
     assert plugin2_cls.storage._fq_plugin_name == 'tests.machine_v2.fake_plugins:FakePlugin2'
 
 
-def test_plugin_init(settings):
+@pytest.mark.asyncio
+async def test_plugin_init(settings):
     machine = Machine(settings=settings)
     machine._setup_storage()
-    machine._load_plugins()
+    await machine._load_plugins()
     actions = machine._registered_actions
     plugin_cls = actions.listen_to['tests.machine_v2.fake_plugins:FakePlugin2.another_listen_function-doit'].class_
     assert plugin_cls.x == 42
