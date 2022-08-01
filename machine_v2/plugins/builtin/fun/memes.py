@@ -7,6 +7,7 @@ from machine_v2.plugins.builtin.fun.regexes import url_regex
 class MemePlugin(MachineBasePlugin):
     """Images"""
 
+    # TODO: upload image via Slack API instead of posting URL?
     @respond_to(r"meme (?P<meme>\S+) (?P<top>.+);(?P<bottom>.+)")
     async def meme(self, msg: Message, meme, top, bottom):
         """meme <meme template> <top text>;<bottom text>: generate a meme"""
@@ -17,30 +18,22 @@ class MemePlugin(MachineBasePlugin):
             bottom = bottom.replace(original, replacement)
         match = url_regex.match(meme)
         if match:
-            query_string = query_string + "&alt=" + match.group("url")
+            query_string += "&background=" + match.group("url")
             meme = "custom"
-            path = "{}/{}/{}/{}.jpg{}".format(self._base_url, meme, top.strip(), bottom.strip(), query_string).replace(
-                " ", "-"
-            )
+            path = f"{self._base_url}/images/{meme}/{top.strip()}/{bottom.strip()}.jpg{query_string}".replace(" ", "-")
             await msg.say(path)
         else:
-            path = "/{}/{}/{}".format(meme, top.strip(), bottom.strip()).replace(" ", "-")
-            status, meme_info = self._memegen_api_request(path)
-            if 200 <= status < 400:
-                await msg.say(meme_info["direct"]["masked"] + query_string)
-            elif status == 404:
-                await msg.say("I don't know that meme. Use `list memes` to see what memes I have available")
-            else:
-                await msg.say("Ooooops! Something went wrong :cry:")
+            path = f"{self._base_url}/images/{meme}/{top.strip()}/{bottom.strip()}{query_string}".replace(" ", "-")
+            await msg.say(path)
 
     @respond_to(r"list memes")
     async def list_memes(self, msg):
         """list memes: list all the available meme templates"""
         ephemeral = not msg.is_dm
-        status, templates = self._memegen_api_request("/api/templates/")
+        status, templates = self._memegen_api_request("/templates/")
         if 200 <= status < 400:
             message = "*You can choose from these memes:*\n\n" + "\n".join(
-                ["\t_{}_: '{}'".format(url.rsplit("/", 1)[1], description) for description, url in templates.items()]
+                [f"\t_{template['id']}_: '{template['name']}'" for template in templates]
             )
             await msg.say(message, ephemeral=ephemeral)
         else:
@@ -57,7 +50,7 @@ class MemePlugin(MachineBasePlugin):
 
     @property
     def _base_url(self):
-        return self.settings.get("MEMEGEN_URL", "https://memegen.link")
+        return self.settings.get("MEMEGEN_URL", "https://api.memegen.link")
 
     @property
     def _font(self):

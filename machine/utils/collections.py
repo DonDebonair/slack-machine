@@ -1,6 +1,7 @@
 from collections.abc import MutableMapping, Mapping
 
 
+# TODO: add type hints and make generic
 class CaseInsensitiveDict(MutableMapping):
     """
     A case-insensitive ``dict``-like object.

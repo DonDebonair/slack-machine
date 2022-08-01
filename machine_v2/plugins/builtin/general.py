@@ -28,4 +28,4 @@ class HelloPlugin(MachineBasePlugin):
     async def greet(self, msg: Message, greeting):
         """hi/hello: say hello to the little guy"""
         logger.debug("Greeting '%s' received", greeting)
-        await msg.say(f"{greeting.title}, {msg.at_sender}!")
+        await msg.say(f"{greeting.title()}, {msg.at_sender}!")

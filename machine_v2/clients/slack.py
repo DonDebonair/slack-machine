@@ -54,10 +54,11 @@ class SlackClient:
     async def _process_users_channels(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest):
         logger.debug("Request of type %s with payload %s", req.type, req.payload)
         if req.type == "events_api":
-            event = req.payload["event"]
             # Acknowledge the request
             response = SocketModeResponse(envelope_id=req.envelope_id)
             await self._client.send_socket_mode_response(response)
+
+            event = req.payload["event"]
 
             # Handle events to update local channel & user caches
             if event["type"] == "team_join":

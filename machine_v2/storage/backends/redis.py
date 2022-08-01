@@ -31,3 +31,6 @@ class RedisStorage(MachineBaseStorage):
     async def size(self):
         info = await self._redis.info('memory')
         return info['used_memory']
+
+    async def close(self) -> None:
+        await self._redis.close()

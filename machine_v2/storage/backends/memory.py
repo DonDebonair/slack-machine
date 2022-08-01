@@ -48,3 +48,6 @@ class MemoryStorage(MachineBaseStorage):
 
     async def size(self) -> int:
         return sys.getsizeof(self._storage)  # pragma: no cover
+
+    async def close(self) -> None:
+        pass
