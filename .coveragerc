@@ -1,12 +1,11 @@
 [run]
-source = machine, machine_v2
+source = machine
 omit =
     # don't care about bundled plugins, they will not be tested
     machine/plugins/builtin/*
-    machine_v2/plugins/builtin/*
+    machine/asyncio/plugins/builtin/*
     # we won't test the run script
     machine/bin/*
-    machine_v2/bin/*
     # we don't care about vendored libs
     machine/vendor/*
 
