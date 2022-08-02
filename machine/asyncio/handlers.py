@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
-from typing import Any
+from typing import Any, Callable
 
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_listeners import AsyncSocketModeRequestListener
@@ -43,6 +43,23 @@ def create_message_handler(
     return message_handler
 
 
+def create_generic_event_handler(plugin_actions: RegisteredActions) -> AsyncSocketModeRequestListener:
+    async def generic_event_handler(client: SocketModeClient, request: SocketModeRequest) -> None:
+        if request.type == "events_api":
+            # Acknowledge the request anyway
+            response = SocketModeResponse(envelope_id=request.envelope_id)
+            # Don't forget having await for method calls
+            await client.send_socket_mode_response(response)
+
+            # only process message events
+            if request.payload["event"]["type"] in plugin_actions.process:
+                await dispatch_event_handlers(
+                    request.payload["event"], list(plugin_actions.process[request.payload["event"]["type"]].values())
+                )
+
+    return generic_event_handler
+
+
 def generate_message_matcher(settings: dict[str, Any]) -> re.Pattern[str]:
     alias_regex = ""
     if "ALIASES" in settings:
@@ -50,7 +67,7 @@ def generate_message_matcher(settings: dict[str, Any]) -> re.Pattern[str]:
         alias_alternatives = "|".join([re.escape(alias) for alias in settings["ALIASES"].split(",")])
         alias_regex = f"|(?P<alias>{alias_alternatives})"
     return re.compile(
-        fr"^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{alias_regex}) ?(?P<text>.*)$",
+        rf"^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{alias_regex}) ?(?P<text>.*)$",
         re.DOTALL,
     )
 
@@ -128,4 +145,11 @@ async def dispatch_listeners(
         if match:
             message = _gen_message(event, handler.class_name, slack_client)
             handler_funcs.append(handler.function(message, **match.groupdict()))
+    await asyncio.gather(*handler_funcs)
+
+
+async def dispatch_event_handlers(
+    event: dict[str, Any], event_handlers: list[Callable[[dict[str, Any]], None]]
+) -> None:
+    handler_funcs = [f(event) for f in event_handlers]
     await asyncio.gather(*handler_funcs)
