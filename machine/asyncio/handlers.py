@@ -45,11 +45,12 @@ def create_message_handler(
 
 def generate_message_matcher(settings: dict[str, Any]) -> re.Pattern[str]:
     alias_regex = ""
-    if settings and "ALIASES" in settings:
-        logger.info("Setting aliases to %s", settings["ALIASES"])
-        alias_regex = "|(?P<alias>{})".format("|".join([re.escape(s) for s in settings["ALIASES"].split(",")]))
+    if "ALIASES" in settings:
+        logger.debug("Setting aliases to %s", settings["ALIASES"])
+        alias_alternatives = "|".join([re.escape(alias) for alias in settings["ALIASES"].split(",")])
+        alias_regex = f"|(?P<alias>{alias_alternatives})"
     return re.compile(
-        r"^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{}) ?(?P<text>.*)$".format(alias_regex),
+        fr"^(?:<@(?P<atuser>\w+)>:?|(?P<username>\w+):{alias_regex}) ?(?P<text>.*)$",
         re.DOTALL,
     )
 
