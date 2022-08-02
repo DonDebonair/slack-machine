@@ -67,6 +67,7 @@ redis = ["redis", "hiredis"]
 
 [tool.poetry.scripts]
 slack-machine = 'machine.bin.run:main'
+slack-machine-async = 'machine.bin.run_async:main'
 
 [tool.isort]
 profile = "black"
@@ -79,7 +80,7 @@ experimental-string-processing = true
 
 [tool.pytest.ini_options]
 mock_use_standalone_module = true
-addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine --cov=machine_v2"
+addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine"
 filterwarnings = [
     "ignore:invalid escape sequence::bottle",
     "ignore:Using or importing the ABCs::bottle"

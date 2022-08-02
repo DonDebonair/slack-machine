@@ -1,4 +1,4 @@
-from machine_v2.bin.run import main
+from machine.bin.run_async import main
 
 if __name__ == "__main__":
     main()
