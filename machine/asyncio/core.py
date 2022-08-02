@@ -17,7 +17,7 @@ from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.module_loading import import_string
 from machine.utils.text import show_valid, warn, error, announce, show_invalid
 from machine.asyncio.clients.slack import SlackClient
-from machine.asyncio.handlers import create_message_handler
+from machine.asyncio.handlers import create_message_handler, create_generic_event_handler
 from machine.asyncio.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions
 from machine.asyncio.plugins.base import MachineBasePlugin
 from machine.asyncio.plugins.decorators import DecoratedPluginFunc, Metadata
@@ -241,8 +241,10 @@ class Machine:
         message_handler = create_message_handler(
             self._registered_actions, self._settings, bot_id, bot_name, self._client
         )
+        generic_event_handler = create_generic_event_handler(self._registered_actions)
 
         self._client.register_handler(message_handler)
+        self._client.register_handler(generic_event_handler)
         # Establish a WebSocket connection to the Socket Mode servers
         await self._socket_mode_client.connect()
 

@@ -2,6 +2,8 @@ from __future__ import annotations
 import re
 
 import pytest
+from slack_sdk.socket_mode.aiohttp import SocketModeClient
+from slack_sdk.socket_mode.request import SocketModeRequest
 
 from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.models.core import RegisteredActions, MessageHandler
@@ -9,12 +11,22 @@ from machine.asyncio.plugins.base import Message
 from machine.asyncio.storage.backends.base import MachineBaseStorage
 from machine.utils.collections import CaseInsensitiveDict
 from tests.asyncio.fake_plugins import FakePlugin
-from machine.asyncio.handlers import _check_bot_mention, generate_message_matcher, handle_message
+from machine.asyncio.handlers import (
+    _check_bot_mention,
+    generate_message_matcher,
+    handle_message,
+    create_generic_event_handler,
+)
 
 
 @pytest.fixture
 def slack_client(mocker):
     return mocker.MagicMock(spec=SlackClient)
+
+
+@pytest.fixture
+def socket_mode_client(mocker):
+    return mocker.MagicMock(spec=SocketModeClient)
 
 
 @pytest.fixture
@@ -53,25 +65,13 @@ def plugin_actions(fake_plugin):
                 regex=re.compile("hello", re.IGNORECASE),
             )
         },
-        process={"TestPlugin.process_function": {"some_event": process_fn}},
+        process={"some_event": {"TestPlugin.process_function": process_fn}},
     )
     return plugin_actions
 
 
 def _gen_msg_event(text: str, channel_type: str = "channel") -> dict[str, str]:
     return {"type": "message", "text": text, "channel_type": channel_type, "user": "user1"}
-
-
-# @pytest.fixture(params=[None, {"ALIASES": "!"}, {"ALIASES": "!,$"}], ids=["No Alias", "Alias", "Aliases"])
-# def dispatcher(mocker, plugin_actions, request):
-#     mocker.patch("machine.dispatch.LowLevelSlackClient", autospec=True)
-#     dispatch_instance = EventDispatcher(plugin_actions, request.param)
-#     mocker.patch.object(dispatch_instance, "_get_bot_id")
-#     dispatch_instance._get_bot_id.return_value = "123"
-#     mocker.patch.object(dispatch_instance, "_get_bot_name")
-#     dispatch_instance._get_bot_name.return_value = "superbot"
-#     dispatch_instance._aliases = request.param
-#     return dispatch_instance
 
 
 def test_generate_message_matcher():
@@ -146,7 +146,7 @@ def _assert_message(args, text):
 
 
 @pytest.mark.asyncio
-async def test_handle_event_listen_to(plugin_actions, fake_plugin, slack_client):
+async def test_handle_message_listen_to(plugin_actions, fake_plugin, slack_client):
     bot_name = "superbot"
     bot_id = "123"
     message_matcher = generate_message_matcher({})
@@ -160,7 +160,7 @@ async def test_handle_event_listen_to(plugin_actions, fake_plugin, slack_client)
 
 
 @pytest.mark.asyncio
-async def test_handle_event_respond_to(plugin_actions, fake_plugin, slack_client):
+async def test_handle_message_respond_to(plugin_actions, fake_plugin, slack_client):
     bot_name = "superbot"
     bot_id = "123"
     message_matcher = generate_message_matcher({})
@@ -170,3 +170,20 @@ async def test_handle_event_respond_to(plugin_actions, fake_plugin, slack_client
     assert fake_plugin.listen_function.call_count == 0
     args = fake_plugin.respond_function.call_args
     _assert_message(args, "hello")
+
+
+def _gen_request(event_type: str):
+    return SocketModeRequest(type="events_api", envelope_id="x", payload={"event": {"type": event_type, "foo": "bar"}})
+
+
+@pytest.mark.asyncio
+async def test_create_generic_event_handler(plugin_actions, fake_plugin, socket_mode_client):
+    handler = create_generic_event_handler(plugin_actions)
+    await handler(socket_mode_client, _gen_request("other_event"))
+    assert fake_plugin.process_function.call_count == 0
+    await handler(socket_mode_client, _gen_request("some_event"))
+    assert fake_plugin.process_function.call_count == 1
+    args = fake_plugin.process_function.call_args
+    assert len(args[0]) == 1
+    assert len(args[1]) == 0
+    assert args[0][0] == {"type": "some_event", "foo": "bar"}
