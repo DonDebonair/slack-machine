@@ -1,7 +1,7 @@
 import re
 import inspect
 import pytest
-from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings
+from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings, ee, on
 
 
 @pytest.fixture(scope="module")
@@ -25,6 +25,15 @@ def listen_to_f():
 @pytest.fixture(scope="module")
 def respond_to_f():
     @respond_to(r"hello-respond", re.IGNORECASE)
+    def f(msg):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope='module')
+def on_f():
+    @on('test_event')
     def f(msg):
         pass
 
@@ -108,6 +117,13 @@ def test_mulitple_decorators(multi_decorator_f):
     assert multi_decorator_f.metadata.plugin_actions.respond_to == [re.compile(r"hello-respond", re.IGNORECASE)]
     assert multi_decorator_f.metadata.plugin_actions.listen_to == [re.compile(r"hello-listen", re.IGNORECASE)]
     assert multi_decorator_f.metadata.plugin_actions.process == []
+
+
+def test_on(on_f):
+    assert ee.event_names() == {"test_event"}
+    listeners = ee.listeners("test_event")
+    assert len(listeners) == 1
+    assert listeners[0] == on_f
 
 
 def test_required_settings_list(required_settings_list_f):

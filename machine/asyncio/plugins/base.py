@@ -11,6 +11,7 @@ from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.models import Channel
 from machine.asyncio.models import User
 from machine.asyncio.storage import PluginStorage
+from machine.asyncio.plugins.decorators import ee
 
 
 class MachineBasePlugin:
@@ -205,6 +206,18 @@ class MachineBasePlugin:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
         return await self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
+
+    def emit(self, event: str, **kwargs):
+        """Emit an event
+
+        Emit an event that plugins can listen for. You can include arbitrary data as keyword
+        arguments.
+
+        :param event: name of the event
+        :param kwargs: any data you want to emit with the event
+        :return: None
+        """
+        ee.emit(event, self, **kwargs)
 
 
 class Message:
