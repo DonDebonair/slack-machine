@@ -3,9 +3,12 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from typing import Callable, Union, cast
+from pyee.asyncio import AsyncIOEventEmitter
 
 from typing_extensions import ParamSpec
 from typing_extensions import Protocol
+
+ee = AsyncIOEventEmitter()
 
 
 @dataclass
@@ -104,6 +107,22 @@ def respond_to(
         return f
 
     return respond_to_decorator
+
+
+def on(event: str) -> Callable[[Callable[P, None]], Callable[P, None]]:
+    """Listen for an event
+
+    The decorated function will be called whenever a plugin (or Slack Machine itself) emits an
+    event with the given name.
+
+    :param event: name of the event to listen for. Event names are global
+    """
+
+    def on_decorator(f: Callable[P, None]) -> Callable[P, None]:
+        ee.add_listener(event, f)
+        return f
+
+    return on_decorator
 
 
 def required_settings(settings: Union[list[str], str]) -> Callable[[Callable[P, None]], DecoratedPluginFunc[P, None]]:
