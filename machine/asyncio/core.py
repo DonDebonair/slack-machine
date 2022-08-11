@@ -5,7 +5,7 @@ import inspect
 import logging
 import re
 import sys
-from typing import Callable, cast
+from typing import Callable, cast, Awaitable
 
 import dill
 from clint.textui import puts, indent, colored
@@ -30,18 +30,18 @@ class Machine:
     _socket_mode_client: SocketModeClient
     _client: SlackClient | None
     _storage_backend: MachineBaseStorage
-    _settings: CaseInsensitiveDict | None = None
+    _settings: CaseInsensitiveDict
     _help: Manual
     _registered_actions: RegisteredActions
 
     def __init__(self, settings: CaseInsensitiveDict | None = None):
-        if settings:
+        if settings is not None:
             self._settings = settings
         self._help = Manual(human={}, robot={})
         self._registered_actions = RegisteredActions()
         self._client = None
 
-    def _setup_logging(self):
+    def _setup_logging(self) -> None:
         fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
         date_fmt = "%Y-%m-%d %H:%M:%S"
         log_level = self._settings.get("LOGLEVEL", logging.ERROR)
@@ -62,14 +62,14 @@ class Machine:
         puts("Settings loaded!")
         return found_local_settings
 
-    def _setup_storage(self):
-        storage_backend = self._settings.get("STORAGE_BACKEND")
+    def _setup_storage(self) -> None:
+        storage_backend = self._settings.get("STORAGE_BACKEND", "machine.storage.backends.memory.MemoryStorage")
         logger.debug("Initializing storage backend %s...", storage_backend)
         _, cls = import_string(storage_backend)[0]
         self._storage_backend = cls(self._settings)
         logger.debug("Storage backend %s initialized!", storage_backend)
 
-    async def _setup_slack_clients(self):
+    async def _setup_slack_clients(self) -> None:
         # Setup Slack socket mode client
         self._socket_mode_client = SocketModeClient(
             app_token=self._settings["SLACK_APP_TOKEN"],
@@ -80,7 +80,7 @@ class Machine:
         self._client = SlackClient(self._socket_mode_client)
         await self._client.setup()
 
-    async def _setup(self):
+    async def _setup(self) -> None:
         announce("Initializing Slack Machine:")
 
         with indent(4):
@@ -111,7 +111,10 @@ class Machine:
             logger.debug("Plugin help: %s", self._help)
 
     # TODO: factor out plugin registration in separate class / set of functions
-    async def _load_plugins(self):
+    async def _load_plugins(self) -> None:
+        if self._client is None:
+            error("Slack client not initialized!")
+            sys.exit(1)
         with indent(4):
             logger.debug("PLUGINS: %s", self._settings["PLUGINS"])
             for plugin in self._settings["PLUGINS"]:
@@ -136,7 +139,7 @@ class Machine:
     def _register_plugin(self, plugin_class_name: str, cls_instance: MachineBasePlugin) -> list[str] | None:
         missing_settings = []
         cls_instance_for_missing_settings = cast(DecoratedPluginFunc, cls_instance)
-        missing_settings.extend(self._check_missing_settings(cls_instance_for_missing_settings.__class__))
+        missing_settings.extend(self._check_missing_settings(cls_instance_for_missing_settings))
         methods = inspect.getmembers(cls_instance, predicate=inspect.ismethod)
         for _, fn in methods:
             missing_settings.extend(self._check_missing_settings(fn))
@@ -152,12 +155,13 @@ class Machine:
         for name, fn in methods:
             if hasattr(fn, "metadata"):
                 self._register_plugin_actions(plugin_class_name, fn.metadata, cls_instance, name, fn, class_help)
+        return None
 
     def _check_missing_settings(self, fn_or_class: DecoratedPluginFunc) -> list[str]:
         missing_settings = []
         if hasattr(fn_or_class, "metadata") and isinstance(fn_or_class.metadata, Metadata):
             for setting in fn_or_class.metadata.required_settings:
-                if setting not in self._settings:
+                if self._settings is None or setting not in self._settings:
                     missing_settings.append(setting.upper())
         return missing_settings
 
@@ -167,9 +171,9 @@ class Machine:
         metadata: Metadata,
         cls_instance: MachineBasePlugin,
         fn_name: str,
-        fn: Callable[..., None],
+        fn: Callable[..., Awaitable[None]],
         class_help: str,
-    ):
+    ) -> None:
         fq_fn_name = "{}.{}".format(plugin_class_name, fn_name)
         if fn.__doc__:
             self._help.human[class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
@@ -204,10 +208,10 @@ class Machine:
         class_: MachineBasePlugin,
         class_name: str,
         fq_fn_name: str,
-        function: Callable[..., None],
+        function: Callable[..., Awaitable[None]],
         regex: re.Pattern,
         class_help: str,
-    ):
+    ) -> None:
         handler = MessageHandler(class_=class_, class_name=class_name, function=function, regex=regex)
         key = f"{fq_fn_name}-{regex.pattern}"
         getattr(self._registered_actions, type_)[key] = handler
@@ -225,13 +229,16 @@ class Machine:
         return HumanHelp(command=command, help=cmd_help)
 
     @staticmethod
-    def _parse_robot_help(regex, action):
+    def _parse_robot_help(regex: re.Pattern, action: str) -> str:
         if action == "respond_to":
             return "@botname {}".format(regex.pattern)
         else:
             return regex.pattern
 
-    async def run(self):
+    async def run(self) -> None:
+        if self._client is None:
+            error("Slack client not initialized!")
+            sys.exit(1)
         announce("\nStarting Slack Machine:")
 
         await self._setup()
@@ -254,6 +261,6 @@ class Machine:
         # Just not to stop this process
         await asyncio.sleep(float("inf"))
 
-    async def close(self):
+    async def close(self) -> None:
         closables = [self._socket_mode_client.close(), self._storage_backend.close()]
         await asyncio.gather(*closables)

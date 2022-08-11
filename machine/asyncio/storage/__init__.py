@@ -73,7 +73,7 @@ class PluginStorage:
         namespaced_key = self._namespace_key(key, shared)
         return await self._storage.has(namespaced_key)
 
-    async def delete(self, key: str, shared: bool = False):
+    async def delete(self, key: str, shared: bool = False) -> None:
         """Remove a key and its data from storage
 
         :param key: key to remove
@@ -83,14 +83,14 @@ class PluginStorage:
         namespaced_key = self._namespace_key(key, shared)
         await self._storage.delete(namespaced_key)
 
-    async def get_storage_size(self):
+    async def get_storage_size(self) -> int:
         """Calculate the total size of the storage
 
         :return: the total size of the storage in bytes (integer)
         """
         return await self._storage.size()
 
-    async def get_storage_size_human(self):
+    async def get_storage_size_human(self) -> str:
         """Calculate the total size of the storage in human readable format
 
         :return: the total size of the storage in a human readable string, rounded to the nearest

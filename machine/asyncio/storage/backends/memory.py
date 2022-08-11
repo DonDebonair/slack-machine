@@ -8,7 +8,7 @@ from machine.asyncio.storage.backends.base import MachineBaseStorage
 
 
 class MemoryStorage(MachineBaseStorage):
-    _storage: dict[str, Tuple[bytes, datetime]]
+    _storage: dict[str, Tuple[bytes, datetime | None]]
 
     def __init__(self, settings: dict[str, Any]):
         super().__init__(settings)

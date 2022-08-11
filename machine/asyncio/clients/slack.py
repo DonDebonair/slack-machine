@@ -5,7 +5,6 @@ from typing import Callable, Awaitable, Any
 
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
-from slack_sdk.socket_mode.async_listeners import AsyncSocketModeRequestListener
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
@@ -43,15 +42,11 @@ class SlackClient:
 
     def register_handler(
         self,
-        handler: AsyncSocketModeRequestListener
-        | Callable[
-            [AsyncBaseSocketModeClient, SocketModeRequest],
-            Awaitable[None],
-        ],
-    ):
+        handler: Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]],
+    ) -> None:
         self._client.socket_mode_request_listeners.append(handler)
 
-    async def _process_users_channels(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest):
+    async def _process_users_channels(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest) -> None:
         logger.debug("Request of type %s with payload %s", req.type, req.payload)
         if req.type == "events_api":
             # Acknowledge the request
@@ -83,7 +78,7 @@ class SlackClient:
             elif event["type"] == "member_joined_channel":
                 await self._on_member_joined_channel(event)
 
-    async def setup(self):
+    async def setup(self) -> None:
         # Setup handlers
         # TODO: use partial?
         self.register_handler(lambda client, req: self._process_users_channels(client, req))
@@ -95,7 +90,7 @@ class SlackClient:
 
         # Build user cache
         # TODO: can we use an async list comprehension here?
-        all_users = []
+        all_users: list[dict[str, Any]] = []
         async for page in await self._client.web_client.users_list(limit=500):
             all_users = all_users + page["members"]
         for u in all_users:
@@ -105,7 +100,7 @@ class SlackClient:
             "Users: %s", ", ".join([f"{u.profile.display_name}|{u.profile.real_name}" for u in self._users.values()])
         )
 
-        all_channels = []
+        all_channels: list[dict[str, Any]] = []
         async for page in await self._client.web_client.conversations_list(
             limit=500, types="public_channel,private_channel,mpim,im"
         ):
@@ -115,33 +110,33 @@ class SlackClient:
         logger.debug("Number of channels found: %s", len(self._channels))
         logger.debug("Channels: %s", ", ".join([c.identifier for c in self._channels.values()]))
 
-    def _register_user(self, user_response: dict[str, Any]):
+    def _register_user(self, user_response: dict[str, Any]) -> User:
         user = User.from_api_response(user_response)
         self._users[user.id] = user
         return user
 
-    def _register_channel(self, channel_response: dict[str, Any]):
+    def _register_channel(self, channel_response: dict[str, Any]) -> Channel:
         channel = Channel.from_api_response(channel_response)
         self._channels[channel.id] = channel
         return channel
 
-    async def _on_team_join(self, event: dict[str, Any]):
+    async def _on_team_join(self, event: dict[str, Any]) -> None:
         logger.debug("team_join: %s", event)
         user = self._register_user(event["user"])
         logger.debug("User joined team: %s", user)
 
-    async def _on_user_change(self, event: dict[str, Any]):
+    async def _on_user_change(self, event: dict[str, Any]) -> None:
         logger.debug("user_change: %s", event)
         user = self._register_user(event["user"])
         logger.debug("User changed: %s", user)
 
-    async def _on_channel_created(self, event: dict[str, Any]):
+    async def _on_channel_created(self, event: dict[str, Any]) -> None:
         logger.debug("channel_created: %s", event)
         channel_resp = await self._client.web_client.conversations_info(channel=event["channel"]["id"])
         channel = self._register_channel(channel_resp["channel"])
         logger.debug("Channel created: %s", channel)
 
-    async def _on_channel_updated(self, event: dict[str, Any]):
+    async def _on_channel_updated(self, event: dict[str, Any]) -> None:
         logger.debug(
             "channel_rename/channel_archive/channel_unarchive/group_rename/group_archive/group_unarchive: %s", event
         )
@@ -153,13 +148,13 @@ class SlackClient:
         channel = self._register_channel(channel_resp["channel"])
         logger.debug("Channel updated: %s", channel)
 
-    async def _on_channel_deleted(self, event: dict[str, Any]):
+    async def _on_channel_deleted(self, event: dict[str, Any]) -> None:
         logger.debug("channel_deleted: %s", event)
         channel = self._channels[event["channel"]]
         del self._channels[event["channel"]]
         logger.debug("Channel %s deleted", channel.name)
 
-    async def _on_member_joined_channel(self, event: dict[str, Any]):
+    async def _on_member_joined_channel(self, event: dict[str, Any]) -> None:
         logger.debug("member_joined_channel: %s", event)
         if event["user"] == self._bot_info["user_id"]:
             channel_id = event["channel"]
@@ -167,7 +162,7 @@ class SlackClient:
             channel = self._register_channel(channel_resp["channel"])
             logger.debug("Bot joined %s", channel)
 
-    async def _on_channel_id_changed(self, event: dict[str, Any]):
+    async def _on_channel_id_changed(self, event: dict[str, Any]) -> None:
         logger.debug("channel_id_changed: %s", event)
         channel = self._channels[event["old_channel_id"]]
         self._channels[event["new_channel_id"]] = channel
@@ -205,7 +200,7 @@ class SlackClient:
         response = await self._client.web_client.conversations_open(users=user_id)
         return response["channel"]["id"]
 
-    async def send_dm(self, user: User | str, text: str, **kwargs) -> AsyncSlackResponse:
+    async def send_dm(self, user: User | str, text: str, **kwargs: Any) -> AsyncSlackResponse:
         user_id = id_for_user(user)
         dm_channel_id = await self.open_im(user_id)
 

@@ -61,6 +61,9 @@ black = "^22.6.0"
 typing-extensions = "^4.3.0"
 pytest-asyncio = "^0.19.0"
 mock = "^4.0.3"
+mypy = "^0.971"
+types-redis = "^4.3.14"
+types-requests = "^2.28.8"
 
 [tool.poetry.extras]
 redis = ["redis", "hiredis"]
@@ -85,6 +88,14 @@ filterwarnings = [
     "ignore:invalid escape sequence::bottle",
     "ignore:Using or importing the ABCs::bottle"
 ]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true
+show_column_numbers = true
+show_error_codes = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

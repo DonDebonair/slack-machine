@@ -18,7 +18,6 @@ class Channel:
     """
     id: str
     name: Optional[str]
-    is_channel: Optional[bool]
     created: int
     creator: Optional[str]
     is_archived: bool
@@ -38,7 +37,7 @@ class Channel:
     previous_names: Optional[List[str]]
 
     @property
-    def identifier(self):
+    def identifier(self) -> str:
         if self.name:
             return self.name
         else:

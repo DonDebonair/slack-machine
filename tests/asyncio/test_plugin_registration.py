@@ -2,19 +2,25 @@ import re
 import pytest
 
 from machine.asyncio import Machine
+from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.models.core import RegisteredActions
 from machine.asyncio.plugins.decorators import required_settings
 from machine.utils.collections import CaseInsensitiveDict
 
 
 @pytest.fixture(scope="module")
-def settings(module_mocker):
+def settings():
     settings = CaseInsensitiveDict()
     settings["PLUGINS"] = ["tests.asyncio.fake_plugins"]
     settings["SLACK_BOT_TOKEN"] = "xoxb-abc123"
     settings["SLACK_APP_TOKEN"] = "xapp-abc123"
     settings["STORAGE_BACKEND"] = "machine.asyncio.storage.backends.memory.MemoryStorage"
     return settings
+
+
+@pytest.fixture
+def slack_client(mocker):
+    return mocker.MagicMock(spec=SlackClient)
 
 
 @pytest.fixture(scope="module")
@@ -33,8 +39,9 @@ def required_settings_class():
 
 
 @pytest.mark.asyncio
-async def test_load_and_register_plugins(settings):
+async def test_load_and_register_plugins(settings, slack_client):
     machine = Machine(settings=settings)
+    machine._client = slack_client
     machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
@@ -61,8 +68,9 @@ async def test_load_and_register_plugins(settings):
 
 
 @pytest.mark.asyncio
-async def test_plugin_storage_fq_plugin_name(settings):
+async def test_plugin_storage_fq_plugin_name(settings, slack_client):
     machine = Machine(settings=settings)
+    machine._client = slack_client
     machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
@@ -73,8 +81,9 @@ async def test_plugin_storage_fq_plugin_name(settings):
 
 
 @pytest.mark.asyncio
-async def test_plugin_init(settings):
+async def test_plugin_init(settings, slack_client):
     machine = Machine(settings=settings)
+    machine._client = slack_client
     machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
