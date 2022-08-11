@@ -12,7 +12,7 @@ class ImageSearchPlugin(MachineBasePlugin):
     """Images"""
 
     @respond_to(r"(?:image|img)(?: me)? (?P<query>.+)")
-    async def image_me(self, msg: Message, query):
+    async def image_me(self, msg: Message, query: str) -> None:
         """image/img (me) <query>: find a random image"""
         results = self._search(query.strip())
         if results:
@@ -22,7 +22,7 @@ class ImageSearchPlugin(MachineBasePlugin):
             await msg.say("Couldn't find any results for '{}'! :cry:".format(query))
 
     @respond_to(r"animate(?: me)? (?P<query>.+)")
-    async def animate_me(self, msg: Message, query):
+    async def animate_me(self, msg: Message, query: str) -> None:
         """animate (me) <query>: find a random gif"""
         results = self._search(query.strip(), animated=True)
         if results:
@@ -31,7 +31,7 @@ class ImageSearchPlugin(MachineBasePlugin):
         else:
             await msg.say(f"Couldn't find any results for '{query}'! :cry:")
 
-    def _search(self, query, animated=False):
+    def _search(self, query: str, animated: bool = False) -> list[str]:
         query_params = {
             "cx": self.settings["GOOGLE_CSE_ID"],
             "key": self.settings["GOOGLE_API_KEY"],

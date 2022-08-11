@@ -1,4 +1,6 @@
 import logging
+from typing import Any
+
 from machine.asyncio.plugins.base import MachineBasePlugin
 from machine.asyncio.plugins.decorators import process
 
@@ -7,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 class EchoPlugin(MachineBasePlugin):
     @process(slack_event_type="message")
-    async def echo_message(self, event):
+    async def echo_message(self, event: dict[str, Any]) -> None:
         logger.debug("Message received: %s", event)
         if (
             "subtype" in event and (event["subtype"] == "bot_message" or event["subtype"] == "message_replied")

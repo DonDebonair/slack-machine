@@ -11,7 +11,7 @@ from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.models import Channel
 from machine.asyncio.models import User
 from machine.asyncio.storage import PluginStorage
-from machine.asyncio.plugins.decorators import ee
+from machine.asyncio.plugins import ee
 
 
 class MachineBasePlugin:
@@ -40,7 +40,7 @@ class MachineBasePlugin:
         self.settings = settings
         self._fq_name = f"{self.__module__}.{self.__class__.__name__}"
 
-    def init(self):
+    def init(self) -> None:
         """Initialize plugin
 
         This method can be implemented by concrete plugin classes. It will be called **once**
@@ -85,6 +85,7 @@ class MachineBasePlugin:
         for c in self.channels.values():
             if c.name_normalized and channel_name.lower() == c.name_normalized.lower():
                 return c
+        return None
 
     @property
     def bot_info(self) -> dict[str, Any]:
@@ -118,7 +119,7 @@ class MachineBasePlugin:
         blocks: list[Block] | list[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
         ephemeral_user: User | str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Send a message to a channel
 
@@ -182,7 +183,7 @@ class MachineBasePlugin:
         text: str,
         attachments: list[Attachment] | list[dict[str, Any]] | None = None,
         blocks: list[Block] | list[dict[str, Any]] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Send a Direct Message
 
@@ -207,7 +208,7 @@ class MachineBasePlugin:
         """
         return await self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def emit(self, event: str, **kwargs):
+    def emit(self, event: str, **kwargs: Any) -> None:
         """Emit an event
 
         Emit an event that plugins can listen for. You can include arbitrary data as keyword
@@ -284,7 +285,7 @@ class Message:
         blocks: list[Block] | list[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
         ephemeral: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Send a new message to the channel the original message was received in
 
@@ -332,12 +333,12 @@ class Message:
 
     async def reply(
         self,
-        text,
+        text: str,
         attachments: list[Attachment] | list[dict[str, Any]] | None = None,
         blocks: list[Block] | list[dict[str, Any]] | None = None,
         in_thread: bool = False,
         ephemeral: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Reply to the sender of the original message
 
@@ -380,7 +381,7 @@ class Message:
         text: str,
         attachments: list[Attachment] | list[dict[str, Any]] | None = None,
         blocks: list[Block] | list[dict[str, Any]] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Reply to the sender of the original message with a DM
 
@@ -416,7 +417,7 @@ class Message:
         """
         return await self._client.react(self.channel.id, self._msg_event["ts"], emoji)
 
-    def _create_reply(self, text):
+    def _create_reply(self, text: str) -> str:
         if not self.is_dm:
             return f"{self.at_sender}: {text}"
         else:
@@ -431,14 +432,14 @@ class Message:
         return self._msg_event["ts"]
 
     @property
-    def in_thread(self):
+    def in_thread(self) -> bool:
         """Is message in a thread
 
         :return: bool
         """
         return "thread_ts" in self._msg_event
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.channel.is_im:
             message = "Message '{}', sent by user @{} in DM".format(self.text, self.sender.profile.real_name)
         else:
@@ -447,7 +448,7 @@ class Message:
             )
         return message
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Message(text={}, sender={}, channel={})".format(
             repr(self.text), repr(self.sender.profile.real_name), repr(self.channel.name)
         )

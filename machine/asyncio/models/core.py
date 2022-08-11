@@ -1,7 +1,7 @@
 from __future__ import annotations
 import re
 from dataclasses import dataclass, field
-from typing import Callable, Any
+from typing import Callable, Any, Awaitable
 
 from machine.asyncio.plugins.base import MachineBasePlugin
 
@@ -22,7 +22,7 @@ class Manual:
 class MessageHandler:
     class_: MachineBasePlugin
     class_name: str
-    function: Callable[..., None]
+    function: Callable[..., Awaitable[None]]
     regex: re.Pattern[str]
 
 
@@ -30,4 +30,4 @@ class MessageHandler:
 class RegisteredActions:
     listen_to: dict[str, MessageHandler] = field(default_factory=dict)
     respond_to: dict[str, MessageHandler] = field(default_factory=dict)
-    process: dict[str, dict[str, Callable[[dict[str, Any]], None]]] = field(default_factory=dict)
+    process: dict[str, dict[str, Callable[[dict[str, Any]], Awaitable[None]]]] = field(default_factory=dict)

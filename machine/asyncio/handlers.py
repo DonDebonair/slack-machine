@@ -3,26 +3,30 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
-from typing import Any, Callable
+from typing import Any, Callable, Awaitable
 
-from slack_sdk.socket_mode.aiohttp import SocketModeClient
-from slack_sdk.socket_mode.async_listeners import AsyncSocketModeRequestListener
+from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
 
 from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.models.core import RegisteredActions, MessageHandler
 from machine.asyncio.plugins.base import Message
+from machine.utils.collections import CaseInsensitiveDict
 
 logger = logging.getLogger(__name__)
 
 
 def create_message_handler(
-    plugin_actions: RegisteredActions, settings: dict[str, Any], bot_id: str, bot_name: str, slack_client: SlackClient
-) -> AsyncSocketModeRequestListener:
+    plugin_actions: RegisteredActions,
+    settings: CaseInsensitiveDict,
+    bot_id: str,
+    bot_name: str,
+    slack_client: SlackClient,
+) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
     message_matcher = generate_message_matcher(settings)
 
-    async def message_handler(client: SocketModeClient, request: SocketModeRequest) -> None:
+    async def message_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "events_api":
             # Acknowledge the request anyway
             response = SocketModeResponse(envelope_id=request.envelope_id)
@@ -43,8 +47,10 @@ def create_message_handler(
     return message_handler
 
 
-def create_generic_event_handler(plugin_actions: RegisteredActions) -> AsyncSocketModeRequestListener:
-    async def generic_event_handler(client: SocketModeClient, request: SocketModeRequest) -> None:
+def create_generic_event_handler(
+    plugin_actions: RegisteredActions,
+) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
+    async def generic_event_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "events_api":
             # Acknowledge the request anyway
             response = SocketModeResponse(envelope_id=request.envelope_id)
@@ -60,7 +66,7 @@ def create_generic_event_handler(plugin_actions: RegisteredActions) -> AsyncSock
     return generic_event_handler
 
 
-def generate_message_matcher(settings: dict[str, Any]) -> re.Pattern[str]:
+def generate_message_matcher(settings: CaseInsensitiveDict) -> re.Pattern[str]:
     alias_regex = ""
     if "ALIASES" in settings:
         logger.debug("Setting aliases to %s", settings["ALIASES"])
@@ -146,10 +152,11 @@ async def dispatch_listeners(
             message = _gen_message(event, handler.class_name, slack_client)
             handler_funcs.append(handler.function(message, **match.groupdict()))
     await asyncio.gather(*handler_funcs)
+    return
 
 
 async def dispatch_event_handlers(
-    event: dict[str, Any], event_handlers: list[Callable[[dict[str, Any]], None]]
+    event: dict[str, Any], event_handlers: list[Callable[[dict[str, Any]], Awaitable[None]]]
 ) -> None:
     handler_funcs = [f(event) for f in event_handlers]
     await asyncio.gather(*handler_funcs)
