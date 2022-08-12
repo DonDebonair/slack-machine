@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import re
-from typing import Any, Callable, Awaitable
+from typing import Any, Callable, Awaitable, Mapping
 
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
@@ -12,14 +12,13 @@ from slack_sdk.socket_mode.response import SocketModeResponse
 from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.models.core import RegisteredActions, MessageHandler
 from machine.asyncio.plugins.base import Message
-from machine.utils.collections import CaseInsensitiveDict
 
 logger = logging.getLogger(__name__)
 
 
 def create_message_handler(
     plugin_actions: RegisteredActions,
-    settings: CaseInsensitiveDict,
+    settings: Mapping,
     bot_id: str,
     bot_name: str,
     slack_client: SlackClient,
@@ -66,7 +65,7 @@ def create_generic_event_handler(
     return generic_event_handler
 
 
-def generate_message_matcher(settings: CaseInsensitiveDict) -> re.Pattern[str]:
+def generate_message_matcher(settings: Mapping) -> re.Pattern[str]:
     alias_regex = ""
     if "ALIASES" in settings:
         logger.debug("Setting aliases to %s", settings["ALIASES"])

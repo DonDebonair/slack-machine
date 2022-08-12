@@ -1,14 +1,19 @@
 from __future__ import annotations
 
+import logging
 import re
 from dataclasses import dataclass, field
-from typing import Callable, Union, cast, TypeVar, Awaitable
+from typing import Callable, Union, cast, TypeVar, Awaitable, Any
 
 from typing_extensions import ParamSpec
 from typing_extensions import Protocol
 
 from machine.asyncio.plugins import ee
-from machine.asyncio.plugins.base import MachineBasePlugin
+from machine.asyncio.plugins.admin_utils import matching_roles_by_user_id, RoleCombinator
+from machine.asyncio.plugins.base import MachineBasePlugin, Message
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -110,6 +115,7 @@ def respond_to(
     return respond_to_decorator
 
 
+# TODO: this will actually receive the `self` of the emitting plugin, not the plugin where this decorator is used
 def on(event: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """Listen for an event
 
@@ -126,7 +132,7 @@ def on(event: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     return on_decorator
 
 
-def required_settings(settings: Union[list[str], str]) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
+def required_settings(settings: list[str] | str) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Specify a required setting for a plugin or plugin method
 
     The settings specified with this decorator will be added to the required settings for the
@@ -146,3 +152,81 @@ def required_settings(settings: Union[list[str], str]) -> Callable[[Callable[P, 
         return casted_f_or_cls
 
     return required_settings_decorator
+
+
+# TODO: write tests for this decorator
+def require_any_role(
+    required_roles: list[str],
+) -> Callable[[Callable[..., Awaitable[None]]], Callable[..., Awaitable[None]]]:
+    """Specify required roles for a plugin method
+
+    To use the plugin method where this decorator is applied, the user must have
+    at least one of the listed roles.
+
+    :param required_roles: list of roles required to use the plugin method
+    """
+
+    def middle(func: Callable[..., Awaitable[None]]) -> Callable[..., Awaitable[None]]:
+        async def wrapper(self: MachineBasePlugin, msg: Message, **kwargs: Any) -> None:
+            if await matching_roles_by_user_id(self, msg.sender.id, required_roles):
+                logger.debug(f"User {msg.sender} has one of the required roles {required_roles}")
+                return await func(self, msg, **kwargs)
+            else:
+                logger.debug(f"User {msg.sender} does not have any of the required roles {required_roles}")
+                ee.emit(
+                    "unauthorized-access",
+                    self,
+                    message=msg,
+                    required_roles=required_roles,
+                    combinator=RoleCombinator.ANY,
+                )
+                await msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
+                return None
+
+        # Copy any existing docs and metadata from container function to
+        # generated function
+        wrapper.__doc__ = func.__doc__
+        casted_wrapper = cast(DecoratedPluginFunc, wrapper)
+        casted_wrapper.metadata = getattr(func, "metadata", Metadata())
+        return casted_wrapper
+
+    return middle
+
+
+# TODO: write tests for this decorator
+def require_all_roles(
+    required_roles: list[str],
+) -> Callable[[Callable[..., Awaitable[None]]], Callable[..., Awaitable[None]]]:
+    """Specify required roles for a plugin method
+
+    To use the plugin method where this decorator is applied, the user must have
+    all of the listed roles.
+
+    :param required_roles: list of roles required to use the plugin method
+    """
+
+    def middle(func: Callable[..., Awaitable[None]]) -> Callable[..., Awaitable[None]]:
+        async def wrapper(self: MachineBasePlugin, msg: Message, **kwargs: Any) -> None:
+            if await matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
+                logger.debug(f"User {msg.sender} has all of the required roles {required_roles}")
+                return await func(self, msg, **kwargs)
+            else:
+                logger.debug(f"User {msg.sender} does not have all of the required roles {required_roles}")
+                ee.emit(
+                    "unauthorized-access",
+                    self,
+                    message=msg,
+                    required_roles=required_roles,
+                    combinator=RoleCombinator.ALL,
+                )
+                await msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
+                return None
+
+        # Copy any existing docs and metadata from container function to
+        # generated function
+        wrapper.__doc__ = func.__doc__
+        casted_wrapper = cast(DecoratedPluginFunc, wrapper)
+        casted_wrapper.metadata = getattr(func, "metadata", Metadata())
+        return casted_wrapper
+
+    return middle
