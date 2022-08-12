@@ -12,7 +12,9 @@ is easy:
     token)
 4. Add the Slack API token to your `local_settings.py` like this:
 
-        SLACK_API_TOKEN = 'xox-my-slack-token'
+    ``` title="local_settings.py"
+    SLACK_API_TOKEN = 'xox-my-slack-token'
+    ```
 
 5. Start the bot with `slack-machine`
 6. ...

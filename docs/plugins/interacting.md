@@ -173,9 +173,9 @@ message: *@superbot greet me in the future*.
     You cannot schedule a reaction to a message. It doesn't make sense to react to a message in the future.
 
 For more information about scheduling message, have a look at the
-[api documentation](../api.md).
+[api documentation](../api/index.md).
 
-## Protecting messages
+## Protecting commands
 
 Sometimes you may want to restrict certain commands in your bot, so they
 can only be invoked by certain users.
@@ -196,7 +196,7 @@ PLUGINS = [
 ]
 ```
 
-You can get the *member ID* from the slack profile, by clicking *more*
+You can get the *member ID* from a user by going to their Slack profile, clicking *more*
 and selecting *Copy member ID*.
 
 If you wish to share the powers of root you can enable the RBAC admin
@@ -206,8 +206,8 @@ The RBAC plugin provides you with three new commands that lets you
 lookup, grant and revoke roles to users:
 
 - *@superbot who has role admin*
-- *@superbot grant role admin to @trusted_user*
-- *@superbot revoke role admin from @trusted_user*.
+- *@superbot grant role admin to @trusted-user*
+- *@superbot revoke role admin from @trusted-user*.
 
 Now you can decorate certain functions in your plugin with the
 [`@require_any_role`][machine.plugins.decorators.require_any_role] or

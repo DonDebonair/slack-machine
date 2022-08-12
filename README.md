@@ -4,8 +4,8 @@
 [![image](https://img.shields.io/pypi/v/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
 [![image](https://img.shields.io/pypi/l/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
 [![image](https://img.shields.io/pypi/pyversions/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
-[![CI Status](https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml/badge.svg)](https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml)
-[![image](https://codecov.io/gh/DandyDev/slack-machine/branch/master/graph/badge.svg)](https://codecov.io/gh/DandyDev/slack-machine)
+[![CI Status](https://github.com/DonDebonair/slack-machine/actions/workflows/ci.yml/badge.svg)](https://github.com/DandyDev/slack-machine/actions/workflows/ci.yml)
+[![image](https://codecov.io/gh/DandyDev/slack-machine/branch/main/graph/badge.svg)](https://codecov.io/gh/DandyDev/slack-machine)
 
 Slack Machine is a sexy, simple, yet powerful and extendable Slack bot.
 More than just a bot, Slack Machine is a framework that helps you
@@ -13,14 +13,15 @@ develop your Slack team into a ChatOps powerhouse.
 
 ![image](extra/logo.png)
 
-## *Warning*
+## *Note*
 
-As of v0.24.0 Python 3.6 support has been dropped. Python 3.6 is EOL on 2021-12-23, which is 3
-weeks from now at the time of writing (2021-12-1). I just switched to a new Macbook Pro M1 on which
-I cannot build and test for Python 3.6 easily anymore, so I'm dropping support.
+As of v0.26.0 Slack Machine supports AsyncIO using the
+[Slack Events API](https://api.slack.com/apis/connections/events-api) and
+[Socket Mode](https://api.slack.com/apis/connections/socket). This is still experimental and should be thoroughly
+tested. The goal is to eventually stop supporting the old version that uses the Slack RTM API, as the Events API is
+recommended by Slack for must use cases and asyncio has the potential to be much more performant.
 
-This does not mean that Slack Machine won't work with Python 3.6 anymore. For now, there are no
-specific features being used from Python 3.7 or higher.
+I encourage everyone to start testing the async mode and report any issues in this repository.
 
 ## Features
 
@@ -30,24 +31,26 @@ specific features being used from Python 3.7 or higher.
 - Support for rich interactions using the [Slack Web API](https://api.slack.com/web)
 - High-level API for maximum convenience when building plugins
 - Low-level API for maximum flexibility
+- **(Experimental) Support for asyncio**
 
 ### Plugin API features:
 
 - Listen and respond to any regular expression
 - Capture parts of messages to use as variables in your functions
 - Respond to messages in channels, groups and direct message conversations
-- Respond with Emoji
+- Respond with reactions
 - Respond in threads
 - Respond with ephemeral messages
 - Send DMs to any user
 - Support for [message attachments](https://api.slack.com/docs/message-attachments)
 - Support for [blocks](https://api.slack.com/reference/block-kit/blocks)
-- Listen and respond to any [Slack event](https://api.slack.com/events) supported by the RTM API
+- Listen and respond to any [Slack event](https://api.slack.com/events) supported by the RTM API (or the Events API
+  with Socket Mode in the case of using async mode)
 - Store and retrieve any kind of data in persistent storage (currently Redis and in-memory storage are supported)
-- Schedule actions and messages
+- Schedule actions and messages (note: currently not supported in async mode)
 - Emit and listen for events
 - Help texts for Plugins
-- Built in web server for webhooks
+- Built in web server for webhooks (note: currently not supported in async mode)
 
 ### Coming Soon
 
@@ -67,26 +70,25 @@ It is **strongly recommended** that you install `slack-machine` inside a
 
 ## Usage
 
-1.  Create a directory for your Slack Machine bot:
-    `mkdir my-slack-bot && cd my-slack-bot`
-2.  Add a `local_settings.py` file to your bot directory:
-    `touch local_settings.py`
-3.  Create a Bot User for your Slack team:
-    https://my.slack.com/services/new/bot (take note of your API
-    token)
-4.  Add the Slack API token to your `local_settings.py` like this:
+1. Create a directory for your Slack Machine bot:
+   `mkdir my-slack-bot && cd my-slack-bot`
+2. Add a `local_settings.py` file to your bot directory:
+   `touch local_settings.py`
+3. Create a Bot User for your Slack team:
+   https://my.slack.com/services/new/bot (take note of your API
+   token)
+4. Add the Slack API token to your `local_settings.py` like this:
 
 ``` python
 SLACK_API_TOKEN = 'xox-my-slack-token'
 ```
 
-5.  Start the bot with `slack-machine`
-6.  ...
-7.  Profit!
+5. Start the bot with `slack-machine`
+6. ...
+7. Profit!
 
 ## Documentation
 
-You can find the documentation for Slack Machine here: https://dandydev.github.io/slack-machine/
+You can find the documentation for Slack Machine here: https://dondebonair.github.io/slack-machine/
 
-Go read it to learn how to properly configure Slack Machine, write
-plugins, and more!
+Go read it to learn how to properly configure Slack Machine, write plugins, and more!

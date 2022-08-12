@@ -20,7 +20,7 @@ more!
 
 Being able to talk in Slack is only half the story for plugins. The
 functions in your plugin have to be triggered somehow. Slack Machine
-provides [Decorators][decorators] for that.
+provides [Decorators](../../api#decorators) for that.
 You can decorate the functions in your plugin class to tell them what
 they should react to.
 

@@ -26,6 +26,7 @@ theme:
     - navigation.expand
     - navigation.instant
     - navigation.tracking
+    - navigation.indexes
 nav:
   - 'index.md'
   - 'user/intro.md'
@@ -38,7 +39,10 @@ nav:
       - 'plugins/settings.md'
       - 'plugins/storage.md'
       - 'plugins/misc.md'
-  - 'api.md'
+  - 'API Documentation':
+      - 'api/index.md'
+      - 'api/api-async.md'
+  - 'async.md'
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite
@@ -56,7 +60,7 @@ plugins:
       handlers:
         python:
           selection:
-            docstring_style: restructured-text
+            docstring_style: sphinx
           rendering:
             show_root_heading: yes
             show_signature_annotations: yes
