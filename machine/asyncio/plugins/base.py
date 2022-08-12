@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Sequence
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
@@ -115,8 +115,8 @@ class MachineBasePlugin:
         self,
         channel: Channel | str,
         text: str,
-        attachments: list[Attachment] | list[dict[str, Any]] | None = None,
-        blocks: list[Block] | list[dict[str, Any]] | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
         ephemeral_user: User | str | None = None,
         **kwargs: Any,
@@ -181,8 +181,8 @@ class MachineBasePlugin:
         self,
         user: User | str,
         text: str,
-        attachments: list[Attachment] | list[dict[str, Any]] | None = None,
-        blocks: list[Block] | list[dict[str, Any]] | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Send a Direct Message
@@ -281,8 +281,8 @@ class Message:
     async def say(
         self,
         text: str,
-        attachments: list[Attachment] | list[dict[str, Any]] | None = None,
-        blocks: list[Block] | list[dict[str, Any]] | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
         ephemeral: bool = False,
         **kwargs: Any,
@@ -334,8 +334,8 @@ class Message:
     async def reply(
         self,
         text: str,
-        attachments: list[Attachment] | list[dict[str, Any]] | None = None,
-        blocks: list[Block] | list[dict[str, Any]] | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         in_thread: bool = False,
         ephemeral: bool = False,
         **kwargs: Any,
@@ -379,8 +379,8 @@ class Message:
     async def reply_dm(
         self,
         text: str,
-        attachments: list[Attachment] | list[dict[str, Any]] | None = None,
-        blocks: list[Block] | list[dict[str, Any]] | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Reply to the sender of the original message with a DM

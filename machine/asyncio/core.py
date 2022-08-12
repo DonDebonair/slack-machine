@@ -30,18 +30,21 @@ class Machine:
     _socket_mode_client: SocketModeClient
     _client: SlackClient | None
     _storage_backend: MachineBaseStorage
-    _settings: CaseInsensitiveDict
+    _settings: CaseInsensitiveDict | None
     _help: Manual
     _registered_actions: RegisteredActions
 
     def __init__(self, settings: CaseInsensitiveDict | None = None):
         if settings is not None:
             self._settings = settings
+        else:
+            self._settings = None
         self._help = Manual(human={}, robot={})
         self._registered_actions = RegisteredActions()
         self._client = None
 
     def _setup_logging(self) -> None:
+        assert self._settings is not None
         fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
         date_fmt = "%Y-%m-%d %H:%M:%S"
         log_level = self._settings.get("LOGLEVEL", logging.ERROR)
@@ -63,6 +66,7 @@ class Machine:
         return found_local_settings
 
     def _setup_storage(self) -> None:
+        assert self._settings is not None
         storage_backend = self._settings.get("STORAGE_BACKEND", "machine.storage.backends.memory.MemoryStorage")
         logger.debug("Initializing storage backend %s...", storage_backend)
         _, cls = import_string(storage_backend)[0]
@@ -70,6 +74,7 @@ class Machine:
         logger.debug("Storage backend %s initialized!", storage_backend)
 
     async def _setup_slack_clients(self) -> None:
+        assert self._settings is not None
         # Setup Slack socket mode client
         self._socket_mode_client = SocketModeClient(
             app_token=self._settings["SLACK_APP_TOKEN"],
@@ -85,6 +90,7 @@ class Machine:
 
         with indent(4):
             found_local_settings = self._load_settings()
+            assert self._settings is not None
             self._setup_logging()
             if not found_local_settings:
                 warn("No local_settings found! Are you sure this is what you want?")
@@ -112,6 +118,7 @@ class Machine:
 
     # TODO: factor out plugin registration in separate class / set of functions
     async def _load_plugins(self) -> None:
+        assert self._settings is not None
         if self._client is None:
             error("Slack client not initialized!")
             sys.exit(1)
@@ -236,12 +243,13 @@ class Machine:
             return regex.pattern
 
     async def run(self) -> None:
-        if self._client is None:
-            error("Slack client not initialized!")
-            sys.exit(1)
         announce("\nStarting Slack Machine:")
 
         await self._setup()
+        assert self._settings is not None
+        if self._client is None:
+            error("Slack client not initialized!")
+            sys.exit(1)
 
         bot_id = self._client.bot_info["user_id"]
         bot_name = self._client.bot_info["name"]

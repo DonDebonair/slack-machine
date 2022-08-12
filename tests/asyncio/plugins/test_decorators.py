@@ -1,7 +1,8 @@
 import re
 import inspect
 import pytest
-from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings, ee, on
+from machine.asyncio.plugins import ee
+from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings, on
 
 
 @pytest.fixture(scope="module")
