@@ -180,7 +180,7 @@ class SlackClient:
     def bot_info(self) -> dict[str, Any]:
         return self._bot_info
 
-    async def send(self, channel: Channel | str, text: str, **kwargs: Any) -> AsyncSlackResponse:
+    async def send(self, channel: Channel | str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         if "ephemeral_user" in kwargs and kwargs["ephemeral_user"] is not None:
             ephemeral_user_id = id_for_user(kwargs["ephemeral_user"])
@@ -200,7 +200,7 @@ class SlackClient:
         response = await self._client.web_client.conversations_open(users=user_id)
         return response["channel"]["id"]
 
-    async def send_dm(self, user: User | str, text: str, **kwargs: Any) -> AsyncSlackResponse:
+    async def send_dm(self, user: User | str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
         user_id = id_for_user(user)
         dm_channel_id = await self.open_im(user_id)
 
