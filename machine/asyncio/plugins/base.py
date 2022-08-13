@@ -441,7 +441,7 @@ class Message:
 
     def __str__(self) -> str:
         if self.channel.is_im:
-            message = "Message '{}', sent by user @{} in DM".format(self.text, self.sender.profile.real_name)
+            message = f"Message '{self.text}', sent by user @{self.sender.profile.real_name} in DM"
         else:
             message = "Message '{}', sent by user @{} in channel #{}".format(
                 self.text, self.sender.profile.real_name, self.channel.name

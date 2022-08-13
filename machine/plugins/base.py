@@ -31,7 +31,7 @@ class MachineBasePlugin:
         self._client = client
         self.storage = storage
         self.settings = settings
-        self._fq_name = "{}.{}".format(self.__module__, self.__class__.__name__)
+        self._fq_name = f"{self.__module__}.{self.__class__.__name__}"
 
     def init(self):
         """Initialize plugin
@@ -73,7 +73,7 @@ class MachineBasePlugin:
         :param channel_name: The name of the channel to retrieve.
         :return: The channel if found, None otherwise.
         """
-        if channel_name.startswith('#'):
+        if channel_name.startswith("#"):
             channel_name = channel_name[1:]
         for c in self.channels.values():
             if c.name_normalized and channel_name.lower() == c.name_normalized.lower():
@@ -103,11 +103,16 @@ class MachineBasePlugin:
         """
         return user.fmt_mention()
 
-    def say(self, channel: Union[Channel, str], text: str,
-            attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-            blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-            thread_ts: Optional[str] = None, ephemeral_user: Union[User, str, None] = None,
-            **kwargs):
+    def say(
+        self,
+        channel: Union[Channel, str],
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        thread_ts: Optional[str] = None,
+        ephemeral_user: Union[User, str, None] = None,
+        **kwargs,
+    ):
         """Send a message to a channel
 
         Send a message to a channel using the WebAPI. Allows for rich formatting using
@@ -138,14 +143,27 @@ class MachineBasePlugin:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
-        return self._client.send(channel, text=text, attachments=attachments, blocks=blocks,
-                                 thread_ts=thread_ts, ephemeral_user=ephemeral_user, **kwargs)
+        return self._client.send(
+            channel,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            thread_ts=thread_ts,
+            ephemeral_user=ephemeral_user,
+            **kwargs,
+        )
 
-    def say_scheduled(self, when: datetime, channel: Union[Channel, str], text: str,
-                      attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                      blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-                      thread_ts: Optional[str] = None,
-                      ephemeral_user: Union[User, str, None] = None, **kwargs):
+    def say_scheduled(
+        self,
+        when: datetime,
+        channel: Union[Channel, str],
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        thread_ts: Optional[str] = None,
+        ephemeral_user: Union[User, str, None] = None,
+        **kwargs,
+    ):
         """Schedule a message to a channel
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
@@ -165,9 +183,16 @@ class MachineBasePlugin:
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        self._client.send_scheduled(when, channel, text=text, attachments=attachments,
-                                    blocks=blocks, thread_ts=thread_ts,
-                                    ephemeral_user=ephemeral_user, **kwargs)
+        self._client.send_scheduled(
+            when,
+            channel,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            thread_ts=thread_ts,
+            ephemeral_user=ephemeral_user,
+            **kwargs,
+        )
 
     def react(self, channel: Union[Channel, str], ts: str, emoji: str):
         """React to a message in a channel
@@ -185,9 +210,14 @@ class MachineBasePlugin:
         """
         return self._client.react(channel, ts, emoji)
 
-    def send_dm(self, user: Union[User, str], text: str,
-                attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
+    def send_dm(
+        self,
+        user: Union[User, str],
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        **kwargs,
+    ):
         """Send a Direct Message
 
         Send a Direct Message to a user by opening a DM channel and sending a message to it. Allows
@@ -211,9 +241,15 @@ class MachineBasePlugin:
         """
         return self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def send_dm_scheduled(self, when: datetime, user: Union[User, str], text: str,
-                          attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                          blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
+    def send_dm_scheduled(
+        self,
+        when: datetime,
+        user: Union[User, str],
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        **kwargs,
+    ):
         """Schedule a Direct Message
 
         This is the scheduled version of
@@ -230,8 +266,7 @@ class MachineBasePlugin:
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        self._client.send_dm_scheduled(when, user, text=text, attachments=attachments,
-                                       blocks=blocks, **kwargs)
+        self._client.send_dm_scheduled(when, user, text=text, attachments=attachments, blocks=blocks, **kwargs)
 
     def emit(self, event: str, **kwargs):
         """Emit an event
@@ -269,7 +304,7 @@ class Message:
 
         :return: the User the message was sent by
         """
-        return self._client.users[self._msg_event['user']]
+        return self._client.users[self._msg_event["user"]]
 
     @property
     def channel(self) -> Channel:
@@ -277,12 +312,12 @@ class Message:
 
         :return: the Channel the message was sent to
         """
-        return self._client.channels[self._msg_event['channel']]
+        return self._client.channels[self._msg_event["channel"]]
 
     @property
     def is_dm(self) -> bool:
-        channel_id = self._msg_event['channel']
-        return not (channel_id.startswith('C') or channel_id.startswith('G'))
+        channel_id = self._msg_event["channel"]
+        return not (channel_id.startswith("C") or channel_id.startswith("G"))
 
     @property
     def text(self) -> str:
@@ -290,7 +325,7 @@ class Message:
 
         :return: the body (text) of the actual message
         """
-        return self._msg_event['text']
+        return self._msg_event["text"]
 
     @property
     def at_sender(self) -> str:
@@ -303,10 +338,15 @@ class Message:
         """
         return self.sender.fmt_mention()
 
-    def say(self, text: str,
-            attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-            blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-            thread_ts: Optional[str] = None, ephemeral: bool = False, **kwargs):
+    def say(
+        self,
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        thread_ts: Optional[str] = None,
+        ephemeral: bool = False,
+        **kwargs,
+    ):
         """Send a new message to the channel the original message was received in
 
         Send a new message to the channel the original message was received in, using the WebAPI.
@@ -348,13 +388,19 @@ class Message:
             blocks=blocks,
             thread_ts=thread_ts,
             ephemeral_user=ephemeral_user,
-            **kwargs
+            **kwargs,
         )
 
-    def say_scheduled(self, when: datetime, text: str,
-                      attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                      blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-                      thread_ts: Optional[str] = None, ephemeral: bool = False, **kwargs):
+    def say_scheduled(
+        self,
+        when: datetime,
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        thread_ts: Optional[str] = None,
+        ephemeral: bool = False,
+        **kwargs,
+    ):
         """Schedule a message
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
@@ -377,17 +423,26 @@ class Message:
         else:
             ephemeral_user = None
 
-        self._client.send_scheduled(when, self.channel.id, text=text,
-                                    attachments=attachments,
-                                    blocks=blocks,
-                                    thread_ts=thread_ts,
-                                    ephemeral_user=ephemeral_user,
-                                    **kwargs)
+        self._client.send_scheduled(
+            when,
+            self.channel.id,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            thread_ts=thread_ts,
+            ephemeral_user=ephemeral_user,
+            **kwargs,
+        )
 
-    def reply(self, text,
-              attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-              blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-              in_thread: bool = False, ephemeral: bool = False, **kwargs):
+    def reply(
+        self,
+        text,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        in_thread: bool = False,
+        ephemeral: bool = False,
+        **kwargs,
+    ):
         """Reply to the sender of the original message
 
         Reply to the sender of the original message with a new message, mentioning that user. Rich
@@ -419,17 +474,21 @@ class Message:
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         if in_thread and not ephemeral:
-            return self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.ts,
-                            **kwargs)
+            return self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs)
         else:
             text = self._create_reply(text)
-            return self.say(text, attachments=attachments, blocks=blocks, ephemeral=ephemeral,
-                            **kwargs)
+            return self.say(text, attachments=attachments, blocks=blocks, ephemeral=ephemeral, **kwargs)
 
-    def reply_scheduled(self, when: datetime, text: str,
-                        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-                        in_thread: bool = False, ephemeral: bool = False, **kwargs):
+    def reply_scheduled(
+        self,
+        when: datetime,
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        in_thread: bool = False,
+        ephemeral: bool = False,
+        **kwargs,
+    ):
         """Schedule a reply and send it
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
@@ -448,16 +507,18 @@ class Message:
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
         if in_thread and not ephemeral:
-            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks,
-                                      thread_ts=self.ts, **kwargs)
+            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs)
         else:
             text = self._create_reply(text)
-            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks,
-                                      ephemeral=ephemeral, **kwargs)
+            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks, ephemeral=ephemeral, **kwargs)
 
-    def reply_dm(self, text: str,
-                 attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                 blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
+    def reply_dm(
+        self,
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        **kwargs,
+    ):
         """Reply to the sender of the original message with a DM
 
         Reply in a Direct Message to the sender of the original message by opening a DM channel and
@@ -478,12 +539,16 @@ class Message:
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        return self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks,
-                                    **kwargs)
+        return self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def reply_dm_scheduled(self, when: datetime, text: str,
-                           attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-                           blocks: Union[List[Block], List[Dict[str, Any]], None] = None, **kwargs):
+    def reply_dm_scheduled(
+        self,
+        when: datetime,
+        text: str,
+        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
+        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        **kwargs,
+    ):
         """Schedule a DM reply and send it
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`.
@@ -498,8 +563,9 @@ class Message:
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        self._client.send_dm_scheduled(when, self.sender.id, text=text, attachments=attachments,
-                                       blocks=blocks, **kwargs)
+        self._client.send_dm_scheduled(
+            when, self.sender.id, text=text, attachments=attachments, blocks=blocks, **kwargs
+        )
 
     def react(self, emoji: str):
         """React to the original message
@@ -511,7 +577,7 @@ class Message:
 
         .. _reactions.add: https://api.slack.com/methods/reactions.add
         """
-        return self._client.react(self.channel.id, self._msg_event['ts'], emoji)
+        return self._client.react(self.channel.id, self._msg_event["ts"], emoji)
 
     def _create_reply(self, text):
         if not self.is_dm:
@@ -525,7 +591,7 @@ class Message:
 
         :return: the timestamp of the message
         """
-        return self._msg_event['ts']
+        return self._msg_event["ts"]
 
     @property
     def in_thread(self):
@@ -533,25 +599,18 @@ class Message:
 
         :return: bool
         """
-        return 'thread_ts' in self._msg_event
+        return "thread_ts" in self._msg_event
 
     def __str__(self):
         if self.channel.is_im:
-            message = "Message '{}', sent by user @{} in DM".format(
-                self.text,
-                self.sender.profile.real_name
-            )
+            message = f"Message '{self.text}', sent by user @{self.sender.profile.real_name} in DM"
         else:
             message = "Message '{}', sent by user @{} in channel #{}".format(
-                self.text,
-                self.sender.profile.real_name,
-                self.channel.name
+                self.text, self.sender.profile.real_name, self.channel.name
             )
         return message
 
     def __repr__(self):
         return "Message(text={}, sender={}, channel={})".format(
-            repr(self.text),
-            repr(self.sender.profile.real_name),
-            repr(self.channel.name)
+            repr(self.text), repr(self.sender.profile.real_name), repr(self.channel.name)
         )

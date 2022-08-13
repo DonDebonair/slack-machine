@@ -15,7 +15,7 @@ class MemePlugin(MachineBasePlugin):
     async def meme(self, msg: Message, meme: str, top: str, bottom: str) -> None:
         """meme <meme template> <top text>;<bottom text>: generate a meme"""
         character_replacements = {"?": "~q", "&": "~p", "#": "~h", "/": "~s", "''": '"'}
-        query_string = "?font={}".format(self._font)
+        query_string = f"?font={self._font}"
         for original, replacement in character_replacements.items():
             top = top.replace(original, replacement)
             bottom = bottom.replace(original, replacement)

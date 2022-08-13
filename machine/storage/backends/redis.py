@@ -7,12 +7,12 @@ from machine.utils.redis import gen_config_dict
 class RedisStorage(MachineBaseStorage):
     def __init__(self, settings):
         super().__init__(settings)
-        self._key_prefix = settings.get('REDIS_KEY_PREFIX', 'SM')
+        self._key_prefix = settings.get("REDIS_KEY_PREFIX", "SM")
         redis_config = gen_config_dict(settings)
         self._redis = StrictRedis(**redis_config)
 
     def _prefix(self, key):
-        return "{}:{}".format(self._key_prefix, key)
+        return f"{self._key_prefix}:{key}"
 
     def has(self, key):
         return self._redis.exists(self._prefix(key))
@@ -27,5 +27,5 @@ class RedisStorage(MachineBaseStorage):
         self._redis.delete(self._prefix(key))
 
     def size(self):
-        info = self._redis.info('memory')
-        return info['used_memory']
+        info = self._redis.info("memory")
+        return info["used_memory"]

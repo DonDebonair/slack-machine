@@ -18,7 +18,7 @@ def redis_client(module_mocker):
 
 @pytest.fixture
 def redis_storage(redis_client):
-    settings = {'REDIS_URL': 'redis://nohost:1234'}
+    settings = {"REDIS_URL": "redis://nohost:1234"}
     storage = RedisStorage(settings)
     storage._redis = redis_client
     return storage
@@ -26,31 +26,31 @@ def redis_storage(redis_client):
 
 @pytest.mark.asyncio
 async def test_set(redis_storage, redis_client):
-    await redis_storage.set('key1', b'value1')
-    redis_client.set.assert_called_with('SM:key1', b'value1', None)
-    await redis_storage.set('key2', b'value2', 42)
-    redis_client.set.assert_called_with('SM:key2', b'value2', 42)
+    await redis_storage.set("key1", b"value1")
+    redis_client.set.assert_called_with("SM:key1", b"value1", None)
+    await redis_storage.set("key2", b"value2", 42)
+    redis_client.set.assert_called_with("SM:key2", b"value2", 42)
 
 
 @pytest.mark.asyncio
 async def test_get(redis_storage, redis_client):
-    await redis_storage.get('key1')
-    redis_client.get.assert_called_with('SM:key1')
+    await redis_storage.get("key1")
+    redis_client.get.assert_called_with("SM:key1")
 
 
 @pytest.mark.asyncio
 async def test_has(redis_storage, redis_client):
-    await redis_storage.has('key1')
-    redis_client.exists.assert_called_with('SM:key1')
+    await redis_storage.has("key1")
+    redis_client.exists.assert_called_with("SM:key1")
 
 
 @pytest.mark.asyncio
 async def test_delete(redis_storage, redis_client):
-    await redis_storage.delete('key1')
-    redis_client.delete.assert_called_with('SM:key1')
+    await redis_storage.delete("key1")
+    redis_client.delete.assert_called_with("SM:key1")
 
 
 @pytest.mark.asyncio
 async def test_size(redis_storage, redis_client):
     await redis_storage.size()
-    redis_client.info.assert_called_with('memory')
+    redis_client.info.assert_called_with("memory")

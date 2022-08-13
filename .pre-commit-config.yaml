@@ -2,18 +2,38 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.1.0
+    rev: v4.3.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
       - id: check-added-large-files
   - repo: https://gitlab.com/pycqa/flake8
-    rev: 3.8.3
+    rev: 5.0.4
     hooks:
       - id: flake8
-        files: >
-          (?x)^(
-              machine|
-              setup.py
-          )
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.1.1
+    hooks:
+      - id: pycln
+        name: remove unused imports
+        args: [ "--config=./pyproject.toml" ]
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
+    hooks:
+      - id: isort
+        name: isort
+        args: ["--show-config"]
+  - repo: https://github.com/psf/black
+    rev: 22.6.0
+    hooks:
+      - id: black
+        name: black
+        args: ["--config=./pyproject.toml"]
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v2.37.3
+    hooks:
+      - id: pyupgrade
+        args:
+          - --py37-plus
+          - --keep-runtime-typing

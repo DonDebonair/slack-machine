@@ -16,6 +16,7 @@ class Channel:
     """
     Channel model that represents a channel object from the Slack API
     """
+
     id: str
     name: Optional[str]
     created: int
@@ -44,5 +45,5 @@ class Channel:
             return self.id
 
     @staticmethod
-    def from_api_response(user_reponse: Dict[str, Any]) -> 'Channel':
+    def from_api_response(user_reponse: Dict[str, Any]) -> "Channel":
         return from_dict(data_class=Channel, data=user_reponse)

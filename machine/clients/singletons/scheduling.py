@@ -9,9 +9,9 @@ class Scheduler(metaclass=Singleton):
     def __init__(self):
         _settings, _ = import_settings()
         self._scheduler = BackgroundScheduler()
-        if 'REDIS_URL' in _settings:
+        if "REDIS_URL" in _settings:
             redis_config = gen_config_dict(_settings)
-            self._scheduler.add_jobstore('redis', **redis_config)
+            self._scheduler.add_jobstore("redis", **redis_config)
 
     def __getattr__(self, item):
         return getattr(self._scheduler, item)

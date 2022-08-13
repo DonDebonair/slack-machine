@@ -14,11 +14,12 @@ class PluginStorage:
 
     .. _Dill: https://pypi.python.org/pypi/dill
     """
+
     def __init__(self, fq_plugin_name):
         self._fq_plugin_name = fq_plugin_name
 
     def _gen_unique_key(self, key):
-        return "{}:{}".format(self._fq_plugin_name, key)
+        return f"{self._fq_plugin_name}:{key}"
 
     def _namespace_key(self, key, shared):
         return key if shared else self._gen_unique_key(key)

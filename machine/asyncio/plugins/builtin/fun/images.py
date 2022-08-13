@@ -19,7 +19,7 @@ class ImageSearchPlugin(MachineBasePlugin):
             url = random.choice(results)
             await msg.say(url)
         else:
-            await msg.say("Couldn't find any results for '{}'! :cry:".format(query))
+            await msg.say(f"Couldn't find any results for '{query}'! :cry:")
 
     @respond_to(r"animate(?: me)? (?P<query>.+)")
     async def animate_me(self, msg: Message, query: str) -> None:

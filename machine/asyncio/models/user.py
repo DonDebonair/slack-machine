@@ -30,6 +30,7 @@ class User:
     """
     User model that represents a user object from the Slack API
     """
+
     id: str
     team_id: Optional[str]
     name: str
@@ -53,8 +54,8 @@ class User:
     locale: Optional[str] = None
 
     @staticmethod
-    def from_api_response(user_reponse: Dict[str, Any]) -> 'User':
+    def from_api_response(user_reponse: Dict[str, Any]) -> "User":
         return from_dict(data_class=User, data=user_reponse)  # pragma: no cover
 
     def fmt_mention(self) -> str:
-        return "<@{}>".format(self.id)
+        return f"<@{self.id}>"

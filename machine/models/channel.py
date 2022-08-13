@@ -16,6 +16,7 @@ class Channel:
     """
     Channel model that represents a channel object from the Slack API
     """
+
     id: str
     name: Optional[str]
     is_channel: Optional[bool]
@@ -55,14 +56,13 @@ class Channel:
     def _load_members(self):
         """Load a fresh set of members."""
         from machine.clients.singletons.slack import LowLevelSlackClient, call_paginated_endpoint
+
         web_client = LowLevelSlackClient.get_instance().web_client
-        all_members = call_paginated_endpoint(
-            web_client.conversations_members, 'members', channel=self.id
-        )
+        all_members = call_paginated_endpoint(web_client.conversations_members, "members", channel=self.id)
         self._members.clear()
         for member in all_members:
             self._members.append(member)
 
     @staticmethod
-    def from_api_response(user_reponse: Dict[str, Any]) -> 'Channel':
+    def from_api_response(user_reponse: Dict[str, Any]) -> "Channel":
         return from_dict(data_class=Channel, data=user_reponse)
