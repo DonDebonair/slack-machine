@@ -12,12 +12,10 @@ class RoleCombinator(Enum):
 
 
 async def role_assignments_by_role(plugin: MachineBasePlugin, role: str) -> dict[str, int]:
-    if role == 'root':
-        users_with_role = {
-            plugin.settings['ROOT_USER']: 1
-        }
+    if role == "root":
+        users_with_role = {plugin.settings["ROOT_USER"]: 1}
     else:
-        users_with_role_payload = await plugin.storage.get(f'rbac:role:{role}', shared=True)
+        users_with_role_payload = await plugin.storage.get(f"rbac:role:{role}", shared=True)
         if users_with_role_payload is not None:
             users_with_role = cast(dict[str, int], users_with_role_payload)
         else:

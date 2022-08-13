@@ -19,6 +19,7 @@ class PluginStorage:
 
     .. _Dill: https://pypi.python.org/pypi/dill
     """
+
     def __init__(self, fq_plugin_name: str, storage_backend: MachineBaseStorage):
         self._fq_plugin_name = fq_plugin_name
         self._storage = storage_backend

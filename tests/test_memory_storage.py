@@ -28,7 +28,7 @@ def test_delete_values(memory_storage):
 
 def test_expire_values(memory_storage, mocker):
     assert memory_storage._storage == {}
-    mocked_dt = mocker.patch('machine.storage.backends.memory.datetime', autospec=True)
+    mocked_dt = mocker.patch("machine.storage.backends.memory.datetime", autospec=True)
     mocked_dt.utcnow.return_value = datetime(2017, 1, 1, 12, 0, 0, 0)
     memory_storage.set("key1", "value1", expires=15)
     assert memory_storage._storage == {"key1": ("value1", datetime(2017, 1, 1, 12, 0, 15, 0))}
@@ -40,6 +40,6 @@ def test_expire_values(memory_storage, mocker):
 def test_inclusion(memory_storage):
     assert memory_storage._storage == {}
     memory_storage.set("key1", "value1")
-    assert memory_storage.has("key1") == True
+    assert memory_storage.has("key1") is True
     memory_storage.delete("key1")
-    assert memory_storage.has("key1") == False
+    assert memory_storage.has("key1") is False

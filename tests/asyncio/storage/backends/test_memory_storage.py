@@ -31,7 +31,7 @@ async def test_delete_values(memory_storage):
 @pytest.mark.asyncio
 async def test_expire_values(memory_storage, mocker):
     assert memory_storage._storage == {}
-    mocked_dt = mocker.patch('machine.asyncio.storage.backends.memory.datetime', autospec=True)
+    mocked_dt = mocker.patch("machine.asyncio.storage.backends.memory.datetime", autospec=True)
     mocked_dt.utcnow.return_value = datetime(2017, 1, 1, 12, 0, 0, 0)
     await memory_storage.set("key1", "value1", expires=15)
     assert memory_storage._storage == {"key1": ("value1", datetime(2017, 1, 1, 12, 0, 15, 0))}

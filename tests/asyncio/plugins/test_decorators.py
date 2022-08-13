@@ -32,9 +32,9 @@ def respond_to_f():
     return f
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def on_f():
-    @on('test_event')
+    @on("test_event")
     def f(msg):
         pass
 

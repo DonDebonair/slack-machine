@@ -39,8 +39,8 @@ async def test_retrieve(plugin_storage):
 @pytest.mark.asyncio
 async def test_shared(plugin_storage, storage_backend):
     await plugin_storage.set("key1", "value1", shared=True)
-    assert await plugin_storage.has("key1") == False
-    assert await plugin_storage.has("key1", shared=True) == True
+    assert await plugin_storage.has("key1") is False
+    assert await plugin_storage.has("key1", shared=True) is True
     expected_key = "key1"
     assert expected_key in storage_backend._storage
 
@@ -48,9 +48,9 @@ async def test_shared(plugin_storage, storage_backend):
 @pytest.mark.asyncio
 async def test_delete(plugin_storage, storage_backend):
     await plugin_storage.set("key1", "value1")
-    assert await plugin_storage.has("key1") == True
+    assert await plugin_storage.has("key1") is True
     expected_key = "tests.fake_plugin.FakePlugin:key1"
     assert expected_key in storage_backend._storage
     await plugin_storage.delete("key1")
-    assert await plugin_storage.has("key1") == False
+    assert await plugin_storage.has("key1") is False
     assert expected_key not in storage_backend._storage

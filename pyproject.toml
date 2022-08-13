@@ -30,29 +30,27 @@ include = ["extra/logo.png", "run_dev.py", "run_dev.py", "README.md", "LICENSE",
 
 [tool.poetry.dependencies]
 python = "^3.7"
-dill = "^0.3.4"
-APScheduler = "^3.8.1"
+dill = "^0.3.5.1"
+APScheduler = "^3.9.1"
 blinker-alt = "^1.5"
 clint = "^0.5.1"
 dacite = "^1.6.0"
-requests = "^2.26.0"
+requests = "^2.28.1"
 redis = {version = ">=4.3.4,<5.0.0", optional = true}
 hiredis = {version = "^2.0.0", optional = true}
-slack-sdk = "^3.12.0"
+slack-sdk = "^3.18.1"
 aiohttp = "^3.8.1"
 pyee = "^9.0.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.0.1"
-pytest-mock = "^3.6.1"
+pytest = "^7.1.2"
+pytest-mock = "^3.8.2"
 tox = "^3.25.1"
 tox-gh-actions = "^2.9.1"
-flake8 = "<4.0.0"
-coverage = "^6.2"
+coverage = "^6.4.3"
 redis = ">=4.3.4,<5.0.0"
-pre-commit = "^2.17.0"
+pre-commit = "^2.20.0"
 pytest-cov = "^3.0.0"
-Markdown = "^3.3.7"
 isort = "^5.10.1"
 black = "^22.6.0"
 typing-extensions = "^4.3.0"
@@ -62,7 +60,8 @@ mypy = "^0.971"
 types-redis = "^4.3.14"
 types-requests = "^2.28.8"
 mkdocstrings = {extras = ["python"], version = "^0.19.0"}
-mkdocs-material = "^8.3.9"
+mkdocs-material = "^8.4.0"
+flake8 = "<4.0.1"
 
 [tool.poetry.extras]
 redis = ["redis", "hiredis"]
@@ -74,11 +73,11 @@ slack-machine-async = 'machine.bin.run_async:main'
 [tool.isort]
 profile = "black"
 line_length = 120
-known_first_party = ["api", "tests"]
+known_first_party = ["machine", "tests"]
 
 [tool.black]
 line-length = 120
-experimental-string-processing = true
+preview = true
 
 [tool.pytest.ini_options]
 mock_use_standalone_module = true

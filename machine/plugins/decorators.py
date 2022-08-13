@@ -21,10 +21,9 @@ def process(slack_event_type):
 
     def process_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['process'] = \
-            f.metadata['plugin_actions'].get('process', {})
-        f.metadata['plugin_actions']['process']['event_type'] = slack_event_type
+        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata["plugin_actions"]["process"] = f.metadata["plugin_actions"].get("process", {})
+        f.metadata["plugin_actions"]["process"]["event_type"] = slack_event_type
         return f
 
     return process_decorator
@@ -46,12 +45,10 @@ def listen_to(regex, flags=re.IGNORECASE):
 
     def listen_to_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['listen_to'] = \
-            f.metadata['plugin_actions'].get('listen_to', {})
-        f.metadata['plugin_actions']['listen_to']['regex'] = \
-            f.metadata['plugin_actions']['listen_to'].get('regex', [])
-        f.metadata['plugin_actions']['listen_to']['regex'].append(re.compile(regex, flags))
+        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata["plugin_actions"]["listen_to"] = f.metadata["plugin_actions"].get("listen_to", {})
+        f.metadata["plugin_actions"]["listen_to"]["regex"] = f.metadata["plugin_actions"]["listen_to"].get("regex", [])
+        f.metadata["plugin_actions"]["listen_to"]["regex"].append(re.compile(regex, flags))
         return f
 
     return listen_to_decorator
@@ -75,19 +72,30 @@ def respond_to(regex, flags=re.IGNORECASE):
 
     def respond_to_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['respond_to'] = \
-            f.metadata['plugin_actions'].get('respond_to', {})
-        f.metadata['plugin_actions']['respond_to']['regex'] = \
-            f.metadata['plugin_actions']['respond_to'].get('regex', [])
-        f.metadata['plugin_actions']['respond_to']['regex'].append(re.compile(regex, flags))
+        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata["plugin_actions"]["respond_to"] = f.metadata["plugin_actions"].get("respond_to", {})
+        f.metadata["plugin_actions"]["respond_to"]["regex"] = f.metadata["plugin_actions"]["respond_to"].get(
+            "regex", []
+        )
+        f.metadata["plugin_actions"]["respond_to"]["regex"].append(re.compile(regex, flags))
         return f
 
     return respond_to_decorator
 
 
-def schedule(year=None, month=None, day=None, week=None, day_of_week=None, hour=None, minute=None,
-             second=None, start_date=None, end_date=None, timezone=None):
+def schedule(
+    year=None,
+    month=None,
+    day=None,
+    week=None,
+    day_of_week=None,
+    hour=None,
+    minute=None,
+    second=None,
+    start_date=None,
+    end_date=None,
+    timezone=None,
+):
     """Schedule a function to be executed according to a crontab-like schedule
 
     The decorated function will be executed according to the schedule provided. Slack Machine uses
@@ -111,8 +119,8 @@ def schedule(year=None, month=None, day=None, week=None, day_of_week=None, hour=
 
     def schedule_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['schedule'] = kwargs
+        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata["plugin_actions"]["schedule"] = kwargs
         return f
 
     return schedule_decorator
@@ -147,11 +155,11 @@ def required_settings(settings):
 
     def required_settings_decorator(f_or_cls):
         f_or_cls.metadata = getattr(f_or_cls, "metadata", {})
-        f_or_cls.metadata['required_settings'] = f_or_cls.metadata.get('required_settings', [])
-        if (isinstance(settings, list)):
-            f_or_cls.metadata['required_settings'].extend(settings)
-        elif (isinstance(settings, str)):
-            f_or_cls.metadata['required_settings'].append(settings)
+        f_or_cls.metadata["required_settings"] = f_or_cls.metadata.get("required_settings", [])
+        if isinstance(settings, list):
+            f_or_cls.metadata["required_settings"].extend(settings)
+        elif isinstance(settings, str):
+            f_or_cls.metadata["required_settings"].append(settings)
         return f_or_cls
 
     return required_settings_decorator
@@ -168,11 +176,10 @@ def route(path, **kwargs):
 
     def route_decorator(f):
         f.metadata = getattr(f, "metadata", {})
-        f.metadata['plugin_actions'] = f.metadata.get('plugin_actions', {})
-        f.metadata['plugin_actions']['route'] = \
-            f.metadata['plugin_actions'].get('route', [])
-        kwargs['path'] = path
-        f.metadata['plugin_actions']['route'].append(kwargs)
+        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
+        f.metadata["plugin_actions"]["route"] = f.metadata["plugin_actions"].get("route", [])
+        kwargs["path"] = path
+        f.metadata["plugin_actions"]["route"].append(kwargs)
         return f
 
     return route_decorator
@@ -194,16 +201,13 @@ def require_any_role(required_roles=None):
             if matching_roles_by_user_id(self, msg.sender.id, required_roles):
                 return func(self, msg, **kwargs)
             else:
-                msg.say(
-                    "I'm sorry, but you don't have access to that command",
-                    ephemeral=True
-                )
+                msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
                 role_string = ", ".join([f"`{role}`" for role in required_roles])
                 notify_admins(
                     self,
                     "Attempt to execute unauthorized command",
                     f"User {msg.at_sender} tried to execute the following command:"
-                    f"```{msg.text}``` but lacks _one_ of these roles: {role_string}"
+                    f"```{msg.text}``` but lacks _one_ of these roles: {role_string}",
                 )
 
         # Copy any existing docs and metadata from container function to
@@ -228,20 +232,16 @@ def require_all_roles(required_roles=None):
 
     def middle(func):
         def wrapper(self, msg, **kwargs):
-            if matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(
-                    required_roles):
+            if matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
                 return func(self, msg, **kwargs)
             else:
-                msg.say(
-                    "I'm sorry, but you don't have access to that command",
-                    ephemeral=True
-                )
+                msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
                 role_string = ", ".join([f"`{role}`" for role in required_roles])
                 notify_admins(
                     self,
                     "Attempt to execute unauthorized command",
                     f"User {msg.at_sender} tried to execute the following command:"
-                    f"```{msg.text}``` but lacks _all_ of these roles: {role_string}"
+                    f"```{msg.text}``` but lacks _all_ of these roles: {role_string}",
                 )
                 return
 

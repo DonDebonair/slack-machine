@@ -183,7 +183,7 @@ class Machine:
         fn: Callable[..., Awaitable[None]],
         class_help: str,
     ) -> None:
-        fq_fn_name = "{}.{}".format(plugin_class_name, fn_name)
+        fq_fn_name = f"{plugin_class_name}.{fn_name}"
         if fn.__doc__:
             self._help.human[class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
         for regex in metadata.plugin_actions.listen_to:
@@ -240,7 +240,7 @@ class Machine:
     @staticmethod
     def _parse_robot_help(regex: re.Pattern, action: str) -> str:
         if action == "respond_to":
-            return "@botname {}".format(regex.pattern)
+            return f"@botname {regex.pattern}"
         else:
             return regex.pattern
 

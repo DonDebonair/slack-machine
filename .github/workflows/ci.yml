@@ -43,6 +43,18 @@ jobs:
       with:
         name: Unit test results ${{ matrix.python-version }}
         path: pytest.xml
+  lint:
+    name: linting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+      - uses: psf/black@stable
+      - name: flake8 Lint
+        uses: py-actions/flake8@v2
   upload-event-file:
     name: Upload Event File
     needs: tests

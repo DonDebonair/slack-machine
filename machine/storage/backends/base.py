@@ -8,6 +8,7 @@ class MachineBaseStorage:
     - Serialization/Deserialization of data
     - Namespacing of keys (so data stored by different plugins doesn't clash)
     """
+
     def __init__(self, settings):
         self.settings = settings
 
