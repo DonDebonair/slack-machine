@@ -114,7 +114,7 @@ class MachineBasePlugin:
     async def say(
         self,
         channel: Channel | str,
-        text: str,
+        text: str | None = None,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
@@ -180,7 +180,7 @@ class MachineBasePlugin:
     async def send_dm(
         self,
         user: User | str,
-        text: str,
+        text: str | None = None,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         **kwargs: Any,
@@ -280,7 +280,7 @@ class Message:
 
     async def say(
         self,
-        text: str,
+        text: str | None = None,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
@@ -333,7 +333,7 @@ class Message:
 
     async def reply(
         self,
-        text: str,
+        text: str | None = None,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         in_thread: bool = False,
@@ -378,7 +378,7 @@ class Message:
 
     async def reply_dm(
         self,
-        text: str,
+        text: str | None = None,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         **kwargs: Any,
@@ -417,8 +417,8 @@ class Message:
         """
         return await self._client.react(self.channel.id, self._msg_event["ts"], emoji)
 
-    def _create_reply(self, text: str) -> str:
-        if not self.is_dm:
+    def _create_reply(self, text: str | None) -> str | None:
+        if not self.is_dm and text is not None:
             return f"{self.at_sender}: {text}"
         else:
             return text
