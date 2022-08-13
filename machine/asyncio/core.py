@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import inspect
 import logging
+import os
 import re
 import sys
 from typing import Callable, cast, Awaitable
@@ -43,48 +44,6 @@ class Machine:
         self._registered_actions = RegisteredActions()
         self._client = None
 
-    def _setup_logging(self) -> None:
-        assert self._settings is not None
-        fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
-        date_fmt = "%Y-%m-%d %H:%M:%S"
-        log_level = self._settings.get("LOGLEVEL", logging.ERROR)
-        logging.basicConfig(
-            level=log_level,
-            format=fmt,
-            datefmt=date_fmt,
-        )
-        logging.getLogger("slack_sdk.socket_mode.aiohttp").setLevel(logging.INFO)
-        logging.getLogger("slack_sdk.web.async_base_client").setLevel(logging.INFO)
-
-    def _load_settings(self) -> bool:
-        puts("Loading settings...")
-        if self._settings is not None:
-            found_local_settings = True
-        else:
-            self._settings, found_local_settings = import_settings()
-        puts("Settings loaded!")
-        return found_local_settings
-
-    def _setup_storage(self) -> None:
-        assert self._settings is not None
-        storage_backend = self._settings.get("STORAGE_BACKEND", "machine.storage.backends.memory.MemoryStorage")
-        logger.debug("Initializing storage backend %s...", storage_backend)
-        _, cls = import_string(storage_backend)[0]
-        self._storage_backend = cls(self._settings)
-        logger.debug("Storage backend %s initialized!", storage_backend)
-
-    async def _setup_slack_clients(self) -> None:
-        assert self._settings is not None
-        # Setup Slack socket mode client
-        self._socket_mode_client = SocketModeClient(
-            app_token=self._settings["SLACK_APP_TOKEN"],
-            web_client=AsyncWebClient(token=self._settings["SLACK_BOT_TOKEN"]),
-        )
-
-        # Setup high-level Slack client for plugins
-        self._client = SlackClient(self._socket_mode_client)
-        await self._client.setup()
-
     async def _setup(self) -> None:
         announce("Initializing Slack Machine:")
 
@@ -115,6 +74,49 @@ class Machine:
             await self._load_plugins()
             logger.debug("Registered plugin actions: %s", self._registered_actions)
             logger.debug("Plugin help: %s", self._help)
+
+    def _setup_logging(self) -> None:
+        assert self._settings is not None
+        fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
+        date_fmt = "%Y-%m-%d %H:%M:%S"
+        log_level = self._settings.get("LOGLEVEL", logging.ERROR)
+        logging.basicConfig(
+            level=log_level,
+            format=fmt,
+            datefmt=date_fmt,
+        )
+        logging.getLogger("slack_sdk.socket_mode.aiohttp").setLevel(logging.INFO)
+        logging.getLogger("slack_sdk.web.async_base_client").setLevel(logging.INFO)
+
+    def _load_settings(self) -> bool:
+        puts("Loading settings...")
+        if self._settings is not None:
+            found_local_settings = True
+        else:
+            settings_module = os.environ.get("SM_SETTINGS_MODULE", "local_settings")
+            self._settings, found_local_settings = import_settings(settings_module=settings_module)
+        puts("Settings loaded!")
+        return found_local_settings
+
+    def _setup_storage(self) -> None:
+        assert self._settings is not None
+        storage_backend = self._settings.get("STORAGE_BACKEND", "machine.storage.backends.memory.MemoryStorage")
+        logger.debug("Initializing storage backend %s...", storage_backend)
+        _, cls = import_string(storage_backend)[0]
+        self._storage_backend = cls(self._settings)
+        logger.debug("Storage backend %s initialized!", storage_backend)
+
+    async def _setup_slack_clients(self) -> None:
+        assert self._settings is not None
+        # Setup Slack socket mode client
+        self._socket_mode_client = SocketModeClient(
+            app_token=self._settings["SLACK_APP_TOKEN"],
+            web_client=AsyncWebClient(token=self._settings["SLACK_BOT_TOKEN"]),
+        )
+
+        # Setup high-level Slack client for plugins
+        self._client = SlackClient(self._socket_mode_client)
+        await self._client.setup()
 
     # TODO: factor out plugin registration in separate class / set of functions
     async def _load_plugins(self) -> None:
