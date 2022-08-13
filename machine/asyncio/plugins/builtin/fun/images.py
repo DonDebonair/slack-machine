@@ -1,10 +1,18 @@
-import random
-import requests
 import logging
+import random
+
+import httpx
+from slack_sdk.models.blocks import Block, ImageBlock, PlainTextObject
+
 from machine.asyncio.plugins.base import MachineBasePlugin, Message
 from machine.asyncio.plugins.decorators import respond_to, required_settings
 
 logger = logging.getLogger(__name__)
+
+
+def _make_blocks(search_string: str, image_url: str) -> list[Block]:
+    blocks = [ImageBlock(image_url=image_url, alt_text=search_string, title=PlainTextObject(text=search_string))]
+    return blocks
 
 
 @required_settings(["GOOGLE_CSE_ID", "GOOGLE_API_KEY"])
@@ -14,24 +22,24 @@ class ImageSearchPlugin(MachineBasePlugin):
     @respond_to(r"(?:image|img)(?: me)? (?P<query>.+)")
     async def image_me(self, msg: Message, query: str) -> None:
         """image/img (me) <query>: find a random image"""
-        results = self._search(query.strip())
+        results = await self._search(query.strip())
         if results:
             url = random.choice(results)
-            await msg.say(url)
+            await msg.say(blocks=_make_blocks(query, url))
         else:
             await msg.say(f"Couldn't find any results for '{query}'! :cry:")
 
     @respond_to(r"animate(?: me)? (?P<query>.+)")
     async def animate_me(self, msg: Message, query: str) -> None:
         """animate (me) <query>: find a random gif"""
-        results = self._search(query.strip(), animated=True)
+        results = await self._search(query.strip(), animated=True)
         if results:
             url = random.choice(results)
-            await msg.say(url)
+            await msg.say(blocks=_make_blocks(query, url))
         else:
             await msg.say(f"Couldn't find any results for '{query}'! :cry:")
 
-    def _search(self, query: str, animated: bool = False) -> list[str]:
+    async def _search(self, query: str, animated: bool = False) -> list[str]:
         query_params = {
             "cx": self.settings["GOOGLE_CSE_ID"],
             "key": self.settings["GOOGLE_API_KEY"],
@@ -43,12 +51,15 @@ class ImageSearchPlugin(MachineBasePlugin):
 
         if animated:
             query_params.update({"fileType": "gif", "hq": "animated", "tbs": "itp:animated"})
-        # TODO: replace requests with httpx
-        r = requests.get("https://www.googleapis.com/customsearch/v1", params=query_params)
-        if r.ok:
-            response = r.json()
-            results = [result["link"] for result in response["items"] if "items" in response]
+        timeout = httpx.Timeout(10.0, connect=60.0)
+        async with httpx.AsyncClient(timeout=timeout) as client:
+            response = await client.get("https://www.googleapis.com/customsearch/v1", params=query_params)
+        if response.status_code == httpx.codes.OK:
+            data = response.json()
+            results = [result["link"] for result in data["items"] if "items" in data]
         else:
-            logger.warning("An error occurred while searching! Status code: %s, response: %s", r.status_code, r.text)
+            logger.warning(
+                "An error occurred while searching! Status code: %s, response: %s", response.status_code, response.text
+            )
             results = []
         return results
