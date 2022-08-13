@@ -6,7 +6,8 @@ As of v0.26.0 Slack Machine supports AsyncIO using the
 tested. The goal is to eventually stop supporting the old version that uses the Slack RTM API, as the Events API is
 recommended by Slack for must use cases and asyncio has the potential to be much more performant.
 
-All the asyncio code is in the `machine.asyncio` package.
+All the asyncio code is in the `machine.asyncio` package. The async version of Slack Machine has been built from the
+ground up. It is AsyncIO from top to bottom and is fully type-hinted (and checked with MyPY)
 
 ## How to start using it
 
@@ -21,7 +22,7 @@ tokens. This means that you'll need to create a new app in Slack and get an app 
     --8<-- "docs/extra/manifest.yaml"
     ```
 
-4. Add the Slack API token to your `local_settings.py` like this:
+4. Add the Slack App and Bot tokens to your `local_settings.py` like this:
 
     ``` title="local_settings.py"
     SLACK_APP_TOKEN = "xapp-my-app-token"
@@ -34,7 +35,8 @@ tokens. This means that you'll need to create a new app in Slack and get an app 
 
 ## Choosing storage
 
-Async mode uses different storage backend then the old sync mode. The following 2 backends are available:
+As Async mode is fully built on AsyncIO, it uses different storage backends then the old sync mode. The following 2
+backends are available:
 
 - `machine.asyncio.storage.backends.memory.MemoryStorage`
 - `machine.asyncio.storage.backends.memory.RedisStorage`
