@@ -4,12 +4,15 @@ import calendar
 import base64
 import datetime
 import logging
+import typing
 from contextlib import AsyncExitStack
 from typing import Mapping, Any, cast
 
 import aioboto3
 from botocore.exceptions import ClientError
-from types_aiobotocore_dynamodb.service_resource import DynamoDBServiceResource, Table
+
+if typing.TYPE_CHECKING:
+    from types_aiobotocore_dynamodb.service_resource import DynamoDBServiceResource, Table
 
 
 from machine.asyncio.storage.backends.base import MachineBaseStorage
