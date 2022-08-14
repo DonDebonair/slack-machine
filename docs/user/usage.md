@@ -75,6 +75,7 @@ Slack Machine comes with a few simple built-in plugins:
 - **HelpPlugin**: responds to "help" with a list of all available commands and how they work. You can use "robot
   help" to learn the regexes that are used to match commands.
 - **MemePlugin**: lets the user generate memes based on templates and captions Uses [Memegen](https://memegen.link/)
+- **ImageSearchPlugin**: lets users search images and gifs using Google Custom Search
 - **RBACPlugin**: lets admins assign, revoke and list user roles. Is used when you want to
   [protect commands][protecting-commands]
 
@@ -153,6 +154,30 @@ Out of the box, Slack Machine provides 2 options for storage backend:
       by default, so "key1" gets stored under `SM:key1`)
 
   *Class*: `machine.storage.backends.redis.RedisStorage`
+
+- **DynamoDB**: this backend stores data in [DynamoDB](https://aws.amazon.com/dynamodb/). DynamoDB is a managed
+  NoSQL datastore on AWS that, among other things, allows for easy persistance of objects by key. The DynamoDB backend
+  requires either a set of valid AWS account credentials, or a locally running DynamoDB test bed, such as the one
+  included in [localstack](https://github.com/localstack/localstack). This backend requires the environment
+  variables or path-based AWS credentials that are normally used to access AWS services. The following are optional
+  parameters that can be set in your `local_settings.py` or `SM_` environment variable slack-machine settings:
+
+  Optional parameters:
+
+  - `DYNAMODB_ENDPOINT_URL`: specifies an optional alternate endpoint, for local bot testing
+  - `DYNAMODB_KEY_PREFIX`: an optional prefix to use within the key lookup. Defaults to `SM:`
+  - `DYNAMODB_TABLE_NAME`: specifies the table to use in DynamoDB. Defaults to `slack-machine-state`
+  - `DYNAMODB_CREATE_TABLE`: optionally -create- the table to be used in DynamoDB. Defaults to `False`
+  - `DYNAMODB_CLIENT`: if custom configuration is needed for the DynamoDB client, an optional
+    [`aioboto3`](https://pypi.org/project/aioboto3/) resource can be specified here
+
+  *Class*: `machine.async.storage.backends.dynamodb.DynamoDBStorage`
+
+!!! attention
+    This backend only exists in asyncio variant. A sync variant will not be built as the sync version of Slack Machine
+    will be deprecated soon
+
+---
 
 So if, for example, you want to configure Slack Machine to use Redis as
 a storage backend, with your Redis instance running on *localhost* on
