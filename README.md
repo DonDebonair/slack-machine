@@ -7,7 +7,7 @@
 [![CI Status](https://github.com/DonDebonair/slack-machine/actions/workflows/ci.yml/badge.svg)](https://github.com/DonDebonair/slack-machine/actions/workflows/ci.yml)
 [![image](https://codecov.io/gh/DonDebonair/slack-machine/branch/main/graph/badge.svg)](https://codecov.io/gh/DonDebonair/slack-machine)
 
-Slack Machine is a sexy, simple, yet powerful and extendable Slack bot.
+Slack Machine is a wonderful, simple, yet powerful and extendable Slack bot framework.
 More than just a bot, Slack Machine is a framework that helps you
 develop your Slack team into a ChatOps powerhouse.
 
