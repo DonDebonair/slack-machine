@@ -664,7 +664,7 @@ mkdocs = ">=1.1"
 
 [[package]]
 name = "mkdocs-material"
-version = "8.4.0"
+version = "8.4.1"
 description = "Documentation that simply works"
 category = "dev"
 optional = false
@@ -1726,7 +1726,7 @@ redis = ["redis", "hiredis"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "570eab9eafecc27af0c5c2892f05964539b258e1867ee816074d0bc367edaf26"
+content-hash = "d66515344b871ddc0e99d6629813ce1793d210589f6a8c3cae5219f32c0fa2b3"
 
 [metadata.files]
 aioboto3 = [
@@ -2226,8 +2226,8 @@ mkdocs-autorefs = [
     {file = "mkdocs_autorefs-0.4.1-py3-none-any.whl", hash = "sha256:a2248a9501b29dc0cc8ba4c09f4f47ff121945f6ce33d760f145d6f89d313f5b"},
 ]
 mkdocs-material = [
-    {file = "mkdocs-material-8.4.0.tar.gz", hash = "sha256:6c0a6e6cda8b43956e0c562374588160af8110584a1444f422b1cfd91930f9c7"},
-    {file = "mkdocs_material-8.4.0-py2.py3-none-any.whl", hash = "sha256:ef6641e1910d4f217873ac376b4594f3157dca3949901b88b4991ba8e5477577"},
+    {file = "mkdocs-material-8.4.1.tar.gz", hash = "sha256:92c70f94b2e1f8a05d9e05eec1c7af9dffc516802d69222329db89503c97b4f3"},
+    {file = "mkdocs_material-8.4.1-py2.py3-none-any.whl", hash = "sha256:319a6254819ce9d864ff79de48c43842fccfdebb43e4e6820eef75216f8cfb0a"},
 ]
 mkdocs-material-extensions = [
     {file = "mkdocs-material-extensions-1.0.3.tar.gz", hash = "sha256:bfd24dfdef7b41c312ede42648f9eb83476ea168ec163b613f9abd12bbfddba2"},
