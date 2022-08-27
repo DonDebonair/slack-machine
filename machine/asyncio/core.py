@@ -13,16 +13,21 @@ from clint.textui import puts, indent, colored
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
 
-from machine.settings import import_settings
-from machine.utils.collections import CaseInsensitiveDict
-from machine.utils.module_loading import import_string
-from machine.utils.text import show_valid, warn, error, announce, show_invalid
 from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.handlers import create_message_handler, create_generic_event_handler
 from machine.asyncio.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions
 from machine.asyncio.plugins.base import MachineBasePlugin
 from machine.asyncio.plugins.decorators import DecoratedPluginFunc, Metadata
 from machine.asyncio.storage import PluginStorage, MachineBaseStorage
+from machine.settings import import_settings
+from machine.utils.collections import CaseInsensitiveDict
+from machine.utils.module_loading import import_string
+from machine.utils.text import show_valid, warn, error, announce, show_invalid
+
+if sys.version_info >= (3, 9):
+    from zoneinfo import ZoneInfo  # pragma: no cover
+else:
+    from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +39,7 @@ class Machine:
     _settings: CaseInsensitiveDict | None
     _help: Manual
     _registered_actions: RegisteredActions
+    _tz: ZoneInfo
 
     def __init__(self, settings: CaseInsensitiveDict | None = None):
         if settings is not None:
@@ -95,7 +101,9 @@ class Machine:
         else:
             settings_module = os.environ.get("SM_SETTINGS_MODULE", "local_settings")
             self._settings, found_local_settings = import_settings(settings_module=settings_module)
+        self._tz = ZoneInfo(self._settings["TZ"])
         puts("Settings loaded!")
+
         return found_local_settings
 
     async def _setup_storage(self) -> None:
@@ -116,7 +124,7 @@ class Machine:
         )
 
         # Setup high-level Slack client for plugins
-        self._client = SlackClient(self._socket_mode_client)
+        self._client = SlackClient(self._socket_mode_client, self._tz)
         await self._client.setup()
 
     # TODO: factor out plugin registration in separate class / set of functions

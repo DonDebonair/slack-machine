@@ -87,8 +87,9 @@ async def handle_message(
 ) -> None:
     # Handle message subtype 'message_changed' to allow the bot to respond to edits
     if "subtype" in event and event["subtype"] == "message_changed":
+        channel_type = event["channel_type"]
         event = event["message"]
-        event["channel"] = event.get("channel", "")
+        event["channel_type"] = channel_type
     if "user" in event and not event["user"] == bot_id:
         listeners = list(plugin_actions.listen_to.values())
         respond_to_msg = _check_bot_mention(

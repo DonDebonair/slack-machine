@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Any, Sequence
 
 from slack_sdk.models.attachments import Attachment
@@ -14,6 +15,7 @@ from machine.asyncio.storage import PluginStorage
 from machine.asyncio.plugins import ee
 
 
+# TODO: fix docstrings (return types are wrong, replace RST with Markdown)
 class MachineBasePlugin:
     """Base class for all Slack Machine plugins
 
@@ -161,6 +163,43 @@ class MachineBasePlugin:
             **kwargs,
         )
 
+    async def say_scheduled(
+        self,
+        when: datetime,
+        channel: Channel | str,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        thread_ts: str | None = None,
+        **kwargs,
+    ) -> AsyncSlackResponse:
+        """Schedule a message to a channel
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
+        It behaves the same, but will send the message at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
+            message to. Can be public or private (group) channel, or DM channel.
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :param thread_ts: optional timestamp of thread, to send a message in that thread
+        :return: None
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        return await self._client.send_scheduled(
+            when,
+            channel,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            thread_ts=thread_ts,
+            **kwargs,
+        )
+
     async def react(self, channel: Channel | str, ts: str, emoji: str) -> AsyncSlackResponse:
         """React to a message in a channel
 
@@ -207,6 +246,35 @@ class MachineBasePlugin:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
         return await self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
+
+    async def send_dm_scheduled(
+        self,
+        when: datetime,
+        user: User | str,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        **kwargs,
+    ) -> AsyncSlackResponse:
+        """Schedule a Direct Message
+
+        This is the scheduled version of
+        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm`. It behaves the same, but
+        will send the DM at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :return: None
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        return await self._client.send_dm_scheduled(
+            when, user, text=text, attachments=attachments, blocks=blocks, **kwargs
+        )
 
     def emit(self, event: str, **kwargs: Any) -> None:
         """Emit an event
@@ -331,6 +399,40 @@ class Message:
             **kwargs,
         )
 
+    async def say_scheduled(
+        self,
+        when: datetime,
+        text: str,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        thread_ts: str | None = None,
+        **kwargs,
+    ) -> AsyncSlackResponse:
+        """Schedule a message
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
+        It behaves the same, but will send the message at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :param thread_ts: optional timestamp of thread, to send a message in that thread
+        :return: None
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        return await self._client.send_scheduled(
+            when,
+            self.channel.id,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            thread_ts=thread_ts,
+            **kwargs,
+        )
+
     async def reply(
         self,
         text: str | None = None,
@@ -376,6 +478,38 @@ class Message:
             text = self._create_reply(text)
             return await self.say(text, attachments=attachments, blocks=blocks, ephemeral=ephemeral, **kwargs)
 
+    async def reply_scheduled(
+        self,
+        when: datetime,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        in_thread: bool = False,
+        **kwargs,
+    ) -> AsyncSlackResponse:
+        """Schedule a reply and send it
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
+        It behaves the same, but will send the reply at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :param in_thread: ``True/False`` wether to reply to the original message in-thread
+        :return: None
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        if in_thread:
+            return await self.say_scheduled(
+                when, text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs
+            )
+        else:
+            text = self._create_reply(text)
+            return await self.say_scheduled(when, text, attachments=attachments, blocks=blocks, **kwargs)
+
     async def reply_dm(
         self,
         text: str | None = None,
@@ -404,6 +538,32 @@ class Message:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
         return await self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks, **kwargs)
+
+    async def reply_dm_scheduled(
+        self,
+        when: datetime,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        **kwargs,
+    ) -> AsyncSlackResponse:
+        """Schedule a DM reply and send it
+
+        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`.
+        It behaves the same, but will send the DM at the scheduled time.
+
+        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :return: None
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        """
+        return await self._client.send_dm_scheduled(
+            when, self.sender.id, text=text, attachments=attachments, blocks=blocks, **kwargs
+        )
 
     async def react(self, emoji: str) -> AsyncSlackResponse:
         """React to the original message
