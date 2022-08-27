@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import logging
+import sys
+from datetime import datetime
 from typing import Callable, Awaitable, Any
 
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
@@ -11,6 +13,12 @@ from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
 from machine.asyncio.models import Channel
 from machine.asyncio.models import User
+from machine.asyncio.utils.datetime import calculate_epoch
+
+if sys.version_info >= (3, 9):
+    from zoneinfo import ZoneInfo  # pragma: no cover
+else:
+    from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
 logger = logging.getLogger(__name__)
 
@@ -34,11 +42,13 @@ class SlackClient:
     _users: dict[str, User]
     _channels: dict[str, Channel]
     _bot_info: dict[str, Any]
+    _tz: ZoneInfo
 
-    def __init__(self, client: SocketModeClient):
+    def __init__(self, client: SocketModeClient, tz: ZoneInfo):
         self._client = client
         self._users = {}
         self._channels: dict[str, Channel] = {}
+        self._tz = tz
 
     def register_handler(
         self,
@@ -191,6 +201,15 @@ class SlackClient:
         else:
             return await self._client.web_client.chat_postMessage(channel=channel_id, text=text, **kwargs)
 
+    async def send_scheduled(
+        self, when: datetime, channel: Channel | str, text: str | None, **kwargs: Any
+    ) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        scheduled_ts = calculate_epoch(when, self._tz)
+        return await self._client.web_client.chat_scheduleMessage(
+            channel=channel_id, text=text, post_at=scheduled_ts, **kwargs
+        )
+
     async def react(self, channel: Channel | str, ts: str, emoji: str) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.reactions_add(name=emoji, channel=channel_id, timestamp=ts)
@@ -205,3 +224,14 @@ class SlackClient:
         dm_channel_id = await self.open_im(user_id)
 
         return await self._client.web_client.chat_postMessage(channel=dm_channel_id, text=text, as_user=True, **kwargs)
+
+    async def send_dm_scheduled(
+        self, when: datetime, user: User | str, text: str | None, **kwargs: Any
+    ) -> AsyncSlackResponse:
+        user_id = id_for_user(user)
+        dm_channel_id = await self.open_im(user_id)
+        scheduled_ts = calculate_epoch(when, self._tz)
+
+        return await self._client.web_client.chat_scheduleMessage(
+            channel=dm_channel_id, text=text, as_user=True, post_at=scheduled_ts, **kwargs
+        )
