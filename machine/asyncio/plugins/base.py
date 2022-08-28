@@ -288,6 +288,28 @@ class MachineBasePlugin:
         """
         ee.emit(event, self, **kwargs)
 
+    async def pin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
+        """Pin message
+
+        Pin a message in a channel
+
+        :param channel: channel to pin the message in
+        :param ts: timestamp of the message to pin
+        :return: response from the Slack Web API
+        """
+        return await self._client.pin_message(channel, ts)
+
+    async def unpin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
+        """Unpin message
+
+        Unpin a message that was previously pinned in a channel
+
+        :param channel: channel where the message is pinned that needs to be unpinned
+        :param ts: timestamp of the message to unpin
+        :return: response from the Slack Web API
+        """
+        return await self._client.unpin_message(channel, ts)
+
 
 class Message:
     """A message that was received by the bot
@@ -598,6 +620,13 @@ class Message:
         :return: bool
         """
         return "thread_ts" in self._msg_event
+
+    async def pin_message(self) -> AsyncSlackResponse:
+        """Pin message
+
+        Pin the current message in the channel it was posted in
+        """
+        return await self._client.pin_message(self.channel, self.ts)
 
     def __str__(self) -> str:
         if self.channel.is_im:
