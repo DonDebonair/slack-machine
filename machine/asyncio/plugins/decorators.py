@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import re
 from dataclasses import dataclass, field
+from datetime import datetime, tzinfo
 from typing import Callable, Union, cast, TypeVar, Awaitable, Any
 
 from typing_extensions import ParamSpec
@@ -21,6 +22,7 @@ class PluginActions:
     process: list[str] = field(default_factory=list)
     listen_to: list[re.Pattern[str]] = field(default_factory=list)
     respond_to: list[re.Pattern[str]] = field(default_factory=list)
+    schedule: dict[str, Any] | None = None
 
 
 @dataclass
@@ -113,6 +115,49 @@ def respond_to(
         return fn
 
     return respond_to_decorator
+
+
+def schedule(
+    year: int | str | None = None,
+    month: int | str | None = None,
+    day: int | str | None = None,
+    week: int | str | None = None,
+    day_of_week: int | str | None = None,
+    hour: int | str | None = None,
+    minute: int | str | None = None,
+    second: int | str | None = None,
+    start_date: datetime | str | None = None,
+    end_date: datetime | str | None = None,
+    timezone: tzinfo | str | None = None,
+) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
+    """Schedule a function to be executed according to a crontab-like schedule
+
+    The decorated function will be executed according to the schedule provided. Slack Machine uses
+    APScheduler under the hood for scheduling. For more information on the interpretation of the
+    provided parameters, see :class:`CronTrigger<apscheduler:apscheduler.triggers.cron.CronTrigger>`
+
+    :param int|str year: 4-digit year
+    :param int|str month: month (1-12)
+    :param int|str day: day of the (1-31)
+    :param int|str week: ISO week (1-53)
+    :param int|str day_of_week: number or name of weekday (0-6 or mon,tue,wed,thu,fri,sat,sun)
+    :param int|str hour: hour (0-23)
+    :param int|str minute: minute (0-59)
+    :param int|str second: second (0-59)
+    :param datetime|str start_date: earliest possible date/time to trigger on (inclusive)
+    :param datetime|str end_date: latest possible date/time to trigger on (inclusive)
+    :param datetime.tzinfo|str timezone: time zone to use for the date/time calculations (defaults
+        to scheduler timezone)
+    """
+    kwargs = locals()
+
+    def schedule_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        fn.metadata.plugin_actions.schedule = kwargs
+        return fn
+
+    return schedule_decorator
 
 
 # TODO: this will actually receive the `self` of the emitting plugin, not the plugin where this decorator is used

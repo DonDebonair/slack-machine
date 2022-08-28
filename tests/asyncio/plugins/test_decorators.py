@@ -2,7 +2,7 @@ import re
 import inspect
 import pytest
 from machine.asyncio.plugins import ee
-from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings, on
+from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings, on, schedule
 
 
 @pytest.fixture(scope="module")
@@ -27,6 +27,15 @@ def listen_to_f():
 def respond_to_f():
     @respond_to(r"hello-respond", re.IGNORECASE)
     def f(msg):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def schedule_f():
+    @schedule(hour="*/2", minute=30)
+    def f():
         pass
 
     return f
@@ -107,6 +116,15 @@ def test_respond_to(respond_to_f):
     assert hasattr(respond_to_f.metadata, "plugin_actions")
     assert hasattr(respond_to_f.metadata.plugin_actions, "respond_to")
     assert respond_to_f.metadata.plugin_actions.respond_to == [re.compile(r"hello-respond", re.IGNORECASE)]
+
+
+def test_schedule(schedule_f):
+    assert hasattr(schedule_f, "metadata")
+    assert hasattr(schedule_f.metadata, "plugin_actions")
+    assert hasattr(schedule_f.metadata.plugin_actions, "schedule")
+    assert schedule_f.metadata.plugin_actions.schedule is not None
+    assert schedule_f.metadata.plugin_actions.schedule["hour"] == "*/2"
+    assert schedule_f.metadata.plugin_actions.schedule["minute"] == 30
 
 
 def test_mulitple_decorators(multi_decorator_f):

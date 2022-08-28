@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Any, Sequence
+from typing import Any, Sequence, cast
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
@@ -167,11 +167,11 @@ class MachineBasePlugin:
         self,
         when: datetime,
         channel: Channel | str,
-        text: str | None = None,
+        text: str,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Schedule a message to a channel
 
@@ -251,10 +251,10 @@ class MachineBasePlugin:
         self,
         when: datetime,
         user: User | str,
-        text: str | None = None,
+        text: str,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Schedule a Direct Message
 
@@ -406,7 +406,7 @@ class Message:
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         thread_ts: str | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Schedule a message
 
@@ -481,11 +481,11 @@ class Message:
     async def reply_scheduled(
         self,
         when: datetime,
-        text: str | None = None,
+        text: str,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         in_thread: bool = False,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Schedule a reply and send it
 
@@ -507,7 +507,7 @@ class Message:
                 when, text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs
             )
         else:
-            text = self._create_reply(text)
+            text = cast(str, self._create_reply(text))
             return await self.say_scheduled(when, text, attachments=attachments, blocks=blocks, **kwargs)
 
     async def reply_dm(
@@ -542,10 +542,10 @@ class Message:
     async def reply_dm_scheduled(
         self,
         when: datetime,
-        text: str | None = None,
+        text: str,
         attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
         blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
-        **kwargs,
+        **kwargs: Any,
     ) -> AsyncSlackResponse:
         """Schedule a DM reply and send it
 
