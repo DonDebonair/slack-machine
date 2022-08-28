@@ -9,6 +9,7 @@ import sys
 from typing import Callable, cast, Awaitable
 
 import dill
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from clint.textui import puts, indent, colored
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
@@ -40,6 +41,7 @@ class Machine:
     _help: Manual
     _registered_actions: RegisteredActions
     _tz: ZoneInfo
+    _scheduler: AsyncIOScheduler
 
     def __init__(self, settings: CaseInsensitiveDict | None = None):
         if settings is not None:
@@ -75,6 +77,9 @@ class Machine:
 
             # Setup Slack clients
             await self._setup_slack_clients()
+
+            # Setup scheduling
+            self._scheduler = AsyncIOScheduler(timezone=self._tz)
 
             # Load plugins
             await self._load_plugins()
@@ -220,6 +225,16 @@ class Machine:
             key = f"{fq_fn_name}-{event}"
             self._registered_actions.process[event][key] = fn
 
+        if metadata.plugin_actions.schedule is not None:
+            self._scheduler.add_job(
+                fq_fn_name,
+                trigger="cron",
+                args=[cls_instance],
+                id=fq_fn_name,
+                replace_existing=True,
+                **metadata.plugin_actions.schedule,
+            )
+
     def _register_message_handler(
         self,
         type_: str,
@@ -276,6 +291,10 @@ class Machine:
 
         with indent(4):
             show_valid("Connected to Slack")
+
+        self._scheduler.start()
+        with indent(4):
+            show_valid("Scheduler started")
 
         # Just not to stop this process
         await asyncio.sleep(float("inf"))

@@ -202,7 +202,7 @@ class SlackClient:
             return await self._client.web_client.chat_postMessage(channel=channel_id, text=text, **kwargs)
 
     async def send_scheduled(
-        self, when: datetime, channel: Channel | str, text: str | None, **kwargs: Any
+        self, when: datetime, channel: Channel | str, text: str, **kwargs: Any
     ) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         scheduled_ts = calculate_epoch(when, self._tz)
@@ -225,9 +225,7 @@ class SlackClient:
 
         return await self._client.web_client.chat_postMessage(channel=dm_channel_id, text=text, as_user=True, **kwargs)
 
-    async def send_dm_scheduled(
-        self, when: datetime, user: User | str, text: str | None, **kwargs: Any
-    ) -> AsyncSlackResponse:
+    async def send_dm_scheduled(self, when: datetime, user: User | str, text: str, **kwargs: Any) -> AsyncSlackResponse:
         user_id = id_for_user(user)
         dm_channel_id = await self.open_im(user_id)
         scheduled_ts = calculate_epoch(when, self._tz)
