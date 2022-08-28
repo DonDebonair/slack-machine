@@ -233,3 +233,11 @@ class SlackClient:
         return await self._client.web_client.chat_scheduleMessage(
             channel=dm_channel_id, text=text, as_user=True, post_at=scheduled_ts, **kwargs
         )
+
+    async def pin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.pins_add(channel=channel_id, timestamp=ts)
+
+    async def unpin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.pins_remove(channel=channel_id, timestamp=ts)
