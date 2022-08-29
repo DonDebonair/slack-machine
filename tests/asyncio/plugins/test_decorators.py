@@ -2,7 +2,15 @@ import re
 import inspect
 import pytest
 from machine.asyncio.plugins import ee
-from machine.asyncio.plugins.decorators import process, listen_to, respond_to, required_settings, on, schedule
+from machine.asyncio.plugins.decorators import (
+    process,
+    listen_to,
+    respond_to,
+    required_settings,
+    on,
+    schedule,
+    MatcherConfig,
+)
 
 
 @pytest.fixture(scope="module")
@@ -25,7 +33,7 @@ def listen_to_f():
 
 @pytest.fixture(scope="module")
 def respond_to_f():
-    @respond_to(r"hello-respond", re.IGNORECASE)
+    @respond_to(r"hello-respond", re.IGNORECASE, handle_message_changed=True)
     def f(msg):
         pass
 
@@ -108,14 +116,18 @@ def test_listen_to(listen_to_f):
     assert hasattr(listen_to_f, "metadata")
     assert hasattr(listen_to_f.metadata, "plugin_actions")
     assert hasattr(listen_to_f.metadata.plugin_actions, "listen_to")
-    assert listen_to_f.metadata.plugin_actions.listen_to == [re.compile(r"hello-listen", re.IGNORECASE)]
+    assert listen_to_f.metadata.plugin_actions.listen_to == [
+        MatcherConfig(regex=re.compile(r"hello-listen", re.IGNORECASE), handle_changed_message=False)
+    ]
 
 
 def test_respond_to(respond_to_f):
     assert hasattr(respond_to_f, "metadata")
     assert hasattr(respond_to_f.metadata, "plugin_actions")
     assert hasattr(respond_to_f.metadata.plugin_actions, "respond_to")
-    assert respond_to_f.metadata.plugin_actions.respond_to == [re.compile(r"hello-respond", re.IGNORECASE)]
+    assert respond_to_f.metadata.plugin_actions.respond_to == [
+        MatcherConfig(regex=re.compile(r"hello-respond", re.IGNORECASE), handle_changed_message=True)
+    ]
 
 
 def test_schedule(schedule_f):
@@ -133,8 +145,12 @@ def test_mulitple_decorators(multi_decorator_f):
     assert hasattr(multi_decorator_f.metadata.plugin_actions, "respond_to")
     assert hasattr(multi_decorator_f.metadata.plugin_actions, "listen_to")
     assert hasattr(multi_decorator_f.metadata.plugin_actions, "process")
-    assert multi_decorator_f.metadata.plugin_actions.respond_to == [re.compile(r"hello-respond", re.IGNORECASE)]
-    assert multi_decorator_f.metadata.plugin_actions.listen_to == [re.compile(r"hello-listen", re.IGNORECASE)]
+    assert multi_decorator_f.metadata.plugin_actions.respond_to == [
+        MatcherConfig(regex=re.compile(r"hello-respond", re.IGNORECASE), handle_changed_message=False)
+    ]
+    assert multi_decorator_f.metadata.plugin_actions.listen_to == [
+        MatcherConfig(regex=re.compile(r"hello-listen", re.IGNORECASE), handle_changed_message=False)
+    ]
     assert multi_decorator_f.metadata.plugin_actions.process == []
 
 

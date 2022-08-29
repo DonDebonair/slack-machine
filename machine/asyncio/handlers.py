@@ -88,8 +88,11 @@ async def handle_message(
     # Handle message subtype 'message_changed' to allow the bot to respond to edits
     if "subtype" in event and event["subtype"] == "message_changed":
         channel_type = event["channel_type"]
+        channel = event["channel"]
         event = event["message"]
         event["channel_type"] = channel_type
+        event["channel"] = channel
+        event["subtype"] = "message_changed"
     if "user" in event and not event["user"] == bot_id:
         listeners = list(plugin_actions.listen_to.values())
         respond_to_msg = _check_bot_mention(
@@ -147,6 +150,8 @@ async def dispatch_listeners(
     handler_funcs = []
     for handler in message_handlers:
         matcher = handler.regex
+        if "subtype" in event and event["subtype"] == "message_changed" and not handler.handle_message_changed:
+            continue
         match = matcher.search(event.get("text", ""))
         if match:
             message = _gen_message(event, handler.class_name, slack_client)
