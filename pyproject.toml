@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "slack-machine"
-version = "0.28.1"
+version = "0.28.2"
 description = "A wonderful, simple, yet powerful and extendable Slack bot framework"
 authors = ["Daan Debie <daan@dv.email>"]
 license = "MIT"
