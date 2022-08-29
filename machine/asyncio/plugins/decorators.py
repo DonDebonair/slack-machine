@@ -18,10 +18,16 @@ logger = logging.getLogger(__name__)
 
 
 @dataclass
+class MatcherConfig:
+    regex: re.Pattern[str]
+    handle_changed_message: bool
+
+
+@dataclass
 class PluginActions:
     process: list[str] = field(default_factory=list)
-    listen_to: list[re.Pattern[str]] = field(default_factory=list)
-    respond_to: list[re.Pattern[str]] = field(default_factory=list)
+    listen_to: list[MatcherConfig] = field(default_factory=list)
+    respond_to: list[MatcherConfig] = field(default_factory=list)
     schedule: dict[str, Any] | None = None
 
 
@@ -66,7 +72,7 @@ def process(slack_event_type: str) -> Callable[[Callable[P, R]], DecoratedPlugin
 
 
 def listen_to(
-    regex: str, flags: re.RegexFlag | int = re.IGNORECASE
+    regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False
 ) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Listen to messages matching a regex pattern
 
@@ -78,20 +84,21 @@ def listen_to(
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching
+    :param handle_message_changed: if changed messages should trigger the decorated function
     :return: wrapped method
     """
 
     def listen_to_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
         fn = cast(DecoratedPluginFunc, f)
         fn.metadata = getattr(f, "metadata", Metadata())
-        fn.metadata.plugin_actions.listen_to.append(re.compile(regex, flags))
+        fn.metadata.plugin_actions.listen_to.append(MatcherConfig(re.compile(regex, flags), handle_message_changed))
         return fn
 
     return listen_to_decorator
 
 
 def respond_to(
-    regex: str, flags: re.RegexFlag | int = re.IGNORECASE
+    regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False
 ) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Listen to messages mentioning the bot and matching a regex pattern
 
@@ -105,13 +112,14 @@ def respond_to(
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching
+    :param handle_message_changed: if changed messages should trigger the decorated function
     :return: wrapped method
     """
 
     def respond_to_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
         fn = cast(DecoratedPluginFunc, f)
         fn.metadata = getattr(f, "metadata", Metadata())
-        fn.metadata.plugin_actions.respond_to.append(re.compile(regex, flags))
+        fn.metadata.plugin_actions.respond_to.append(MatcherConfig(re.compile(regex, flags), handle_message_changed))
         return fn
 
     return respond_to_decorator

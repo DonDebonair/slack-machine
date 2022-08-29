@@ -24,6 +24,7 @@ class MessageHandler:
     class_name: str
     function: Callable[..., Awaitable[None]]
     regex: re.Pattern[str]
+    handle_message_changed: bool
 
 
 @dataclass

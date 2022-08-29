@@ -4,7 +4,6 @@ import asyncio
 import inspect
 import logging
 import os
-import re
 import sys
 from typing import Callable, cast, Awaitable
 
@@ -18,7 +17,7 @@ from machine.asyncio.clients.slack import SlackClient
 from machine.asyncio.handlers import create_message_handler, create_generic_event_handler
 from machine.asyncio.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions
 from machine.asyncio.plugins.base import MachineBasePlugin
-from machine.asyncio.plugins.decorators import DecoratedPluginFunc, Metadata
+from machine.asyncio.plugins.decorators import DecoratedPluginFunc, Metadata, MatcherConfig
 from machine.asyncio.storage import PluginStorage, MachineBaseStorage
 from machine.settings import import_settings
 from machine.utils.collections import CaseInsensitiveDict
@@ -200,24 +199,24 @@ class Machine:
         fq_fn_name = f"{plugin_class_name}.{fn_name}"
         if fn.__doc__:
             self._help.human[class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
-        for regex in metadata.plugin_actions.listen_to:
+        for matcher_config in metadata.plugin_actions.listen_to:
             self._register_message_handler(
                 type_="listen_to",
                 class_=cls_instance,
                 class_name=plugin_class_name,
                 fq_fn_name=fq_fn_name,
                 function=fn,
-                regex=regex,
+                matcher_config=matcher_config,
                 class_help=class_help,
             )
-        for regex in metadata.plugin_actions.respond_to:
+        for matcher_config in metadata.plugin_actions.respond_to:
             self._register_message_handler(
                 type_="respond_to",
                 class_=cls_instance,
                 class_name=plugin_class_name,
                 fq_fn_name=fq_fn_name,
                 function=fn,
-                regex=regex,
+                matcher_config=matcher_config,
                 class_help=class_help,
             )
         for event in metadata.plugin_actions.process:
@@ -242,13 +241,19 @@ class Machine:
         class_name: str,
         fq_fn_name: str,
         function: Callable[..., Awaitable[None]],
-        regex: re.Pattern,
+        matcher_config: MatcherConfig,
         class_help: str,
     ) -> None:
-        handler = MessageHandler(class_=class_, class_name=class_name, function=function, regex=regex)
-        key = f"{fq_fn_name}-{regex.pattern}"
+        handler = MessageHandler(
+            class_=class_,
+            class_name=class_name,
+            function=function,
+            regex=matcher_config.regex,
+            handle_message_changed=matcher_config.handle_changed_message,
+        )
+        key = f"{fq_fn_name}-{matcher_config.regex.pattern}"
         getattr(self._registered_actions, type_)[key] = handler
-        self._help.robot[class_help].append(self._parse_robot_help(regex, type_))
+        self._help.robot[class_help].append(self._parse_robot_help(matcher_config, type_))
 
     @staticmethod
     def _parse_human_help(doc: str) -> HumanHelp:
@@ -262,11 +267,12 @@ class Machine:
         return HumanHelp(command=command, help=cmd_help)
 
     @staticmethod
-    def _parse_robot_help(regex: re.Pattern, action: str) -> str:
+    def _parse_robot_help(matcher_config: MatcherConfig, action: str) -> str:
+        handle_message_changed_suffix = " [includes changed messages]" if matcher_config.handle_changed_message else ""
         if action == "respond_to":
-            return f"@botname {regex.pattern}"
+            return f"@botname {matcher_config.regex.pattern}{handle_message_changed_suffix}"
         else:
-            return regex.pattern
+            return f"{matcher_config.regex.pattern}{handle_message_changed_suffix}"
 
     async def run(self) -> None:
         announce("\nStarting Slack Machine:")
