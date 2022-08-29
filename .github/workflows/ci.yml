@@ -37,12 +37,7 @@ jobs:
       if: ${{ matrix.python-version == '3.10' }}
       with:
         fail_ci_if_error: true
-    - name: Upload Unit Test Results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: Unit test results ${{ matrix.python-version }}
-        path: pytest.xml
+
   lint:
     name: linting
     runs-on: ubuntu-latest
@@ -55,13 +50,3 @@ jobs:
       - uses: psf/black@stable
       - name: flake8 Lint
         uses: py-actions/flake8@v2
-  upload-event-file:
-    name: Upload Event File
-    needs: tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Upload
-        uses: actions/upload-artifact@v3
-        with:
-          name: Event File
-          path: ${{ github.event_path }}
