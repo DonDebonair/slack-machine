@@ -1619,7 +1619,7 @@ python-versions = ">=3.7,<4.0"
 
 [[package]]
 name = "types-redis"
-version = "4.3.19"
+version = "4.3.20"
 description = "Typing stubs for redis"
 category = "dev"
 optional = false
@@ -1759,7 +1759,7 @@ redis = ["redis", "hiredis"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "46c57ab317a95218d5f201767ad8164a790e0960681c628692cf802416d40d69"
+content-hash = "ce9609ec9d85a5918ee55b4d4fa89a52e3befaf4bc53f141474bba07773671ac"
 
 [metadata.files]
 aioboto3 = [
@@ -2598,8 +2598,8 @@ types-awscrt = [
     {file = "types_awscrt-0.14.0-py3-none-any.whl", hash = "sha256:5887a007f020c3950861842f7d98a06a922cb4a2290fa0e5df71fb271a4ab9c6"},
 ]
 types-redis = [
-    {file = "types-redis-4.3.19.tar.gz", hash = "sha256:c881ffb94bd47dca21ed503328544a56bb315851575eebb27fb371bff735844a"},
-    {file = "types_redis-4.3.19-py3-none-any.whl", hash = "sha256:c74262197487a65e3f02db37d3f0e0f3bb2d5d370f7e6ba390814e865a45e56e"},
+    {file = "types-redis-4.3.20.tar.gz", hash = "sha256:74ed02945470ddea2dd21447c185dabb3169e5a5328d26b25cf3547d949b8e04"},
+    {file = "types_redis-4.3.20-py3-none-any.whl", hash = "sha256:b22e0f5a18b98b6a197dd403daed52a22cb76f50e3cbd7ddc539196af52ec23e"},
 ]
 types-requests = [
     {file = "types-requests-2.28.10.tar.gz", hash = "sha256:97d8f40aa1ffe1e58c3726c77d63c182daea9a72d9f1fa2cafdea756b2a19f2c"},
