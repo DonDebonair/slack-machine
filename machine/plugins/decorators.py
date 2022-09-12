@@ -1,11 +1,54 @@
+from __future__ import annotations
+
+import logging
 import re
+from dataclasses import dataclass, field
+from datetime import datetime, tzinfo
+from typing import Callable, Union, cast, TypeVar, Awaitable, Any
 
-from blinker import signal
+from typing_extensions import ParamSpec
+from typing_extensions import Protocol
 
-from machine.plugins.builtin.admin_utils import matching_roles_by_user_id, notify_admins
+from machine.plugins import ee
+from machine.plugins.admin_utils import matching_roles_by_user_id, RoleCombinator
+from machine.plugins.base import MachineBasePlugin, Message
 
 
-def process(slack_event_type):
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class MatcherConfig:
+    regex: re.Pattern[str]
+    handle_changed_message: bool
+
+
+@dataclass
+class PluginActions:
+    process: list[str] = field(default_factory=list)
+    listen_to: list[MatcherConfig] = field(default_factory=list)
+    respond_to: list[MatcherConfig] = field(default_factory=list)
+    schedule: dict[str, Any] | None = None
+
+
+@dataclass
+class Metadata:
+    plugin_actions: PluginActions = field(default_factory=PluginActions)
+    required_settings: list[str] = field(default_factory=list)
+
+
+P = ParamSpec("P")
+R = TypeVar("R", covariant=True, bound=Union[Awaitable[None], MachineBasePlugin])
+
+
+class DecoratedPluginFunc(Protocol[P, R]):
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> R:
+        ...
+
+    metadata: Metadata
+
+
+def process(slack_event_type: str) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Process Slack events of a specific type
 
     This decorator will enable a Plugin method to process `Slack events`_ of a specific type. The
@@ -19,17 +62,18 @@ def process(slack_event_type):
     :return: wrapped method
     """
 
-    def process_decorator(f):
-        f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["process"] = f.metadata["plugin_actions"].get("process", {})
-        f.metadata["plugin_actions"]["process"]["event_type"] = slack_event_type
-        return f
+    def process_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        fn.metadata.plugin_actions.process.append(slack_event_type)
+        return fn
 
     return process_decorator
 
 
-def listen_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
+def listen_to(
+    regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False
+) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Listen to messages matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that match a regex pattern.
@@ -40,25 +84,22 @@ def listen_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching
-    :param handle_changed_message: should changed messages be handled by this function
+    :param handle_message_changed: if changed messages should trigger the decorated function
     :return: wrapped method
     """
 
-    def listen_to_decorator(f):
-        config = {"regex": re.compile(regex, flags), "handle_changed_message": handle_changed_message}
-        f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["listen_to"] = f.metadata["plugin_actions"].get("listen_to", {})
-        f.metadata["plugin_actions"]["listen_to"]["configs"] = f.metadata["plugin_actions"]["listen_to"].get(
-            "configs", []
-        )
-        f.metadata["plugin_actions"]["listen_to"]["configs"].append(config)
-        return f
+    def listen_to_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        fn.metadata.plugin_actions.listen_to.append(MatcherConfig(re.compile(regex, flags), handle_message_changed))
+        return fn
 
     return listen_to_decorator
 
 
-def respond_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
+def respond_to(
+    regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False
+) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Listen to messages mentioning the bot and matching a regex pattern
 
     This decorator will enable a Plugin method to listen to messages that are directed to the bot
@@ -71,37 +112,32 @@ def respond_to(regex, flags=re.IGNORECASE, handle_changed_message=False):
 
     :param regex: regex pattern to listen for
     :param flags: regex flags to apply when matching
-    :param handle_changed_message: should changed messages be handled by this function
+    :param handle_message_changed: if changed messages should trigger the decorated function
     :return: wrapped method
     """
 
-    def respond_to_decorator(f):
-        config = {"regex": re.compile(regex, flags), "handle_changed_message": handle_changed_message}
-        f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["respond_to"] = f.metadata["plugin_actions"].get("respond_to", {})
-        f.metadata["plugin_actions"]["respond_to"]["configs"] = f.metadata["plugin_actions"]["respond_to"].get(
-            "configs", []
-        )
-        f.metadata["plugin_actions"]["respond_to"]["configs"].append(config)
-        return f
+    def respond_to_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        fn.metadata.plugin_actions.respond_to.append(MatcherConfig(re.compile(regex, flags), handle_message_changed))
+        return fn
 
     return respond_to_decorator
 
 
 def schedule(
-    year=None,
-    month=None,
-    day=None,
-    week=None,
-    day_of_week=None,
-    hour=None,
-    minute=None,
-    second=None,
-    start_date=None,
-    end_date=None,
-    timezone=None,
-):
+    year: int | str | None = None,
+    month: int | str | None = None,
+    day: int | str | None = None,
+    week: int | str | None = None,
+    day_of_week: int | str | None = None,
+    hour: int | str | None = None,
+    minute: int | str | None = None,
+    second: int | str | None = None,
+    start_date: datetime | str | None = None,
+    end_date: datetime | str | None = None,
+    timezone: tzinfo | str | None = None,
+) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Schedule a function to be executed according to a crontab-like schedule
 
     The decorated function will be executed according to the schedule provided. Slack Machine uses
@@ -123,16 +159,17 @@ def schedule(
     """
     kwargs = locals()
 
-    def schedule_decorator(f):
-        f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["schedule"] = kwargs
-        return f
+    def schedule_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        fn.metadata.plugin_actions.schedule = kwargs
+        return fn
 
     return schedule_decorator
 
 
-def on(event):
+# TODO: this will actually receive the `self` of the emitting plugin, not the plugin where this decorator is used
+def on(event: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """Listen for an event
 
     The decorated function will be called whenever a plugin (or Slack Machine itself) emits an
@@ -141,15 +178,14 @@ def on(event):
     :param event: name of the event to listen for. Event names are global
     """
 
-    def on_decorator(f):
-        e = signal(event)
-        e.connect(f)
+    def on_decorator(f: Callable[P, R]) -> Callable[P, R]:
+        ee.add_listener(event, f)
         return f
 
     return on_decorator
 
 
-def required_settings(settings):
+def required_settings(settings: list[str] | str) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Specify a required setting for a plugin or plugin method
 
     The settings specified with this decorator will be added to the required settings for the
@@ -159,39 +195,22 @@ def required_settings(settings):
     :param settings: settings that are required (can be list of strings, or single string)
     """
 
-    def required_settings_decorator(f_or_cls):
-        f_or_cls.metadata = getattr(f_or_cls, "metadata", {})
-        f_or_cls.metadata["required_settings"] = f_or_cls.metadata.get("required_settings", [])
+    def required_settings_decorator(f_or_cls: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        casted_f_or_cls = cast(DecoratedPluginFunc, f_or_cls)
+        casted_f_or_cls.metadata = getattr(f_or_cls, "metadata", Metadata())
         if isinstance(settings, list):
-            f_or_cls.metadata["required_settings"].extend(settings)
+            casted_f_or_cls.metadata.required_settings.extend(settings)
         elif isinstance(settings, str):
-            f_or_cls.metadata["required_settings"].append(settings)
-        return f_or_cls
+            casted_f_or_cls.metadata.required_settings.append(settings)
+        return casted_f_or_cls
 
     return required_settings_decorator
 
 
-def route(path, **kwargs):
-    """Define a http route that should trigger the function
-
-    The parameters to this decorator will be passed to the ``route`` function of Bottle
-
-    :param path: path to match
-    :param kwargs: additional keyword arguments to be passed to Bottle
-    """
-
-    def route_decorator(f):
-        f.metadata = getattr(f, "metadata", {})
-        f.metadata["plugin_actions"] = f.metadata.get("plugin_actions", {})
-        f.metadata["plugin_actions"]["route"] = f.metadata["plugin_actions"].get("route", [])
-        kwargs["path"] = path
-        f.metadata["plugin_actions"]["route"].append(kwargs)
-        return f
-
-    return route_decorator
-
-
-def require_any_role(required_roles=None):
+# TODO: write tests for this decorator
+def require_any_role(
+    required_roles: list[str],
+) -> Callable[[Callable[..., Awaitable[None]]], Callable[..., Awaitable[None]]]:
     """Specify required roles for a plugin method
 
     To use the plugin method where this decorator is applied, the user must have
@@ -200,32 +219,37 @@ def require_any_role(required_roles=None):
     :param required_roles: list of roles required to use the plugin method
     """
 
-    required_roles = required_roles if required_roles else []
-
-    def middle(func):
-        def wrapper(self, msg, **kwargs):
-            if matching_roles_by_user_id(self, msg.sender.id, required_roles):
-                return func(self, msg, **kwargs)
+    def middle(func: Callable[..., Awaitable[None]]) -> Callable[..., Awaitable[None]]:
+        async def wrapper(self: MachineBasePlugin, msg: Message, **kwargs: Any) -> None:
+            if await matching_roles_by_user_id(self, msg.sender.id, required_roles):
+                logger.debug(f"User {msg.sender} has one of the required roles {required_roles}")
+                return await func(self, msg, **kwargs)
             else:
-                msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
-                role_string = ", ".join([f"`{role}`" for role in required_roles])
-                notify_admins(
+                logger.debug(f"User {msg.sender} does not have any of the required roles {required_roles}")
+                ee.emit(
+                    "unauthorized-access",
                     self,
-                    "Attempt to execute unauthorized command",
-                    f"User {msg.at_sender} tried to execute the following command:"
-                    f"```{msg.text}``` but lacks _one_ of these roles: {role_string}",
+                    message=msg,
+                    required_roles=required_roles,
+                    combinator=RoleCombinator.ANY,
                 )
+                await msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
+                return None
 
         # Copy any existing docs and metadata from container function to
         # generated function
         wrapper.__doc__ = func.__doc__
-        wrapper.metadata = getattr(func, "metadata", {})
-        return wrapper
+        casted_wrapper = cast(DecoratedPluginFunc, wrapper)
+        casted_wrapper.metadata = getattr(func, "metadata", Metadata())
+        return casted_wrapper
 
     return middle
 
 
-def require_all_roles(required_roles=None):
+# TODO: write tests for this decorator
+def require_all_roles(
+    required_roles: list[str],
+) -> Callable[[Callable[..., Awaitable[None]]], Callable[..., Awaitable[None]]]:
     """Specify required roles for a plugin method
 
     To use the plugin method where this decorator is applied, the user must have
@@ -234,27 +258,28 @@ def require_all_roles(required_roles=None):
     :param required_roles: list of roles required to use the plugin method
     """
 
-    required_roles = required_roles if required_roles else []
-
-    def middle(func):
-        def wrapper(self, msg, **kwargs):
-            if matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
-                return func(self, msg, **kwargs)
+    def middle(func: Callable[..., Awaitable[None]]) -> Callable[..., Awaitable[None]]:
+        async def wrapper(self: MachineBasePlugin, msg: Message, **kwargs: Any) -> None:
+            if await matching_roles_by_user_id(self, msg.sender.id, required_roles) == len(required_roles):
+                logger.debug(f"User {msg.sender} has all of the required roles {required_roles}")
+                return await func(self, msg, **kwargs)
             else:
-                msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
-                role_string = ", ".join([f"`{role}`" for role in required_roles])
-                notify_admins(
+                logger.debug(f"User {msg.sender} does not have all of the required roles {required_roles}")
+                ee.emit(
+                    "unauthorized-access",
                     self,
-                    "Attempt to execute unauthorized command",
-                    f"User {msg.at_sender} tried to execute the following command:"
-                    f"```{msg.text}``` but lacks _all_ of these roles: {role_string}",
+                    message=msg,
+                    required_roles=required_roles,
+                    combinator=RoleCombinator.ALL,
                 )
-                return
+                await msg.say("I'm sorry, but you don't have access to that command", ephemeral=True)
+                return None
 
         # Copy any existing docs and metadata from container function to
         # generated function
         wrapper.__doc__ = func.__doc__
-        wrapper.metadata = getattr(func, "metadata", {})
-        return wrapper
+        casted_wrapper = cast(DecoratedPluginFunc, wrapper)
+        casted_wrapper.metadata = getattr(func, "metadata", Metadata())
+        return casted_wrapper
 
     return middle

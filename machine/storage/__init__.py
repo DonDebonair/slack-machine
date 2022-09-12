@@ -1,6 +1,11 @@
+from __future__ import annotations
+
+from datetime import timedelta
+from typing import Any
+
 import dill
 
-from machine.clients.singletons.storage import Storage
+from machine.storage.backends.base import MachineBaseStorage
 from machine.utils import sizeof_fmt
 
 
@@ -15,16 +20,17 @@ class PluginStorage:
     .. _Dill: https://pypi.python.org/pypi/dill
     """
 
-    def __init__(self, fq_plugin_name):
+    def __init__(self, fq_plugin_name: str, storage_backend: MachineBaseStorage):
         self._fq_plugin_name = fq_plugin_name
+        self._storage = storage_backend
 
-    def _gen_unique_key(self, key):
+    def _gen_unique_key(self, key: str) -> str:
         return f"{self._fq_plugin_name}:{key}"
 
-    def _namespace_key(self, key, shared):
+    def _namespace_key(self, key: str, shared: bool = False) -> str:
         return key if shared else self._gen_unique_key(key)
 
-    def set(self, key, value, expires=None, shared=False):
+    async def set(self, key: str, value: Any, expires: int | timedelta | None = None, shared: bool = False) -> None:
         """Store or update a value by key
 
         :param key: the key under which to store the data
@@ -33,11 +39,12 @@ class PluginStorage:
         :param shared: ``True/False`` wether this data should be shared by other plugins.  Use with
             care, because it pollutes the global namespace of the storage.
         """
+        expires = int(expires.total_seconds()) if isinstance(expires, timedelta) else expires
         namespaced_key = self._namespace_key(key, shared)
         pickled_value = dill.dumps(value)
-        Storage.get_instance().set(namespaced_key, pickled_value, expires)
+        await self._storage.set(namespaced_key, pickled_value, expires)
 
-    def get(self, key, shared=False):
+    async def get(self, key: str, shared: bool = False) -> Any | None:
         """Retrieve data by key
 
         :param key: key for the data to retrieve
@@ -45,13 +52,13 @@ class PluginStorage:
         :return: the data, or ``None`` if the key cannot be found/has expired
         """
         namespaced_key = self._namespace_key(key, shared)
-        value = Storage.get_instance().get(namespaced_key)
+        value = await self._storage.get(namespaced_key)
         if value:
             return dill.loads(value)
         else:
             return None
 
-    def has(self, key, shared=False):
+    async def has(self, key: str, shared: bool = False) -> bool:
         """Check if the key exists in storage
 
         Note: this class implements ``__contains__`` so instead of calling
@@ -65,9 +72,9 @@ class PluginStorage:
             expired.
         """
         namespaced_key = self._namespace_key(key, shared)
-        return Storage.get_instance().has(namespaced_key)
+        return await self._storage.has(namespaced_key)
 
-    def delete(self, key, shared=False):
+    async def delete(self, key: str, shared: bool = False) -> None:
         """Remove a key and its data from storage
 
         :param key: key to remove
@@ -75,22 +82,20 @@ class PluginStorage:
             namespace
         """
         namespaced_key = self._namespace_key(key, shared)
-        Storage.get_instance().delete(namespaced_key)
+        await self._storage.delete(namespaced_key)
 
-    def get_storage_size(self):
+    async def get_storage_size(self) -> int:
         """Calculate the total size of the storage
 
         :return: the total size of the storage in bytes (integer)
         """
-        return Storage.get_instance().size()
+        return await self._storage.size()
 
-    def get_storage_size_human(self):
+    async def get_storage_size_human(self) -> str:
         """Calculate the total size of the storage in human readable format
 
         :return: the total size of the storage in a human readable string, rounded to the nearest
             applicable division. eg. B for Bytes, KiB for Kilobytes, MiB for Megabytes etc.
         """
-        return sizeof_fmt(self.get_storage_size())
-
-    def __contains__(self, key):
-        return self.has(key, False)
+        size = await self.get_storage_size()
+        return sizeof_fmt(size)

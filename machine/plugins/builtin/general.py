@@ -1,5 +1,5 @@
 import logging
-from machine.plugins.base import MachineBasePlugin
+from machine.plugins.base import MachineBasePlugin, Message
 from machine.plugins.decorators import listen_to, respond_to
 
 logger = logging.getLogger(__name__)
@@ -9,23 +9,23 @@ class PingPongPlugin(MachineBasePlugin):
     """Playing Ping Pong"""
 
     @listen_to(r"^ping$")
-    def listen_to_ping(self, msg):
+    async def listen_to_ping(self, msg: Message) -> None:
         """ping: serving the ball"""
         logger.debug("Ping received with msg: %s", msg)
-        msg.say("pong")
+        await msg.say("pong")
 
     @listen_to(r"^pong$")
-    def listen_to_pong(self, msg):
+    async def listen_to_pong(self, msg: Message) -> None:
         """pong: returning the ball"""
         logger.debug("Pong received with msg: %s", msg)
-        msg.say("ping")
+        await msg.say("ping")
 
 
 class HelloPlugin(MachineBasePlugin):
     """Greetings"""
 
     @respond_to(r"^(?P<greeting>hi|hello)")
-    def greet(self, msg, greeting):
+    async def greet(self, msg: Message, greeting: str) -> None:
         """hi/hello: say hello to the little guy"""
         logger.debug("Greeting '%s' received", greeting)
-        msg.say(f"{greeting.title()}, {msg.at_sender}!")
+        await msg.say(f"{greeting.title()}, {msg.at_sender}!")

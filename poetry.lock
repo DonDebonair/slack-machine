@@ -197,14 +197,6 @@ jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
-name = "blinker-alt"
-version = "1.5"
-description = "Fast, simple object-to-object and broadcast signaling"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "boto3"
 version = "1.21.21"
 description = "The AWS SDK for Python"
@@ -1134,7 +1126,7 @@ ocsp = ["cryptography (>=36.0.1)", "pyopenssl (==20.0.1)", "requests (>=2.26.0)"
 name = "requests"
 version = "2.28.1"
 description = "Python HTTP for Humans."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7, <4"
 
@@ -1866,7 +1858,7 @@ redis = ["redis", "hiredis"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "f71ab8861989ca39b617fdf89012f8cfc8d012c5d002820bbf987339c663ae27"
+content-hash = "375f53d246d7dca5fba5ffb7dba632db63089bbcfed367772c982c8c82b5d064"
 
 [metadata.files]
 aioboto3 = [
@@ -2024,10 +2016,6 @@ black = [
     {file = "black-22.8.0-cp39-cp39-win_amd64.whl", hash = "sha256:bc4d4123830a2d190e9cc42a2e43570f82ace35c3aeb26a512a2102bce5af7ec"},
     {file = "black-22.8.0-py3-none-any.whl", hash = "sha256:d2c21d439b2baf7aa80d6dd4e3659259be64c6f49dfd0f32091063db0e006db4"},
     {file = "black-22.8.0.tar.gz", hash = "sha256:792f7eb540ba9a17e8656538701d3eb1afcb134e3b45b71f20b25c77a8db7e6e"},
-]
-blinker-alt = [
-    {file = "blinker-alt-1.5.tar.gz", hash = "sha256:3310bd4d5db848cb7fca8c837a2806a6eef073b8ea0776c421db4f7cf8885ba9"},
-    {file = "blinker_alt-1.5-py2.py3-none-any.whl", hash = "sha256:74e62312a6c673c71b50384d120fb20d0e5c213b0dc22874563b59445d08bc37"},
 ]
 boto3 = [
     {file = "boto3-1.21.21-py3-none-any.whl", hash = "sha256:8fa32fcc8be38327bd667237223d71e5e4b2475f39d6882aca4dbad19fff8c29"},

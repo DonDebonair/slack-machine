@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "slack-machine"
-version = "0.28.2"
+version = "0.30.0"
 description = "A wonderful, simple, yet powerful and extendable Slack bot framework"
 authors = ["Daan Debie <daan@dv.email>"]
 license = "MIT"
@@ -33,10 +33,8 @@ python = "^3.7"
 "backports.zoneinfo" = { version = "^0.2.1", python = "<3.9" }
 dill = "^0.3.5.1"
 APScheduler = "^3.9.1"
-blinker-alt = "^1.5"
 clint = "^0.5.1"
 dacite = "^1.6.0"
-requests = "^2.28.1"
 redis = {version = ">=4.3.4,<5.0.0", optional = true}
 hiredis = {version = "^2.0.0", optional = true}
 slack-sdk = "^3.18.1"
@@ -75,7 +73,6 @@ dynamodb = ["aioboto3"]
 
 [tool.poetry.scripts]
 slack-machine = 'machine.bin.run:main'
-slack-machine-async = 'machine.bin.run_async:main'
 
 [tool.isort]
 profile = "black"
