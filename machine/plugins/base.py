@@ -1,17 +1,21 @@
-from datetime import datetime
-from typing import Dict, Any, Optional, Union, List
+from __future__ import annotations
 
-from blinker import signal
+from datetime import datetime
+from typing import Any, Sequence, cast
+
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
+from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
+from machine.utils.collections import CaseInsensitiveDict
 from machine.clients.slack import SlackClient
 from machine.models import Channel
 from machine.models import User
 from machine.storage import PluginStorage
-from machine.utils.collections import CaseInsensitiveDict
+from machine.plugins import ee
 
 
+# TODO: fix docstrings (return types are wrong, replace RST with Markdown)
 class MachineBasePlugin:
     """Base class for all Slack Machine plugins
 
@@ -27,13 +31,18 @@ class MachineBasePlugin:
         specifically for their plugin.
     """
 
+    _client: SlackClient
+    storage: PluginStorage
+    settings: CaseInsensitiveDict
+    _fq_name: str
+
     def __init__(self, client: SlackClient, settings: CaseInsensitiveDict, storage: PluginStorage):
         self._client = client
         self.storage = storage
         self.settings = settings
         self._fq_name = f"{self.__module__}.{self.__class__.__name__}"
 
-    def init(self):
+    def init(self) -> None:
         """Initialize plugin
 
         This method can be implemented by concrete plugin classes. It will be called **once**
@@ -46,7 +55,7 @@ class MachineBasePlugin:
         pass
 
     @property
-    def users(self) -> Dict[str, User]:
+    def users(self) -> dict[str, User]:
         """Dictionary of all users in the Slack workspace
 
         :return: a dictionary of all users in the Slack workspace, where the key is the user id and
@@ -55,7 +64,7 @@ class MachineBasePlugin:
         return self._client.users
 
     @property
-    def channels(self) -> Dict[str, Channel]:
+    def channels(self) -> dict[str, Channel]:
         """List of all channels in the Slack workspace
 
         This is a list of all channels in the Slack workspace that the bot is aware of. This
@@ -67,9 +76,8 @@ class MachineBasePlugin:
         """
         return self._client.channels
 
-    def find_channel_by_name(self, channel_name: str) -> Optional[Channel]:
-        """Find a channel by its name, irrespective of a preceding pound symbol. This does not
-        include DMs.
+    def find_channel_by_name(self, channel_name: str) -> Channel | None:
+        """Find a channel by its name, irrespective of a preceding pound symbol. This does not include DMs.
 
         :param channel_name: The name of the channel to retrieve.
         :return: The channel if found, None otherwise.
@@ -79,9 +87,10 @@ class MachineBasePlugin:
         for c in self.channels.values():
             if c.name_normalized and channel_name.lower() == c.name_normalized.lower():
                 return c
+        return None
 
     @property
-    def bot_info(self) -> Dict[str, str]:
+    def bot_info(self) -> dict[str, Any]:
         """Information about the bot user in Slack
 
         This will return a dictionary with information about the bot user in Slack that represents
@@ -104,16 +113,16 @@ class MachineBasePlugin:
         """
         return user.fmt_mention()
 
-    def say(
+    async def say(
         self,
-        channel: Union[Channel, str],
-        text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        thread_ts: Optional[str] = None,
-        ephemeral_user: Union[User, str, None] = None,
-        **kwargs,
-    ):
+        channel: Channel | str,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        thread_ts: str | None = None,
+        ephemeral_user: User | str | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Send a message to a channel
 
         Send a message to a channel using the WebAPI. Allows for rich formatting using
@@ -144,7 +153,7 @@ class MachineBasePlugin:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
-        return self._client.send(
+        return await self._client.send(
             channel,
             text=text,
             attachments=attachments,
@@ -154,17 +163,16 @@ class MachineBasePlugin:
             **kwargs,
         )
 
-    def say_scheduled(
+    async def say_scheduled(
         self,
         when: datetime,
-        channel: Union[Channel, str],
+        channel: Channel | str,
         text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        thread_ts: Optional[str] = None,
-        ephemeral_user: Union[User, str, None] = None,
-        **kwargs,
-    ):
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        thread_ts: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Schedule a message to a channel
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
@@ -177,25 +185,22 @@ class MachineBasePlugin:
         :param attachments: optional attachments (see `attachments`_)
         :param blocks: optional blocks (see `blocks`_)
         :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :param ephemeral_user: optional :py:class:`~machine.models.user.User` object or id of user
-            if the message needs to visible to that specific user only
         :return: None
 
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        self._client.send_scheduled(
+        return await self._client.send_scheduled(
             when,
             channel,
             text=text,
             attachments=attachments,
             blocks=blocks,
             thread_ts=thread_ts,
-            ephemeral_user=ephemeral_user,
             **kwargs,
         )
 
-    def react(self, channel: Union[Channel, str], ts: str, emoji: str):
+    async def react(self, channel: Channel | str, ts: str, emoji: str) -> AsyncSlackResponse:
         """React to a message in a channel
 
         Add a reaction to a message in a channel. What message to react to, is determined by the
@@ -209,16 +214,16 @@ class MachineBasePlugin:
 
         .. _reactions.add: https://api.slack.com/methods/reactions.add
         """
-        return self._client.react(channel, ts, emoji)
+        return await self._client.react(channel, ts, emoji)
 
-    def send_dm(
+    async def send_dm(
         self,
-        user: Union[User, str],
-        text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        **kwargs,
-    ):
+        user: User | str,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Send a Direct Message
 
         Send a Direct Message to a user by opening a DM channel and sending a message to it. Allows
@@ -240,17 +245,17 @@ class MachineBasePlugin:
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        return self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
+        return await self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def send_dm_scheduled(
+    async def send_dm_scheduled(
         self,
         when: datetime,
-        user: Union[User, str],
+        user: User | str,
         text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        **kwargs,
-    ):
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Schedule a Direct Message
 
         This is the scheduled version of
@@ -267,9 +272,11 @@ class MachineBasePlugin:
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        self._client.send_dm_scheduled(when, user, text=text, attachments=attachments, blocks=blocks, **kwargs)
+        return await self._client.send_dm_scheduled(
+            when, user, text=text, attachments=attachments, blocks=blocks, **kwargs
+        )
 
-    def emit(self, event: str, **kwargs):
+    def emit(self, event: str, **kwargs: Any) -> None:
         """Emit an event
 
         Emit an event that plugins can listen for. You can include arbitrary data as keyword
@@ -279,8 +286,29 @@ class MachineBasePlugin:
         :param kwargs: any data you want to emit with the event
         :return: None
         """
-        e = signal(event)
-        e.send(self, **kwargs)
+        ee.emit(event, self, **kwargs)
+
+    async def pin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
+        """Pin message
+
+        Pin a message in a channel
+
+        :param channel: channel to pin the message in
+        :param ts: timestamp of the message to pin
+        :return: response from the Slack Web API
+        """
+        return await self._client.pin_message(channel, ts)
+
+    async def unpin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
+        """Unpin message
+
+        Unpin a message that was previously pinned in a channel
+
+        :param channel: channel where the message is pinned that needs to be unpinned
+        :param ts: timestamp of the message to unpin
+        :return: response from the Slack Web API
+        """
+        return await self._client.unpin_message(channel, ts)
 
 
 class Message:
@@ -294,21 +322,11 @@ class Message:
     right channel, replying to the sender, etc.
     """
 
-    def __init__(self, client: SlackClient, msg_event: Dict[str, Any], plugin_class_name: str):
+    # TODO: create proper class for msg_event
+    def __init__(self, client: SlackClient, msg_event: dict[str, Any], plugin_class_name: str):
         self._client = client
         self._msg_event = msg_event
         self._fq_plugin_name = plugin_class_name
-
-    @property
-    def subtype(self) -> str:
-        """The subtype of the message, if applicable
-
-        :return: the subtype of the message, if applicable
-        """
-        if "subtype" in self._msg_event:
-            return self._msg_event["subtype"]
-        else:
-            return None
 
     @property
     def sender(self) -> User:
@@ -350,15 +368,15 @@ class Message:
         """
         return self.sender.fmt_mention()
 
-    def say(
+    async def say(
         self,
-        text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        thread_ts: Optional[str] = None,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        thread_ts: str | None = None,
         ephemeral: bool = False,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Send a new message to the channel the original message was received in
 
         Send a new message to the channel the original message was received in, using the WebAPI.
@@ -393,7 +411,7 @@ class Message:
         else:
             ephemeral_user = None
 
-        return self._client.send(
+        return await self._client.send(
             self.channel.id,
             text=text,
             attachments=attachments,
@@ -403,16 +421,15 @@ class Message:
             **kwargs,
         )
 
-    def say_scheduled(
+    async def say_scheduled(
         self,
         when: datetime,
         text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        thread_ts: Optional[str] = None,
-        ephemeral: bool = False,
-        **kwargs,
-    ):
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        thread_ts: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Schedule a message
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
@@ -423,38 +440,30 @@ class Message:
         :param attachments: optional attachments (see `attachments`_)
         :param blocks: optional blocks (see `blocks`_)
         :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
-            visible to the sender of the original message
         :return: None
 
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        if ephemeral:
-            ephemeral_user = self.sender.id
-        else:
-            ephemeral_user = None
-
-        self._client.send_scheduled(
+        return await self._client.send_scheduled(
             when,
             self.channel.id,
             text=text,
             attachments=attachments,
             blocks=blocks,
             thread_ts=thread_ts,
-            ephemeral_user=ephemeral_user,
             **kwargs,
         )
 
-    def reply(
+    async def reply(
         self,
-        text,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         in_thread: bool = False,
         ephemeral: bool = False,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Reply to the sender of the original message
 
         Reply to the sender of the original message with a new message, mentioning that user. Rich
@@ -486,21 +495,20 @@ class Message:
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
         if in_thread and not ephemeral:
-            return self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs)
+            return await self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs)
         else:
             text = self._create_reply(text)
-            return self.say(text, attachments=attachments, blocks=blocks, ephemeral=ephemeral, **kwargs)
+            return await self.say(text, attachments=attachments, blocks=blocks, ephemeral=ephemeral, **kwargs)
 
-    def reply_scheduled(
+    async def reply_scheduled(
         self,
         when: datetime,
         text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
         in_thread: bool = False,
-        ephemeral: bool = False,
-        **kwargs,
-    ):
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Schedule a reply and send it
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
@@ -511,26 +519,26 @@ class Message:
         :param attachments: optional attachments (see `attachments`_)
         :param blocks: optional blocks (see `blocks`_)
         :param in_thread: ``True/False`` wether to reply to the original message in-thread
-        :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
-            visible to the sender of the original message
         :return: None
 
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        if in_thread and not ephemeral:
-            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs)
+        if in_thread:
+            return await self.say_scheduled(
+                when, text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs
+            )
         else:
-            text = self._create_reply(text)
-            return self.say_scheduled(when, text, attachments=attachments, blocks=blocks, ephemeral=ephemeral, **kwargs)
+            text = cast(str, self._create_reply(text))
+            return await self.say_scheduled(when, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def reply_dm(
+    async def reply_dm(
         self,
-        text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        **kwargs,
-    ):
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Reply to the sender of the original message with a DM
 
         Reply in a Direct Message to the sender of the original message by opening a DM channel and
@@ -551,16 +559,16 @@ class Message:
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
-        return self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks, **kwargs)
+        return await self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks, **kwargs)
 
-    def reply_dm_scheduled(
+    async def reply_dm_scheduled(
         self,
         when: datetime,
         text: str,
-        attachments: Union[List[Attachment], List[Dict[str, Any]], None] = None,
-        blocks: Union[List[Block], List[Dict[str, Any]], None] = None,
-        **kwargs,
-    ):
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
         """Schedule a DM reply and send it
 
         This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`.
@@ -575,11 +583,11 @@ class Message:
         .. _attachments: https://api.slack.com/docs/message-attachments
         .. _blocks: https://api.slack.com/reference/block-kit/blocks
         """
-        self._client.send_dm_scheduled(
+        return await self._client.send_dm_scheduled(
             when, self.sender.id, text=text, attachments=attachments, blocks=blocks, **kwargs
         )
 
-    def react(self, emoji: str):
+    async def react(self, emoji: str) -> AsyncSlackResponse:
         """React to the original message
 
         Add a reaction to the original message
@@ -589,10 +597,10 @@ class Message:
 
         .. _reactions.add: https://api.slack.com/methods/reactions.add
         """
-        return self._client.react(self.channel.id, self._msg_event["ts"], emoji)
+        return await self._client.react(self.channel.id, self._msg_event["ts"], emoji)
 
-    def _create_reply(self, text):
-        if not self.is_dm:
+    def _create_reply(self, text: str | None) -> str | None:
+        if not self.is_dm and text is not None:
             return f"{self.at_sender}: {text}"
         else:
             return text
@@ -606,14 +614,21 @@ class Message:
         return self._msg_event["ts"]
 
     @property
-    def in_thread(self):
+    def in_thread(self) -> bool:
         """Is message in a thread
 
         :return: bool
         """
         return "thread_ts" in self._msg_event
 
-    def __str__(self):
+    async def pin_message(self) -> AsyncSlackResponse:
+        """Pin message
+
+        Pin the current message in the channel it was posted in
+        """
+        return await self._client.pin_message(self.channel, self.ts)
+
+    def __str__(self) -> str:
         if self.channel.is_im:
             message = f"Message '{self.text}', sent by user @{self.sender.profile.real_name} in DM"
         else:
@@ -622,7 +637,7 @@ class Message:
             )
         return message
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return "Message(text={}, sender={}, channel={})".format(
             repr(self.text), repr(self.sender.profile.real_name), repr(self.channel.name)
         )

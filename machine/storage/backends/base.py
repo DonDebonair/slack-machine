@@ -1,4 +1,9 @@
-class MachineBaseStorage:
+from __future__ import annotations
+from abc import ABC, abstractmethod
+from typing import Any, Mapping
+
+
+class MachineBaseStorage(ABC):
     """Base class for storage backends
 
     Extending classes should implement the five methods in this base class. Slack Machine takes
@@ -9,19 +14,27 @@ class MachineBaseStorage:
     - Namespacing of keys (so data stored by different plugins doesn't clash)
     """
 
-    def __init__(self, settings):
+    settings: Mapping[str, Any]
+
+    def __init__(self, settings: Mapping[str, Any]):
         self.settings = settings
 
-    def get(self, key):
+    async def init(self) -> None:
+        """Initialize the storage backend"""
+        pass
+
+    @abstractmethod
+    async def get(self, key: str) -> bytes | None:
         """Retrieve data by key
 
         :param key: key for which to retrieve data
         :return: the raw data for the provided key, as (byte)string. Should return ``None`` when
             the key is unknown or the data has expired.
         """
-        raise NotImplementedError
+        ...
 
-    def set(self, key, value, expires=None):
+    @abstractmethod
+    async def set(self, key: str, value: bytes, expires: int | None = None) -> None:
         """Store data by key
 
         :param key: the key under which to store the data
@@ -29,26 +42,34 @@ class MachineBaseStorage:
         :param expires: optional expiration time in seconds, after which the data should not be
             returned any more.
         """
-        raise NotImplementedError
+        ...
 
-    def delete(self, key):
+    @abstractmethod
+    async def delete(self, key: str) -> None:
         """Delete data by key
 
         :param key: key for which to delete the data
         """
-        raise NotImplementedError
+        ...
 
-    def has(self, key):
+    @abstractmethod
+    async def has(self, key: str) -> bool:
         """Check if the key exists
 
         :param key: key to check
         :return: ``True/False`` wether the key exists
         """
-        raise NotImplementedError
+        ...
 
-    def size(self):
+    @abstractmethod
+    async def size(self) -> int:
         """Calculate the total size of the storage
 
         :return: total size of storage in bytes (integer)
         """
-        raise NotImplementedError
+        ...
+
+    @abstractmethod
+    async def close(self) -> None:
+        """Close the storage backend"""
+        ...

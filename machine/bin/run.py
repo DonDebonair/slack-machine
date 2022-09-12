@@ -1,3 +1,4 @@
+import asyncio
 import sys
 import os
 
@@ -10,8 +11,11 @@ def main():
     # Python path, so we have to add it
     sys.path.insert(0, os.getcwd())
     bot = Machine()
+    loop = asyncio.get_event_loop()
     try:
-        bot.run()
+        loop.run_until_complete(bot.run())
     except KeyboardInterrupt:
+        loop.run_until_complete(bot.close())
+        loop.close()
         announce("Thanks for playing!")
         sys.exit(0)

@@ -2,21 +2,25 @@ import re
 import pytest
 
 from machine import Machine
+from machine.clients.slack import SlackClient
+from machine.models.core import RegisteredActions
 from machine.plugins.decorators import required_settings
 from machine.utils.collections import CaseInsensitiveDict
 
 
 @pytest.fixture(scope="module")
-def settings(module_mocker):
+def settings():
     settings = CaseInsensitiveDict()
     settings["PLUGINS"] = ["tests.fake_plugins"]
-    settings["SLACK_API_TOKEN"] = "xoxo-abc123"
+    settings["SLACK_BOT_TOKEN"] = "xoxb-abc123"
+    settings["SLACK_APP_TOKEN"] = "xapp-abc123"
     settings["STORAGE_BACKEND"] = "machine.storage.backends.memory.MemoryStorage"
-    slack_settings = module_mocker.patch("machine.clients.singletons.slack.import_settings")
-    storage_settings = module_mocker.patch("machine.clients.singletons.storage.import_settings")
-    slack_settings.return_value = (settings, True)
-    storage_settings.return_value = (settings, True)
     return settings
+
+
+@pytest.fixture
+def slack_client(mocker):
+    return mocker.MagicMock(spec=SlackClient)
 
 
 @pytest.fixture(scope="module")
@@ -34,43 +38,56 @@ def required_settings_class():
     return C
 
 
-def test_load_and_register_plugins(settings):
+@pytest.mark.asyncio
+async def test_load_and_register_plugins(settings, slack_client):
     machine = Machine(settings=settings)
-    actions = machine._plugin_actions
+    machine._client = slack_client
+    await machine._setup_storage()
+    await machine._load_plugins()
+    actions = machine._registered_actions
 
     # Test general structure of _plugin_actions
-    assert set(actions.keys()) == {"listen_to", "respond_to"}
+    assert isinstance(actions, RegisteredActions)
 
     # Test registration of respond_to actions
     respond_to_key = "tests.fake_plugins:FakePlugin.respond_function-hello"
-    assert respond_to_key in actions["respond_to"]
-    assert "class" in actions["respond_to"][respond_to_key]
-    assert "function" in actions["respond_to"][respond_to_key]
-    assert "regex" in actions["respond_to"][respond_to_key]
-    assert actions["respond_to"][respond_to_key]["regex"] == re.compile("hello", re.IGNORECASE)
+    assert respond_to_key in actions.respond_to
+    assert actions.respond_to[respond_to_key].class_name == "tests.fake_plugins:FakePlugin"
+    assert actions.respond_to[respond_to_key].regex == re.compile("hello", re.IGNORECASE)
 
     # Test registration of listen_to actions
     listen_to_key = "tests.fake_plugins:FakePlugin.listen_function-hi"
-    assert listen_to_key in actions["listen_to"]
-    assert "class" in actions["listen_to"][listen_to_key]
-    assert "function" in actions["listen_to"][listen_to_key]
-    assert "regex" in actions["listen_to"][listen_to_key]
-    assert actions["listen_to"][listen_to_key]["regex"] == re.compile("hi", re.IGNORECASE)
+    assert listen_to_key in actions.listen_to
+    assert actions.listen_to[listen_to_key].class_name == "tests.fake_plugins:FakePlugin"
+    assert actions.listen_to[listen_to_key].regex == re.compile("hi", re.IGNORECASE)
+
+    # Test registration of process actions
+    process_key = "tests.fake_plugins:FakePlugin.process_function-some_event"
+    assert "some_event" in actions.process
+    assert process_key in actions.process["some_event"]
 
 
-def test_plugin_storage_fq_plugin_name(settings):
+@pytest.mark.asyncio
+async def test_plugin_storage_fq_plugin_name(settings, slack_client):
     machine = Machine(settings=settings)
-    actions = machine._plugin_actions
-    plugin1_cls = actions["respond_to"]["tests.fake_plugins:FakePlugin.respond_function-hello"]["class"]
-    plugin2_cls = actions["listen_to"]["tests.fake_plugins:FakePlugin2.another_listen_function-doit"]["class"]
+    machine._client = slack_client
+    await machine._setup_storage()
+    await machine._load_plugins()
+    actions = machine._registered_actions
+    plugin1_cls = actions.respond_to["tests.fake_plugins:FakePlugin.respond_function-hello"].class_
+    plugin2_cls = actions.listen_to["tests.fake_plugins:FakePlugin2.another_listen_function-doit"].class_
     assert plugin1_cls.storage._fq_plugin_name == "tests.fake_plugins:FakePlugin"
     assert plugin2_cls.storage._fq_plugin_name == "tests.fake_plugins:FakePlugin2"
 
 
-def test_plugin_init(settings):
+@pytest.mark.asyncio
+async def test_plugin_init(settings, slack_client):
     machine = Machine(settings=settings)
-    actions = machine._plugin_actions
-    plugin_cls = actions["listen_to"]["tests.fake_plugins:FakePlugin2.another_listen_function-doit"]["class"]
+    machine._client = slack_client
+    await machine._setup_storage()
+    await machine._load_plugins()
+    actions = machine._registered_actions
+    plugin_cls = actions.listen_to["tests.fake_plugins:FakePlugin2.another_listen_function-doit"].class_
     assert plugin_cls.x == 42
 
 

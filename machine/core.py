@@ -1,98 +1,167 @@
+from __future__ import annotations
+
+import asyncio
 import inspect
 import logging
+import os
 import sys
-import time
-from typing import Callable
-from threading import Thread
+from typing import Callable, cast, Awaitable
 
 import dill
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from clint.textui import puts, indent, colored
-from slack_sdk.rtm_v2 import RTMClient
+from slack_sdk.socket_mode.aiohttp import SocketModeClient
+from slack_sdk.web.async_client import AsyncWebClient
 
-from machine.vendor import bottle
-
-from machine.dispatch import EventDispatcher
-from machine.plugins.base import MachineBasePlugin
-from machine.settings import import_settings
-from machine.clients.singletons.scheduling import Scheduler
-from machine.clients.singletons.storage import Storage
 from machine.clients.slack import SlackClient
-from machine.clients.singletons.slack import LowLevelSlackClient
-from machine.storage import PluginStorage
+from machine.handlers import create_message_handler, create_generic_event_handler
+from machine.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.decorators import DecoratedPluginFunc, Metadata, MatcherConfig
+from machine.storage import PluginStorage, MachineBaseStorage
+from machine.settings import import_settings
+from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.module_loading import import_string
-from machine.utils.text import show_valid, show_invalid, warn, error, announce
+from machine.utils.text import show_valid, warn, error, announce, show_invalid
+
+if sys.version_info >= (3, 9):
+    from zoneinfo import ZoneInfo  # pragma: no cover
+else:
+    from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
 logger = logging.getLogger(__name__)
 
 
-def callable_with_sanitized_event(fn: Callable):
-    def sanitzed_call(client: RTMClient, event: dict):
-        return fn(event)
-
-    return sanitzed_call
-
-
 class Machine:
-    def __init__(self, settings=None):
+    _socket_mode_client: SocketModeClient
+    _client: SlackClient | None
+    _storage_backend: MachineBaseStorage
+    _settings: CaseInsensitiveDict | None
+    _help: Manual
+    _registered_actions: RegisteredActions
+    _tz: ZoneInfo
+    _scheduler: AsyncIOScheduler
+
+    def __init__(self, settings: CaseInsensitiveDict | None = None):
+        if settings is not None:
+            self._settings = settings
+        else:
+            self._settings = None
+        self._help = Manual(human={}, robot={})
+        self._registered_actions = RegisteredActions()
+        self._client = None
+
+    async def _setup(self) -> None:
         announce("Initializing Slack Machine:")
 
         with indent(4):
-            puts("Loading settings...")
-            if settings:
-                self._settings = settings
-                found_local_settings = True
-            else:
-                self._settings, found_local_settings = import_settings()
-            fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
-            date_fmt = "%Y-%m-%d %H:%M:%S"
-            log_level = self._settings.get("LOGLEVEL", logging.ERROR)
-            logging.basicConfig(
-                level=log_level,
-                format=fmt,
-                datefmt=date_fmt,
-            )
+            found_local_settings = self._load_settings()
+            assert self._settings is not None
+            self._setup_logging()
             if not found_local_settings:
                 warn("No local_settings found! Are you sure this is what you want?")
-            if "SLACK_API_TOKEN" not in self._settings:
-                error("No SLACK_API_TOKEN found in settings! I need that to work...")
+            else:
+                logger.debug("Found local settings %s", self._settings)
+
+            # Check if Slack token are present
+            if "SLACK_APP_TOKEN" not in self._settings:
+                error("No SLACK_APP_TOKEN found in settings! I need that to work...")
                 sys.exit(1)
-            self._client = LowLevelSlackClient()
-            puts("Initializing storage using backend: {}".format(self._settings["STORAGE_BACKEND"]))
-            self._storage = Storage.get_instance()
-            logger.debug("Storage initialized!")
+            if "SLACK_BOT_TOKEN" not in self._settings:
+                error("No SLACK_BOT_TOKEN found in settings! I need that to work...")
+                sys.exit(1)
 
-            self._plugin_actions = {"listen_to": {}, "respond_to": {}}
-            self._help = {"human": {}, "robot": {}}
-            self._dispatcher = EventDispatcher(self._plugin_actions, self._settings)
-            puts("Loading plugins...")
-            self.load_plugins()
-            logger.debug("The following plugin actions were registered: %s", self._plugin_actions)
+            # Setup storage
+            await self._setup_storage()
 
-    def load_plugins(self):
+            # Setup Slack clients
+            await self._setup_slack_clients()
+
+            # Setup scheduling
+            self._scheduler = AsyncIOScheduler(timezone=self._tz)
+
+            # Load plugins
+            await self._load_plugins()
+            logger.debug("Registered plugin actions: %s", self._registered_actions)
+            logger.debug("Plugin help: %s", self._help)
+
+    def _setup_logging(self) -> None:
+        assert self._settings is not None
+        fmt = "[%(asctime)s][%(levelname)s] %(name)s %(filename)s:%(funcName)s:%(lineno)d | %(message)s"
+        date_fmt = "%Y-%m-%d %H:%M:%S"
+        log_level = self._settings.get("LOGLEVEL", logging.ERROR)
+        logging.basicConfig(
+            level=log_level,
+            format=fmt,
+            datefmt=date_fmt,
+        )
+        logging.getLogger("slack_sdk.socket_mode.aiohttp").setLevel(logging.INFO)
+        logging.getLogger("slack_sdk.web.async_base_client").setLevel(logging.INFO)
+
+    def _load_settings(self) -> bool:
+        puts("Loading settings...")
+        if self._settings is not None:
+            found_local_settings = True
+        else:
+            settings_module = os.environ.get("SM_SETTINGS_MODULE", "local_settings")
+            self._settings, found_local_settings = import_settings(settings_module=settings_module)
+        self._tz = ZoneInfo(self._settings["TZ"])
+        puts("Settings loaded!")
+
+        return found_local_settings
+
+    async def _setup_storage(self) -> None:
+        assert self._settings is not None
+        storage_backend = self._settings.get("STORAGE_BACKEND", "machine.storage.backends.memory.MemoryStorage")
+        logger.debug("Initializing storage backend %s...", storage_backend)
+        _, cls = import_string(storage_backend)[0]
+        self._storage_backend = cls(self._settings)
+        await self._storage_backend.init()
+        logger.debug("Storage backend %s initialized!", storage_backend)
+
+    async def _setup_slack_clients(self) -> None:
+        assert self._settings is not None
+        # Setup Slack socket mode client
+        self._socket_mode_client = SocketModeClient(
+            app_token=self._settings["SLACK_APP_TOKEN"],
+            web_client=AsyncWebClient(token=self._settings["SLACK_BOT_TOKEN"]),
+        )
+
+        # Setup high-level Slack client for plugins
+        self._client = SlackClient(self._socket_mode_client, self._tz)
+        await self._client.setup()
+
+    # TODO: factor out plugin registration in separate class / set of functions
+    async def _load_plugins(self) -> None:
+        assert self._settings is not None
+        if self._client is None:
+            error("Slack client not initialized!")
+            sys.exit(1)
         with indent(4):
             logger.debug("PLUGINS: %s", self._settings["PLUGINS"])
             for plugin in self._settings["PLUGINS"]:
                 for class_name, cls in import_string(plugin):
                     if issubclass(cls, MachineBasePlugin) and cls is not MachineBasePlugin:
                         logger.debug("Found a Machine plugin: %s", plugin)
-                        storage = PluginStorage(class_name)
-                        instance = cls(SlackClient(), self._settings, storage)
+                        storage = PluginStorage(class_name, self._storage_backend)
+                        instance = cls(self._client, self._settings, storage)
                         missing_settings = self._register_plugin(class_name, instance)
                         if missing_settings:
                             show_invalid(class_name)
                             with indent(4):
-                                error_msg = "The following settings are missing: {}".format(", ".join(missing_settings))
+                                error_msg = f"The following settings are missing: {', '.join(missing_settings)}"
                                 puts(colored.red(error_msg))
                                 puts(colored.red("This plugin will not be loaded!"))
                             del instance
                         else:
                             instance.init()
                             show_valid(class_name)
-        self._storage.set("manual", dill.dumps(self._help))
+        await self._storage_backend.set("manual", dill.dumps(self._help))
 
-    def _register_plugin(self, plugin_class, cls_instance):
+    def _register_plugin(self, plugin_class_name: str, cls_instance: MachineBasePlugin) -> list[str] | None:
         missing_settings = []
-        missing_settings.extend(self._check_missing_settings(cls_instance.__class__))
+        cls_instance_for_missing_settings = cast(DecoratedPluginFunc, cls_instance)
+        missing_settings.extend(self._check_missing_settings(cls_instance_for_missing_settings))
         methods = inspect.getmembers(cls_instance, predicate=inspect.ismethod)
         for _, fn in methods:
             missing_settings.extend(self._check_missing_settings(fn))
@@ -102,55 +171,92 @@ class Machine:
         if cls_instance.__doc__:
             class_help = cls_instance.__doc__.splitlines()[0]
         else:
-            class_help = plugin_class
-        self._help["human"][class_help] = self._help["human"].get(class_help, {})
-        self._help["robot"][class_help] = self._help["robot"].get(class_help, [])
+            class_help = plugin_class_name
+        self._help.human[class_help] = self._help.human.get(class_help, {})
+        self._help.robot[class_help] = self._help.robot.get(class_help, [])
         for name, fn in methods:
             if hasattr(fn, "metadata"):
-                self._register_plugin_actions(plugin_class, fn.metadata, cls_instance, name, fn, class_help)
+                self._register_plugin_actions(plugin_class_name, fn.metadata, cls_instance, name, fn, class_help)
+        return None
 
-    def _check_missing_settings(self, fn_or_class):
+    def _check_missing_settings(self, fn_or_class: DecoratedPluginFunc) -> list[str]:
         missing_settings = []
-        if hasattr(fn_or_class, "metadata") and "required_settings" in fn_or_class.metadata:
-            for setting in fn_or_class.metadata["required_settings"]:
-                if setting not in self._settings:
+        if hasattr(fn_or_class, "metadata") and isinstance(fn_or_class.metadata, Metadata):
+            for setting in fn_or_class.metadata.required_settings:
+                if self._settings is None or setting not in self._settings:
                     missing_settings.append(setting.upper())
         return missing_settings
 
-    def _register_plugin_actions(self, plugin_class, metadata, cls_instance, fn_name, fn, class_help):
-        fq_fn_name = f"{plugin_class}.{fn_name}"
+    def _register_plugin_actions(
+        self,
+        plugin_class_name: str,
+        metadata: Metadata,
+        cls_instance: MachineBasePlugin,
+        fn_name: str,
+        fn: Callable[..., Awaitable[None]],
+        class_help: str,
+    ) -> None:
+        fq_fn_name = f"{plugin_class_name}.{fn_name}"
         if fn.__doc__:
-            self._help["human"][class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
-        for action, config in metadata["plugin_actions"].items():
-            if action == "process":
-                event_type = config["event_type"]
-                self._client.rtm_client.on(event_type)(callable_with_sanitized_event(fn))
-            if action in ["respond_to", "listen_to"]:
-                for c in config["configs"]:
-                    regex = c["regex"]
-                    handle_changed_message = c["handle_changed_message"]
-                    event_handler = {
-                        "class": cls_instance,
-                        "class_name": plugin_class,
-                        "function": fn,
-                        "regex": regex,
-                        "handle_changed_message": handle_changed_message,
-                    }
-                    key = f"{fq_fn_name}-{regex.pattern}"
-                    self._plugin_actions[action][key] = event_handler
-                    self._help["robot"][class_help].append(
-                        self._parse_robot_help(regex, handle_changed_message, action)
-                    )
-            if action == "schedule":
-                Scheduler.get_instance().add_job(
-                    fq_fn_name, trigger="cron", args=[cls_instance], id=fq_fn_name, replace_existing=True, **config
-                )
-            if action == "route":
-                for route_config in config:
-                    bottle.route(**route_config)(fn)
+            self._help.human[class_help][fq_fn_name] = self._parse_human_help(fn.__doc__)
+        for matcher_config in metadata.plugin_actions.listen_to:
+            self._register_message_handler(
+                type_="listen_to",
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                matcher_config=matcher_config,
+                class_help=class_help,
+            )
+        for matcher_config in metadata.plugin_actions.respond_to:
+            self._register_message_handler(
+                type_="respond_to",
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                matcher_config=matcher_config,
+                class_help=class_help,
+            )
+        for event in metadata.plugin_actions.process:
+            self._registered_actions.process[event] = self._registered_actions.process.get(event, {})
+            key = f"{fq_fn_name}-{event}"
+            self._registered_actions.process[event][key] = fn
+
+        if metadata.plugin_actions.schedule is not None:
+            self._scheduler.add_job(
+                fq_fn_name,
+                trigger="cron",
+                args=[cls_instance],
+                id=fq_fn_name,
+                replace_existing=True,
+                **metadata.plugin_actions.schedule,
+            )
+
+    def _register_message_handler(
+        self,
+        type_: str,
+        class_: MachineBasePlugin,
+        class_name: str,
+        fq_fn_name: str,
+        function: Callable[..., Awaitable[None]],
+        matcher_config: MatcherConfig,
+        class_help: str,
+    ) -> None:
+        handler = MessageHandler(
+            class_=class_,
+            class_name=class_name,
+            function=function,
+            regex=matcher_config.regex,
+            handle_message_changed=matcher_config.handle_changed_message,
+        )
+        key = f"{fq_fn_name}-{matcher_config.regex.pattern}"
+        getattr(self._registered_actions, type_)[key] = handler
+        self._help.robot[class_help].append(self._parse_robot_help(matcher_config, type_))
 
     @staticmethod
-    def _parse_human_help(doc):
+    def _parse_human_help(doc: str) -> HumanHelp:
         summary = doc.splitlines()[0].split(":")
         if len(summary) > 1:
             command = summary[0].strip()
@@ -158,47 +264,47 @@ class Machine:
         else:
             command = "??"
             cmd_help = summary[0].strip()
-        return {"command": command, "help": cmd_help}
+        return HumanHelp(command=command, help=cmd_help)
 
     @staticmethod
-    def _parse_robot_help(regex, handle_changed_message, action):
+    def _parse_robot_help(matcher_config: MatcherConfig, action: str) -> str:
+        handle_message_changed_suffix = " [includes changed messages]" if matcher_config.handle_changed_message else ""
         if action == "respond_to":
-            return "@botname {}{}".format(
-                regex.pattern, " [includes changed messages]" if handle_changed_message else ""
-            )
+            return f"@botname {matcher_config.regex.pattern}{handle_message_changed_suffix}"
         else:
-            return "{}{}".format(regex.pattern, " [includes changed messages]" if handle_changed_message else "")
+            return f"{matcher_config.regex.pattern}{handle_message_changed_suffix}"
 
-    def _keepalive(self):
-        while True:
-            time.sleep(self._settings["KEEP_ALIVE"])
-            self._client.ping()
-            logger.debug("Client Ping!")
-
-    def run(self):
+    async def run(self) -> None:
         announce("\nStarting Slack Machine:")
+
+        await self._setup()
+        assert self._settings is not None
+        if self._client is None:
+            error("Slack client not initialized!")
+            sys.exit(1)
+
+        bot_id = self._client.bot_info["user_id"]
+        bot_name = self._client.bot_info["name"]
+        message_handler = create_message_handler(
+            self._registered_actions, self._settings, bot_id, bot_name, self._client
+        )
+        generic_event_handler = create_generic_event_handler(self._registered_actions)
+
+        self._client.register_handler(message_handler)
+        self._client.register_handler(generic_event_handler)
+        # Establish a WebSocket connection to the Socket Mode servers
+        await self._socket_mode_client.connect()
+
         with indent(4):
             show_valid("Connected to Slack")
-            Scheduler.get_instance().start()
+
+        self._scheduler.start()
+        with indent(4):
             show_valid("Scheduler started")
-            if not self._settings["DISABLE_HTTP"]:
-                self._bottle_thread = Thread(
-                    target=bottle.run,
-                    kwargs=dict(
-                        host=self._settings["HTTP_SERVER_HOST"],
-                        port=self._settings["HTTP_SERVER_PORT"],
-                        server=self._settings["HTTP_SERVER_BACKEND"],
-                    ),
-                )
-                self._bottle_thread.daemon = True
-                self._bottle_thread.start()
-                show_valid("Web server started")
 
-            if self._settings["KEEP_ALIVE"]:
-                self._keep_alive_thread = Thread(target=self._keepalive)
-                self._keep_alive_thread.daemon = True
-                self._keep_alive_thread.start()
-                show_valid("Keepalive thread started [Interval: %ss]" % self._settings["KEEP_ALIVE"])
+        # Just not to stop this process
+        await asyncio.sleep(float("inf"))
 
-            show_valid("Dispatcher started")
-            self._dispatcher.start()
+    async def close(self) -> None:
+        closables = [self._socket_mode_client.close(), self._storage_backend.close()]
+        await asyncio.gather(*closables)
