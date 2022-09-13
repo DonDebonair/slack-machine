@@ -39,10 +39,8 @@ nav:
       - 'plugins/settings.md'
       - 'plugins/storage.md'
       - 'plugins/misc.md'
-  - 'API Documentation':
-      - 'api/index.md'
-      - 'api/api-async.md'
-  - 'async.md'
+  - 'api.md'
+  - 'migrating.md'
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite

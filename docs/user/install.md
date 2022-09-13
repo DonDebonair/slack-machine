@@ -1,16 +1,21 @@
 # Installation
 
-This part of the documentation helps you install Slack Machine with the
-least amount of friction, or the most amount of flexibility.
+This part of the documentation helps you install Slack Machine with the least amount of friction, or the most amount of
+flexibility.
 
 ## Installing the easy way with pip
 
-Slack Machine is published to the [Python package
-index](https://pypi.python.org/pypi/slack-machine) so you can easily
+Slack Machine is published to the [Python package index](https://pypi.python.org/pypi/slack-machine) so you can easily
 install Slack Machine using pip:
 
 ```bash
 pip install slack-machine
+```
+
+or add it to your [Poetry](https://python-poetry.org/) project:
+
+```bash
+poetry add slack-machine
 ```
 
 It is **strongly recommended** that you install `slack-machine` inside a
@@ -18,27 +23,26 @@ It is **strongly recommended** that you install `slack-machine` inside a
 
 ## Installing from source
 
-If you are adventurous, want to modify the core of your Slack Machine
-instance and want maximum flexibility, you can also install from source.
-This way, you can enjoy the latest and greatest!
+If you are adventurous, want to modify the core of your Slack Machine instance and want maximum flexibility, you can
+also install from source. This way, you can enjoy the latest and greatest!
 
 You can either clone the public repository:
 
 ```bash
-git clone git://github.com/DandyDev/slack-machine.git
+git clone git://github.com/DonDebonair/slack-machine.git
 ```
 
 Or, download the
 [tarball](https://github.com/DandyDev/slack-machine/tarball/main):
 
 ```bash
-curl -OL https://github.com/DandyDev/slack-machine/tarball/main
+curl -OL https://github.com/DonDebonair/slack-machine/tarball/main
 ```
 
 _Optionally, zipball is also available (for Windows users)._
 
-Once you have a copy of the source, you can embed it in your own Python
-package, or install it into your site-packages easily:
+Once you have a copy of the source, you can embed it in your own Python package, or install it into your virtualenv
+easily:
 
 ```bash
 cd slack-machine
