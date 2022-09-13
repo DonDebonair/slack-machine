@@ -33,7 +33,7 @@ git clone git://github.com/DonDebonair/slack-machine.git
 ```
 
 Or, download the
-[tarball](https://github.com/DandyDev/slack-machine/tarball/main):
+[tarball](https://github.com/DonDebonair/slack-machine/tarball/main):
 
 ```bash
 curl -OL https://github.com/DonDebonair/slack-machine/tarball/main

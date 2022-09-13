@@ -4,9 +4,9 @@ version = "0.30.0"
 description = "A wonderful, simple, yet powerful and extendable Slack bot framework"
 authors = ["Daan Debie <daan@dv.email>"]
 license = "MIT"
-repository = "https://github.com/DandyDev/slack-machine"
-homepage = "https://github.com/DandyDev/slack-machine"
-documentation = "https://dandydev.github.io/slack-machine/"
+repository = "https://github.com/DonDebonair/slack-machine"
+homepage = "https://github.com/DonDebonair/slack-machine"
+documentation = "https://DonDebonair.github.io/slack-machine/"
 readme = "README.md"
 classifiers = [
     "Development Status :: 4 - Beta",

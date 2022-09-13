@@ -1,6 +1,6 @@
 site_name: Slack Machine
-repo_url: https://github.com/DandyDev/slack-machine
-repo_name: DandyDev/slack-machine
+repo_url: https://github.com/DonDebonair/slack-machine
+repo_name: DonDebonair/slack-machine
 theme:
   name: material
   icon:
