@@ -15,7 +15,7 @@ calls with the `await` keyword:
 await self.say("#general", "Hello there baby!")
 ```
 
-## All of your plugin function
+## All of your plugin functions need to be async
 
 Because you're awaiting methods from the Slack Machine plugin classes now, the functions you define in your own
 plugins, need to be _async_. This is as easy as prefixing your function definitions with the `async` keyword:
