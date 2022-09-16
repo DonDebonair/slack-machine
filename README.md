@@ -19,9 +19,9 @@ from machine.plugins.decorators import respond_to
 class DeploymentPlugin(MachineBasePlugin):
     """Deployments"""
     @respond_to(r"deploy (?P<application>\w+) to (?P<environment>\w+)")
-    def deploy(self, msg: Message, application, environment):
+    async def deploy(self, msg: Message, application, environment):
         """deploy <application> <environment>: deploy application to target environment"""
-        msg.say(f"Deploying {application} to {environment}")
+        await msg.say(f"Deploying {application} to {environment}")
 ```
 
 ## *Note*

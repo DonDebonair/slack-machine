@@ -2,7 +2,7 @@
 
 ![image](img/logo.png)
 
-[![Join the chat at https://gitter.im/slack-machine/lobby](https://badges.gitter.im/slack-machine/lobby.svg)](https://gitter.im/slack-machine/lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at Slack](https://img.shields.io/badge/chat-slack-green?logo=slack&logoColor=white)](https://join.slack.com/t/slack-machine-chat/shared_invite/zt-1g87tzvlf-8bV_WnY3JZyaYNnRFwRd~w)
 [![image](https://img.shields.io/pypi/v/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
 [![image](https://img.shields.io/pypi/l/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
 [![image](https://img.shields.io/pypi/pyversions/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
@@ -10,7 +10,21 @@
 [![image](https://codecov.io/gh/DonDebonair/slack-machine/branch/main/graph/badge.svg)](https://codecov.io/gh/DonDebonair/slack-machine)
 
 Slack Machine is a wonderful, simple, yet powerful and extendable Slack bot framework. More than just a bot, Slack
-Machine is a framework that helps you develop your Slack workspace into a ChatOps powerhouse.
+Machine is a framework that helps you develop your Slack workspace into a ChatOps powerhouse. Slack Machine is built
+with an intuitive plugin system that lets you build bots quickly, but also allows for easy code organization. A
+plugin can look as simple as this:
+
+```python
+from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.decorators import respond_to
+
+class DeploymentPlugin(MachineBasePlugin):
+    """Deployments"""
+    @respond_to(r"deploy (?P<application>\w+) to (?P<environment>\w+)")
+    async def deploy(self, msg: Message, application, environment):
+        """deploy <application> <environment>: deploy application to target environment"""
+        await msg.say(f"Deploying {application} to {environment}")
+```
 
 ## *Note*
 
