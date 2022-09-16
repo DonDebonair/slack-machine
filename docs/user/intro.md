@@ -2,7 +2,7 @@
 
 ## Philosophy
 
-Slack Machine is a wonderful, simple, yet powerful and extendable bot framework & platform for Slack.
+Slack Machine is a simple, yet powerful and extendable bot framework & platform for Slack.
 
 Slack Machine should be:
 
