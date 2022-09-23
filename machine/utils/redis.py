@@ -1,7 +1,8 @@
+from typing import Any, Mapping
 from urllib.parse import urlparse
 
 
-def gen_config_dict(settings):
+def gen_config_dict(settings: Mapping[str, Any]) -> Mapping[str, Any]:
     url = urlparse(settings["REDIS_URL"])
     if hasattr(url, "path") and getattr(url, "path"):
         db = url.path[1:]

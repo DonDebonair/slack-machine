@@ -1,8 +1,12 @@
-from collections.abc import MutableMapping, Mapping
+from __future__ import annotations
+
+from typing import MutableMapping, Mapping, TypeVar, Tuple, Iterable, Iterator, cast
+
+KT = TypeVar("KT", bound=str)
+VT = TypeVar("VT")
 
 
-# TODO: add type hints and make generic
-class CaseInsensitiveDict(MutableMapping):
+class CaseInsensitiveDict(MutableMapping[KT, VT]):
     """
     A case-insensitive ``dict``-like object.
     Implements all methods and operations of
@@ -24,39 +28,44 @@ class CaseInsensitiveDict(MutableMapping):
     operations are given keys that have equal ``.lower()``s, the
     behavior is undefined.
 
-    This class was copied from the ``requests`` package, and can
-    be found at:
+    This class was copied from the ``requests`` package and made type-safe
+    The original can be found at:
     https://github.com/requests/requests/blob/v1.2.3/requests/structures.py#L37
     """
 
-    def __init__(self, data=None, **kwargs):
-        self._store = dict()
+    def __init__(self, data: Mapping[KT, VT] | Iterable[Tuple[KT, VT]] | None = None, **kwargs: VT):
+        self._store: dict[KT, Tuple[KT, VT]] = dict()
         if data is None:
             data = {}
         self.update(data, **kwargs)
 
-    def __setitem__(self, key, value):
+    @staticmethod
+    def _convert_key(key: KT) -> KT:
+        lower_key = cast(KT, key.lower())
+        return lower_key
+
+    def __setitem__(self, key: KT, value: VT) -> None:
         # Use the lowercased key for lookups, but store the actual
         # key alongside the value.
-        self._store[key.lower()] = (key, value)
+        self._store[self._convert_key(key)] = (key, value)
 
-    def __getitem__(self, key):
-        return self._store[key.lower()][1]
+    def __getitem__(self, key: KT) -> VT:
+        return self._store[self._convert_key(key)][1]
 
-    def __delitem__(self, key):
-        del self._store[key.lower()]
+    def __delitem__(self, key: KT) -> None:
+        del self._store[self._convert_key(key)]
 
-    def __iter__(self):
-        return (casedkey for casedkey, mappedvalue in self._store.values())
+    def __iter__(self) -> Iterator[KT]:
+        return (casedkey for casedkey, _ in self._store.values())
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self._store)
 
-    def lower_items(self):
+    def lower_items(self) -> Iterator[Tuple[KT, VT]]:
         """Like iteritems(), but with all lowercase keys."""
         return ((lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items())
 
-    def __eq__(self, other: Mapping) -> bool:
+    def __eq__(self, other: object) -> bool:
         if isinstance(other, Mapping):
             other = CaseInsensitiveDict(other)
         else:
@@ -65,8 +74,8 @@ class CaseInsensitiveDict(MutableMapping):
         return dict(self.lower_items()) == dict(other.lower_items())
 
     # Copy is required
-    def copy(self):
+    def copy(self) -> CaseInsensitiveDict[KT, VT]:
         return CaseInsensitiveDict(self._store.values())
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"{self.__class__.__name__}({dict(self.items())!r})"
