@@ -632,12 +632,10 @@ class Message:
         if self.channel.is_im:
             message = f"Message '{self.text}', sent by user @{self.sender.profile.real_name} in DM"
         else:
-            message = "Message '{}', sent by user @{} in channel #{}".format(
-                self.text, self.sender.profile.real_name, self.channel.name
+            message = (
+                f"Message '{self.text}', sent by user @{self.sender.profile.real_name} in channel #{self.channel.name}"
             )
         return message
 
     def __repr__(self) -> str:
-        return "Message(text={}, sender={}, channel={})".format(
-            repr(self.text), repr(self.sender.profile.real_name), repr(self.channel.name)
-        )
+        return f"Message(text={self.text!r}, sender={self.sender.profile.real_name!r}, channel={self.channel.name!r})"

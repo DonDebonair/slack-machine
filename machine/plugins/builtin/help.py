@@ -8,7 +8,6 @@ from machine.plugins.decorators import respond_to
 logger = logging.getLogger(__name__)
 
 
-# TODO: f-strings
 class HelpPlugin(MachineBasePlugin):
     """Getting Help"""
 
@@ -53,4 +52,5 @@ class HelpPlugin(MachineBasePlugin):
 
     def _gen_bot_regex(self, regex: str) -> str:
         bot_name = self.bot_info["name"]
-        return "\t`{}`".format(regex.replace("@botname", "@" + bot_name))
+        actual_bot_mention = regex.replace("@botname", f"@{bot_name}")
+        return f"\t`{actual_bot_mention}`"
