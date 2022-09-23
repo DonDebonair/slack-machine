@@ -8,7 +8,7 @@ from machine.utils.collections import CaseInsensitiveDict
 logger = logging.getLogger(__name__)
 
 
-def import_settings(settings_module="local_settings") -> Tuple[CaseInsensitiveDict, bool]:
+def import_settings(settings_module: str = "local_settings") -> Tuple[CaseInsensitiveDict, bool]:
     default_settings = {
         "PLUGINS": [
             "machine.plugins.builtin.general.PingPongPlugin",
