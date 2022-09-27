@@ -1181,8 +1181,8 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "types-aiobotocore"
-version = "2.4.0"
-description = "Type annotations for aiobotocore 2.4.0 generated with mypy-boto3-builder 7.11.8"
+version = "2.4.0.post1"
+description = "Type annotations for aiobotocore 2.4.0 generated with mypy-boto3-builder 7.11.10"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
@@ -2561,8 +2561,8 @@ typed-ast = [
     {file = "typed_ast-1.5.4.tar.gz", hash = "sha256:39e21ceb7388e4bb37f4c679d72707ed46c2fbf2a5609b8b8ebc4b067d977df2"},
 ]
 types-aiobotocore = [
-    {file = "types-aiobotocore-2.4.0.tar.gz", hash = "sha256:27a73c95b2efbe308f7b46e227e96a8b8bf2ee0e0117f3902b31d461f2fb312a"},
-    {file = "types_aiobotocore-2.4.0-py3-none-any.whl", hash = "sha256:40201ae48df190cca1831780481437a5507dfb81a99ee23447c50de08ec0479b"},
+    {file = "types-aiobotocore-2.4.0.post1.tar.gz", hash = "sha256:a39c871cd88be036ae3fa8c40db36817f8481e927baae515171385468200e3ad"},
+    {file = "types_aiobotocore-2.4.0.post1-py3-none-any.whl", hash = "sha256:39740a5cf99e09822d1c9cc3c3d8666cb17646b0f722c92612c173db4399bf3b"},
 ]
 types-aiobotocore-cloudformation = [
     {file = "types-aiobotocore-cloudformation-2.4.0.tar.gz", hash = "sha256:f25cad80474c800ef2cdbb0033599ef02bd04af844db56ac06ce6a62de504494"},
