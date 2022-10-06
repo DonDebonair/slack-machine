@@ -1100,7 +1100,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "slack-sdk"
-version = "3.19.0"
+version = "3.19.1"
 description = "The Slack API Platform SDK for Python"
 category = "main"
 optional = false
@@ -2513,8 +2513,8 @@ six = [
     {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 slack-sdk = [
-    {file = "slack_sdk-3.19.0-py2.py3-none-any.whl", hash = "sha256:5110385001653a2f8ffc017f853d2721d25ea897a096b4866eb5298a31d4fa87"},
-    {file = "slack_sdk-3.19.0.tar.gz", hash = "sha256:041309a3ea93dbc1a7e88291f3276c8694926593ea5fab53d7061089d509c6ef"},
+    {file = "slack_sdk-3.19.1-py2.py3-none-any.whl", hash = "sha256:a0bafb9e53ffbc408a8b5a42443525aac2c0c7347223d9373dd9d41cf90c9343"},
+    {file = "slack_sdk-3.19.1.tar.gz", hash = "sha256:5db78a3ed3c58b3b0a2bdbe40bac43c7b00edcbc12ff6a7778ac5cbe3a3a2899"},
 ]
 sniffio = [
     {file = "sniffio-1.2.0-py3-none-any.whl", hash = "sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663"},
