@@ -1,18 +1,18 @@
-from dataclasses import dataclass
-from typing import List, Dict, Any, Optional
+from typing import List, Optional
 
-from dacite import from_dict
+from pydantic import BaseModel
 
 
-@dataclass(frozen=True)
-class PurposeTopic:
+class PurposeTopic(BaseModel):
     value: str
     creator: Optional[str]
     last_set: int
 
+    class Config:
+        allow_mutation = False
 
-@dataclass(frozen=True)
-class Channel:
+
+class Channel(BaseModel):
     """
     Channel model that represents a channel object from the Slack API
     """
@@ -44,6 +44,5 @@ class Channel:
         else:
             return self.id
 
-    @staticmethod
-    def from_api_response(user_reponse: Dict[str, Any]) -> "Channel":
-        return from_dict(data_class=Channel, data=user_reponse)
+    class Config:
+        allow_mutation = False

@@ -1,11 +1,9 @@
-from dataclasses import dataclass
-from typing import Optional, Dict, Any
+from typing import Optional
 
-from dacite import from_dict
+from pydantic import BaseModel
 
 
-@dataclass(frozen=True)
-class Profile:
+class Profile(BaseModel):
     avatar_hash: str
     status_text: Optional[str]
     status_emoji: Optional[str]
@@ -24,9 +22,11 @@ class Profile:
     email: Optional[str] = None
     image_original: Optional[str] = None
 
+    class Config:
+        allow_mutation = False
 
-@dataclass(frozen=True)
-class User:
+
+class User(BaseModel):
     """
     User model that represents a user object from the Slack API
     """
@@ -53,9 +53,8 @@ class User:
     has_2fa: Optional[bool] = None
     locale: Optional[str] = None
 
-    @staticmethod
-    def from_api_response(user_reponse: Dict[str, Any]) -> "User":
-        return from_dict(data_class=User, data=user_reponse)  # pragma: no cover
+    class Config:
+        allow_mutation = False
 
     def fmt_mention(self) -> str:
         return f"<@{self.id}>"
