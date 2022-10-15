@@ -44,7 +44,10 @@ httpx = "^0.23.0"
 aioboto3 = {version = "^10.0.0", optional = true}
 tzdata = "^2022.2"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
 pytest = "^7.1.3"
 pytest-mock = "^3.10.0"
 tox = "^3.26.0"
@@ -61,11 +64,16 @@ mock = "^4.0.3"
 mypy = "^0.982"
 types-redis = "^4.3.21"
 types-requests = "^2.28.11"
-mkdocstrings = {extras = ["python"], version = "^0.19.0"}
-mkdocs-material = "^8.5.6"
 flake8 = "<4.0.1"
 aioboto3 = "^10.0.0"
 types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+mkdocstrings = {extras = ["python"], version = "^0.19.0"}
+mkdocs-material = "^8.5.6"
 
 [tool.poetry.extras]
 redis = ["redis", "hiredis"]
@@ -86,10 +94,6 @@ preview = true
 [tool.pytest.ini_options]
 mock_use_standalone_module = true
 addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine"
-filterwarnings = [
-    "ignore:invalid escape sequence::bottle",
-    "ignore:Using or importing the ABCs::bottle"
-]
 
 [tool.mypy]
 python_version = "3.10"
