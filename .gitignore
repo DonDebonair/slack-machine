@@ -129,3 +129,5 @@ pytest.xml
 
 # we don't need setup.py anymore because we use poetry, but we generate it so we can install slack-machine as editable
 setup.py
+
+.mypy_cache
