@@ -21,6 +21,8 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 - Bump `tzdata` from 2022.4 to 2022.5
 - Bump `aioboto3` from 10.0.0 to 10.1.0
 - Add changelog to keep track of updates
+- Move to [structlog](https://www.structlog.org) for logging
+  ([#663](https://github.com/DonDebonair/slack-machine/pull/663))
 
 ## [0.30.0] - 2022-08-30
 

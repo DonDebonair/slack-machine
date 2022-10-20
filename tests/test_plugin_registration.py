@@ -6,6 +6,7 @@ from machine.clients.slack import SlackClient
 from machine.models.core import RegisteredActions
 from machine.plugins.decorators import required_settings
 from machine.utils.collections import CaseInsensitiveDict
+from machine.utils.logging import configure_logging
 
 
 @pytest.fixture(scope="module")
@@ -40,6 +41,7 @@ def required_settings_class():
 
 @pytest.mark.asyncio
 async def test_load_and_register_plugins(settings, slack_client):
+    configure_logging(settings)
     machine = Machine(settings=settings)
     machine._client = slack_client
     await machine._setup_storage()
