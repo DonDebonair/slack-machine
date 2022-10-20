@@ -1,9 +1,12 @@
 import asyncio
-import sys
 import os
+import sys
+
+from structlog.stdlib import get_logger
 
 from machine import Machine
-from machine.utils.text import announce
+
+logger = get_logger(__name__)
 
 
 def main() -> None:
@@ -17,5 +20,5 @@ def main() -> None:
     except KeyboardInterrupt:
         loop.run_until_complete(bot.close())
         loop.close()
-        announce("Thanks for playing!")
+        logger.info("Thanks for playing!")
         sys.exit(0)
