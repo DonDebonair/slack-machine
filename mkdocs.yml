@@ -41,6 +41,7 @@ nav:
       - 'plugins/misc.md'
   - 'api.md'
   - 'migrating.md'
+  - 'changelog.md'
 markdown_extensions:
   - pymdownx.highlight
   - pymdownx.inlinehilite

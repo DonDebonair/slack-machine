@@ -8,6 +8,20 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+### Changed
+
+- Moved Slack Machine community chat to [Slack](https://join.slack.com/t/slack-machine-chat/shared_invite/zt-1g87tzvlf-8bV_WnY3JZyaYNnRFwRd~w)
+- Type-hint coverage is now 100% so mypy is happy ([#633](https://github.com/DonDebonair/slack-machine/pull/633))
+- Update _pyproject.toml_ to conform to Poetry 1.2 dependency specification
+  ([#657](https://github.com/DonDebonair/slack-machine/pull/657))
+- Replace `dacite` with `pydantic` to create models for Slack API interactions
+  ([#659](https://github.com/DonDebonair/slack-machine/pull/659))
+- Bump `aiohttp` from 3.8.1 to 3.8.3
+- Bump `slack-sdk` from 3.18.3 to 3.19.1
+- Bump `tzdata` from 2022.4 to 2022.5
+- Bump `aioboto3` from 10.0.0 to 10.1.0
+- Add changelog to keep track of updates
+
 ## [0.30.0] - 2022-08-30
 
 ### Changed
