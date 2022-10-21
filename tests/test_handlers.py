@@ -1,5 +1,6 @@
 from __future__ import annotations
 import re
+from inspect import Signature
 
 import pytest
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
@@ -54,6 +55,7 @@ def plugin_actions(fake_plugin):
                 class_=fake_plugin,
                 class_name="tests.fake_plugins.FakePlugin",
                 function=listen_fn,
+                function_signature=Signature.from_callable(listen_fn),
                 regex=re.compile("hi", re.IGNORECASE),
                 handle_message_changed=True,
             )
@@ -63,6 +65,7 @@ def plugin_actions(fake_plugin):
                 class_=fake_plugin,
                 class_name="tests.fake_plugins.FakePlugin",
                 function=respond_fn,
+                function_signature=Signature.from_callable(respond_fn),
                 regex=re.compile("hello", re.IGNORECASE),
                 handle_message_changed=False,
             )
@@ -158,7 +161,7 @@ async def test_handle_message_listen_to(plugin_actions, fake_plugin, slack_clien
     bot_id = "123"
     msg_event = _gen_msg_event("hi")
 
-    await handle_message(msg_event, bot_name, bot_id, plugin_actions, message_matcher, slack_client)
+    await handle_message(msg_event, bot_name, bot_id, plugin_actions, message_matcher, slack_client, True)
     assert fake_plugin.listen_function.call_count == 1
     assert fake_plugin.respond_function.call_count == 0
     args = fake_plugin.listen_function.call_args
@@ -170,7 +173,7 @@ async def test_handle_message_respond_to(plugin_actions, fake_plugin, slack_clie
     bot_name = "superbot"
     bot_id = "123"
     msg_event = _gen_msg_event("<@123> hello")
-    await handle_message(msg_event, bot_name, bot_id, plugin_actions, message_matcher, slack_client)
+    await handle_message(msg_event, bot_name, bot_id, plugin_actions, message_matcher, slack_client, True)
     assert fake_plugin.respond_function.call_count == 1
     assert fake_plugin.listen_function.call_count == 0
     args = fake_plugin.respond_function.call_args
@@ -191,7 +194,7 @@ async def test_handle_message_changed(plugin_actions, fake_plugin, slack_client,
         "channel_type": "channel",
         "channel": "C123",
     }
-    await handle_message(msg_event, bot_name, bot_id, plugin_actions, message_matcher, slack_client)
+    await handle_message(msg_event, bot_name, bot_id, plugin_actions, message_matcher, slack_client, True)
     assert fake_plugin.respond_function.call_count == 0
     assert fake_plugin.listen_function.call_count == 1
     args = fake_plugin.listen_function.call_args

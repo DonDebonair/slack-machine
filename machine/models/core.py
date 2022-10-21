@@ -2,6 +2,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from typing import Callable, Any, Awaitable
+from inspect import Signature
 
 from machine.plugins.base import MachineBasePlugin
 
@@ -23,6 +24,7 @@ class MessageHandler:
     class_: MachineBasePlugin
     class_name: str
     function: Callable[..., Awaitable[None]]
+    function_signature: Signature
     regex: re.Pattern[str]
     handle_message_changed: bool
 

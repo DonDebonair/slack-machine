@@ -30,6 +30,8 @@ Slack Machine, and the most of the built-in plugins, only need a `SLACK_APP_TOKE
 
 You can override the log level by setting `LOGLEVEL`. By default this is set to `"ERROR"`.
 
+If you want to use Slack Machine behind a proxy, you can set `HTTP_PROXY`.
+
 ### Using environment variables for configuration
 
 For some configuration, it can be a security consideration not to store them in your source code

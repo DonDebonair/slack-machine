@@ -24,6 +24,11 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 - Move to [structlog](https://www.structlog.org) for logging
   ([#663](https://github.com/DonDebonair/slack-machine/pull/663))
 
+### Removed
+
+- Remove unused settings: `DISABLE_HTTP`, `HTTP_SERVER_HOST`, `HTTP_SERVER_PORT`, `HTTP_SERVER_BACKEND`, `HTTPS_PROXY`,
+  `KEEP_ALIVE`
+
 ## [0.30.0] - 2022-08-30
 
 ### Changed

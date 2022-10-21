@@ -17,14 +17,9 @@ def import_settings(settings_module: str = "local_settings") -> Tuple[CaseInsens
             "machine.plugins.builtin.fun.memes.MemePlugin",
         ],
         "STORAGE_BACKEND": "machine.storage.backends.memory.MemoryStorage",
-        "DISABLE_HTTP": False,
-        "HTTP_SERVER_HOST": "0.0.0.0",
-        "HTTP_SERVER_PORT": 8080,
-        "HTTP_SERVER_BACKEND": "wsgiref",
         "HTTP_PROXY": None,
-        "HTTPS_PROXY": None,
-        "KEEP_ALIVE": None,
         "TZ": "UTC",
+        "LOG_HANDLED_MESSAGES": True,
     }
     settings = CaseInsensitiveDict(default_settings)
     try:

@@ -5,6 +5,8 @@ import logging
 import re
 from typing import Any, Callable, Awaitable, Mapping
 
+from structlog.stdlib import get_logger
+
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
@@ -41,6 +43,7 @@ def create_message_handler(
                     plugin_actions=plugin_actions,
                     message_matcher=message_matcher,
                     slack_client=slack_client,
+                    log_handled_message=settings["LOG_HANDLED_MESSAGES"],
                 )
 
     return message_handler
@@ -84,6 +87,7 @@ async def handle_message(
     plugin_actions: RegisteredActions,
     message_matcher: re.Pattern,
     slack_client: SlackClient,
+    log_handled_message: bool,
 ) -> None:
     # Handle message subtype 'message_changed' to allow the bot to respond to edits
     if "subtype" in event and event["subtype"] == "message_changed":
@@ -103,9 +107,9 @@ async def handle_message(
         )
         if respond_to_msg:
             listeners += list(plugin_actions.respond_to.values())
-            await dispatch_listeners(respond_to_msg, listeners, slack_client)
+            await dispatch_listeners(respond_to_msg, listeners, slack_client, log_handled_message)
         else:
-            await dispatch_listeners(event, listeners, slack_client)
+            await dispatch_listeners(event, listeners, slack_client, log_handled_message)
 
 
 def _check_bot_mention(
@@ -145,7 +149,7 @@ def _gen_message(event: dict[str, Any], plugin_class_name: str, slack_client: Sl
 
 
 async def dispatch_listeners(
-    event: dict[str, Any], message_handlers: list[MessageHandler], slack_client: SlackClient
+    event: dict[str, Any], message_handlers: list[MessageHandler], slack_client: SlackClient, log_handled_message: bool
 ) -> None:
     handler_funcs = []
     for handler in message_handlers:
@@ -155,7 +159,15 @@ async def dispatch_listeners(
         match = matcher.search(event.get("text", ""))
         if match:
             message = _gen_message(event, handler.class_name, slack_client)
-            handler_funcs.append(handler.function(message, **match.groupdict()))
+            extra_params = {**match.groupdict()}
+            fq_fn_name = f"{handler.class_name}.{handler.function.__name__}"
+            handler_logger = get_logger(fq_fn_name)
+            handler_logger = handler_logger.bind(user_id=message.sender.id, user_name=message.sender.name)
+            if log_handled_message:
+                handler_logger.info("Handling message", message=message.text)
+            if "logger" in handler.function_signature.parameters:
+                extra_params["logger"] = handler_logger
+            handler_funcs.append(handler.function(message, **extra_params))
     await asyncio.gather(*handler_funcs)
     return
 
