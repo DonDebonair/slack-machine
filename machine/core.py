@@ -6,6 +6,7 @@ from structlog.stdlib import get_logger
 import os
 import sys
 from typing import Callable, cast, Awaitable
+from inspect import Signature
 
 import dill
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -109,6 +110,7 @@ class Machine:
         self._socket_mode_client = SocketModeClient(
             app_token=self._settings["SLACK_APP_TOKEN"],
             web_client=AsyncWebClient(token=self._settings["SLACK_BOT_TOKEN"]),
+            proxy=self._settings["HTTP_PROXY"],
         )
 
         # Setup high-level Slack client for plugins
@@ -225,10 +227,13 @@ class Machine:
         matcher_config: MatcherConfig,
         class_help: str,
     ) -> None:
+        signature = Signature.from_callable(function)
+        logger.debug("signature of handler", signature=signature, function=fq_fn_name)
         handler = MessageHandler(
             class_=class_,
             class_name=class_name,
             function=function,
+            function_signature=signature,
             regex=matcher_config.regex,
             handle_message_changed=matcher_config.handle_changed_message,
         )
