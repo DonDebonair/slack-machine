@@ -19,7 +19,7 @@ Once you have installed Slack Machine, configuring and starting your bot is easy
     SLACK_BOT_TOKEN = "xoxb-my-bot-token"
     ```
 
-7. Start the bot with `slack-machine-async`
+7. Start the bot with `slack-machine`
 8. ...
 9. Profit!
 
