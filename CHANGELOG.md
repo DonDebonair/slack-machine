@@ -8,6 +8,8 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.31.0] - 2022-10-21
+
 ### Changed
 
 - Moved Slack Machine community chat to [Slack](https://join.slack.com/t/slack-machine-chat/shared_invite/zt-1g87tzvlf-8bV_WnY3JZyaYNnRFwRd~w)
@@ -21,7 +23,8 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 - Bump `tzdata` from 2022.4 to 2022.5
 - Bump `aioboto3` from 10.0.0 to 10.1.0
 - Add changelog to keep track of updates
-- Move to [structlog](https://www.structlog.org) for logging
+- Move to [structlog](https://www.structlog.org) for logging, fixes
+  [#599](https://github.com/DonDebonair/slack-machine/issues/599)
   ([#663](https://github.com/DonDebonair/slack-machine/pull/663))
 
 ### Removed
@@ -529,7 +532,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.30.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.31.0...HEAD
+[0.31.0]: https://github.com/DonDebonair/slack-machine/compare/v0.30.0...v0.31.0
 [0.30.0]: https://github.com/DonDebonair/slack-machine/compare/v0.28.2...v0.30.0
 [0.28.2]: https://github.com/DonDebonair/slack-machine/compare/v0.28.1...v0.28.2
 [0.28.1]: https://github.com/DonDebonair/slack-machine/compare/v0.28.0...v0.28.1
