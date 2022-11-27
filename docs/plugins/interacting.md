@@ -167,7 +167,7 @@ PLUGINS = [
 You can get the *member ID* from a user by going to their Slack profile, clicking *more* and selecting *Copy member ID*.
 
 If you wish to share the powers of root you can enable the RBAC admin
-plugin [`RBACPlugin`][machine.plugins.builtin.admin.RBACPlugin] and grant the *admin* role to users you trust.
+plugin `machine.plugins.builtin.admin.RBACPlugin` and grant the *admin* role to users you trust.
 
 The RBAC plugin provides you with three new commands that lets you lookup, grant and revoke roles to users:
 
@@ -213,3 +213,12 @@ async def broadcast_bathroom_usage(self, msg):
 ```
 
 You can read [the events section][events] to see how your plugin can listen for events.
+
+
+## Using the Slack Web API in other ways
+
+Sometimes you want to use [Slack Web API](https://api.slack.com/web) in ways that are not directly exposed by
+[`MachineBaserPlugin`][machine.plugins.base.MachineBasePlugin]. In these cases you can use
+[`self.web_client`][machine.plugins.base.MachineBasePlugin.web_client]. `self.web_client` references the
+[`AsyncWebClient`](https://slack.dev/python-slack-sdk/api-docs/slack_sdk/web/async_client.html#slack_sdk.web.async_client.AsyncWebClient)
+object of the underlying Slack Python SDK.

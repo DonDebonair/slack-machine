@@ -9,6 +9,7 @@ from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
+from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
 from machine.models import Channel
@@ -49,6 +50,10 @@ class SlackClient:
         self._users = {}
         self._channels: dict[str, Channel] = {}
         self._tz = tz
+
+    @property
+    def web_client(self) -> AsyncWebClient:
+        return self._client.web_client
 
     def register_handler(
         self,

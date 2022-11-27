@@ -58,11 +58,11 @@ plugins:
   - mkdocstrings:
       handlers:
         python:
-          selection:
+          options:
             docstring_style: sphinx
-          rendering:
             show_root_heading: yes
             show_signature_annotations: yes
             members_order: source
           import:
             - https://docs.python.org/dev/objects.inv
+            - https://slack.dev/python-slack-sdk/objects.inv
