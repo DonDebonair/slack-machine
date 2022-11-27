@@ -5,6 +5,7 @@ from typing import Any, Sequence, cast
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
+from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
 from machine.utils.collections import CaseInsensitiveDict
@@ -59,7 +60,7 @@ class MachineBasePlugin:
         """Dictionary of all users in the Slack workspace
 
         :return: a dictionary of all users in the Slack workspace, where the key is the user id and
-            the value is a :py:class:`~machine.models.user.User` object
+            the value is a [`User`][machine.models.user.User] object
         """
         return self._client.users
 
@@ -75,6 +76,17 @@ class MachineBasePlugin:
             :py:class:`~machine.models.channel.Channel` object
         """
         return self._client.channels
+
+    @property
+    def web_client(self) -> AsyncWebClient:
+        """Slack SDK web client to access the [Slack Web API][slack-web-api]
+
+        This property references an instance of [`AsyncWebClient`][async-web-client]
+
+        [slack-web-api]: https://api.slack.com/web
+        [async-web-client]: https://slack.dev/python-slack-sdk/api-docs/slack_sdk/web/async_client.html#slack_sdk.web.async_client.AsyncWebClient  # noqa: E501
+        """
+        return self._client.web_client
 
     def find_channel_by_name(self, channel_name: str) -> Channel | None:
         """Find a channel by its name, irrespective of a preceding pound symbol. This does not include DMs.
@@ -283,7 +295,7 @@ class MachineBasePlugin:
         arguments.
 
         :param event: name of the event
-        :param kwargs: any data you want to emit with the event
+        :param **kwargs: any data you want to emit with the event
         :return: None
         """
         ee.emit(event, self, **kwargs)
