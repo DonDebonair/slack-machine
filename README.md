@@ -99,7 +99,7 @@ It is **strongly recommended** that you install `slack-machine` inside a
     SLACK_BOT_TOKEN = "xoxb-my-bot-token"
     ```
 
-7. Start the bot with `slack-machine-async`
+7. Start the bot with `slack-machine`
 8. ...
 9. Profit!
 
