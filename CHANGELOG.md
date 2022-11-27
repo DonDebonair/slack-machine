@@ -8,6 +8,10 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+### Added
+
+- Add Python 3.10 support ([#676](https://github.com/DonDebonair/slack-machine/pull/676))
+
 ## [0.31.0] - 2022-10-21
 
 ### Changed
