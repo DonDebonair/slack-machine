@@ -8,10 +8,27 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.32.0] - 2022-11-27
+
 ### Added
 
-- Add Python 3.10 support ([#676](https://github.com/DonDebonair/slack-machine/pull/676))
+- Add Python 3.11 support ([#676](https://github.com/DonDebonair/slack-machine/pull/676))
 - Expose web client of Slack SDK ([#677](https://github.com/DonDebonair/slack-machine/pull/677))
+
+### Changed
+
+- Bump `dill` from 0.3.5.1 to 0.3.6
+- Bump `slack-sdk` from 3.19.1 to 3.19.4
+- Bump `tzdata` from 2022.5 to 2022.6
+- Bump `apscheduler` from 3.9.1 to 3.9.1.post1
+- Bump `httpx` from 0.23.0 to 0.23.1
+- Bump `redis` from 4.3.4 to 4.3.5
+- Bump `structlog` from 22.1.0 to 22.3.0
+
+### Fixed
+
+- Fix documentation typos ([#665](https://github.com/DonDebonair/slack-machine/pull/665) by
+  [**@bennylu2**](https://github.com/bennylu2))
 
 ## [0.31.0] - 2022-10-21
 
@@ -127,10 +144,10 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ### Changed
 
-- Bump `redis` from 4.0.2 to 4.2.0 ([#545](https://github.com/DonDebonair/slack-machine/pull/545) [#562](https://github.com/DonDebonair/slack-machine/pull/562))
-- Bump `slack-sdk` from 3.12.0 to 3.15.2 ([#546](https://github.com/DonDebonair/slack-machine/pull/546) [#560](https://github.com/DonDebonair/slack-machine/pull/560))
-- Bump `requests` from 2.26.0 to 2.27.1 ([#532](https://github.com/DonDebonair/slack-machine/pull/532))
-- Bump `apscheduler` from 3.8.1 to 3.9.1 ([#556](https://github.com/DonDebonair/slack-machine/pull/556))
+- Bump `redis` from 4.0.2 to 4.2.0
+- Bump `slack-sdk` from 3.12.0 to 3.15.2
+- Bump `requests` from 2.26.0 to 2.27.1
+- Bump `apscheduler` from 3.8.1 to 3.9.1
 
 ### Fixed
 
@@ -145,8 +162,8 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ### Changed
 
-- Bump `redis` from 3.5.3 to 4.0.2 ([#512](https://github.com/DonDebonair/slack-machine/pull/512) [#513](https://github.com/DonDebonair/slack-machine/pull/513))
-- Bump `apscheduler` from 3.8.0 to 3.8.1 ([#507](https://github.com/DonDebonair/slack-machine/pull/507))
+- Bump `redis` from 3.5.3 to 4.0.2
+- Bump `apscheduler` from 3.8.0 to 3.8.1
 - Move documentation from Sphinx to MkDocs and [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
   for beautiful docs ([#514](https://github.com/DonDebonair/slack-machine/pull/514))
 - Switch from `slackclient` to `slack_sdk` library, fixes [#443](https://github.com/DonDebonair/slack-machine/issues/443)
@@ -180,7 +197,7 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 ### Changed
 
 - Switch to Poetry for project and dependency management
-- Bump `apscheduler` from 3.7.0 to 3.8.0 ([#497](https://github.com/DonDebonair/slack-machine/pull/497))
+- Bump `apscheduler` from 3.7.0 to 3.8.0
 
 ### Fixed
 
@@ -190,9 +207,9 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ### Changed
 
-- Bump `dill` from 0.3.3 to 0.3.4 ([#477](https://github.com/DonDebonair/slack-machine/pull/477))
-- Bump `requests` from 2.25.1 to 2.26.0 ([#481](https://github.com/DonDebonair/slack-machine/pull/481))
-- Bump `cython` from 0.29.23 to 0.29.24 ([#482](https://github.com/DonDebonair/slack-machine/pull/482))
+- Bump `dill` from 0.3.3 to 0.3.4
+- Bump `requests` from 2.25.1 to 2.26.0
+- Bump `cython` from 0.29.23 to 0.29.24
 - Use Github Actions for CI and drop Travis ([#492](https://github.com/DonDebonair/slack-machine/pull/492))
 - Switch `master` branch to `main` to get with the times
 
@@ -395,9 +412,8 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 - Make HTTP server host & port configurable ([#64](https://github.com/DonDebonair/slack-machine/pull/64) by
   [**@pirogoeth**](https://github.com/pirogoeth))
-- Bump `dill` from 0.2.7.1 to 0.2.8.2 ([#62](https://github.com/DonDebonair/slack-machine/pull/62))
-- Bump `slackclient` from 1.1.3 to 1.2.1 ([#42](https://github.com/DonDebonair/slack-machine/pull/42)
-  [#45](https://github.com/DonDebonair/slack-machine/pull/45))
+- Bump `dill` from 0.2.7.1 to 0.2.8.2
+- Bump `slackclient` from 1.1.3 to 1.2.1
 
 ## [0.13.1] - 2018-03-06
 
@@ -415,13 +431,13 @@ _:warning: NOTE: release was yanked due to lack of documentation_
 
 ### Changed
 
-- Bump `slackclient` from 1.1.2 to 1.1.3 ([#37](https://github.com/DonDebonair/slack-machine/pull/37))
+- Bump `slackclient` from 1.1.2 to 1.1.3
 
 ## [0.12.2] - 2018-02-26
 
 ### Changed
 
-- Bump `slackclient` from 1.1.0 to 1.1.2 ([#26](https://github.com/DonDebonair/slack-machine/pull/26))
+- Bump `slackclient` from 1.1.0 to 1.1.2
 - Memes plugin: support custom meme templates
 
 ### Fixed
@@ -456,15 +472,14 @@ _:warning: NOTE: release was yanked due to lack of documentation_
 
 ### Changed
 
-- Bump `apscheduler` from 3.4.0 to 3.5.1 ([#20](https://github.com/DonDebonair/slack-machine/pull/20)
-  [#23](https://github.com/DonDebonair/slack-machine/pull/23))
+- Bump `apscheduler` from 3.4.0 to 3.5.1
 
 ## [0.9.0] - 2017-12-03
 
 ### Changed
 
-- Bump `apscheduler` from 3.3.1 to 3.4.0 ([#8](https://github.com/DonDebonair/slack-machine/pull/8))
-- Bump `slackclient` from 1.0.9 to 1.1.0 ([#16](https://github.com/DonDebonair/slack-machine/pull/16))
+- Bump `apscheduler` from 3.3.1 to 3.4.0
+- Bump `slackclient` from 1.0.9 to 1.1.0
 - WebAPI methods will return deserialized API responses ([#14](https://github.com/DonDebonair/slack-machine/pull/14)
   by [**@pirogoeth**](https://github.com/pirogoeth))
 
@@ -537,7 +552,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.31.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...HEAD
+[0.32.0]: https://github.com/DonDebonair/slack-machine/compare/v0.31.0...v0.32.0
 [0.31.0]: https://github.com/DonDebonair/slack-machine/compare/v0.30.0...v0.31.0
 [0.30.0]: https://github.com/DonDebonair/slack-machine/compare/v0.28.2...v0.30.0
 [0.28.2]: https://github.com/DonDebonair/slack-machine/compare/v0.28.1...v0.28.2
