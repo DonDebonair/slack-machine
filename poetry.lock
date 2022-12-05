@@ -1,13 +1,13 @@
 [[package]]
 name = "aioboto3"
-version = "10.1.0"
+version = "10.2.0"
 description = "Async boto3 wrapper"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 
 [package.dependencies]
-aiobotocore = {version = "2.4.0", extras = ["boto3"]}
+aiobotocore = {version = "2.4.1", extras = ["boto3"]}
 
 [package.extras]
 chalice = ["chalice (>=1.24.0)"]
@@ -15,7 +15,7 @@ s3cse = ["cryptography (>=2.3.1)"]
 
 [[package]]
 name = "aiobotocore"
-version = "2.4.0"
+version = "2.4.1"
 description = "Async client for aws services using botocore and aiohttp"
 category = "main"
 optional = false
@@ -1747,12 +1747,12 @@ content-hash = "b35276f0ba0393070cdb56814804f137cfbe3dde42be601129a0d4f1ba69ddae
 
 [metadata.files]
 aioboto3 = [
-    {file = "aioboto3-10.1.0-py3-none-any.whl", hash = "sha256:61806d41a8e0637c9388a30dd80c6daa5a0f89fd3a6856ba30e9d943b07ddad2"},
-    {file = "aioboto3-10.1.0.tar.gz", hash = "sha256:212cd30334e203cadc6389c526478cc6eaba266589637f5df2133c76f97b8544"},
+    {file = "aioboto3-10.2.0-py3-none-any.whl", hash = "sha256:077891f718bdec6432357768c399e86522a37d6893a2b2d76c2e510d9c8d7b6f"},
+    {file = "aioboto3-10.2.0.tar.gz", hash = "sha256:256b6003cd8ccddf7a445dd9dc209dec240cd9cb9f07acc004df5ec655c49ef4"},
 ]
 aiobotocore = [
-    {file = "aiobotocore-2.4.0-py3-none-any.whl", hash = "sha256:6c25381d31b712652bc2f6008683949351c240c56d24b1d8ae252c1034a50f63"},
-    {file = "aiobotocore-2.4.0.tar.gz", hash = "sha256:f9fe0698cc497861bdb54cd16161c804031f758ada9480c35540f20c0c078385"},
+    {file = "aiobotocore-2.4.1-py3-none-any.whl", hash = "sha256:26e0d55d5901f487c3467616c028abb85036ca33a0f88e279770adae6b865c69"},
+    {file = "aiobotocore-2.4.1.tar.gz", hash = "sha256:5c8ee79d1f14273e3f8f3af5c893db889ef163227b178ecacb5aea4547d3b9a7"},
 ]
 aiohttp = [
     {file = "aiohttp-3.8.3-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:ba71c9b4dcbb16212f334126cc3d8beb6af377f6703d9dc2d9fb3874fd667ee9"},
