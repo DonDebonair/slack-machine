@@ -27,7 +27,7 @@ messages that have been _changed_. By default, only _new_ messages will trigger 
 
 ### How your function will be called
 
-Your function will be called with a [`Message`][machine.plugins.base.Message] object that represents the message
+Your function will be called with a [`Message`][machine.plugins.message.Message] object that represents the message
 that triggered the function. It not only contains the message text itself, but also has many convenient
 methods for replying.
 

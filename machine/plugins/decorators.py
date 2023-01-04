@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import inspect
 import logging
 import re
 from dataclasses import dataclass, field
@@ -11,8 +12,8 @@ from typing_extensions import Protocol
 
 from machine.plugins import ee
 from machine.plugins.admin_utils import matching_roles_by_user_id, RoleCombinator
-from machine.plugins.base import MachineBasePlugin, Message
-
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,13 @@ logger = logging.getLogger(__name__)
 @dataclass
 class MatcherConfig:
     regex: re.Pattern[str]
-    handle_changed_message: bool
+    handle_changed_message: bool = False
+
+
+@dataclass
+class CommandConfig:
+    command: str
+    is_generator: bool = False
 
 
 @dataclass
@@ -29,6 +36,7 @@ class PluginActions:
     listen_to: list[MatcherConfig] = field(default_factory=list)
     respond_to: list[MatcherConfig] = field(default_factory=list)
     schedule: dict[str, Any] | None = None
+    commands: list[CommandConfig] = field(default_factory=list)
 
 
 @dataclass
@@ -123,6 +131,30 @@ def respond_to(
         return fn
 
     return respond_to_decorator
+
+
+def command(slash_command: str) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
+    """Respond to a slash command
+
+    This decorator will enable a Plugin method to respond to slash commands
+
+    :param slash_command: the slash command to respond to
+    :return: wrapped method
+    """
+
+    def command_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        if not slash_command.startswith("/"):
+            normalized_slash_command = f"/{slash_command}"
+        else:
+            normalized_slash_command = slash_command
+        fn.metadata.plugin_actions.commands.append(
+            CommandConfig(command=normalized_slash_command, is_generator=inspect.isasyncgenfunction(f))
+        )
+        return fn
+
+    return command_decorator
 
 
 def schedule(
