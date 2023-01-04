@@ -49,7 +49,7 @@ Slack Machine will automatically inject a logger with the right context variable
 will produce a message like:
 
 ```bash
-2022-10-21T14:29:05.639162Z [info] my_handler invoked! [example_plugin.my_plugin:MyPlugin.my_handler] filename=my_plugin.py func_name=my_handler lineno=5 user_id=U12345678 user_name=user1
+2022-10-21T14:29:05.639162Z [info] my_handler invoked! [example_plugin.my_plugin.MyPlugin.my_handler] filename=my_plugin.py func_name=my_handler lineno=5 user_id=U12345678 user_name=user1
 ```
 
 This works only for handler functions that are decorated with

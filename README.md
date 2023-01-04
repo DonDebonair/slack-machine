@@ -13,11 +13,14 @@ with an intuitive plugin system that lets you build bots quickly, but also allow
 plugin can look as simple as this:
 
 ```python
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to
+
 
 class DeploymentPlugin(MachineBasePlugin):
     """Deployments"""
+
     @respond_to(r"deploy (?P<application>\w+) to (?P<environment>\w+)")
     async def deploy(self, msg: Message, application, environment):
         """deploy <application> <environment>: deploy application to target environment"""

@@ -4,7 +4,8 @@ from typing import Tuple, Any
 import httpx
 from slack_sdk.models.blocks import ImageBlock, PlainTextObject
 
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to
 from machine.plugins.builtin.fun.regexes import url_regex
 

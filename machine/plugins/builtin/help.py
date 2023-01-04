@@ -2,7 +2,8 @@ from __future__ import annotations
 import logging
 
 from machine.models.core import Manual, HumanHelp
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to
 
 logger = logging.getLogger(__name__)

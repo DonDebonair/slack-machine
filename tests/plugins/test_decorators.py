@@ -6,10 +6,12 @@ from machine.plugins.decorators import (
     process,
     listen_to,
     respond_to,
+    command,
     required_settings,
     on,
     schedule,
     MatcherConfig,
+    CommandConfig,
 )
 
 
@@ -36,6 +38,33 @@ def respond_to_f():
     @respond_to(r"hello-respond", re.IGNORECASE, handle_message_changed=True)
     def f(msg):
         pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def command_f():
+    @command("/test")
+    async def f(cmd):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def command_f_no_slash():
+    @command("no-slash-test")
+    async def f(cmd):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def command_f_generator():
+    @command("/test-generator")
+    async def f(cmd):
+        yield "hello"
 
     return f
 
@@ -127,6 +156,29 @@ def test_respond_to(respond_to_f):
     assert hasattr(respond_to_f.metadata.plugin_actions, "respond_to")
     assert respond_to_f.metadata.plugin_actions.respond_to == [
         MatcherConfig(regex=re.compile(r"hello-respond", re.IGNORECASE), handle_changed_message=True)
+    ]
+
+
+def test_command(command_f):
+    assert hasattr(command_f, "metadata")
+    assert hasattr(command_f.metadata, "plugin_actions")
+    assert hasattr(command_f.metadata.plugin_actions, "commands")
+    assert command_f.metadata.plugin_actions.commands == [CommandConfig(command="/test")]
+
+
+def test_command_no_slash(command_f_no_slash):
+    assert hasattr(command_f_no_slash, "metadata")
+    assert hasattr(command_f_no_slash.metadata, "plugin_actions")
+    assert hasattr(command_f_no_slash.metadata.plugin_actions, "commands")
+    assert command_f_no_slash.metadata.plugin_actions.commands == [CommandConfig(command="/no-slash-test")]
+
+
+def test_command_generator(command_f_generator):
+    assert hasattr(command_f_generator, "metadata")
+    assert hasattr(command_f_generator.metadata, "plugin_actions")
+    assert hasattr(command_f_generator.metadata.plugin_actions, "commands")
+    assert command_f_generator.metadata.plugin_actions.commands == [
+        CommandConfig(command="/test-generator", is_generator=True)
     ]
 
 
