@@ -1,6 +1,6 @@
 [[package]]
 name = "aioboto3"
-version = "10.2.0"
+version = "10.3.0"
 description = "Async boto3 wrapper"
 category = "main"
 optional = false
@@ -1746,8 +1746,8 @@ content-hash = "b35276f0ba0393070cdb56814804f137cfbe3dde42be601129a0d4f1ba69ddae
 
 [metadata.files]
 aioboto3 = [
-    {file = "aioboto3-10.2.0-py3-none-any.whl", hash = "sha256:077891f718bdec6432357768c399e86522a37d6893a2b2d76c2e510d9c8d7b6f"},
-    {file = "aioboto3-10.2.0.tar.gz", hash = "sha256:256b6003cd8ccddf7a445dd9dc209dec240cd9cb9f07acc004df5ec655c49ef4"},
+    {file = "aioboto3-10.3.0-py3-none-any.whl", hash = "sha256:ee3ce30ffcfb3e823dd2a9187cc418b61330a8184f1c0da585440fb41cc7deb8"},
+    {file = "aioboto3-10.3.0.tar.gz", hash = "sha256:7a927f91152c6ac78fd09660726bd36ba9dc8683f2a4ba5a5ba6ef8b27d63928"},
 ]
 aiobotocore = [
     {file = "aiobotocore-2.4.1-py3-none-any.whl", hash = "sha256:26e0d55d5901f487c3467616c028abb85036ca33a0f88e279770adae6b865c69"},
