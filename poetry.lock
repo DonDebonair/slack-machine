@@ -2,18 +2,18 @@
 
 [[package]]
 name = "aioboto3"
-version = "10.3.0"
+version = "10.4.0"
 description = "Async boto3 wrapper"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "aioboto3-10.3.0-py3-none-any.whl", hash = "sha256:ee3ce30ffcfb3e823dd2a9187cc418b61330a8184f1c0da585440fb41cc7deb8"},
-    {file = "aioboto3-10.3.0.tar.gz", hash = "sha256:7a927f91152c6ac78fd09660726bd36ba9dc8683f2a4ba5a5ba6ef8b27d63928"},
+    {file = "aioboto3-10.4.0-py3-none-any.whl", hash = "sha256:6d0f0bf6af0168c27828e108f1a24182669a6ea6939437c27638caf06a693403"},
+    {file = "aioboto3-10.4.0.tar.gz", hash = "sha256:e52b5f96b67031ddcbabcc55015bad3f851d3d4e6d5bfc7a1d1518d90e0c1fd8"},
 ]
 
 [package.dependencies]
-aiobotocore = {version = "2.4.1", extras = ["boto3"]}
+aiobotocore = {version = "2.4.2", extras = ["boto3"]}
 
 [package.extras]
 chalice = ["chalice (>=1.24.0)"]
@@ -21,14 +21,14 @@ s3cse = ["cryptography (>=2.3.1)"]
 
 [[package]]
 name = "aiobotocore"
-version = "2.4.1"
+version = "2.4.2"
 description = "Async client for aws services using botocore and aiohttp"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "aiobotocore-2.4.1-py3-none-any.whl", hash = "sha256:26e0d55d5901f487c3467616c028abb85036ca33a0f88e279770adae6b865c69"},
-    {file = "aiobotocore-2.4.1.tar.gz", hash = "sha256:5c8ee79d1f14273e3f8f3af5c893db889ef163227b178ecacb5aea4547d3b9a7"},
+    {file = "aiobotocore-2.4.2-py3-none-any.whl", hash = "sha256:4acd1ebe2e44be4b100aa553910bda899f6dc090b3da2bc1cf3d5de2146ed208"},
+    {file = "aiobotocore-2.4.2.tar.gz", hash = "sha256:0603b74a582dffa7511ce7548d07dc9b10ec87bc5fb657eb0b34f9bd490958bf"},
 ]
 
 [package.dependencies]
