@@ -1936,14 +1936,14 @@ pyyaml = "*"
 
 [[package]]
 name = "redis"
-version = "4.4.2"
+version = "4.5.0"
 description = "Python client for Redis database and key-value store"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "redis-4.4.2-py3-none-any.whl", hash = "sha256:e6206448e2f8a432871d07d432c13ed6c2abcf6b74edb436c99752b1371be387"},
-    {file = "redis-4.4.2.tar.gz", hash = "sha256:a010f6cb7378065040a02839c3f75c7e0fb37a87116fb4a95be82a95552776c7"},
+    {file = "redis-4.5.0-py3-none-any.whl", hash = "sha256:98d265eea4d2255f4d0ea98c53326adf30c0a581b6cfba9d77eefb341ed8145c"},
+    {file = "redis-4.5.0.tar.gz", hash = "sha256:16135483fd35fb6c3927e4bb056780a0ad11234f61e0aa81f1db89292129c714"},
 ]
 
 [package.dependencies]
