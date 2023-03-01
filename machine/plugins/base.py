@@ -360,3 +360,74 @@ class MachineBasePlugin:
         :return: response from the Slack Web API
         """
         return await self._client.set_topic(channel, topic, **kwargs)
+
+    async def update(
+        self,
+        channel: Channel | str,
+        ts: str,
+        text: str | None = None,
+        attachments: Sequence[Attachment] | Sequence[dict[str, Any]] | None = None,
+        blocks: Sequence[Block] | Sequence[dict[str, Any]] | None = None,
+        ephemeral_user: User | str | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
+        """Updates existing message
+
+        Update an existing message using the WebAPI. Allows for rich formatting using
+        `blocks`_ and/or `attachments`_. You can provide blocks and attachments as Python dicts or
+        you can use the `convenient classes`_ that the underlying slack client provides.
+        Can also update in-thread and ephemeral messages, visible to only one user.
+        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
+        `chat.postEphemeral`_ request.
+
+        .. _attachments: https://api.slack.com/docs/message-attachments
+        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        .. _convenient classes:
+            https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+
+        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
+            message to. Can be public or private (group) channel, or DM channel.
+        :param ts: Timestamp of the message to be updated.
+        :param text: message text
+        :param attachments: optional attachments (see `attachments`_)
+        :param blocks: optional blocks (see `blocks`_)
+        :param thread_ts: optional timestamp of thread, to send a message in that thread
+        :param ephemeral_user: optional user name or id if the message needs to visible
+            to a specific user only
+        :return: Dictionary deserialized from `chat.update`_ request
+
+        .. _chat.update: https://api.slack.com/methods/chat.update
+        """
+        return await self._client.update(
+            channel,
+            ts=ts,
+            text=text,
+            attachments=attachments,
+            blocks=blocks,
+            ephemeral_user=ephemeral_user,
+            **kwargs,
+        )
+
+    async def delete(
+        self,
+        channel: Channel | str,
+        ts: str,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
+        """Deletes existing message
+
+        Delete an existing message using the WebAPI.
+        Any extra kwargs you provide, will be passed on directly to the `chat.delete`_ request.
+
+        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
+            message to. Can be public or private (group) channel, or DM channel.
+        :param ts: Timestamp of the message to be deleted.
+        :return: Dictionary deserialized from `chat.delete`_ request
+
+        .. _chat.delete: https://api.slack.com/methods/chat.delete
+        """
+        return await self._client.delete(
+            channel,
+            ts=ts,
+            **kwargs,
+        )
