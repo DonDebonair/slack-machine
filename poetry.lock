@@ -2187,14 +2187,14 @@ files = [
 
 [[package]]
 name = "types-aiobotocore"
-version = "2.4.2.post1"
-description = "Type annotations for aiobotocore 2.4.2 generated with mypy-boto3-builder 7.12.3"
+version = "2.4.2.post2"
+description = "Type annotations for aiobotocore 2.4.2 generated with mypy-boto3-builder 7.12.5"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "types-aiobotocore-2.4.2.post1.tar.gz", hash = "sha256:be92d5df25a7e47190c83d28e8275741f35e351765504c8a77160c667ea31d36"},
-    {file = "types_aiobotocore-2.4.2.post1-py3-none-any.whl", hash = "sha256:be6832b44739b9c17681431fed6f50ca6dbdda12dd31262bdb74758d9856813d"},
+    {file = "types-aiobotocore-2.4.2.post2.tar.gz", hash = "sha256:22d476446c22f53ab3424751bd2b12ce64e3d03dc87ea8b142b265e2446ca729"},
+    {file = "types_aiobotocore-2.4.2.post2-py3-none-any.whl", hash = "sha256:7a60b6ac0ba73524bb089ca219203e2fb865f81a964640221413de7494e129b7"},
 ]
 
 [package.dependencies]
