@@ -169,6 +169,16 @@ Optional parameters:
 
 *Class*: `machine.storage.backends.dynamodb.DynamoDBStorage`
 
+#### SQLite
+
+This backend stores data in [SQLite](https://www.sqlite.org/).  SQLite is a C library that provides a lightweight disk-based database that doesn’t require a separate server process and allows accessing the database using a nonstandard variant of the SQL query language. Some applications can use SQLite for internal data storage.
+
+The SQLite backend requires you to provide a filename that will be use to store the data by setting the `SQLITE_PATH` variable in `local_settings.py`. The filename can be relative or absolute.
+
+    `SQLITE_PATH: /path/to/slackmachine.sqlite3`
+
+*Class*: `machine.storage.backends.dynamodb.SQLiteStorage`
+
 ---
 
 So if, for example, you want to configure Slack Machine to use Redis as a storage backend, with your Redis instance
