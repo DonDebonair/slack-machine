@@ -122,14 +122,14 @@ qualified class of the chosen storage backend.
 
 Out of the box, Slack Machine provides 3 options for storage backend:
 
-#### in-memory (*default*):
+#### in-memory (*default*)
 
 This backend will store all data in-memory, which is great for testing because it doesn't have any external
 dependencies. **Does not persist data between restarts**
 
 *Class*: `machine.storage.backends.memory.MemoryStorage`
 
-#### Redis:
+#### Redis
 
 This backend stores data in [Redis](https://redis.io/). Redis is a very fast key-value store that is super easy to
 install and operate. This backend is recommended, because it will persist data between restarts. The Redis backend
@@ -168,6 +168,19 @@ Optional parameters:
   [`aioboto3`](https://pypi.org/project/aioboto3/) resource can be specified here
 
 *Class*: `machine.storage.backends.dynamodb.DynamoDBStorage`
+
+#### SQLite
+
+This backend stores data in [SQLite](https://www.sqlite.org/). SQLite is a C library that provides a lightweight
+disk-based database that doesn’t require a separate server process and allows accessing the database using a
+non-standard variant of the SQL query language.
+
+The SQLite backend requires you to provide a filename that will be used to store the data by setting the
+`SQLITE_PATH` variable in `local_settings.py`. The filename can be relative or absolute:
+
+    `SQLITE_PATH: /path/to/slack-machine.db`
+
+*Class*: `machine.storage.backends.sqlite.SQLiteStorage`
 
 ---
 
