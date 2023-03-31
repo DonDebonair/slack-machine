@@ -61,8 +61,8 @@ It's really easy!
 - Support for [blocks](https://api.slack.com/reference/block-kit/blocks)
 - Support for [message attachments](https://api.slack.com/docs/message-attachments) [Legacy 🏚]
 - Listen and respond to any [Slack event](https://api.slack.com/events) supported by the Events API
-- Store and retrieve any kind of data in persistent storage (currently Redis, DynamoDB and in-memory storage are
-  supported)
+- Store and retrieve any kind of data in persistent storage (currently Redis, DynamoDB, SQLite, and in-memory storage
+  are supported)
 - Schedule actions and messages
 - Emit and listen for events
 - Help texts for Plugins

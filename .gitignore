@@ -131,3 +131,4 @@ pytest.xml
 setup.py
 
 .mypy_cache
+*.db
