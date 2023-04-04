@@ -177,7 +177,7 @@ The SQLite backend requires you to provide a filename that will be use to store 
 
     `SQLITE_PATH: /path/to/slackmachine.sqlite3`
 
-*Class*: `machine.storage.backends.dynamodb.SQLiteStorage`
+*Class*: `machine.storage.backends.sqlite.SQLiteStorage`
 
 ---
 
