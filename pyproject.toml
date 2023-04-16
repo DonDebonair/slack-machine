@@ -73,7 +73,7 @@ types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-mkdocstrings = {extras = ["python"], version = "^0.19.0"}
+mkdocstrings = {extras = ["python"], version = ">=0.19,<0.22"}
 mkdocs-material = "^8.5.10"
 
 [tool.poetry.extras]
