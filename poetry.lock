@@ -207,14 +207,14 @@ trio = ["trio (>=0.16)"]
 
 [[package]]
 name = "apscheduler"
-version = "3.10.0"
+version = "3.10.1"
 description = "In-process task scheduler with Cron-like capabilities"
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "APScheduler-3.10.0-py3-none-any.whl", hash = "sha256:575299f20073c60a2cc9d4fa5906024cdde33c5c0ce6087c4e3c14be3b50fdd4"},
-    {file = "APScheduler-3.10.0.tar.gz", hash = "sha256:a49fc23269218416f0e41890eea7a75ed6b284f10630dcfe866ab659621a3696"},
+    {file = "APScheduler-3.10.1-py3-none-any.whl", hash = "sha256:e813ad5ada7aff36fb08cdda746b520531eaac7757832abc204868ba78e0c8f6"},
+    {file = "APScheduler-3.10.1.tar.gz", hash = "sha256:0293937d8f6051a0f493359440c1a1b93e882c57daf0197afeff0e727777b96e"},
 ]
 
 [package.dependencies]
