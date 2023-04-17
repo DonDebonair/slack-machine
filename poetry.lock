@@ -2,18 +2,18 @@
 
 [[package]]
 name = "aioboto3"
-version = "10.4.0"
+version = "11.1.0"
 description = "Async boto3 wrapper"
 category = "main"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "aioboto3-10.4.0-py3-none-any.whl", hash = "sha256:6d0f0bf6af0168c27828e108f1a24182669a6ea6939437c27638caf06a693403"},
-    {file = "aioboto3-10.4.0.tar.gz", hash = "sha256:e52b5f96b67031ddcbabcc55015bad3f851d3d4e6d5bfc7a1d1518d90e0c1fd8"},
+    {file = "aioboto3-11.1.0-py3-none-any.whl", hash = "sha256:9c32b0d89c41f7dbc55e96af49335377b2890d98f395a963a6e671f7b10268f6"},
+    {file = "aioboto3-11.1.0.tar.gz", hash = "sha256:ebdca2655b28571ab0dcda486e2cbd9d65d50c677c03f655781377950023c618"},
 ]
 
 [package.dependencies]
-aiobotocore = {version = "2.4.2", extras = ["boto3"]}
+aiobotocore = {version = "2.5.0", extras = ["boto3"]}
 
 [package.extras]
 chalice = ["chalice (>=1.24.0)"]
@@ -21,26 +21,26 @@ s3cse = ["cryptography (>=2.3.1)"]
 
 [[package]]
 name = "aiobotocore"
-version = "2.4.2"
+version = "2.5.0"
 description = "Async client for aws services using botocore and aiohttp"
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "aiobotocore-2.4.2-py3-none-any.whl", hash = "sha256:4acd1ebe2e44be4b100aa553910bda899f6dc090b3da2bc1cf3d5de2146ed208"},
-    {file = "aiobotocore-2.4.2.tar.gz", hash = "sha256:0603b74a582dffa7511ce7548d07dc9b10ec87bc5fb657eb0b34f9bd490958bf"},
+    {file = "aiobotocore-2.5.0-py3-none-any.whl", hash = "sha256:9a2a022d7b78ec9a2af0de589916d2721cddbf96264401b78d7a73c1a1435f3b"},
+    {file = "aiobotocore-2.5.0.tar.gz", hash = "sha256:6a5b397cddd4f81026aa91a14c7dd2650727425740a5af8ba75127ff663faf67"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.3.1"
 aioitertools = ">=0.5.1"
-boto3 = {version = ">=1.24.59,<1.24.60", optional = true, markers = "extra == \"boto3\""}
-botocore = ">=1.27.59,<1.27.60"
+boto3 = {version = ">=1.26.76,<1.26.77", optional = true, markers = "extra == \"boto3\""}
+botocore = ">=1.29.76,<1.29.77"
 wrapt = ">=1.10.10"
 
 [package.extras]
-awscli = ["awscli (>=1.25.60,<1.25.61)"]
-boto3 = ["boto3 (>=1.24.59,<1.24.60)"]
+awscli = ["awscli (>=1.27.76,<1.27.77)"]
+boto3 = ["boto3 (>=1.26.76,<1.26.77)"]
 
 [[package]]
 name = "aiohttp"
@@ -362,18 +362,18 @@ uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "boto3"
-version = "1.24.59"
+version = "1.26.76"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "boto3-1.24.59-py3-none-any.whl", hash = "sha256:34ab44146a2c4e7f4e72737f4b27e6eb5e0a7855c2f4599e3d9199b6a0a2d575"},
-    {file = "boto3-1.24.59.tar.gz", hash = "sha256:a50b4323f9579cfe22fcf5531fbd40b567d4d74c1adce06aeb5c95fce2a6fb40"},
+    {file = "boto3-1.26.76-py3-none-any.whl", hash = "sha256:b4c2969b7677762914394b8273cc1905dfe5b71f250741c1a575487ae357e729"},
+    {file = "boto3-1.26.76.tar.gz", hash = "sha256:30c7d967ed1c6b5a05643e42cae9d4d36c3f1cb6782637ddc7007a104cfd9027"},
 ]
 
 [package.dependencies]
-botocore = ">=1.27.59,<1.28.0"
+botocore = ">=1.29.76,<1.30.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -382,14 +382,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.27.59"
+version = "1.29.76"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 files = [
-    {file = "botocore-1.27.59-py3-none-any.whl", hash = "sha256:69d756791fc024bda54f6c53f71ae34e695ee41bbbc1743d9179c4837a4929da"},
-    {file = "botocore-1.27.59.tar.gz", hash = "sha256:eda4aed6ee719a745d1288eaf1beb12f6f6448ad1fa12f159405db14ba9c92cf"},
+    {file = "botocore-1.29.76-py3-none-any.whl", hash = "sha256:70735b00cd529f152992231ca6757e458e5ec25db43767b3526e9a35b2f143b7"},
+    {file = "botocore-1.29.76.tar.gz", hash = "sha256:c2f67b6b3f8acf2968eafca06526f07b9fb0d27bac4c68a635d51abb675134a7"},
 ]
 
 [package.dependencies]
@@ -398,7 +398,7 @@ python-dateutil = ">=2.1,<3.0.0"
 urllib3 = ">=1.25.4,<1.27"
 
 [package.extras]
-crt = ["awscrt (==0.14.0)"]
+crt = ["awscrt (==0.16.9)"]
 
 [[package]]
 name = "botocore-stubs"
@@ -3107,4 +3107,4 @@ redis = ["redis", "hiredis"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "b4613bd702af326331afb05e3557fabb3a85b9e8dd0bfd3b1e882b5660e64d49"
+content-hash = "61e26d25c49dc9477a8ec7644e0c7e39093de1dc337e683576c18e227195861d"
