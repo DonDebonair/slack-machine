@@ -43,7 +43,7 @@ httpx = "^0.23.0"
 aioboto3 = {version = "^10.0.0", optional = true}
 tzdata = "^2022.2"
 pydantic = "^1.10.2"
-structlog = "^22.1.0"
+structlog = ">=22.1,<24.0"
 
 [tool.poetry.group.test]
 optional = true
