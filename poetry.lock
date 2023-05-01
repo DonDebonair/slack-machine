@@ -1696,14 +1696,14 @@ email = ["email-validator (>=1.0.3)"]
 
 [[package]]
 name = "pyee"
-version = "9.0.4"
+version = "9.1.0"
 description = "A port of node.js's EventEmitter to python."
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyee-9.0.4-py2.py3-none-any.whl", hash = "sha256:9f066570130c554e9cc12de5a9d86f57c7ee47fece163bbdaa3e9c933cfbdfa5"},
-    {file = "pyee-9.0.4.tar.gz", hash = "sha256:2770c4928abc721f46b705e6a72b0c59480c4a69c9a83ca0b00bb994f1ea4b32"},
+    {file = "pyee-9.1.0-py2.py3-none-any.whl", hash = "sha256:b619a4ce3829be3e9a016ed0370086fa7b6a37b092f163237add0e582c42965d"},
+    {file = "pyee-9.1.0.tar.gz", hash = "sha256:a2287af31d6ce6e662ebf8034ea2c3e38dea02ebac63f6a41db23825bf6649d4"},
 ]
 
 [package.dependencies]
