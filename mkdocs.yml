@@ -35,6 +35,7 @@ nav:
   - 'Plugins':
       - 'plugins/basics.md'
       - 'plugins/listening.md'
+      - 'plugins/slash-commands.md'
       - 'plugins/interacting.md'
       - 'plugins/settings.md'
       - 'plugins/storage.md'
