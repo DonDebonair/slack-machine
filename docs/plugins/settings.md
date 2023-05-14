@@ -14,7 +14,7 @@ Setting names are **case insensitive**.
 
 When the `local_settings.py` looks like this:
 
-``` python
+```python
 SLACK_APP_TOKEN = "xapp-my-app-token"
 SLACK_BOT_TOKEN = "xoxb-my-bot-token"
 GREETING_PLUGIN_MY_GREETING = "Bonjour"
@@ -22,7 +22,7 @@ GREETING_PLUGIN_MY_GREETING = "Bonjour"
 
 This can be used in a plugin, like this:
 
-``` python
+```python
 @respond_to(r"Hello!")
 async def greeting(self, msg):
     await msg.reply(f"{self.settings['GREETING_PLUGIN_MY_GREETING']}, {msg.at_sender}!")
@@ -45,7 +45,7 @@ none of the methods will be registered.
 
 Example:
 
-``` python
+```python
 @required_settings(["TODO_SERVICE_USERNAME", "TODO_SERVICE_PASSWORD"])
 class TodoPlugin(MachineBasePlugin):
     ...

@@ -84,7 +84,7 @@ to a module containing one or more plugins.
 
 For example, to enable most of the built-in Slack Machine plugins, your `local_settings.py` would look like this:
 
-``` python
+```python
 SLACK_APP_TOKEN = "xapp-my-app-token"
 SLACK_BOT_TOKEN = "xoxb-my-bot-token"
 PLUGINS = [
@@ -98,7 +98,7 @@ PLUGINS = [
 
 Or is you want import them by the modules they're in:
 
-``` python
+```python
 SLACK_APP_TOKEN = "xapp-my-app-token"
 SLACK_BOT_TOKEN = "xoxb-my-bot-token"
 PLUGINS = [
@@ -174,7 +174,7 @@ Optional parameters:
 So if, for example, you want to configure Slack Machine to use Redis as a storage backend, with your Redis instance
 running on *localhost* on the default port, you would add this to your `local_settings.py`:
 
-``` python
+```python
 STORAGE_BACKEND = 'machine.storage.backends.redis.RedisStorage'
 REDIS_URL = redis://localhost:6379'
 ```

@@ -42,7 +42,7 @@ original message.
 
 Example:
 
-``` python
+```python
 @respond_to(r"^I love you")
 async def spread_love(self, msg):
     await msg.reply("I love you too!")
@@ -128,7 +128,7 @@ argument: a [`datetime`][datetime.datetime] object that tells Slack Machine *whe
 
 Example:
 
-``` python
+```python
 @respond_to(r"greet me in the future")
 async def future(self, msg):
     await msg.say("command received!")
@@ -155,7 +155,7 @@ lose control over your bot.
 
 To enable all the role based features, your `local_settings.py` would look something like this:
 
-``` python
+```python
 SLACK_APP_TOKEN = "xapp-my-app-token"
 SLACK_BOT_TOKEN = "xoxb-my-bot-token"
 ROOT_USER = "0000007"
@@ -182,7 +182,7 @@ certain roles.
 
 Here is an example of a command that requires either the *admin* or *channel* role:
 
-``` python
+```python
 @respond_to(
     r"^say in"
     r"\s+<#\w+\|(?P<channel_name>[^>]+)>"
@@ -206,7 +206,7 @@ optionally provide extra data as keyword arguments.
 
 Example:
 
-``` python
+```python
 @respond_to(r"I have used the bathroom")
 async def broadcast_bathroom_usage(self, msg):
     self.emit('bathroom_used', toilet_flushed=True)
