@@ -51,6 +51,7 @@ It's really easy!
 ### Plugin API features:
 
 - Listen and respond to any regular expression
+- Respond to Slash Commands
 - Capture parts of messages to use as variables in your functions
 - Respond to messages in channels, groups and direct message conversations
 - Respond with reactions
