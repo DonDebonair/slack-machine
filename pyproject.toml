@@ -64,7 +64,6 @@ pytest-asyncio = ">=0.19,<0.22"
 mock = ">=4.0.3,<6.0.0"
 mypy = ">=0.982,<1.4"
 types-redis = "^4.3.21"
-types-requests = "^2.28.11"
 flake8 = "<4.0.1"
 aioboto3 = ">=10,<12"
 types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
