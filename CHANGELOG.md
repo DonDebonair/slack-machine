@@ -8,6 +8,30 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.33.0] - 2023-05-15
+
+### Added
+
+- Add support for [slash commands](https://api.slack.com/interactivity/slash-commands)
+  ([#787](https://github.com/DonDebonair/slack-machine/pull/787))
+
+### Changed
+
+- **Breaking:** move `Message` class from `machine.plugins.base` to `machine.plugins.message`
+- Use dots only for referencing the fully-qualified name of classes and functions instead of using a colon before
+  the class name
+- Bump `tzdata` from 2022.6 to 2023.3
+- Bump `slack-sdk` from 3.19.4 to 3.21.3
+- Bump `aioboto3` from 10.1.0 to 11.2.0
+- Bump `aiohttp` from 3.8.3 to 3.8.4
+- Bump `redis` from 4.3.5 to 4.5.5
+- Bump `hiredis` from 2.0.0 to 2.2.3
+- Bump `pydantic` from 1.10.2 to 1.10.7
+- Bump `httpx` from 0.23.1 to 0.24.0
+- Bump `apscheduler` from 3.9.1.post1 to 3.10.1
+- Bump `structlog` from 22.3.0 to 23.1.0
+- Bump `pyee` from 9.0.4 to 9.1.0
+
 ## [0.32.0] - 2022-11-27
 
 ### Added
@@ -552,7 +576,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.33.0...HEAD
+[0.33.0]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...v0.33.0
 [0.32.0]: https://github.com/DonDebonair/slack-machine/compare/v0.31.0...v0.32.0
 [0.31.0]: https://github.com/DonDebonair/slack-machine/compare/v0.30.0...v0.31.0
 [0.30.0]: https://github.com/DonDebonair/slack-machine/compare/v0.28.2...v0.30.0
