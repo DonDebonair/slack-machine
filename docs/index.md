@@ -1,7 +1,5 @@
 # Slack Machine
 
-![image](img/logo.png)
-
 [![Join the chat at Slack](https://img.shields.io/badge/chat-slack-green?logo=slack&logoColor=white)](https://join.slack.com/t/slack-machine-chat/shared_invite/zt-1g87tzvlf-8bV_WnY3JZyaYNnRFwRd~w)
 [![image](https://img.shields.io/pypi/v/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
 [![image](https://img.shields.io/pypi/l/slack-machine.svg)](https://pypi.python.org/pypi/slack-machine)
@@ -15,11 +13,14 @@ with an intuitive plugin system that lets you build bots quickly, but also allow
 plugin can look as simple as this:
 
 ```python
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to
+
 
 class DeploymentPlugin(MachineBasePlugin):
     """Deployments"""
+
     @respond_to(r"deploy (?P<application>\w+) to (?P<environment>\w+)")
     async def deploy(self, msg: Message, application, environment):
         """deploy <application> <environment>: deploy application to target environment"""
@@ -50,6 +51,7 @@ It's really easy!
 ### Plugin API features:
 
 - Listen and respond to any regular expression
+- Respond to Slash Commands
 - Capture parts of messages to use as variables in your functions
 - Respond to messages in channels, groups and direct message conversations
 - Respond with reactions

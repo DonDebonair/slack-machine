@@ -1,5 +1,6 @@
 import logging
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.decorators import listen_to, respond_to
 
 logger = logging.getLogger(__name__)

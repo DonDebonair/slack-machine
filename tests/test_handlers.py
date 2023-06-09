@@ -7,8 +7,9 @@ from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 
 from machine.clients.slack import SlackClient
-from machine.models.core import RegisteredActions, MessageHandler
-from machine.plugins.base import Message
+from machine.models.core import RegisteredActions, MessageHandler, CommandHandler
+from machine.plugins.command import Command
+from machine.plugins.message import Message
 from machine.storage.backends.base import MachineBaseStorage
 from machine.utils.collections import CaseInsensitiveDict
 from tests.fake_plugins import FakePlugin
@@ -17,6 +18,7 @@ from machine.handlers import (
     generate_message_matcher,
     handle_message,
     create_generic_event_handler,
+    create_slash_command_handler,
 )
 
 
@@ -41,6 +43,8 @@ def fake_plugin(mocker, slack_client, storage):
     mocker.spy(plugin_instance, "respond_function")
     mocker.spy(plugin_instance, "listen_function")
     mocker.spy(plugin_instance, "process_function")
+    mocker.spy(plugin_instance, "command_function")
+    mocker.spy(plugin_instance, "generator_command_function")
     return plugin_instance
 
 
@@ -49,6 +53,8 @@ def plugin_actions(fake_plugin):
     respond_fn = getattr(fake_plugin, "respond_function")
     listen_fn = getattr(fake_plugin, "listen_function")
     process_fn = getattr(fake_plugin, "process_function")
+    command_fn = getattr(fake_plugin, "command_function")
+    generator_command_fn = getattr(fake_plugin, "generator_command_function")
     plugin_actions = RegisteredActions(
         listen_to={
             "TestPlugin.listen_function-hi": MessageHandler(
@@ -71,6 +77,24 @@ def plugin_actions(fake_plugin):
             )
         },
         process={"some_event": {"TestPlugin.process_function": process_fn}},
+        command={
+            "/test": CommandHandler(
+                class_=fake_plugin,
+                class_name="tests.fake_plugins.FakePlugin",
+                function=command_fn,
+                function_signature=Signature.from_callable(command_fn),
+                command="/test",
+                is_generator=False,
+            ),
+            "/test-generator": CommandHandler(
+                class_=fake_plugin,
+                class_name="tests.fake_plugins.FakePlugin",
+                function=generator_command_fn,
+                function_signature=Signature.from_callable(generator_command_fn),
+                command="/test-generator",
+                is_generator=True,
+            ),
+        },
     )
     return plugin_actions
 
@@ -201,18 +225,64 @@ async def test_handle_message_changed(plugin_actions, fake_plugin, slack_client,
     _assert_message(args, "hi")
 
 
-def _gen_request(event_type: str):
+def _gen_event_request(event_type: str):
     return SocketModeRequest(type="events_api", envelope_id="x", payload={"event": {"type": event_type, "foo": "bar"}})
 
 
 @pytest.mark.asyncio
 async def test_create_generic_event_handler(plugin_actions, fake_plugin, socket_mode_client):
     handler = create_generic_event_handler(plugin_actions)
-    await handler(socket_mode_client, _gen_request("other_event"))
+    await handler(socket_mode_client, _gen_event_request("other_event"))
     assert fake_plugin.process_function.call_count == 0
-    await handler(socket_mode_client, _gen_request("some_event"))
+    await handler(socket_mode_client, _gen_event_request("some_event"))
     assert fake_plugin.process_function.call_count == 1
     args = fake_plugin.process_function.call_args
     assert len(args[0]) == 1
     assert len(args[1]) == 0
     assert args[0][0] == {"type": "some_event", "foo": "bar"}
+
+
+def _gen_command_request(command: str, text: str):
+    payload = {"command": command, "text": text, "response_url": "https://my.webhook.com"}
+    return SocketModeRequest(type="slash_commands", envelope_id="x", payload=payload)
+
+
+def assert_command(args, command, text):
+    # called with 1 positional arg and 0 kw args
+    assert len(args[0]) == 1
+    assert len(args[1]) == 0
+    # assert called with Command
+    assert isinstance(args[0][0], Command)
+    # assert command equals expected command
+    assert args[0][0].command == command
+    # assert command text equals expected text
+    assert args[0][0].text == text
+
+
+@pytest.mark.asyncio
+async def test_create_slash_command_handler(plugin_actions, fake_plugin, socket_mode_client, slack_client):
+    handler = create_slash_command_handler(plugin_actions, slack_client)
+    await handler(socket_mode_client, _gen_command_request("/test", "foo"))
+    assert fake_plugin.command_function.call_count == 1
+    args = fake_plugin.command_function.call_args
+    assert_command(args, "/test", "foo")
+    socket_mode_client.send_socket_mode_response.assert_called_once()
+    resp = socket_mode_client.send_socket_mode_response.call_args.args[0]
+    assert resp.envelope_id == "x"
+    assert resp.payload is None
+    assert fake_plugin.generator_command_function.call_count == 0
+
+
+@pytest.mark.asyncio
+async def test_create_slash_command_handler_generator(plugin_actions, fake_plugin, socket_mode_client, slack_client):
+    handler = create_slash_command_handler(plugin_actions, slack_client)
+    await handler(socket_mode_client, _gen_command_request("/test-generator", "bar"))
+    assert fake_plugin.generator_command_function.call_count == 1
+    args = fake_plugin.generator_command_function.call_args
+    assert_command(args, "/test-generator", "bar")
+    socket_mode_client.send_socket_mode_response.assert_called_once()
+    resp = socket_mode_client.send_socket_mode_response.call_args.args[0]
+    assert resp.envelope_id == "x"
+    # SocketModeResponse will transform a string into a dict with `text` as only key
+    assert resp.payload == {"text": "hello"}
+    assert fake_plugin.command_function.call_count == 0

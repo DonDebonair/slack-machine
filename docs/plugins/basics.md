@@ -41,7 +41,7 @@ First, we should import the [`MachineBasePlugin`][machine.plugins.base.MachineBa
 decorator to listen for specific messages. Then we can create our plugin class that includes a function
 that listens for The Answer, and responds to it:
 
-``` python
+```python
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.decorators import listen_to
 import re
@@ -70,7 +70,7 @@ class UltimateQuestionPlugin(MachineBasePlugin):
 Now we can enable our plugin in our configuration file. Your
 `local_settings.py` should look like this:
 
-``` python
+```python
 SLACK_APP_TOKEN = "xapp-my-app-token"
 SLACK_BOT_TOKEN = "xoxb-my-bot-token"
 

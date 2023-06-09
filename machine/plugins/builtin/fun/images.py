@@ -5,7 +5,8 @@ import random
 import httpx
 from slack_sdk.models.blocks import Block, ImageBlock, PlainTextObject
 
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to, required_settings
 
 logger = logging.getLogger(__name__)

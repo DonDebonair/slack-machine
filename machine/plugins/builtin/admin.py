@@ -1,7 +1,8 @@
 import logging
 from datetime import datetime
 
-from machine.plugins.base import MachineBasePlugin, Message
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.message import Message
 from machine.plugins.admin_utils import role_assignments_by_role, RoleCombinator
 from machine.plugins.decorators import respond_to, required_settings, require_any_role, on
 from slack_sdk.models.blocks import MarkdownTextObject, SectionBlock, ImageElement

@@ -6,13 +6,15 @@ Therefore it is not documented.
 
 ## Plugin classes
 
-The following 2 classes form the basis for Plugin development.
+The following classes form the basis for Plugin development.
 
 ### ::: machine.plugins.base.MachineBasePlugin
 
 ------------------------------------------------------------------------
 
-### ::: machine.plugins.base.Message
+### ::: machine.plugins.message.Message
+
+### ::: machine.plugins.command.Command
 
 
 ## Decorators
