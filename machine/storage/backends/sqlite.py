@@ -10,15 +10,13 @@ class SQLiteStorage(MachineBaseStorage):
     async def _connect(self):
         self.conn = await aiosqlite.connect(self._file)
         self.cursor = await self.conn.cursor()
-        await self.cursor.execute(
-            """
+        await self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS storage (
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 expires INTEGER
             )
-        """
-        )
+        """)
         await self.conn.commit()
 
     async def set(self, key: str, value: str, expires: int = None):
@@ -51,9 +49,7 @@ class SQLiteStorage(MachineBaseStorage):
 
     async def has(self, key: str):
         await self._connect()
-        await self.cursor.execute(
-            "SELECT EXISTS(SELECT 1 FROM storage WHERE key=?)", (key,)
-        )
+        await self.cursor.execute("SELECT EXISTS(SELECT 1 FROM storage WHERE key=?)", (key,))
         result = await self.cursor.fetchone()
         await self.conn.close()
         return bool(result[0])
