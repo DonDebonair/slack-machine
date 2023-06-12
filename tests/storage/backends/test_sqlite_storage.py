@@ -6,6 +6,7 @@ from machine.storage.backends.sqlite import SQLiteStorage
 import pytest_asyncio
 import asyncio
 
+
 @pytest_asyncio.fixture
 async def sqlite_storage():
     storage = SQLiteStorage({"SQLITE_FILE": ":memory:"})

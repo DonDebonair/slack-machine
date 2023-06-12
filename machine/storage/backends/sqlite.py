@@ -41,7 +41,9 @@ class SQLiteStorage(MachineBaseStorage):
 
     async def get(self, key: str) -> bytes | None:
         current_GMT = int(time.time())
-        await self.cursor.execute("SELECT value FROM storage WHERE key=? and (expires > ? OR expires IS NULL)", (key, current_GMT))
+        await self.cursor.execute(
+            "SELECT value FROM storage WHERE key=? and (expires > ? OR expires IS NULL)", (key, current_GMT)
+        )
         row = await self.cursor.fetchone()
         return row[0] if row else None
 
