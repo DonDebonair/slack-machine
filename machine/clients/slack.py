@@ -246,3 +246,7 @@ class SlackClient:
     async def unpin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.pins_remove(channel=channel_id, timestamp=ts)
+
+    async def set_topic(self, channel: Channel | str, topic: str, **kwargs: Any) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.channels_setTopic(channel=channel_id, topic=topic, **kwargs)
