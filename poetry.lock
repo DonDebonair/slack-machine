@@ -1629,17 +1629,20 @@ email = ["email-validator (>=1.0.3)"]
 
 [[package]]
 name = "pyee"
-version = "9.1.0"
-description = "A port of node.js's EventEmitter to python."
+version = "10.0.2"
+description = "A rough port of Node.js's EventEmitter to Python with a few tricks of its own"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyee-9.1.0-py2.py3-none-any.whl", hash = "sha256:b619a4ce3829be3e9a016ed0370086fa7b6a37b092f163237add0e582c42965d"},
-    {file = "pyee-9.1.0.tar.gz", hash = "sha256:a2287af31d6ce6e662ebf8034ea2c3e38dea02ebac63f6a41db23825bf6649d4"},
+    {file = "pyee-10.0.2-py3-none-any.whl", hash = "sha256:798f8f70255b137da500e18274612ef256aa179b9352a67940dab59910167ddf"},
+    {file = "pyee-10.0.2.tar.gz", hash = "sha256:266e0389ac212e364bca1dc5e7cd92ddf8d3a06259cbfc2687aa54c7f1a0da94"},
 ]
 
 [package.dependencies]
 typing-extensions = "*"
+
+[package.extras]
+dev = ["black", "flake8", "flake8-black", "isort", "jupyter-console", "mkdocs", "mkdocs-include-markdown-plugin", "mkdocstrings[python]", "pytest", "pytest-asyncio", "pytest-trio", "toml", "tox", "trio", "trio", "trio-typing", "twine", "twisted", "validate-pyproject[all]"]
 
 [[package]]
 name = "pyflakes"
@@ -2967,4 +2970,4 @@ redis = ["hiredis", "redis"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.7"
-content-hash = "b6440dffb1ed7682f399f834d9b797db0162527c8c156f30d5af138ba9a03179"
+content-hash = "6a5799bf1c1151bc01552341d3df6974b65e0fb34ad74c09ea0210992e5be753"
