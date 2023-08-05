@@ -41,7 +41,7 @@ def user_dict():
 
 @pytest.fixture
 def user(user_dict):
-    return User.parse_obj(user_dict)
+    return User.model_validate(user_dict)
 
 
 @pytest.fixture
@@ -51,7 +51,7 @@ def channel_dict():
 
 @pytest.fixture
 def channel(channel_dict):
-    return Channel.parse_obj(channel_dict)
+    return Channel.model_validate(channel_dict)
 
 
 @pytest.fixture
@@ -121,7 +121,7 @@ async def test_process_users_channels_team_join(slack_client, socket_mode_client
     slack_client._on_team_join.assert_called_once_with(event)
     assert len(slack_client._users) == 1
     assert "U1" in slack_client._users
-    assert slack_client._users["U1"] == User.parse_obj(user_dict)
+    assert slack_client._users["U1"] == User.model_validate(user_dict)
 
 
 @pytest.mark.asyncio
@@ -133,7 +133,7 @@ async def test_process_users_channels_user_change(slack_client, socket_mode_clie
     slack_client._on_user_change.assert_called_once_with(event)
     assert len(slack_client._users) == 1
     assert "U1" in slack_client._users
-    assert slack_client._users["U1"] == User.parse_obj(user_dict)
+    assert slack_client._users["U1"] == User.model_validate(user_dict)
 
 
 @pytest.mark.asyncio
@@ -146,7 +146,7 @@ async def test_process_users_channels_channel_created(slack_client, socket_mode_
     slack_client._on_channel_created.assert_called_once_with(event)
     assert len(slack_client._channels) == 1
     assert "C1" in slack_client._channels
-    assert slack_client._channels["C1"] == Channel.parse_obj(channel_dict)
+    assert slack_client._channels["C1"] == Channel.model_validate(channel_dict)
 
 
 @pytest.mark.asyncio

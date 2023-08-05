@@ -42,7 +42,7 @@ pyee = ">=9.0.4,<11.0.0"
 httpx = ">=0.23,<0.25"
 aioboto3 = {version = ">=10,<12", optional = true}
 tzdata = ">=2022.2,<2024.0"
-pydantic = "^1.10.2"
+pydantic = "^2.1.1"
 structlog = ">=22.1,<24.0"
 
 [tool.poetry.group.test]
@@ -56,6 +56,7 @@ tox-gh-actions = "^2.10.0"
 coverage = ">=6.5,<8.0"
 redis = ">=4.3.4,<5.0.0"
 pre-commit = "^2.20.0"
+pyyaml = "^6.0.1"
 pytest-cov = "^4.0.0"
 isort = "^5.10.1"
 black = ">=22.10,<24.0"
