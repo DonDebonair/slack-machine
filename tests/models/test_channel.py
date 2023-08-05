@@ -13,11 +13,11 @@ def channel_dict():
 
 
 def test_identifier_without_name(channel_dict):
-    channel = Channel.parse_obj(channel_dict)
+    channel = Channel.model_validate(channel_dict)
     assert channel.identifier == "C1"
 
 
 def test_identifier_with_name(channel_dict):
     channel_dict_with_name = dict(name="channel-1", **channel_dict)
-    channel = Channel.parse_obj(channel_dict_with_name)
+    channel = Channel.model_validate(channel_dict_with_name)
     assert channel.identifier == "channel-1"

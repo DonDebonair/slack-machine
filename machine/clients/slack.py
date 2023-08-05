@@ -126,12 +126,12 @@ class SlackClient:
         logger.debug("Channels: %s", ", ".join([c.identifier for c in self._channels.values()]))
 
     def _register_user(self, user_response: dict[str, Any]) -> User:
-        user = User.parse_obj(user_response)
+        user = User.model_validate(user_response)
         self._users[user.id] = user
         return user
 
     def _register_channel(self, channel_response: dict[str, Any]) -> Channel:
-        channel = Channel.parse_obj(channel_response)
+        channel = Channel.model_validate(channel_response)
         self._channels[channel.id] = channel
         return channel
 
