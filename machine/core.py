@@ -148,7 +148,8 @@ class Machine:
         missing_settings.extend(self._check_missing_settings(cls_instance_for_missing_settings))
         methods = inspect.getmembers(cls_instance, predicate=inspect.ismethod)
         for _, fn in methods:
-            missing_settings.extend(self._check_missing_settings(fn))
+            method_for_missing_settings = cast(DecoratedPluginFunc, fn)
+            missing_settings.extend(self._check_missing_settings(method_for_missing_settings))
         if missing_settings:
             return missing_settings
 
