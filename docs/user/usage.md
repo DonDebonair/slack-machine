@@ -129,6 +129,24 @@ dependencies. **Does not persist data between restarts**
 
 *Class*: `machine.storage.backends.memory.MemoryStorage`
 
+#### Shelve:
+
+This backend stores data using the [shelve](https://docs.python.org/3/library/shelve.html) package.
+Shelve is module of the Python standard library that provides a persistent,
+dictionary-like object that is stored in a file.
+It serves as a very simple way to provide cross-session persistent storage for the slack-machine. Objects in a shelf are pickled, so the usual warnings apply about pickling.
+
+Required Parameters:
+- `STORAGE_FILE`:  Name of the file(s) that ShelfStorage will create and utilize. Do not provide an extension. Example: `path/to/storage_file`
+
+The storage will be persisted in a set of files.  Removing these files will reset the storage.
+- `path/to/storage_file.dat`
+- `path/to/storage_file.dir`
+- `path/to/storage_file.bak`
+
+
+*Class*: `machine.storage.backends.shelve.ShelfStorage`
+
 #### Redis:
 
 This backend stores data in [Redis](https://redis.io/). Redis is a very fast key-value store that is super easy to
