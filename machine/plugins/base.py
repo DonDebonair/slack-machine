@@ -321,3 +321,14 @@ class MachineBasePlugin:
         :return: response from the Slack Web API
         """
         return await self._client.unpin_message(channel, ts)
+
+    async def set_topic(self, channel: Channel | str, topic: str, **kwargs: Any) -> AsyncSlackResponse:
+        """Set channel topic
+
+        Set or update topic for the channel
+
+        :param channel: channel where topic needs to be set or updated
+        :param topic: topic for the channel (slack does not support formatting for topics)
+        :return: response from the Slack Web API
+        """
+        return await self._client.set_topic(channel, topic, **kwargs)
