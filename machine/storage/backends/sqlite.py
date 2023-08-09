@@ -30,6 +30,10 @@ class SQLiteStorage(MachineBaseStorage):
         await self.conn.commit()
 
     async def set(self, key: str, value: bytes, expires: int | None = None) -> None:
+        current_GMT = int(time.time())
+        if expires is not None:
+            expires = current_GMT + expires
+
         await self.cursor.execute(
             """
             INSERT OR REPLACE INTO storage (key, value, expires)
@@ -43,6 +47,14 @@ class SQLiteStorage(MachineBaseStorage):
         current_GMT = int(time.time())
         await self.cursor.execute(
             "SELECT value FROM storage WHERE key=? and (expires > ? OR expires IS NULL)", (key, current_GMT)
+        )
+        row = await self.cursor.fetchone()
+        return row[0] if row else None
+
+    async def get_expire(self, key: str) -> bytes | None:
+        current_GMT = int(time.time())
+        await self.cursor.execute(
+            "SELECT expires FROM storage WHERE key=? and (expires > ? OR expires IS NULL)", (key, current_GMT)
         )
         row = await self.cursor.fetchone()
         return row[0] if row else None
