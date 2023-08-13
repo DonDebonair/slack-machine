@@ -41,6 +41,7 @@ def id_for_channel(channel: Channel | str) -> str:
 class SlackClient:
     _client: SocketModeClient
     _users: dict[str, User]
+    _users_by_email: dict[str, User]
     _channels: dict[str, Channel]
     _bot_info: dict[str, Any]
     _tz: ZoneInfo
@@ -48,6 +49,7 @@ class SlackClient:
     def __init__(self, client: SocketModeClient, tz: ZoneInfo):
         self._client = client
         self._users = {}
+        self._users_by_email = {}
         self._channels: dict[str, Channel] = {}
         self._tz = tz
 
@@ -128,6 +130,10 @@ class SlackClient:
     def _register_user(self, user_response: dict[str, Any]) -> User:
         user = User.model_validate(user_response)
         self._users[user.id] = user
+        if user.profile.email is not None:
+            self._users_by_email[user.profile.email] = user
+        else:
+            logger.warning("User has not provided an email address in their profile", user=user.model_dump())
         return user
 
     def _register_channel(self, channel_response: dict[str, Any]) -> Channel:
@@ -188,12 +194,22 @@ class SlackClient:
         return self._users
 
     @property
+    def users_by_email(self) -> dict[str, User]:
+        return self._users_by_email
+
+    @property
     def channels(self) -> dict[str, Channel]:
         return self._channels
 
     @property
     def bot_info(self) -> dict[str, Any]:
         return self._bot_info
+
+    def get_user_by_id(self, user_id: str) -> User | None:
+        return self._users.get(user_id)
+
+    def get_user_by_email(self, email: str) -> User | None:
+        return self._users_by_email.get(email)
 
     async def send(self, channel: Channel | str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
