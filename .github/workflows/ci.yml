@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [ '3.7', '3.8', '3.9', '3.10', '3.11' ]
+        python-version: [ '3.8', '3.9', '3.10', '3.11' ]
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python ${{ matrix.python-version }}
@@ -50,6 +50,6 @@ jobs:
           python-version: "3.11"
       - uses: psf/black@stable
         with:
-          version: "23.3.0"
+          version: "23.7.0"
       - name: flake8 Lint
         uses: py-actions/flake8@v2
