@@ -8,7 +8,7 @@ from datetime import datetime, tzinfo
 from typing import Callable, Union, cast, TypeVar, Awaitable, Any
 
 from typing_extensions import ParamSpec
-from typing_extensions import Protocol
+from typing import Protocol
 
 from machine.plugins import ee
 from machine.plugins.admin_utils import matching_roles_by_user_id, RoleCombinator

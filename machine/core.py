@@ -6,7 +6,7 @@ from structlog.stdlib import get_logger
 import os
 import sys
 from typing import Callable, cast, Awaitable
-from typing_extensions import Literal
+from typing import Literal
 from inspect import Signature
 
 import dill
