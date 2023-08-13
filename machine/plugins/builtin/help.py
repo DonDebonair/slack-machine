@@ -1,12 +1,13 @@
 from __future__ import annotations
-import logging
+
+from structlog.stdlib import get_logger
 
 from machine.models.core import Manual, HumanHelp
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to
+from machine.plugins.message import Message
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class HelpPlugin(MachineBasePlugin):

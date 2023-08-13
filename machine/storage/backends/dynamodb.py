@@ -1,15 +1,15 @@
 from __future__ import annotations
 
-import calendar
 import base64
+import calendar
 import datetime
-import logging
 import typing
 from contextlib import AsyncExitStack
 from typing import Mapping, Any, cast
 
 import aioboto3
 from botocore.exceptions import ClientError
+from structlog.stdlib import get_logger
 
 if typing.TYPE_CHECKING:
     from types_aiobotocore_dynamodb.service_resource import DynamoDBServiceResource, Table
@@ -17,7 +17,7 @@ if typing.TYPE_CHECKING:
 
 from machine.storage.backends.base import MachineBaseStorage
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 DEFAULT_ENCODING = "utf-8"
 
 

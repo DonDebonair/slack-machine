@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 import inspect
-import logging
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, tzinfo
 from typing import Callable, Union, cast, TypeVar, Awaitable, Any
-
-from typing_extensions import ParamSpec
 from typing import Protocol
+
+from structlog.stdlib import get_logger
+from typing_extensions import ParamSpec
 
 from machine.plugins import ee
 from machine.plugins.admin_utils import matching_roles_by_user_id, RoleCombinator
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.message import Message
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 @dataclass

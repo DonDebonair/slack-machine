@@ -1,9 +1,10 @@
-import logging
-from machine.plugins.base import MachineBasePlugin
-from machine.plugins.message import Message
-from machine.plugins.decorators import listen_to, respond_to
+from structlog.stdlib import get_logger
 
-logger = logging.getLogger(__name__)
+from machine.plugins.base import MachineBasePlugin
+from machine.plugins.decorators import listen_to, respond_to
+from machine.plugins.message import Message
+
+logger = get_logger(__name__)
 
 
 class PingPongPlugin(MachineBasePlugin):
