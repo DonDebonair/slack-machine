@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import sys
 from datetime import datetime
 from typing import Callable, Awaitable, Any
@@ -11,6 +10,7 @@ from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
+from structlog.stdlib import get_logger
 
 from machine.models import Channel
 from machine.models import User
@@ -21,7 +21,7 @@ if sys.version_info >= (3, 9):
 else:
     from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def id_for_user(user: User | str) -> str:

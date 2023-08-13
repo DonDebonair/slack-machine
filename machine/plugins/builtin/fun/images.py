@@ -1,15 +1,16 @@
 from __future__ import annotations
-import logging
+
 import random
 
 import httpx
 from slack_sdk.models.blocks import Block, ImageBlock, PlainTextObject
+from structlog.stdlib import get_logger
 
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.message import Message
 from machine.plugins.decorators import respond_to, required_settings
+from machine.plugins.message import Message
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def _make_blocks(search_string: str, image_url: str) -> list[Block]:

@@ -1,10 +1,11 @@
-import logging
 from typing import Any
+
+from structlog.stdlib import get_logger
 
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.decorators import process
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 class EchoPlugin(MachineBasePlugin):

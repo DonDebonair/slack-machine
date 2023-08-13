@@ -1,11 +1,12 @@
 import os
-import logging
 from importlib import import_module
 from typing import Tuple
 
+from structlog.stdlib import get_logger
+
 from machine.utils.collections import CaseInsensitiveDict
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def import_settings(settings_module: str = "local_settings") -> Tuple[CaseInsensitiveDict, bool]:
