@@ -120,7 +120,7 @@ supports different *backends* for storage, so you can choose one that best fits 
 You can configure which backend to use, by setting the `STORAGE_BACKEND` variable in `local_settings.py` to the fully
 qualified class of the chosen storage backend.
 
-Out of the box, Slack Machine provides 3 options for storage backend:
+Out of the box, Slack Machine provides 4 options for storage backend:
 
 #### in-memory (*default*)
 
@@ -130,6 +130,8 @@ dependencies. **Does not persist data between restarts**
 *Class*: `machine.storage.backends.memory.MemoryStorage`
 
 #### Redis
+
+Install with: `pip install 'slack-machine[redis]'`
 
 This backend stores data in [Redis](https://redis.io/). Redis is a very fast key-value store that is super easy to
 install and operate. This backend is recommended, because it will persist data between restarts. The Redis backend
@@ -151,6 +153,8 @@ Optional parameters:
 
 #### DynamoDB
 
+Install with: `pip install 'slack-machine[dynamodb]'`
+
 This backend stores data in [DynamoDB](https://aws.amazon.com/dynamodb/). DynamoDB is a managed NoSQL datastore on AWS
 that, among other things, allows for easy persistance of objects by key. The DynamoDB backend requires either a set of
 valid AWS account credentials, or a locally running DynamoDB test bed, such as the one included in
@@ -170,6 +174,8 @@ Optional parameters:
 *Class*: `machine.storage.backends.dynamodb.DynamoDBStorage`
 
 #### SQLite
+
+Install with: `pip install 'slack-machine[sqlite]'`
 
 This backend stores data in [SQLite](https://www.sqlite.org/). SQLite is a C library that provides a lightweight
 disk-based database that doesn’t require a separate server process and allows accessing the database using a
