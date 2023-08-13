@@ -8,6 +8,13 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.34.2] - 2023-08-13
+
+### Fixed
+
+- Users indexed by email and related functions are now exposed through the plugin interface
+  ([#852](https://github.com/DonDebonair/slack-machine/pull/852))
+
 ## [0.34.1] - 2023-08-13
 
 ### Added
@@ -609,7 +616,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.34.1...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...HEAD
+[0.34.2]: https://github.com/DonDebonair/slack-machine/compare/v0.34.1...v0.34.2
 [0.34.1]: https://github.com/DonDebonair/slack-machine/compare/v0.34.0...v0.34.1
 [0.34.0]: https://github.com/DonDebonair/slack-machine/compare/v0.33.0...v0.34.0
 [0.33.0]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...v0.33.0
