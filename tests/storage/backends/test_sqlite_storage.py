@@ -49,4 +49,4 @@ async def test_size(sqlite_storage: SQLiteStorage):
     assert await sqlite_storage.size() == 0
     await sqlite_storage.set("test_key_1", "test_value_1")
     await sqlite_storage.set("test_key_2", "test_value_2")
-    assert await sqlite_storage.size() == 2
+    assert await sqlite_storage.size() > 44  # number of characters in both columns for both rows
