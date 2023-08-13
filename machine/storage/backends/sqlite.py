@@ -19,7 +19,7 @@ class SQLiteStorage(MachineBaseStorage):
         self.conn.text_factory = bytes
         self.cursor = await self.conn.cursor()
         await self.cursor.execute("""
-            CREATE TABLE IF NOT EXISTS storage (
+            CREATE TABLE IF NOT EXISTS sm_storage (
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL,
                 expires_at INTEGER
@@ -36,7 +36,7 @@ class SQLiteStorage(MachineBaseStorage):
 
         await self.cursor.execute(
             """
-            INSERT OR REPLACE INTO storage (key, value, expires_at)
+            INSERT OR REPLACE INTO sm_storage (key, value, expires_at)
             VALUES (?, ?, ?)
         """,
             (key, value, expires_at),
@@ -46,7 +46,7 @@ class SQLiteStorage(MachineBaseStorage):
     async def get(self, key: str) -> bytes | None:
         current_ts = int(time.time())
         await self.cursor.execute(
-            "SELECT value FROM storage WHERE key=? AND (expires_at > ? OR expires_at IS NULL)", (key, current_ts)
+            "SELECT value FROM sm_storage WHERE key=? AND (expires_at > ? OR expires_at IS NULL)", (key, current_ts)
         )
         row = await self.cursor.fetchone()
         return row[0] if row else None
@@ -54,19 +54,20 @@ class SQLiteStorage(MachineBaseStorage):
     async def get_expire(self, key: str) -> bytes | None:
         current_ts = int(time.time())
         await self.cursor.execute(
-            "SELECT expires_at FROM storage WHERE key = ? AND (expires_at > ? OR expires_at IS NULL)", (key, current_ts)
+            "SELECT expires_at FROM sm_storage WHERE key = ? AND (expires_at > ? OR expires_at IS NULL)",
+            (key, current_ts),
         )
         row = await self.cursor.fetchone()
         return row[0] if row else None
 
     async def delete(self, key: str) -> None:
-        await self.cursor.execute("DELETE FROM storage WHERE key = ?", (key,))
+        await self.cursor.execute("DELETE FROM sm_storage WHERE key = ?", (key,))
         await self.conn.commit()
 
     async def has(self, key: str) -> bool:
         current_ts = int(time.time())
         await self.cursor.execute(
-            "SELECT EXISTS(SELECT 1 FROM storage WHERE key = ? AND (expires_at > ? OR expires_at IS NULL))",
+            "SELECT EXISTS(SELECT 1 FROM sm_storage WHERE key = ? AND (expires_at > ? OR expires_at IS NULL))",
             (key, current_ts),
         )
         result = await self.cursor.fetchone()
@@ -75,7 +76,7 @@ class SQLiteStorage(MachineBaseStorage):
         return False
 
     async def size(self) -> int:
-        await self.cursor.execute("SELECT COUNT(*) FROM storage")
+        await self.cursor.execute("SELECT payload FROM dbstat WHERE name = 'sm_storage' AND aggregate = TRUE")
         result = await self.cursor.fetchone()
         if result is not None:
             return result[0]
