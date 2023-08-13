@@ -8,6 +8,27 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.34.0] - 2023-08-13
+
+### Added
+
+- Add support to set topic on channels ([#839](https://github.com/DonDebonair/slack-machine/pull/839) by
+  [**@jogendra**](https://github.com/jogendra))
+- Add SQLite storage backend ([#844](https://github.com/DonDebonair/slack-machine/pull/844) by
+  [**@cp-richard**](https://github.com/cp-richard))
+
+### Changed
+
+- Bump `httpx` from 0.24.0 to 0.24.1
+- Bump `aiohttp` from 3.8.4 to 3.8.5
+- Bump `certifi` from 2022.12.7 to 2023.7.22
+- Bump `pyee` from 9.1.0 to 10.0.2
+- Bump `pydantic` from 1.10.7 to 2.1.1 ([#840](https://github.com/DonDebonair/slack-machine/pull/840))
+
+### Removed
+
+- **Breaking:** Remove Python 3.7 support ([#846](https://github.com/DonDebonair/slack-machine/pull/846))
+
 ## [0.33.0] - 2023-05-15
 
 ### Added
@@ -576,7 +597,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.33.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.34.0...HEAD
+[0.34.0]: https://github.com/DonDebonair/slack-machine/compare/v0.33.0...v0.34.0
 [0.33.0]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...v0.33.0
 [0.32.0]: https://github.com/DonDebonair/slack-machine/compare/v0.31.0...v0.32.0
 [0.31.0]: https://github.com/DonDebonair/slack-machine/compare/v0.30.0...v0.31.0
