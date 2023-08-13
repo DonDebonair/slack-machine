@@ -65,6 +65,18 @@ class MachineBasePlugin:
         return self._client.users
 
     @property
+    def users_by_email(self) -> dict[str, User]:
+        """Dictionary of all users in the Slack workspace by email
+
+        **Note**: not every user might have an email address in their profile, so this
+        dictionary might not contain all users in the Slack workspace
+
+        :return: a dictionary of all users in the Slack workspace, where the key is the email and
+            the value is a [`User`][machine.models.user.User] object
+        """
+        return self._client.users
+
+    @property
     def channels(self) -> dict[str, Channel]:
         """List of all channels in the Slack workspace
 
@@ -100,6 +112,22 @@ class MachineBasePlugin:
             if c.name_normalized and channel_name.lower() == c.name_normalized.lower():
                 return c
         return None
+
+    def get_user_by_id(self, user_id: str) -> User | None:
+        """Get a user by their ID.
+
+        :param user_id: The ID of the user to retrieve.
+        :return: The user if found, None otherwise.
+        """
+        return self.users.get(user_id)
+
+    def get_user_by_email(self, email: str) -> User | None:
+        """Get a user by their email address.
+
+        :param email: The email address of the user to retrieve.
+        :return: The user if found, None otherwise.
+        """
+        return self._client.get_user_by_email(email)
 
     @property
     def bot_info(self) -> dict[str, Any]:
