@@ -224,18 +224,17 @@ trio = ["trio (<0.22)"]
 
 [[package]]
 name = "apscheduler"
-version = "3.10.1"
+version = "3.10.3"
 description = "In-process task scheduler with Cron-like capabilities"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "APScheduler-3.10.1-py3-none-any.whl", hash = "sha256:e813ad5ada7aff36fb08cdda746b520531eaac7757832abc204868ba78e0c8f6"},
-    {file = "APScheduler-3.10.1.tar.gz", hash = "sha256:0293937d8f6051a0f493359440c1a1b93e882c57daf0197afeff0e727777b96e"},
+    {file = "APScheduler-3.10.3-py3-none-any.whl", hash = "sha256:1611d207b095ff52d97884e90736c192bdd94dbd44ce27eb92c3f1da24a400d3"},
+    {file = "APScheduler-3.10.3.tar.gz", hash = "sha256:3f17fd3915f14f4bfa597f552130a14a9d1cc74a002fa1d95dd671cb48dba70e"},
 ]
 
 [package.dependencies]
 pytz = "*"
-setuptools = ">=0.7"
 six = ">=1.4.0"
 tzlocal = ">=2.0,<3.dev0 || >=4.dev0"
 
@@ -3133,8 +3132,9 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [extras]
 dynamodb = ["aioboto3"]
 redis = ["hiredis", "redis"]
+sqlite = ["aiosqlite"]
 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "4dccbb2767bfd03bf62b543e59599014e2aa12b0470c4167f69c82e3811b7d73"
+content-hash = "259e79d7a3fc2f6532f8f38256613fa63d25070d7e0ebc6f797465f400290d2a"
