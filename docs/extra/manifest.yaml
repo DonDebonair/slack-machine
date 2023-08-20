@@ -44,6 +44,7 @@ oauth_config:
 settings:
   event_subscriptions:
     bot_events:
+      - app_home_opened
       - app_mention
       - channel_archive
       - channel_created
