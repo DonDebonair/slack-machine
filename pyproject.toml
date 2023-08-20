@@ -65,7 +65,7 @@ pytest-asyncio = ">=0.19,<0.22"
 mock = ">=4.0.3,<6.0.0"
 mypy = ">=0.982,<1.6"
 types-redis = "^4.3.21"
-flake8 = "<4.0.1"
+flake8 = "<5.0.5"
 aioboto3 = ">=10,<12"
 types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
 aiosqlite = ">=0.18,<0.20"
