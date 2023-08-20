@@ -1811,13 +1811,13 @@ typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
 name = "pyee"
-version = "10.0.2"
+version = "11.0.0"
 description = "A rough port of Node.js's EventEmitter to Python with a few tricks of its own"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 files = [
-    {file = "pyee-10.0.2-py3-none-any.whl", hash = "sha256:798f8f70255b137da500e18274612ef256aa179b9352a67940dab59910167ddf"},
-    {file = "pyee-10.0.2.tar.gz", hash = "sha256:266e0389ac212e364bca1dc5e7cd92ddf8d3a06259cbfc2687aa54c7f1a0da94"},
+    {file = "pyee-11.0.0-py3-none-any.whl", hash = "sha256:78bb582de8083e50cbcc9aef3e40b43d5bfa321ef85bda07a1a7b8a0c78cfebe"},
+    {file = "pyee-11.0.0.tar.gz", hash = "sha256:27c682bce60bdadc5d3e23eacd4101df328c0280884a3d9c07f3a4e3e595de27"},
 ]
 
 [package.dependencies]
@@ -3133,4 +3133,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "1cdcf9cb9878aa5fca3fd77bad123fed0b974ef4102e7d1c01ec703984241603"
+content-hash = "5aa55bb992f10f3663fe4ff3ebd7243f047297c277511e594b216471af14b525"
