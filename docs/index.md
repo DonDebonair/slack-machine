@@ -27,12 +27,30 @@ class DeploymentPlugin(MachineBasePlugin):
         await msg.say(f"Deploying {application} to {environment}")
 ```
 
-## *Note*
+## _Breaking Changes_
 
-As of v0.30.0 Slack Machine dropped support for the old backend based on the RTM API. As such, Slack Machine is now
-fully based on [AsyncIO](https://docs.python.org/3/library/asyncio.html). This means plugins written before the
-rewrite to asyncio aren't supported anymore. See [here](migrating.md) for a migration guide to get your old plugins
-working with the new version of Slack Machine.
+**Plugin initialization is now async** (v0.35.0)
+
+The optional initialization method
+[plugins can implement](https://dondebonair.github.io/slack-machine/plugins/misc/#plugin-initialization), which is
+run once when the plugin is loaded, should be an **async** method starting the upcoming
+[v0.35.0](https://github.com/DonDebonair/slack-machine/releases/tag/v0.35.0). The reason for this is that this
+allows plugins to interact with Slack through the Slack Machine's plugin API - most of which methods are async.
+
+Simply prefix your `init()` methods with `async`.
+
+**Dropped support for Python 3.7** (v0.34.0)
+
+As of [v0.34.0](https://github.com/DonDebonair/slack-machine/releases/tag/v0.34.0), support for Python 3.7 has been
+dropped. Python 3.7 has reached end-of-life on 2023-06-27.
+
+**AsyncIO** (v0.30.0)
+
+As of [v0.30.0](https://github.com/DonDebonair/slack-machine/releases/tag/v0.30.0) Slack Machine dropped support for
+the old backend based on the RTM API. As such, Slack Machine is now fully based on
+[AsyncIO](https://docs.python.org/3/library/asyncio.html). This means plugins written before the rewrite to asyncio
+aren't supported anymore. See [here](https://dondebonair.github.io/slack-machine/migrating/) for a migration guide to
+get your old plugins working with the new version of Slack Machine.
 
 It's really easy!
 

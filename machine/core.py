@@ -138,7 +138,7 @@ class Machine:
                         logger.warning(error_msg)
                         del instance
                     else:
-                        instance.init()
+                        await instance.init()
                         logger.info("Plugin %s loaded", class_name)
         await self._storage_backend.set("manual", dill.dumps(self._help))
 
