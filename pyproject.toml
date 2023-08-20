@@ -43,7 +43,7 @@ aioboto3 = {version = ">=10,<12", optional = true}
 tzdata = ">=2022.2,<2024.0"
 pydantic = "^2.1.1"
 structlog = ">=22.1,<24.0"
-aiosqlite = {version = "^0.18.0", optional = true}
+aiosqlite = {version = ">=0.18,<0.20", optional = true}
 
 [tool.poetry.group.test]
 optional = true
@@ -68,7 +68,7 @@ types-redis = "^4.3.21"
 flake8 = "<4.0.1"
 aioboto3 = ">=10,<12"
 types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
-aiosqlite = "^0.18.0"
+aiosqlite = ">=0.18,<0.20"
 
 [tool.poetry.group.docs]
 optional = true
