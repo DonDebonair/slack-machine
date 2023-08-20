@@ -25,7 +25,7 @@ class FakePlugin(MachineBasePlugin):
 
 
 class FakePlugin2(MachineBasePlugin):
-    def init(self):
+    async def init(self):
         self.x = 42
 
     @listen_to(r"doit")

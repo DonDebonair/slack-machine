@@ -10,7 +10,13 @@ things to the plugin instance at startup, it is advised not to provide a constru
 
 If your plugin needs to initialize its own things at startup, you can override the
 [`init()`][machine.plugins.base.MachineBasePlugin.init] method. This method will be called once when the plugin is
-initialized. It is no-op by default.
+initialized. It is no-op by default. If you choose to implement this method, make sure it is `async`. This allows
+you to use the async plugin API of Slack Machine to interact with Slack and also lets you use the plugin storage.
+
+When the `init()` methods of plugins are called, the underlying Slack client has already been initialized, so you
+should have full access to all Slack-related information, incl. a populated list of
+[`users`][machine.plugins.base.MachineBasePlugin.users] and
+[`channels`][machine.plugins.base.MachineBasePlugin.channels]
 
 ## Logging
 

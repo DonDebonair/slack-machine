@@ -8,6 +8,11 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+### Changed
+
+- **Breaking:** the optional `init()` method of plugins is now expected to be `async`. This allows plugin authors to
+  interact with Slack during plugin initialization through Slack Machine's plugin API.
+
 ## [0.34.2] - 2023-08-13
 
 ### Fixed

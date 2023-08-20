@@ -43,7 +43,7 @@ class MachineBasePlugin:
         self.settings = settings
         self._fq_name = f"{self.__module__}.{self.__class__.__name__}"
 
-    def init(self) -> None:
+    async def init(self) -> None:
         """Initialize plugin
 
         This method can be implemented by concrete plugin classes. It will be called **once**
@@ -53,7 +53,7 @@ class MachineBasePlugin:
 
         :return: None
         """
-        pass
+        return None
 
     @property
     def users(self) -> dict[str, User]:
