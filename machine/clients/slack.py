@@ -265,4 +265,4 @@ class SlackClient:
 
     async def set_topic(self, channel: Channel | str, topic: str, **kwargs: Any) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
-        return await self._client.web_client.channels_setTopic(channel=channel_id, topic=topic, **kwargs)
+        return await self._client.web_client.conversations_setTopic(channel=channel_id, topic=topic, **kwargs)
