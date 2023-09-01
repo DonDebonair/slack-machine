@@ -5,6 +5,7 @@ from inspect import Signature
 import pytest
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
+from structlog.testing import capture_logs
 
 from machine.clients.slack import SlackClient
 from machine.models.core import RegisteredActions, MessageHandler, CommandHandler
@@ -19,6 +20,7 @@ from machine.handlers import (
     handle_message,
     create_generic_event_handler,
     create_slash_command_handler,
+    log_request,
 )
 
 
@@ -286,3 +288,16 @@ async def test_create_slash_command_handler_generator(plugin_actions, fake_plugi
     # SocketModeResponse will transform a string into a dict with `text` as only key
     assert resp.payload == {"text": "hello"}
     assert fake_plugin.command_function.call_count == 0
+
+
+@pytest.mark.asyncio
+async def test_request_logger_handler(socket_mode_client):
+    with capture_logs() as cap_logs:
+        await log_request(socket_mode_client, _gen_command_request("/test", "foo"))
+        log_event = cap_logs[0]
+        assert log_event["event"] == "Request received"
+        assert log_event["type"] == "slash_commands"
+        assert log_event["request"] == {
+            "envelope_id": "x",
+            "payload": {"command": "/test", "text": "foo", "response_url": "https://my.webhook.com"},
+        }

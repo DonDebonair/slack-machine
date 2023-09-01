@@ -64,7 +64,6 @@ class SlackClient:
         self._client.socket_mode_request_listeners.append(handler)
 
     async def _process_users_channels(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest) -> None:
-        logger.debug("Request of type %s with payload %s", req.type, req.payload)
         if req.type == "events_api":
             # Acknowledge the request
             response = SocketModeResponse(envelope_id=req.envelope_id)
@@ -133,7 +132,8 @@ class SlackClient:
         if user.profile.email is not None:
             self._users_by_email[user.profile.email] = user
         else:
-            logger.warning("User has not provided an email address in their profile", user=user.model_dump())
+            if not user.is_bot:
+                logger.warning("User has not provided an email address in their profile", user=user.model_dump())
         return user
 
     def _register_channel(self, channel_response: dict[str, Any]) -> Channel:
