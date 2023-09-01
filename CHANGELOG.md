@@ -8,6 +8,11 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+### Added
+
+- Incoming requests/events from Slack that the Slack App is subscribed to, will be logged when `LOGLEVEL` is set to
+  `DEBUG` ([#876](https://github.com/DonDebonair/slack-machine/pull/876))
+
 ### Changed
 
 - **Breaking:** the optional `init()` method of plugins is now expected to be `async`. This allows plugin authors to

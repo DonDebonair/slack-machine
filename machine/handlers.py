@@ -28,7 +28,7 @@ def create_message_handler(
 ) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
     message_matcher = generate_message_matcher(settings)
 
-    async def message_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    async def handle_message_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "events_api":
             # Acknowledge the request anyway
             response = SocketModeResponse(envelope_id=request.envelope_id)
@@ -47,14 +47,14 @@ def create_message_handler(
                     log_handled_message=settings["LOG_HANDLED_MESSAGES"],
                 )
 
-    return message_handler
+    return handle_message_request
 
 
 def create_slash_command_handler(
     plugin_actions: RegisteredActions,
     slack_client: SlackClient,
 ) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
-    async def slash_command_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    async def handle_slash_command_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "slash_commands":
             logger.debug("slash command received", payload=request.payload)
             # We only acknowledge request if we know about this command
@@ -88,13 +88,13 @@ def create_slash_command_handler(
                     fn = cast(Callable[..., Awaitable[None]], cmd.function)
                     await fn(command_obj, **extra_args)
 
-    return slash_command_handler
+    return handle_slash_command_request
 
 
 def create_generic_event_handler(
     plugin_actions: RegisteredActions,
 ) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
-    async def generic_event_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    async def handle_event_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "events_api":
             # Acknowledge the request anyway
             response = SocketModeResponse(envelope_id=request.envelope_id)
@@ -107,7 +107,11 @@ def create_generic_event_handler(
                     request.payload["event"], list(plugin_actions.process[request.payload["event"]["type"]].values())
                 )
 
-    return generic_event_handler
+    return handle_event_request
+
+
+async def log_request(_: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    logger.debug("Request received", type=request.type, request=request.to_dict())
 
 
 def generate_message_matcher(settings: Mapping) -> re.Pattern[str]:

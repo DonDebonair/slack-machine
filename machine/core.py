@@ -15,7 +15,12 @@ from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
 
 from machine.clients.slack import SlackClient
-from machine.handlers import create_message_handler, create_generic_event_handler, create_slash_command_handler
+from machine.handlers import (
+    create_message_handler,
+    create_generic_event_handler,
+    create_slash_command_handler,
+    log_request,
+)
 from machine.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions, CommandHandler
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.decorators import DecoratedPluginFunc, Metadata, MatcherConfig
@@ -240,7 +245,6 @@ class Machine:
         class_help: str,
     ) -> None:
         signature = Signature.from_callable(function)
-        logger.debug("signature of message handler", signature=signature, function=fq_fn_name)
         handler = MessageHandler(
             class_=class_,
             class_name=class_name,
@@ -306,6 +310,10 @@ class Machine:
 
         bot_id = self._client.bot_info["user_id"]
         bot_name = self._client.bot_info["name"]
+
+        if self._settings.get("LOGLEVEL", "ERROR").upper() == "DEBUG":
+            self._client.register_handler(log_request)
+
         message_handler = create_message_handler(
             self._registered_actions, self._settings, bot_id, bot_name, self._client
         )

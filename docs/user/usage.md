@@ -30,6 +30,10 @@ Slack Machine, and the most of the built-in plugins, only need a `SLACK_APP_TOKE
 
 You can override the log level by setting `LOGLEVEL`. By default this is set to `"ERROR"`.
 
+!!! warning
+
+    If you set the `LOGLEVEL` to `DEBUG`, all events your Slack App is subscribed to, will be logged.
+
 If you want to use Slack Machine behind a proxy, you can set `HTTP_PROXY`.
 
 ### Using environment variables for configuration
