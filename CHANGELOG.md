@@ -8,6 +8,8 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.35.0]
+
 ### Added
 
 - Incoming requests/events from Slack that the Slack App is subscribed to, will be logged when `LOGLEVEL` is set to
@@ -17,6 +19,19 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 - **Breaking:** the optional `init()` method of plugins is now expected to be `async`. This allows plugin authors to
   interact with Slack during plugin initialization through Slack Machine's plugin API.
+  ([#868](https://github.com/DonDebonair/slack-machine/pull/868))
+- Standard app manifest for Slack Machine now also enables listening for the `app_home_opened` event
+- Bump `aiosqlite` from 0.18.0 to 0.19.0
+- Bump `apscheduler` from 3.10.1 to 3.10.4
+- Bump `redis` from 4.6.0 to 5.0.0
+- Bump `pyee` from 10.0.2 to 11.0.0
+- Bump `pydantic` from 2.2.1 to 2.3.0
+
+### Fixed
+
+- Use conversations_setTopic instead of channels_setTopic for setting channel topic
+  ([#869](https://github.com/DonDebonair/slack-machine/pull/869) by
+  [**@jogendra**](https://github.com/jogendra))
 
 ## [0.34.2] - 2023-08-13
 
@@ -626,7 +641,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.35.0...HEAD
+[0.35.0]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...v0.35.0
 [0.34.2]: https://github.com/DonDebonair/slack-machine/compare/v0.34.1...v0.34.2
 [0.34.1]: https://github.com/DonDebonair/slack-machine/compare/v0.34.0...v0.34.1
 [0.34.0]: https://github.com/DonDebonair/slack-machine/compare/v0.33.0...v0.34.0
