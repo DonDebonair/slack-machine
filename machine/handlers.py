@@ -230,6 +230,7 @@ async def dispatch_listeners(
                 extra_params["logger"] = handler_logger
             handler_funcs.append(handler.function(message, **extra_params))
     await asyncio.gather(*handler_funcs)
+
     return
 
 
