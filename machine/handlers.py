@@ -46,17 +46,6 @@ def create_message_handler(
                     slack_client=slack_client,
                     log_handled_message=settings["LOG_HANDLED_MESSAGES"],
                 )
-        elif request.type == "interactive":
-            # Acknowledge the request anyway
-            response = SocketModeResponse(envelope_id=request.envelope_id)
-            # Don't forget having await for method calls
-            await client.send_socket_mode_response(response)
-
-            # process entire interactive payload
-            if request.payload["type"] in plugin_actions.process:
-                await dispatch_event_handlers(
-                    request.payload, list(plugin_actions.process[request.payload["type"]].values())
-                )
 
     return handle_message_request
 
@@ -116,6 +105,17 @@ def create_generic_event_handler(
             if request.payload["event"]["type"] in plugin_actions.process:
                 await dispatch_event_handlers(
                     request.payload["event"], list(plugin_actions.process[request.payload["event"]["type"]].values())
+                )
+        elif request.type == "interactive":
+            # Acknowledge the request anyway
+            response = SocketModeResponse(envelope_id=request.envelope_id)
+            # Don't forget having await for method calls
+            await client.send_socket_mode_response(response)
+
+            # process entire interactive payload
+            if request.payload["type"] in plugin_actions.process:
+                await dispatch_event_handlers(
+                    request.payload, list(plugin_actions.process[request.payload["type"]].values())
                 )
 
     return handle_event_request
