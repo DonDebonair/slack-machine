@@ -106,17 +106,17 @@ def create_generic_event_handler(
                 await dispatch_event_handlers(
                     request.payload["event"], list(plugin_actions.process[request.payload["event"]["type"]].values())
                 )
-            elif request.type == "interactive":
-                # Acknowledge the request anyway
-                response = SocketModeResponse(envelope_id=request.envelope_id)
-                # Don't forget having await for method calls
-                await client.send_socket_mode_response(response)
+        elif request.type == "interactive":
+            # Acknowledge the request anyway
+            response = SocketModeResponse(envelope_id=request.envelope_id)
+            # Don't forget having await for method calls
+            await client.send_socket_mode_response(response)
 
-                # process entire interactive payload
-                if request.payload["type"] in plugin_actions.process:
-                    await dispatch_event_handlers(
-                        request.payload, list(plugin_actions.process[request.payload["type"]].values())
-                    )
+            # process entire interactive payload
+            if request.payload["type"] in plugin_actions.process:
+                await dispatch_event_handlers(
+                    request.payload, list(plugin_actions.process[request.payload["type"]].values())
+                )
 
     return handle_event_request
 
@@ -173,7 +173,7 @@ def _check_bot_mention(
     event: dict[str, Any], bot_name: str, bot_id: str, message_matcher: re.Pattern[str]
 ) -> dict[str, Any] | None:
     full_text = event.get("text", "")
-    channel_type = event.get("channel_type")
+    channel_type = event["channel_type"]
     m = message_matcher.match(full_text)
 
     if channel_type == "channel" or channel_type == "group":
@@ -230,6 +230,7 @@ async def dispatch_listeners(
                 extra_params["logger"] = handler_logger
             handler_funcs.append(handler.function(message, **extra_params))
     await asyncio.gather(*handler_funcs)
+
     return
 
 
