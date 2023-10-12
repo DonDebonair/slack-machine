@@ -6,6 +6,7 @@ from structlog.stdlib import get_logger
 import os
 import sys
 from typing import Callable, cast, Awaitable
+from typing import Literal
 from inspect import Signature
 
 import dill
@@ -14,8 +15,13 @@ from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
 
 from machine.clients.slack import SlackClient
-from machine.handlers import create_message_handler, create_generic_event_handler
-from machine.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions
+from machine.handlers import (
+    create_message_handler,
+    create_generic_event_handler,
+    create_slash_command_handler,
+    log_request,
+)
+from machine.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions, CommandHandler
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.decorators import DecoratedPluginFunc, Metadata, MatcherConfig
 from machine.storage import PluginStorage, MachineBaseStorage
@@ -137,7 +143,7 @@ class Machine:
                         logger.warning(error_msg)
                         del instance
                     else:
-                        instance.init()
+                        await instance.init()
                         logger.info("Plugin %s loaded", class_name)
         await self._storage_backend.set("manual", dill.dumps(self._help))
 
@@ -147,7 +153,8 @@ class Machine:
         missing_settings.extend(self._check_missing_settings(cls_instance_for_missing_settings))
         methods = inspect.getmembers(cls_instance, predicate=inspect.ismethod)
         for _, fn in methods:
-            missing_settings.extend(self._check_missing_settings(fn))
+            method_for_missing_settings = cast(DecoratedPluginFunc, fn)
+            missing_settings.extend(self._check_missing_settings(method_for_missing_settings))
         if missing_settings:
             return missing_settings
 
@@ -206,12 +213,22 @@ class Machine:
             self._registered_actions.process[event] = self._registered_actions.process.get(event, {})
             key = f"{fq_fn_name}-{event}"
             self._registered_actions.process[event][key] = fn
+        for command_config in metadata.plugin_actions.commands:
+            self._register_command_handler(
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                command=command_config.command,
+                is_generator=command_config.is_generator,
+                class_help=class_help,
+            )
 
         if metadata.plugin_actions.schedule is not None:
             self._scheduler.add_job(
-                fq_fn_name,
+                fn,
                 trigger="cron",
-                args=[cls_instance],
+                args=[],
                 id=fq_fn_name,
                 replace_existing=True,
                 **metadata.plugin_actions.schedule,
@@ -219,7 +236,7 @@ class Machine:
 
     def _register_message_handler(
         self,
-        type_: str,
+        type_: Literal["listen_to", "respond_to"],
         class_: MachineBasePlugin,
         class_name: str,
         fq_fn_name: str,
@@ -228,7 +245,6 @@ class Machine:
         class_help: str,
     ) -> None:
         signature = Signature.from_callable(function)
-        logger.debug("signature of handler", signature=signature, function=fq_fn_name)
         handler = MessageHandler(
             class_=class_,
             class_name=class_name,
@@ -240,6 +256,31 @@ class Machine:
         key = f"{fq_fn_name}-{matcher_config.regex.pattern}"
         getattr(self._registered_actions, type_)[key] = handler
         self._help.robot[class_help].append(self._parse_robot_help(matcher_config, type_))
+
+    def _register_command_handler(
+        self,
+        class_: MachineBasePlugin,
+        class_name: str,
+        fq_fn_name: str,
+        function: Callable[..., Awaitable[None]],
+        command: str,
+        is_generator: bool,
+        class_help: str,
+    ) -> None:
+        signature = Signature.from_callable(function)
+        logger.debug("signature of command handler", signature=signature, function=fq_fn_name)
+        handler = CommandHandler(
+            class_=class_,
+            class_name=class_name,
+            function=function,
+            function_signature=signature,
+            command=command,
+            is_generator=is_generator,
+        )
+        if command in self._registered_actions.command:
+            logger.warning("command was already defined, previous handler will be overwritten!", command=command)
+        self._registered_actions.command[command] = handler
+        # TODO: add to help
 
     @staticmethod
     def _parse_human_help(doc: str) -> HumanHelp:
@@ -269,13 +310,19 @@ class Machine:
 
         bot_id = self._client.bot_info["user_id"]
         bot_name = self._client.bot_info["name"]
+
+        if self._settings.get("LOGLEVEL", "ERROR").upper() == "DEBUG":
+            self._client.register_handler(log_request)
+
         message_handler = create_message_handler(
             self._registered_actions, self._settings, bot_id, bot_name, self._client
         )
         generic_event_handler = create_generic_event_handler(self._registered_actions)
+        slash_command_handler = create_slash_command_handler(self._registered_actions, self._client)
 
         self._client.register_handler(message_handler)
         self._client.register_handler(generic_event_handler)
+        self._client.register_handler(slash_command_handler)
         # Establish a WebSocket connection to the Socket Mode servers
         await self._socket_mode_client.connect()
         logger.info("Connected to Slack")

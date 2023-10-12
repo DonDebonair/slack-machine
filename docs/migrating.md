@@ -8,7 +8,7 @@ new version of Slack Machine.
 ## Await all Slack Machine plugin functions
 
 Any function from [`MachineBasePlugin`][machine.plugins.base.MachineBasePlugin] and
-[`Message`][machine.plugins.base.Message] needs to be awaited now. This is as easy as prefixing your the function
+[`Message`][machine.plugins.message.Message] needs to be awaited now. This is as easy as prefixing your the function
 calls with the `await` keyword:
 
 ```python

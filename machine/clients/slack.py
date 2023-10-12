@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import sys
 from datetime import datetime
 from typing import Callable, Awaitable, Any
@@ -11,6 +10,7 @@ from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
+from structlog.stdlib import get_logger
 
 from machine.models import Channel
 from machine.models import User
@@ -21,7 +21,7 @@ if sys.version_info >= (3, 9):
 else:
     from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def id_for_user(user: User | str) -> str:
@@ -41,6 +41,7 @@ def id_for_channel(channel: Channel | str) -> str:
 class SlackClient:
     _client: SocketModeClient
     _users: dict[str, User]
+    _users_by_email: dict[str, User]
     _channels: dict[str, Channel]
     _bot_info: dict[str, Any]
     _tz: ZoneInfo
@@ -48,6 +49,7 @@ class SlackClient:
     def __init__(self, client: SocketModeClient, tz: ZoneInfo):
         self._client = client
         self._users = {}
+        self._users_by_email = {}
         self._channels: dict[str, Channel] = {}
         self._tz = tz
 
@@ -62,7 +64,6 @@ class SlackClient:
         self._client.socket_mode_request_listeners.append(handler)
 
     async def _process_users_channels(self, _: AsyncBaseSocketModeClient, req: SocketModeRequest) -> None:
-        logger.debug("Request of type %s with payload %s", req.type, req.payload)
         if req.type == "events_api":
             # Acknowledge the request
             response = SocketModeResponse(envelope_id=req.envelope_id)
@@ -126,12 +127,17 @@ class SlackClient:
         logger.debug("Channels: %s", ", ".join([c.identifier for c in self._channels.values()]))
 
     def _register_user(self, user_response: dict[str, Any]) -> User:
-        user = User.parse_obj(user_response)
+        user = User.model_validate(user_response)
         self._users[user.id] = user
+        if user.profile.email is not None:
+            self._users_by_email[user.profile.email] = user
+        else:
+            if not user.is_bot:
+                logger.warning("User has not provided an email address in their profile", user=user.model_dump())
         return user
 
     def _register_channel(self, channel_response: dict[str, Any]) -> Channel:
-        channel = Channel.parse_obj(channel_response)
+        channel = Channel.model_validate(channel_response)
         self._channels[channel.id] = channel
         return channel
 
@@ -188,12 +194,22 @@ class SlackClient:
         return self._users
 
     @property
+    def users_by_email(self) -> dict[str, User]:
+        return self._users_by_email
+
+    @property
     def channels(self) -> dict[str, Channel]:
         return self._channels
 
     @property
     def bot_info(self) -> dict[str, Any]:
         return self._bot_info
+
+    def get_user_by_id(self, user_id: str) -> User | None:
+        return self._users.get(user_id)
+
+    def get_user_by_email(self, email: str) -> User | None:
+        return self._users_by_email.get(email)
 
     async def send(self, channel: Channel | str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
@@ -246,3 +262,7 @@ class SlackClient:
     async def unpin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.pins_remove(channel=channel_id, timestamp=ts)
+
+    async def set_topic(self, channel: Channel | str, topic: str, **kwargs: Any) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.conversations_setTopic(channel=channel_id, topic=topic, **kwargs)

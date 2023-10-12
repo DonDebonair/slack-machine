@@ -8,6 +8,95 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.35.0]
+
+### Added
+
+- Incoming requests/events from Slack that the Slack App is subscribed to, will be logged when `LOGLEVEL` is set to
+  `DEBUG` ([#876](https://github.com/DonDebonair/slack-machine/pull/876))
+
+### Changed
+
+- **Breaking:** the optional `init()` method of plugins is now expected to be `async`. This allows plugin authors to
+  interact with Slack during plugin initialization through Slack Machine's plugin API.
+  ([#868](https://github.com/DonDebonair/slack-machine/pull/868))
+- Standard app manifest for Slack Machine now also enables listening for the `app_home_opened` event
+- Bump `aiosqlite` from 0.18.0 to 0.19.0
+- Bump `apscheduler` from 3.10.1 to 3.10.4
+- Bump `redis` from 4.6.0 to 5.0.0
+- Bump `pyee` from 10.0.2 to 11.0.0
+- Bump `pydantic` from 2.2.1 to 2.3.0
+
+### Fixed
+
+- Use conversations_setTopic instead of channels_setTopic for setting channel topic
+  ([#869](https://github.com/DonDebonair/slack-machine/pull/869) by
+  [**@jogendra**](https://github.com/jogendra))
+
+## [0.34.2] - 2023-08-13
+
+### Fixed
+
+- Users indexed by email and related functions are now exposed through the plugin interface
+  ([#852](https://github.com/DonDebonair/slack-machine/pull/852))
+
+## [0.34.1] - 2023-08-13
+
+### Added
+
+- Slack users are now indexed by their email as well, allowing fast lookups by email
+  ([#849](https://github.com/DonDebonair/slack-machine/pull/849))
+
+### Fixed
+
+- All logging in Slack Machine is now done through structlog instead of the Python stdlib logger
+  ([#850](https://github.com/DonDebonair/slack-machine/pull/850))
+
+## [0.34.0] - 2023-08-13
+
+### Added
+
+- Add support to set topic on channels ([#839](https://github.com/DonDebonair/slack-machine/pull/839) by
+  [**@jogendra**](https://github.com/jogendra))
+- Add SQLite storage backend ([#844](https://github.com/DonDebonair/slack-machine/pull/844) by
+  [**@cp-richard**](https://github.com/cp-richard))
+
+### Changed
+
+- Bump `httpx` from 0.24.0 to 0.24.1
+- Bump `aiohttp` from 3.8.4 to 3.8.5
+- Bump `certifi` from 2022.12.7 to 2023.7.22
+- Bump `pyee` from 9.1.0 to 10.0.2
+- Bump `pydantic` from 1.10.7 to 2.1.1 ([#840](https://github.com/DonDebonair/slack-machine/pull/840))
+
+### Removed
+
+- **Breaking:** Remove Python 3.7 support ([#846](https://github.com/DonDebonair/slack-machine/pull/846))
+
+## [0.33.0] - 2023-05-15
+
+### Added
+
+- Add support for [slash commands](https://api.slack.com/interactivity/slash-commands)
+  ([#787](https://github.com/DonDebonair/slack-machine/pull/787))
+
+### Changed
+
+- **Breaking:** move `Message` class from `machine.plugins.base` to `machine.plugins.message`
+- Use dots only for referencing the fully-qualified name of classes and functions instead of using a colon before
+  the class name
+- Bump `tzdata` from 2022.6 to 2023.3
+- Bump `slack-sdk` from 3.19.4 to 3.21.3
+- Bump `aioboto3` from 10.1.0 to 11.2.0
+- Bump `aiohttp` from 3.8.3 to 3.8.4
+- Bump `redis` from 4.3.5 to 4.5.5
+- Bump `hiredis` from 2.0.0 to 2.2.3
+- Bump `pydantic` from 1.10.2 to 1.10.7
+- Bump `httpx` from 0.23.1 to 0.24.0
+- Bump `apscheduler` from 3.9.1.post1 to 3.10.1
+- Bump `structlog` from 22.3.0 to 23.1.0
+- Bump `pyee` from 9.0.4 to 9.1.0
+
 ## [0.32.0] - 2022-11-27
 
 ### Added
@@ -552,7 +641,12 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.35.0...HEAD
+[0.35.0]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...v0.35.0
+[0.34.2]: https://github.com/DonDebonair/slack-machine/compare/v0.34.1...v0.34.2
+[0.34.1]: https://github.com/DonDebonair/slack-machine/compare/v0.34.0...v0.34.1
+[0.34.0]: https://github.com/DonDebonair/slack-machine/compare/v0.33.0...v0.34.0
+[0.33.0]: https://github.com/DonDebonair/slack-machine/compare/v0.32.0...v0.33.0
 [0.32.0]: https://github.com/DonDebonair/slack-machine/compare/v0.31.0...v0.32.0
 [0.31.0]: https://github.com/DonDebonair/slack-machine/compare/v0.30.0...v0.31.0
 [0.30.0]: https://github.com/DonDebonair/slack-machine/compare/v0.28.2...v0.30.0

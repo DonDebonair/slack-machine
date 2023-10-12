@@ -52,19 +52,19 @@ async def test_load_and_register_plugins(settings, slack_client):
     assert isinstance(actions, RegisteredActions)
 
     # Test registration of respond_to actions
-    respond_to_key = "tests.fake_plugins:FakePlugin.respond_function-hello"
+    respond_to_key = "tests.fake_plugins.FakePlugin.respond_function-hello"
     assert respond_to_key in actions.respond_to
-    assert actions.respond_to[respond_to_key].class_name == "tests.fake_plugins:FakePlugin"
+    assert actions.respond_to[respond_to_key].class_name == "tests.fake_plugins.FakePlugin"
     assert actions.respond_to[respond_to_key].regex == re.compile("hello", re.IGNORECASE)
 
     # Test registration of listen_to actions
-    listen_to_key = "tests.fake_plugins:FakePlugin.listen_function-hi"
+    listen_to_key = "tests.fake_plugins.FakePlugin.listen_function-hi"
     assert listen_to_key in actions.listen_to
-    assert actions.listen_to[listen_to_key].class_name == "tests.fake_plugins:FakePlugin"
+    assert actions.listen_to[listen_to_key].class_name == "tests.fake_plugins.FakePlugin"
     assert actions.listen_to[listen_to_key].regex == re.compile("hi", re.IGNORECASE)
 
     # Test registration of process actions
-    process_key = "tests.fake_plugins:FakePlugin.process_function-some_event"
+    process_key = "tests.fake_plugins.FakePlugin.process_function-some_event"
     assert "some_event" in actions.process
     assert process_key in actions.process["some_event"]
 
@@ -76,10 +76,10 @@ async def test_plugin_storage_fq_plugin_name(settings, slack_client):
     await machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
-    plugin1_cls = actions.respond_to["tests.fake_plugins:FakePlugin.respond_function-hello"].class_
-    plugin2_cls = actions.listen_to["tests.fake_plugins:FakePlugin2.another_listen_function-doit"].class_
-    assert plugin1_cls.storage._fq_plugin_name == "tests.fake_plugins:FakePlugin"
-    assert plugin2_cls.storage._fq_plugin_name == "tests.fake_plugins:FakePlugin2"
+    plugin1_cls = actions.respond_to["tests.fake_plugins.FakePlugin.respond_function-hello"].class_
+    plugin2_cls = actions.listen_to["tests.fake_plugins.FakePlugin2.another_listen_function-doit"].class_
+    assert plugin1_cls.storage._fq_plugin_name == "tests.fake_plugins.FakePlugin"
+    assert plugin2_cls.storage._fq_plugin_name == "tests.fake_plugins.FakePlugin2"
 
 
 @pytest.mark.asyncio
@@ -89,7 +89,7 @@ async def test_plugin_init(settings, slack_client):
     await machine._setup_storage()
     await machine._load_plugins()
     actions = machine._registered_actions
-    plugin_cls = actions.listen_to["tests.fake_plugins:FakePlugin2.another_listen_function-doit"].class_
+    plugin_cls = actions.listen_to["tests.fake_plugins.FakePlugin2.another_listen_function-doit"].class_
     assert plugin_cls.x == 42
 
 

@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import asyncio
-import logging
 import re
-from typing import Any, Callable, Awaitable, Mapping
+from typing import Any, Callable, Awaitable, Mapping, cast, AsyncGenerator, Union
 
-from structlog.stdlib import get_logger
+from slack_sdk.models import JsonObject
+from structlog.stdlib import get_logger, BoundLogger
 
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
@@ -13,9 +13,10 @@ from slack_sdk.socket_mode.response import SocketModeResponse
 
 from machine.clients.slack import SlackClient
 from machine.models.core import RegisteredActions, MessageHandler
-from machine.plugins.base import Message
+from machine.plugins.command import Command
+from machine.plugins.message import Message
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 def create_message_handler(
@@ -27,7 +28,7 @@ def create_message_handler(
 ) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
     message_matcher = generate_message_matcher(settings)
 
-    async def message_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    async def handle_message_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "events_api":
             # Acknowledge the request anyway
             response = SocketModeResponse(envelope_id=request.envelope_id)
@@ -46,13 +47,54 @@ def create_message_handler(
                     log_handled_message=settings["LOG_HANDLED_MESSAGES"],
                 )
 
-    return message_handler
+    return handle_message_request
+
+
+def create_slash_command_handler(
+    plugin_actions: RegisteredActions,
+    slack_client: SlackClient,
+) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
+    async def handle_slash_command_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+        if request.type == "slash_commands":
+            logger.debug("slash command received", payload=request.payload)
+            # We only acknowledge request if we know about this command
+            if request.payload["command"] in plugin_actions.command:
+                cmd = plugin_actions.command[request.payload["command"]]
+                command_obj = _gen_command(request.payload, slack_client)
+                if "logger" in cmd.function_signature.parameters:
+                    command_logger = create_scoped_logger(
+                        cmd.class_name, cmd.function.__name__, command_obj.sender.id, command_obj.sender.name
+                    )
+                    extra_args = {"logger": command_logger}
+                else:
+                    extra_args = {}
+                # Check if the handler is a generator. In this case we have an immediate response we can send back
+                if cmd.is_generator:
+                    gen_fn = cast(Callable[..., AsyncGenerator[Union[dict, JsonObject, str], None]], cmd.function)
+                    logger.debug("Slash command handler is generator, returning immediate ack")
+                    gen = gen_fn(command_obj, **extra_args)
+                    # return immediate reponse
+                    payload = await gen.__anext__()
+                    ack_response = SocketModeResponse(envelope_id=request.envelope_id, payload=payload)
+                    await client.send_socket_mode_response(ack_response)
+                    # Now run the rest of the function
+                    try:
+                        await gen.__anext__()
+                    except StopAsyncIteration:
+                        pass
+                else:
+                    ack_response = SocketModeResponse(envelope_id=request.envelope_id)
+                    await client.send_socket_mode_response(ack_response)
+                    fn = cast(Callable[..., Awaitable[None]], cmd.function)
+                    await fn(command_obj, **extra_args)
+
+    return handle_slash_command_request
 
 
 def create_generic_event_handler(
     plugin_actions: RegisteredActions,
 ) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
-    async def generic_event_handler(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    async def handle_event_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
         if request.type == "events_api":
             # Acknowledge the request anyway
             response = SocketModeResponse(envelope_id=request.envelope_id)
@@ -65,7 +107,11 @@ def create_generic_event_handler(
                     request.payload["event"], list(plugin_actions.process[request.payload["event"]["type"]].values())
                 )
 
-    return generic_event_handler
+    return handle_event_request
+
+
+async def log_request(_: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
+    logger.debug("Request received", type=request.type, request=request.to_dict())
 
 
 def generate_message_matcher(settings: Mapping) -> re.Pattern[str]:
@@ -144,8 +190,12 @@ def _check_bot_mention(
     return event
 
 
-def _gen_message(event: dict[str, Any], plugin_class_name: str, slack_client: SlackClient) -> Message:
-    return Message(slack_client, event, plugin_class_name)
+def _gen_message(event: dict[str, Any], slack_client: SlackClient) -> Message:
+    return Message(slack_client, event)
+
+
+def _gen_command(cmd_payload: dict[str, Any], slack_client: SlackClient) -> Command:
+    return Command(slack_client, cmd_payload)
 
 
 async def dispatch_listeners(
@@ -158,11 +208,11 @@ async def dispatch_listeners(
             continue
         match = matcher.search(event.get("text", ""))
         if match:
-            message = _gen_message(event, handler.class_name, slack_client)
+            message = _gen_message(event, slack_client)
             extra_params = {**match.groupdict()}
-            fq_fn_name = f"{handler.class_name}.{handler.function.__name__}"
-            handler_logger = get_logger(fq_fn_name)
-            handler_logger = handler_logger.bind(user_id=message.sender.id, user_name=message.sender.name)
+            handler_logger = create_scoped_logger(
+                handler.class_name, handler.function.__name__, message.sender.id, message.sender.name
+            )
             if log_handled_message:
                 handler_logger.info("Handling message", message=message.text)
             if "logger" in handler.function_signature.parameters:
@@ -177,3 +227,10 @@ async def dispatch_event_handlers(
 ) -> None:
     handler_funcs = [f(event) for f in event_handlers]
     await asyncio.gather(*handler_funcs)
+
+
+def create_scoped_logger(class_name: str, function_name: str, user_id: str, user_name: str) -> BoundLogger:
+    fq_fn_name = f"{class_name}.{function_name}"
+    handler_logger = get_logger(fq_fn_name)
+    handler_logger = handler_logger.bind(user_id=user_id, user_name=user_name)
+    return handler_logger

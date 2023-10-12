@@ -9,7 +9,7 @@ configured with. You can read more about the available storage backends in the [
 
 Example:
 
-``` python
+```python
 @respond_to(r"store (?P<text>.*) under (?P<key>\w+)")
 async def store(self, msg, text, key):
     await self.storage.set(key, text)
@@ -47,7 +47,7 @@ By default, when you store, retrieve and remove data by key, Slack Machine will 
 with the fully qualified classname of the plugin the storage is used from. This is done to prevent plugins from changing
 or even deleting each others data. So when you do this:
 
-``` python
+```python
 # resides in module my.plugin.package
 class MyPlugin:
     async def some_function():

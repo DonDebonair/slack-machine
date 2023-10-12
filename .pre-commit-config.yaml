@@ -25,7 +25,7 @@ repos:
         name: isort
         args: ["--show-config"]
   - repo: https://github.com/psf/black
-    rev: 22.6.0
+    rev: 23.7.0
     hooks:
       - id: black
         name: black
@@ -35,5 +35,5 @@ repos:
     hooks:
       - id: pyupgrade
         args:
-          - --py37-plus
+          - --py38-plus
           - --keep-runtime-typing

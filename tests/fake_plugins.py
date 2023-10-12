@@ -1,5 +1,5 @@
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import respond_to, listen_to, process
+from machine.plugins.decorators import respond_to, listen_to, process, command
 
 
 class FakePlugin(MachineBasePlugin):
@@ -15,9 +15,17 @@ class FakePlugin(MachineBasePlugin):
     async def process_function(self, event):
         pass
 
+    @command("/test")
+    async def command_function(self, payload):
+        pass
+
+    @command("/test-generator")
+    async def generator_command_function(self, payload):
+        yield "hello"
+
 
 class FakePlugin2(MachineBasePlugin):
-    def init(self):
+    async def init(self):
         self.x = 42
 
     @listen_to(r"doit")

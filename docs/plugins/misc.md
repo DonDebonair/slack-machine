@@ -10,7 +10,13 @@ things to the plugin instance at startup, it is advised not to provide a constru
 
 If your plugin needs to initialize its own things at startup, you can override the
 [`init()`][machine.plugins.base.MachineBasePlugin.init] method. This method will be called once when the plugin is
-initialized. It is no-op by default.
+initialized. It is no-op by default. If you choose to implement this method, make sure it is `async`. This allows
+you to use the async plugin API of Slack Machine to interact with Slack and also lets you use the plugin storage.
+
+When the `init()` methods of plugins are called, the underlying Slack client has already been initialized, so you
+should have full access to all Slack-related information, incl. a populated list of
+[`users`][machine.plugins.base.MachineBasePlugin.users] and
+[`channels`][machine.plugins.base.MachineBasePlugin.channels]
 
 ## Logging
 
@@ -49,11 +55,12 @@ Slack Machine will automatically inject a logger with the right context variable
 will produce a message like:
 
 ```bash
-2022-10-21T14:29:05.639162Z [info] my_handler invoked! [example_plugin.my_plugin:MyPlugin.my_handler] filename=my_plugin.py func_name=my_handler lineno=5 user_id=U12345678 user_name=user1
+2022-10-21T14:29:05.639162Z [info] my_handler invoked! [example_plugin.my_plugin.MyPlugin.my_handler] filename=my_plugin.py func_name=my_handler lineno=5 user_id=U12345678 user_name=user1
 ```
 
-This works only for handler functions that are decorated with
-[`respond_to`][machine.plugins.decorators.respond_to] or [`listen_to`][machine.plugins.decorators.listen_to]
+This currently works for handler functions that are decorated with
+[`respond_to`][machine.plugins.decorators.respond_to], [`listen_to`][machine.plugins.decorators.listen_to] or
+[`command`][machine.plugins.decorators.command]
 
 ## Plugin help information
 

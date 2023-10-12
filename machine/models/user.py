@@ -1,29 +1,28 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class Profile(BaseModel):
+    model_config = ConfigDict(frozen=True)
+
     avatar_hash: str
-    status_text: Optional[str]
-    status_emoji: Optional[str]
-    status_expiration: Optional[int]
+    status_text: Optional[str] = None
+    status_emoji: Optional[str] = None
+    status_expiration: Optional[int] = None
     real_name: str
     display_name: str
     real_name_normalized: str
     display_name_normalized: str
-    image_24: Optional[str]
-    image_32: Optional[str]
-    image_48: Optional[str]
-    image_72: Optional[str]
-    image_192: Optional[str]
-    image_512: Optional[str]
+    image_24: Optional[str] = None
+    image_32: Optional[str] = None
+    image_48: Optional[str] = None
+    image_72: Optional[str] = None
+    image_192: Optional[str] = None
+    image_512: Optional[str] = None
     team: str
     email: Optional[str] = None
     image_original: Optional[str] = None
-
-    class Config:
-        allow_mutation = False
 
 
 class User(BaseModel):
@@ -31,10 +30,12 @@ class User(BaseModel):
     User model that represents a user object from the Slack API
     """
 
+    model_config = ConfigDict(frozen=True)
+
     id: str
-    team_id: Optional[str]
+    team_id: Optional[str] = None
     name: str
-    deleted: Optional[bool]
+    deleted: Optional[bool] = None
     profile: Profile
     is_bot: bool
     updated: int
@@ -52,9 +53,6 @@ class User(BaseModel):
     is_stranger: Optional[bool] = None
     has_2fa: Optional[bool] = None
     locale: Optional[str] = None
-
-    class Config:
-        allow_mutation = False
 
     def fmt_mention(self) -> str:
         return f"<@{self.id}>"
