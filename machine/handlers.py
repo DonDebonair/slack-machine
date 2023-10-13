@@ -213,14 +213,16 @@ async def dispatch_listeners(
     event: dict[str, Any], message_handlers: list[MessageHandler], slack_client: SlackClient, log_handled_message: bool
 ) -> None:
     handler_funcs = []
+    matched_handlers = []
     for handler in message_handlers:
         matcher = handler.regex
         if "subtype" in event and event["subtype"] == "message_changed" and not handler.handle_message_changed:
             continue
         match = matcher.search(event.get("text", ""))
         if match:
+            matched_handlers.append(handler.class_name)
             message = _gen_message(event, slack_client)
-            extra_params = {**match.groupdict()}
+            extra_params = {**{"matched_handlers": matched_handlers}, **match.groupdict()}
             handler_logger = create_scoped_logger(
                 handler.class_name, handler.function.__name__, message.sender.id, message.sender.name
             )
