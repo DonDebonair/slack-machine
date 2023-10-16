@@ -1843,13 +1843,13 @@ typing-extensions = ">=4.6.0,<4.7.0 || >4.7.0"
 
 [[package]]
 name = "pyee"
-version = "11.0.0"
+version = "11.0.1"
 description = "A rough port of Node.js's EventEmitter to Python with a few tricks of its own"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "pyee-11.0.0-py3-none-any.whl", hash = "sha256:78bb582de8083e50cbcc9aef3e40b43d5bfa321ef85bda07a1a7b8a0c78cfebe"},
-    {file = "pyee-11.0.0.tar.gz", hash = "sha256:27c682bce60bdadc5d3e23eacd4101df328c0280884a3d9c07f3a4e3e595de27"},
+    {file = "pyee-11.0.1-py3-none-any.whl", hash = "sha256:9bcc9647822234f42c228d88de63d0f9ffa881e87a87f9d36ddf5211f6ac977d"},
+    {file = "pyee-11.0.1.tar.gz", hash = "sha256:a642c51e3885a33ead087286e35212783a4e9b8d6514a10a5db4e57ac57b2b29"},
 ]
 
 [package.dependencies]
