@@ -2,13 +2,13 @@
 
 [[package]]
 name = "aioboto3"
-version = "11.3.0"
+version = "11.3.1"
 description = "Async boto3 wrapper"
 optional = false
 python-versions = ">=3.7,<4.0"
 files = [
-    {file = "aioboto3-11.3.0-py3-none-any.whl", hash = "sha256:11e6df5bf317e0dfc1390a29fea9e9f3afd8be99bad2cc9719d2cf44080a16fb"},
-    {file = "aioboto3-11.3.0.tar.gz", hash = "sha256:6f504ac312f62be5199033af97f51b20fac31df7f42c128d6643241c8e5741a9"},
+    {file = "aioboto3-11.3.1-py3-none-any.whl", hash = "sha256:7ece9919d4aceabc4ea05f7c210008baf96c763e36cb3b4334742ff226a3a83e"},
+    {file = "aioboto3-11.3.1.tar.gz", hash = "sha256:1b3dd626c98599ee34ff29581c2da119bc408e562be7a61c627ae53fa106eb68"},
 ]
 
 [package.dependencies]
