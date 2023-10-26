@@ -2,17 +2,17 @@
 
 [[package]]
 name = "aioboto3"
-version = "11.3.0"
+version = "12.0.0"
 description = "Async boto3 wrapper"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.8,<4.0"
 files = [
-    {file = "aioboto3-11.3.0-py3-none-any.whl", hash = "sha256:11e6df5bf317e0dfc1390a29fea9e9f3afd8be99bad2cc9719d2cf44080a16fb"},
-    {file = "aioboto3-11.3.0.tar.gz", hash = "sha256:6f504ac312f62be5199033af97f51b20fac31df7f42c128d6643241c8e5741a9"},
+    {file = "aioboto3-12.0.0-py3-none-any.whl", hash = "sha256:23895e734f83e34827a38d3a08ccc3f4178cc8d4e3a7b7031a0cbf8efc875555"},
+    {file = "aioboto3-12.0.0.tar.gz", hash = "sha256:c2bbb990b4efd2e474a1e8a42a80291faf6434b2dc8678f163208d338b2dba39"},
 ]
 
 [package.dependencies]
-aiobotocore = {version = "2.6.0", extras = ["boto3"]}
+aiobotocore = {version = "2.7.0", extras = ["boto3"]}
 
 [package.extras]
 chalice = ["chalice (>=1.24.0)"]
@@ -20,25 +20,25 @@ s3cse = ["cryptography (>=2.3.1)"]
 
 [[package]]
 name = "aiobotocore"
-version = "2.6.0"
+version = "2.7.0"
 description = "Async client for aws services using botocore and aiohttp"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "aiobotocore-2.6.0-py3-none-any.whl", hash = "sha256:0186e6a843364748cdbbf76ee98e9337c44f71a4e694ad1b110d5c516fbce909"},
-    {file = "aiobotocore-2.6.0.tar.gz", hash = "sha256:4805d0140bdfa17bfc2d0ba1243c8cc4273e927201fca5cf2e497c0004a9fab7"},
+    {file = "aiobotocore-2.7.0-py3-none-any.whl", hash = "sha256:aec605df77ce4635a0479b50fd849aa6b640900f7b295021ecca192e1140e551"},
+    {file = "aiobotocore-2.7.0.tar.gz", hash = "sha256:506591374cc0aee1bdf0ebe290560424a24af176dfe2ea7057fe1df97c4f0467"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.7.4.post0,<4.0.0"
 aioitertools = ">=0.5.1,<1.0.0"
-boto3 = {version = ">=1.28.17,<1.28.18", optional = true, markers = "extra == \"boto3\""}
-botocore = ">=1.31.17,<1.31.18"
+boto3 = {version = ">=1.28.16,<1.28.65", optional = true, markers = "extra == \"boto3\""}
+botocore = ">=1.31.16,<1.31.65"
 wrapt = ">=1.10.10,<2.0.0"
 
 [package.extras]
-awscli = ["awscli (>=1.29.17,<1.29.18)"]
-boto3 = ["boto3 (>=1.28.17,<1.28.18)"]
+awscli = ["awscli (>=1.29.16,<1.29.65)"]
+boto3 = ["boto3 (>=1.28.16,<1.28.65)"]
 
 [[package]]
 name = "aiohttp"
@@ -3179,4 +3179,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "7eb0d5db1c5e1599b267c1d495756935de6444b34fa39595c471efe245a93cb7"
+content-hash = "4df0d9289ac4e4ecd47ec2e2962c4b53343d02177ee8edc79d890e2b939b105c"
