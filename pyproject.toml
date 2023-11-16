@@ -74,7 +74,7 @@ aiosqlite = ">=0.18,<0.20"
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-mkdocstrings = {extras = ["python"], version = ">=0.19,<0.24"}
+mkdocstrings = {extras = ["python"], version = ">=0.19,<0.25"}
 mkdocs-material = ">=8.5.10,<10.0.0"
 
 [tool.poetry.extras]
