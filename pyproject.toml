@@ -39,7 +39,7 @@ slack-sdk = "^3.18.1"
 aiohttp = "^3.8.5"
 pyee = ">=9.0.4,<12.0.0"
 httpx = ">=0.23,<0.26"
-aioboto3 = {version = ">=10,<12", optional = true}
+aioboto3 = {version = ">=10,<13", optional = true}
 tzdata = ">=2022.2,<2024.0"
 pydantic = "^2.2.1"
 structlog = ">=22.1,<24.0"
@@ -66,7 +66,7 @@ mock = ">=4.0.3,<6.0.0"
 mypy = ">=0.982,<1.7"
 types-redis = "^4.3.21"
 flake8 = "<5.0.5"
-aioboto3 = ">=10,<12"
+aioboto3 = ">=10,<13"
 types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
 aiosqlite = ">=0.18,<0.20"
 
