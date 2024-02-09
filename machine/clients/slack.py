@@ -222,6 +222,14 @@ class SlackClient:
         else:
             return await self._client.web_client.chat_postMessage(channel=channel_id, text=text, **kwargs)
 
+    async def update(self, channel: Channel | str, ts: str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.chat_update(channel=channel_id, ts=ts, text=text, **kwargs)
+
+    async def delete(self, channel: Channel | str, ts: str, **kwargs: Any) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.chat_delete(channel=channel_id, ts=ts, **kwargs)
+
     async def send_scheduled(
         self, when: datetime, channel: Channel | str, text: str, **kwargs: Any
     ) -> AsyncSlackResponse:
