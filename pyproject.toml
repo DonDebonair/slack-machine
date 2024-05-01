@@ -42,7 +42,7 @@ httpx = ">=0.23,<0.26"
 aioboto3 = {version = ">=10,<13", optional = true}
 tzdata = ">=2022.2,<2024.0"
 pydantic = "^2.2.1"
-structlog = ">=22.1,<24.0"
+structlog = ">=22.1,<25.0"
 aiosqlite = {version = ">=0.18,<0.20", optional = true}
 
 [tool.poetry.group.test]
