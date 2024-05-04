@@ -8,7 +8,31 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
-## [0.35.0]
+## [0.36.0] - 2024-05-04
+
+### Added
+
+- Replace `flake8`, `isort` and `black` with `ruff` ([#1027](https://github.com/DonDebonair/slack-machine/pull/1027))
+- Add Python 3.12 ([#1028](https://github.com/DonDebonair/slack-machine/pull/1028))
+
+### Changed
+
+- Update Github Actions ([#1008](https://github.com/DonDebonair/slack-machine/pull/1008))
+- Bump `slack-sdk` from 3.21.3 to 3.27.1
+- Bump `httpx` from 0.24.1 to 0.27.0
+- Bump `pydantic` from 2.3.0 to 2.7.1
+- Bump `cryptography` from 41.0.3 to 42.0.4
+- Bump `aiohttp` from 3.8.5 to 3.9.5
+- Bump `urllib3` from 1.26.16 1.26.18
+- Bump `structlog` from 23.1.0 to 24.1.0
+- Bump `redis` from 5.0.0 to 5.0.4
+- Bump `pyee` from 11.0.0 to 11.1.0
+- Bump `aioboto3` from 11.3.0 to 12.4.0
+- Bump `tzdata` from 2023.3 to 2024.1
+- Bump `aiosqlite` from 0.19.0 to 0.20.0
+- Bump `hiredis` from 2.2.3 to 2.3.2
+
+## [0.35.0] - 2023-09-03
 
 ### Added
 
@@ -641,7 +665,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.35.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.36.0...HEAD
+[0.36.0]: https://github.com/DonDebonair/slack-machine/compare/v0.35.0...v0.36.0
 [0.35.0]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...v0.35.0
 [0.34.2]: https://github.com/DonDebonair/slack-machine/compare/v0.34.1...v0.34.2
 [0.34.1]: https://github.com/DonDebonair/slack-machine/compare/v0.34.0...v0.34.1
