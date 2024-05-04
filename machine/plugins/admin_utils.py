@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from typing import cast
 from enum import Enum
+from typing import cast
 
 from machine.plugins.base import MachineBasePlugin
 
@@ -16,10 +16,7 @@ async def role_assignments_by_role(plugin: MachineBasePlugin, role: str) -> dict
         users_with_role = {plugin.settings["ROOT_USER"]: 1}
     else:
         users_with_role_payload = await plugin.storage.get(f"rbac:role:{role}", shared=True)
-        if users_with_role_payload is not None:
-            users_with_role = cast(dict[str, int], users_with_role_payload)
-        else:
-            users_with_role = {}
+        users_with_role = cast(dict[str, int], users_with_role_payload) if users_with_role_payload is not None else {}
     return users_with_role
 
 

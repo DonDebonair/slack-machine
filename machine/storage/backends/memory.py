@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime, timedelta
-from typing import Any, Tuple, Mapping
+from typing import Any, Mapping
 
 from machine.storage.backends.base import MachineBaseStorage
 
 
 class MemoryStorage(MachineBaseStorage):
-    _storage: dict[str, Tuple[bytes, datetime | None]]
+    _storage: dict[str, tuple[bytes, datetime | None]]
 
     def __init__(self, settings: Mapping[str, Any]):
         super().__init__(settings)
@@ -26,10 +26,7 @@ class MemoryStorage(MachineBaseStorage):
                 return stored[0]
 
     async def set(self, key: str, value: bytes, expires: int | None = None) -> None:
-        if expires:
-            expires_at = datetime.utcnow() + timedelta(seconds=expires)
-        else:
-            expires_at = None
+        expires_at = datetime.utcnow() + timedelta(seconds=expires) if expires else None
         self._storage[key] = (value, expires_at)
 
     async def has(self, key: str) -> bool:

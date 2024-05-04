@@ -4,8 +4,8 @@ from typing import Any, Mapping
 
 from redis.asyncio import Redis
 
-from machine.utils.redis import gen_config_dict
 from machine.storage.backends.base import MachineBaseStorage
+from machine.utils.redis import gen_config_dict
 
 
 class RedisStorage(MachineBaseStorage):

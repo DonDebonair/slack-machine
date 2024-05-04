@@ -7,7 +7,7 @@ from slack_sdk.models.blocks import Block, ImageBlock, PlainTextObject
 from structlog.stdlib import get_logger
 
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import respond_to, required_settings
+from machine.plugins.decorators import required_settings, respond_to
 from machine.plugins.message import Message
 
 logger = get_logger(__name__)

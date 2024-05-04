@@ -1,6 +1,6 @@
 import pytest
 
-from machine.models.user import User, Profile
+from machine.models.user import Profile, User
 
 
 @pytest.fixture

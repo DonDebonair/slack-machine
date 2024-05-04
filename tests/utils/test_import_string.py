@@ -1,5 +1,7 @@
 import inspect
+
 import pytest
+
 from machine.utils.module_loading import import_string
 
 

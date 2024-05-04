@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import Mapping, Any
+from typing import Any, Mapping
 
 import structlog
 from structlog.processors import CallsiteParameter
@@ -28,13 +28,11 @@ def configure_logging(settings: Mapping[str, Any]) -> None:
         structlog.processors.StackInfoRenderer(),
         structlog.processors.format_exc_info,
         structlog.processors.UnicodeDecoder(),
-        structlog.processors.CallsiteParameterAdder(
-            [
-                CallsiteParameter.FILENAME,
-                CallsiteParameter.FUNC_NAME,
-                CallsiteParameter.LINENO,
-            ]
-        ),
+        structlog.processors.CallsiteParameterAdder([
+            CallsiteParameter.FILENAME,
+            CallsiteParameter.FUNC_NAME,
+            CallsiteParameter.LINENO,
+        ]),
     ]
     # Configure structlog itself
     structlog.configure(
@@ -46,10 +44,7 @@ def configure_logging(settings: Mapping[str, Any]) -> None:
     )
     # Create a formatter. Use Console renderer in terminal and JSON renderer when running in container
     renderer: Processor
-    if sys.stdout.isatty():
-        renderer = structlog.dev.ConsoleRenderer()
-    else:
-        renderer = structlog.processors.JSONRenderer()
+    renderer = structlog.dev.ConsoleRenderer() if sys.stdout.isatty() else structlog.processors.JSONRenderer()
 
     formatter = structlog.stdlib.ProcessorFormatter(
         foreign_pre_chain=shared_processors,

@@ -5,7 +5,7 @@ import calendar
 import datetime
 import typing
 from contextlib import AsyncExitStack
-from typing import Mapping, Any, cast
+from typing import Any, Mapping, cast
 
 import aioboto3
 from botocore.exceptions import ClientError

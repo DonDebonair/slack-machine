@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 import re
 from inspect import Signature
 
@@ -8,20 +9,20 @@ from slack_sdk.socket_mode.request import SocketModeRequest
 from structlog.testing import capture_logs
 
 from machine.clients.slack import SlackClient
-from machine.models.core import RegisteredActions, MessageHandler, CommandHandler
+from machine.handlers import (
+    _check_bot_mention,
+    create_generic_event_handler,
+    create_slash_command_handler,
+    generate_message_matcher,
+    handle_message,
+    log_request,
+)
+from machine.models.core import CommandHandler, MessageHandler, RegisteredActions
 from machine.plugins.command import Command
 from machine.plugins.message import Message
 from machine.storage.backends.base import MachineBaseStorage
 from machine.utils.collections import CaseInsensitiveDict
 from tests.fake_plugins import FakePlugin
-from machine.handlers import (
-    _check_bot_mention,
-    generate_message_matcher,
-    handle_message,
-    create_generic_event_handler,
-    create_slash_command_handler,
-    log_request,
-)
 
 
 @pytest.fixture
@@ -52,11 +53,11 @@ def fake_plugin(mocker, slack_client, storage):
 
 @pytest.fixture
 def plugin_actions(fake_plugin):
-    respond_fn = getattr(fake_plugin, "respond_function")
-    listen_fn = getattr(fake_plugin, "listen_function")
-    process_fn = getattr(fake_plugin, "process_function")
-    command_fn = getattr(fake_plugin, "command_function")
-    generator_command_fn = getattr(fake_plugin, "generator_command_function")
+    respond_fn = fake_plugin.respond_function
+    listen_fn = fake_plugin.listen_function
+    process_fn = fake_plugin.process_function
+    command_fn = fake_plugin.command_function
+    generator_command_fn = fake_plugin.generator_command_function
     plugin_actions = RegisteredActions(
         listen_to={
             "TestPlugin.listen_function-hi": MessageHandler(

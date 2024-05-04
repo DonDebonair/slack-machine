@@ -1,9 +1,11 @@
 from __future__ import annotations
 
-import aiosqlite
 import time
-from machine.storage.backends.base import MachineBaseStorage
 from typing import Any, Mapping
+
+import aiosqlite
+
+from machine.storage.backends.base import MachineBaseStorage
 
 
 class SQLiteStorage(MachineBaseStorage):
@@ -29,10 +31,7 @@ class SQLiteStorage(MachineBaseStorage):
 
     async def set(self, key: str, value: bytes, expires: int | None = None) -> None:
         current_ts = int(time.time())
-        if expires is not None:
-            expires_at = current_ts + expires
-        else:
-            expires_at = None
+        expires_at = current_ts + expires if expires is not None else None
 
         await self.cursor.execute(
             """

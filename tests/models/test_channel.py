@@ -1,4 +1,5 @@
 import pytest
+
 from machine.models.channel import Channel
 
 

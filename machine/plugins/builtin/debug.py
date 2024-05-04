@@ -16,8 +16,5 @@ class EchoPlugin(MachineBasePlugin):
             "subtype" in event and (event["subtype"] == "bot_message" or event["subtype"] == "message_replied")
         ) or event["user"] == self.bot_info["user_id"]:
             return
-        if "thread_ts" in event:
-            thread_ts = event["thread_ts"]
-        else:
-            thread_ts = None
+        thread_ts = event.get("thread_ts")
         await self.say(event["channel"], event["text"], thread_ts=thread_ts)

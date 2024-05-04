@@ -2,30 +2,29 @@ from __future__ import annotations
 
 import asyncio
 import inspect
-from structlog.stdlib import get_logger
 import os
 import sys
-from typing import Callable, cast, Awaitable
-from typing import Literal
 from inspect import Signature
+from typing import Awaitable, Callable, Literal, cast
 
 import dill
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
+from structlog.stdlib import get_logger
 
 from machine.clients.slack import SlackClient
 from machine.handlers import (
-    create_message_handler,
     create_generic_event_handler,
+    create_message_handler,
     create_slash_command_handler,
     log_request,
 )
-from machine.models.core import Manual, HumanHelp, MessageHandler, RegisteredActions, CommandHandler
+from machine.models.core import CommandHandler, HumanHelp, Manual, MessageHandler, RegisteredActions
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import DecoratedPluginFunc, Metadata, MatcherConfig
-from machine.storage import PluginStorage, MachineBaseStorage
+from machine.plugins.decorators import DecoratedPluginFunc, MatcherConfig, Metadata
 from machine.settings import import_settings
+from machine.storage import MachineBaseStorage, PluginStorage
 from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.logging import configure_logging
 from machine.utils.module_loading import import_string
@@ -158,10 +157,7 @@ class Machine:
         if missing_settings:
             return missing_settings
 
-        if cls_instance.__doc__:
-            class_help = cls_instance.__doc__.splitlines()[0]
-        else:
-            class_help = plugin_class_name
+        class_help = cls_instance.__doc__.splitlines()[0] if cls_instance.__doc__ else plugin_class_name
         self._help.human[class_help] = self._help.human.get(class_help, {})
         self._help.robot[class_help] = self._help.robot.get(class_help, [])
         for name, fn in methods:
