@@ -18,6 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Communications :: Chat",
     "Topic :: Internet",
@@ -44,6 +45,7 @@ tzdata = ">=2022.2,<2025.0"
 pydantic = "^2.2.1"
 structlog = ">=22.1,<25.0"
 aiosqlite = {version = ">=0.18,<0.21", optional = true}
+multidict = "^6.0.5"
 
 [tool.poetry.group.dev]
 optional = true
@@ -118,21 +120,12 @@ known-first-party = ["machine", "tests"]
 [tool.ruff.format]
 preview = true
 
-[tool.isort]
-profile = "black"
-line_length = 120
-known_first_party = ["machine", "tests"]
-
-[tool.black]
-line-length = 120
-preview = true
-
 [tool.pytest.ini_options]
 mock_use_standalone_module = true
 addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine"
 
 [tool.mypy]
-python_version = "3.11"
+python_version = "3.12"
 ignore_missing_imports = true
 show_column_numbers = true
 show_error_codes = true
