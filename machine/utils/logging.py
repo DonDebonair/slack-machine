@@ -44,7 +44,10 @@ def configure_logging(settings: Mapping[str, Any]) -> None:
     )
     # Create a formatter. Use Console renderer in terminal and JSON renderer when running in container
     renderer: Processor
-    renderer = structlog.dev.ConsoleRenderer() if sys.stdout.isatty() else structlog.processors.JSONRenderer()
+    if sys.stdout.isatty():  # noqa: SIM108 (doesn't work with mypy)
+        renderer = structlog.dev.ConsoleRenderer()
+    else:
+        renderer = structlog.processors.JSONRenderer()
 
     formatter = structlog.stdlib.ProcessorFormatter(
         foreign_pre_chain=shared_processors,
