@@ -1,17 +1,19 @@
-import re
 import inspect
+import re
+
 import pytest
+
 from machine.plugins import ee
 from machine.plugins.decorators import (
-    process,
-    listen_to,
-    respond_to,
-    command,
-    required_settings,
-    on,
-    schedule,
-    MatcherConfig,
     CommandConfig,
+    MatcherConfig,
+    command,
+    listen_to,
+    on,
+    process,
+    required_settings,
+    respond_to,
+    schedule,
 )
 
 

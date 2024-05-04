@@ -8,7 +8,7 @@ from slack_sdk.webhook import WebhookResponse
 from slack_sdk.webhook.async_client import AsyncWebhookClient
 
 from machine.clients.slack import SlackClient
-from machine.models import User, Channel
+from machine.models import Channel, User
 
 
 class Command:
@@ -118,10 +118,7 @@ class Command:
         :return: Dictionary deserialized from `AsyncWebhookClient.send()`
 
         """
-        if ephemeral:
-            response_type = "ephemeral"
-        else:
-            response_type = "in_channel"
+        response_type = "ephemeral" if ephemeral else "in_channel"
 
         return await self._webhook_client.send(
             text=text, attachments=attachments, blocks=blocks, response_type=response_type, **kwargs

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import MutableMapping, Mapping, TypeVar, Tuple, Iterable, Iterator, cast
+from typing import Iterable, Iterator, Mapping, MutableMapping, TypeVar, cast
 
 KT = TypeVar("KT", bound=str)
 VT = TypeVar("VT")
@@ -33,8 +33,8 @@ class CaseInsensitiveDict(MutableMapping[KT, VT]):
     https://github.com/requests/requests/blob/v1.2.3/requests/structures.py#L37
     """
 
-    def __init__(self, data: Mapping[KT, VT] | Iterable[Tuple[KT, VT]] | None = None, **kwargs: VT):
-        self._store: dict[KT, Tuple[KT, VT]] = dict()
+    def __init__(self, data: Mapping[KT, VT] | Iterable[tuple[KT, VT]] | None = None, **kwargs: VT):
+        self._store: dict[KT, tuple[KT, VT]] = dict()
         if data is None:
             data = {}
         self.update(data, **kwargs)
@@ -61,7 +61,7 @@ class CaseInsensitiveDict(MutableMapping[KT, VT]):
     def __len__(self) -> int:
         return len(self._store)
 
-    def lower_items(self) -> Iterator[Tuple[KT, VT]]:
+    def lower_items(self) -> Iterator[tuple[KT, VT]]:
         """Like iteritems(), but with all lowercase keys."""
         return ((lowerkey, keyval[1]) for (lowerkey, keyval) in self._store.items())
 

@@ -1,4 +1,5 @@
 from unittest.mock import patch
+
 from machine.settings import import_settings
 
 

@@ -1,11 +1,11 @@
 from datetime import datetime
 
-from slack_sdk.models.blocks import MarkdownTextObject, SectionBlock, ImageElement
+from slack_sdk.models.blocks import ImageElement, MarkdownTextObject, SectionBlock
 from structlog.stdlib import get_logger
 
-from machine.plugins.admin_utils import role_assignments_by_role, RoleCombinator
+from machine.plugins.admin_utils import RoleCombinator, role_assignments_by_role
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import respond_to, required_settings, require_any_role, on
+from machine.plugins.decorators import on, require_any_role, required_settings, respond_to
 from machine.plugins.message import Message
 
 logger = get_logger(__name__)
@@ -45,7 +45,7 @@ class RBACPlugin(MachineBasePlugin):
         """who has role <role>: List users with role"""
         users_with_role = await role_assignments_by_role(self, role)
         if len(users_with_role):
-            users_string = ", ".join([f"<@{user_id}>" for user_id in users_with_role.keys()])
+            users_string = ", ".join([f"<@{user_id}>" for user_id in users_with_role])
             await msg.say(f"Role `{role}` has been granted to {users_string}")
         else:
             await msg.say(f"No one have been assigned role `{role}`")

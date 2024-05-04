@@ -8,7 +8,7 @@ from slack_sdk.models.blocks import Block
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
 from machine.clients.slack import SlackClient
-from machine.models import User, Channel
+from machine.models import Channel, User
 
 
 # TODO: fix docstrings (return types are wrong, replace RST with Markdown)
@@ -106,10 +106,7 @@ class Message:
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
         """
-        if ephemeral:
-            ephemeral_user = self.sender.id
-        else:
-            ephemeral_user = None
+        ephemeral_user = self.sender.id if ephemeral else None
 
         return await self._client.send(
             self.channel.id,

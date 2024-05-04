@@ -1,18 +1,18 @@
 from __future__ import annotations
 
 import asyncio
+import contextlib
 import re
-from typing import Any, Callable, Awaitable, Mapping, cast, AsyncGenerator, Union
+from typing import Any, AsyncGenerator, Awaitable, Callable, Mapping, Union, cast
 
 from slack_sdk.models import JsonObject
-from structlog.stdlib import get_logger, BoundLogger
-
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
+from structlog.stdlib import BoundLogger, get_logger
 
 from machine.clients.slack import SlackClient
-from machine.models.core import RegisteredActions, MessageHandler
+from machine.models.core import MessageHandler, RegisteredActions
 from machine.plugins.command import Command
 from machine.plugins.message import Message
 
@@ -78,10 +78,8 @@ def create_slash_command_handler(
                     ack_response = SocketModeResponse(envelope_id=request.envelope_id, payload=payload)
                     await client.send_socket_mode_response(ack_response)
                     # Now run the rest of the function
-                    try:
+                    with contextlib.suppress(StopAsyncIteration):
                         await gen.__anext__()
-                    except StopAsyncIteration:
-                        pass
                 else:
                     ack_response = SocketModeResponse(envelope_id=request.envelope_id)
                     await client.send_socket_mode_response(ack_response)
@@ -143,7 +141,7 @@ async def handle_message(
         event["channel_type"] = channel_type
         event["channel"] = channel
         event["subtype"] = "message_changed"
-    if "user" in event and not event["user"] == bot_id:
+    if "user" in event and event["user"] != bot_id:
         listeners = list(plugin_actions.listen_to.values())
         respond_to_msg = _check_bot_mention(
             event,

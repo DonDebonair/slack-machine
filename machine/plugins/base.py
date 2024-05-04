@@ -8,12 +8,11 @@ from slack_sdk.models.blocks import Block
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
-from machine.utils.collections import CaseInsensitiveDict
 from machine.clients.slack import SlackClient
-from machine.models import Channel
-from machine.models import User
-from machine.storage import PluginStorage
+from machine.models import Channel, User
 from machine.plugins import ee
+from machine.storage import PluginStorage
+from machine.utils.collections import CaseInsensitiveDict
 
 
 # TODO: fix docstrings (return types are wrong, replace RST with Markdown)

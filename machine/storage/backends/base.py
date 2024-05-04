@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
 from typing import Any, Mapping
 
@@ -19,7 +20,7 @@ class MachineBaseStorage(ABC):
     def __init__(self, settings: Mapping[str, Any]):
         self.settings = settings
 
-    async def init(self) -> None:
+    async def init(self) -> None:  # noqa: B027 (no-op by design)
         """Initialize the storage backend"""
         pass
 

@@ -1,5 +1,5 @@
-from machine.utils.collections import CaseInsensitiveDict
 from machine.utils import sizeof_fmt
+from machine.utils.collections import CaseInsensitiveDict
 
 
 def test_CaseInsensitiveDict():

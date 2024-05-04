@@ -4,14 +4,13 @@ import inspect
 import re
 from dataclasses import dataclass, field
 from datetime import datetime, tzinfo
-from typing import Callable, Union, cast, TypeVar, Awaitable, Any
-from typing import Protocol
+from typing import Any, Awaitable, Callable, Protocol, TypeVar, Union, cast
 
 from structlog.stdlib import get_logger
 from typing_extensions import ParamSpec
 
 from machine.plugins import ee
-from machine.plugins.admin_utils import matching_roles_by_user_id, RoleCombinator
+from machine.plugins.admin_utils import RoleCombinator, matching_roles_by_user_id
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.message import Message
 
@@ -50,8 +49,7 @@ R = TypeVar("R", covariant=True, bound=Union[Awaitable[None], MachineBasePlugin]
 
 
 class DecoratedPluginFunc(Protocol[P, R]):
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> R:
-        ...
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> R: ...
 
     metadata: Metadata
 
@@ -145,10 +143,7 @@ def command(slash_command: str) -> Callable[[Callable[P, R]], DecoratedPluginFun
     def command_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
         fn = cast(DecoratedPluginFunc, f)
         fn.metadata = getattr(f, "metadata", Metadata())
-        if not slash_command.startswith("/"):
-            normalized_slash_command = f"/{slash_command}"
-        else:
-            normalized_slash_command = slash_command
+        normalized_slash_command = f"/{slash_command}" if not slash_command.startswith("/") else slash_command
         fn.metadata.plugin_actions.commands.append(
             CommandConfig(command=normalized_slash_command, is_generator=inspect.isasyncgenfunction(f))
         )

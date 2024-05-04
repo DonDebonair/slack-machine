@@ -1,7 +1,7 @@
 import pytest
+import pytest_asyncio
 
 from machine.storage.backends.sqlite import SQLiteStorage
-import pytest_asyncio
 
 
 @pytest_asyncio.fixture

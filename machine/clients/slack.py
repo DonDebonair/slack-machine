@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import sys
 from datetime import datetime
-from typing import Callable, Awaitable, Any
+from typing import Any, Awaitable, Callable
 
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
@@ -12,8 +12,7 @@ from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 from structlog.stdlib import get_logger
 
-from machine.models import Channel
-from machine.models import User
+from machine.models import Channel, User
 from machine.utils.datetime import calculate_epoch
 
 if sys.version_info >= (3, 9):
@@ -161,10 +160,7 @@ class SlackClient:
         logger.debug(
             "channel_rename/channel_archive/channel_unarchive/group_rename/group_archive/group_unarchive: %s", event
         )
-        if isinstance(event["channel"], dict):
-            channel_id = event["channel"]["id"]
-        else:
-            channel_id = event["channel"]
+        channel_id = event["channel"]["id"] if isinstance(event["channel"], dict) else event["channel"]
         channel_resp = await self._client.web_client.conversations_info(channel=channel_id)
         channel = self._register_channel(channel_resp["channel"])
         logger.debug("Channel updated: %s", channel)

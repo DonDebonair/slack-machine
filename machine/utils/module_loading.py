@@ -1,5 +1,5 @@
-from importlib import import_module
 import inspect
+from importlib import import_module
 from typing import List, Tuple, Type
 
 
@@ -15,11 +15,11 @@ def import_string(dotted_path: str) -> List[Tuple[str, Type]]:
     try:
         module = import_module(dotted_path)
         return [(f"{dotted_path}.{name}", cls) for name, cls in inspect.getmembers(module, predicate=inspect.isclass)]
-    except ImportError:
+    except ImportError as exc:
         try:
             module_path, class_name = dotted_path.rsplit(".", 1)
             module = import_module(module_path)
             return [(f"{module_path}.{class_name}", getattr(module, class_name))]
         except (ImportError, AttributeError):
             msg = f"{dotted_path} doesn't look like a module or class"
-            raise ImportError(msg)
+            raise ImportError(msg) from exc
