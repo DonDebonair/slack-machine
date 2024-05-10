@@ -1,5 +1,7 @@
+import re
+
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import command, listen_to, process, respond_to
+from machine.plugins.decorators import action, command, listen_to, process, respond_to
 
 
 class FakePlugin(MachineBasePlugin):
@@ -22,6 +24,10 @@ class FakePlugin(MachineBasePlugin):
     @command("/test-generator")
     async def generator_command_function(self, payload):
         yield "hello"
+
+    @action(action_id=re.compile(r"my_action.*", re.IGNORECASE), block_id="my_block")
+    async def block_action_function(self, payload):
+        pass
 
 
 class FakePlugin2(MachineBasePlugin):

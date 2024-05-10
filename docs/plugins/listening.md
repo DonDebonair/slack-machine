@@ -1,7 +1,7 @@
 # Listening for things
 
 Slack Machine allows you to listen for various different things and respond to that. By decorating functions in your
-plugin using the [decorators](../../api#decorators) Slack Machine provides, you can tell Slack Machine to run those
+plugin using the [decorators](../api.md#decorators) Slack Machine provides, you can tell Slack Machine to run those
 functions when something specific happens.
 
 ## Listen for a mention

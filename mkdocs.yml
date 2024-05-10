@@ -37,6 +37,7 @@ nav:
       - 'plugins/listening.md'
       - 'plugins/slash-commands.md'
       - 'plugins/interacting.md'
+      - 'plugins/block-kit-actions.md'
       - 'plugins/settings.md'
       - 'plugins/storage.md'
       - 'plugins/misc.md'

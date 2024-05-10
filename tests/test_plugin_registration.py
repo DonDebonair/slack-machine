@@ -4,7 +4,7 @@ import pytest
 
 from machine import Machine
 from machine.clients.slack import SlackClient
-from machine.models.core import RegisteredActions
+from machine.models.core import BlockActionHandler, CommandHandler, MessageHandler, RegisteredActions
 from machine.plugins.decorators import required_settings
 from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.logging import configure_logging
@@ -55,12 +55,14 @@ async def test_load_and_register_plugins(settings, slack_client):
     # Test registration of respond_to actions
     respond_to_key = "tests.fake_plugins.FakePlugin.respond_function-hello"
     assert respond_to_key in actions.respond_to
+    assert isinstance(actions.respond_to[respond_to_key], MessageHandler)
     assert actions.respond_to[respond_to_key].class_name == "tests.fake_plugins.FakePlugin"
     assert actions.respond_to[respond_to_key].regex == re.compile("hello", re.IGNORECASE)
 
     # Test registration of listen_to actions
     listen_to_key = "tests.fake_plugins.FakePlugin.listen_function-hi"
     assert listen_to_key in actions.listen_to
+    assert isinstance(actions.listen_to[listen_to_key], MessageHandler)
     assert actions.listen_to[listen_to_key].class_name == "tests.fake_plugins.FakePlugin"
     assert actions.listen_to[listen_to_key].regex == re.compile("hi", re.IGNORECASE)
 
@@ -68,6 +70,32 @@ async def test_load_and_register_plugins(settings, slack_client):
     process_key = "tests.fake_plugins.FakePlugin.process_function-some_event"
     assert "some_event" in actions.process
     assert process_key in actions.process["some_event"]
+
+    # Test registration of command actions
+    command_key = "/test"
+    assert command_key in actions.command
+    assert isinstance(actions.command[command_key], CommandHandler)
+    assert actions.command[command_key].class_name == "tests.fake_plugins.FakePlugin"
+    assert actions.command[command_key].command == "/test"
+    assert not actions.command[command_key].is_generator
+
+    # Test registration of generator command actions
+    generator_command_key = "/test-generator"
+    assert generator_command_key in actions.command
+    assert isinstance(actions.command[generator_command_key], CommandHandler)
+    assert actions.command[generator_command_key].class_name == "tests.fake_plugins.FakePlugin"
+    assert actions.command[generator_command_key].command == "/test-generator"
+    assert actions.command[generator_command_key].is_generator
+
+    # Test registration of block actions
+    block_action_key = "tests.fake_plugins.FakePlugin.block_action_function-my_action.*-my_block"
+    assert block_action_key in actions.block_actions
+    assert isinstance(actions.block_actions[block_action_key], BlockActionHandler)
+    assert actions.block_actions[block_action_key].class_name == "tests.fake_plugins.FakePlugin"
+    assert isinstance(actions.block_actions[block_action_key].action_id_matcher, re.Pattern)
+    assert actions.block_actions[block_action_key].action_id_matcher == re.compile("my_action.*", re.IGNORECASE)
+    assert isinstance(actions.block_actions[block_action_key].block_id_matcher, str)
+    assert actions.block_actions[block_action_key].block_id_matcher == "my_block"
 
 
 @pytest.mark.asyncio

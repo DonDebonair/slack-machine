@@ -78,6 +78,7 @@ It's really easy!
 - Send DMs to any user
 - Support for [blocks](https://api.slack.com/reference/block-kit/blocks)
 - Support for [message attachments](https://api.slack.com/docs/message-attachments) [Legacy 🏚]
+- Support for [interactive elements](https://api.slack.com/block-kit)
 - Listen and respond to any [Slack event](https://api.slack.com/events) supported by the Events API
 - Store and retrieve any kind of data in persistent storage (currently Redis, DynamoDB, SQLite and in-memory storage are
   supported)
@@ -87,7 +88,8 @@ It's really easy!
 
 ### Coming Soon
 
-- Support for Interactive Buttons
+- Support for modals
+- Support for shortcuts
 - ... and much more
 
 ## Installation

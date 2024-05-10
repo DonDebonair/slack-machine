@@ -5,8 +5,10 @@ import pytest
 
 from machine.plugins import ee
 from machine.plugins.decorators import (
+    ActionConfig,
     CommandConfig,
     MatcherConfig,
+    action,
     command,
     listen_to,
     on,
@@ -84,6 +86,33 @@ def schedule_f():
 def on_f():
     @on("test_event")
     def f(msg):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def action_f():
+    @action("action_1", "block_2")
+    def f(action_paylaod):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def action_f_regex():
+    @action(re.compile(r"action_\d", re.IGNORECASE), re.compile(r"block\d", re.IGNORECASE))
+    def f(action_paylaod):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def action_f_no_action_or_block():
+    @action(None, None)
+    def f(action_paylaod):
         pass
 
     return f
@@ -213,6 +242,38 @@ def test_on(on_f):
     listeners = ee.listeners("test_event")
     assert len(listeners) == 1
     assert listeners[0] == on_f
+
+
+def test_action(action_f):
+    assert hasattr(action_f, "metadata")
+    assert hasattr(action_f.metadata, "plugin_actions")
+    assert hasattr(action_f.metadata.plugin_actions, "actions")
+    assert action_f.metadata.plugin_actions.actions == [ActionConfig(action_id="action_1", block_id="block_2")]
+    action_cfg = action_f.metadata.plugin_actions.actions[0]
+    assert isinstance(action_cfg.action_id, str)
+    assert isinstance(action_cfg.block_id, str)
+
+
+def test_action_regex(action_f_regex):
+    assert hasattr(action_f_regex, "metadata")
+    assert hasattr(action_f_regex.metadata, "plugin_actions")
+    assert hasattr(action_f_regex.metadata.plugin_actions, "actions")
+    action_id_pattern = re.compile(r"action_\d", re.IGNORECASE)
+    block_id_pattern = re.compile(r"block\d", re.IGNORECASE)
+    assert action_f_regex.metadata.plugin_actions.actions == [
+        ActionConfig(action_id=action_id_pattern, block_id=block_id_pattern)
+    ]
+    action_cfg = action_f_regex.metadata.plugin_actions.actions[0]
+    assert isinstance(action_cfg.action_id, re.Pattern)
+    assert isinstance(action_cfg.block_id, re.Pattern)
+
+
+def test_action_no_action_or_block():
+    with pytest.raises(ValueError, match="At least one of action_id or block_id must be provided"):
+
+        @action(None, None)
+        def f(action_paylaod):
+            pass
 
 
 def test_required_settings_list(required_settings_list_f):

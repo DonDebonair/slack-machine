@@ -13,7 +13,7 @@ to do anything from talking to channels, responding to messages, sending DMs, an
 ## The decorators
 
 Being able to talk in Slack is only half the story for plugins. The functions in your plugin have to be triggered
-somehow. Slack Machine provides [decorators](../../api#decorators) for that. You can decorate the functions in your
+somehow. Slack Machine provides [decorators](../api.md#decorators) for that. You can decorate the functions in your
 plugin class to tell them what they should react to.
 
 As an example, let's create a cool plugin!
