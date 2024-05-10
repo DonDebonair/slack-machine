@@ -99,7 +99,7 @@ exclude = [
     "build",
     "tests",
 ]
-ignore = []
+ignore = ["UP006", "UP007"]
 select = [
     "E",
     "F",
