@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 from inspect import Signature
-from typing import Any, AsyncGenerator, Awaitable, Callable
+from typing import Any, AsyncGenerator, Awaitable, Callable, Union
 
 from slack_sdk.models import JsonObject
 
@@ -40,6 +40,16 @@ class CommandHandler:
     function_signature: Signature
     command: str
     is_generator: bool
+
+
+@dataclass
+class BlockActionHandler:
+    class_: MachineBasePlugin
+    class_name: str
+    function: Callable[..., Awaitable[None]]
+    function_signature: Signature
+    action_id_matcher: Union[re.Pattern[str], str, None]
+    block_id_matcher: Union[re.Pattern[str], str, None]
 
 
 @dataclass
