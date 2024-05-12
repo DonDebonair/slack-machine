@@ -58,3 +58,13 @@ class RegisteredActions:
     respond_to: dict[str, MessageHandler] = field(default_factory=dict)
     process: dict[str, dict[str, Callable[[dict[str, Any]], Awaitable[None]]]] = field(default_factory=dict)
     command: dict[str, CommandHandler] = field(default_factory=dict)
+    block_actions: dict[str, BlockActionHandler] = field(default_factory=dict)
+
+
+def action_block_id_to_str(id_: Union[str, re.Pattern[str], None]) -> str:
+    if id_ is None:
+        return "*"
+    elif isinstance(id_, str):
+        return id_
+    else:
+        return id_.pattern

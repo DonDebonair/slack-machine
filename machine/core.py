@@ -20,9 +20,17 @@ from machine.handlers import (
     create_slash_command_handler,
     log_request,
 )
-from machine.models.core import CommandHandler, HumanHelp, Manual, MessageHandler, RegisteredActions
+from machine.models.core import (
+    BlockActionHandler,
+    CommandHandler,
+    HumanHelp,
+    Manual,
+    MessageHandler,
+    RegisteredActions,
+    action_block_id_to_str,
+)
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import DecoratedPluginFunc, MatcherConfig, Metadata
+from machine.plugins.decorators import ActionConfig, CommandConfig, DecoratedPluginFunc, MatcherConfig, Metadata
 from machine.settings import import_settings
 from machine.storage import MachineBaseStorage, PluginStorage
 from machine.utils.collections import CaseInsensitiveDict
@@ -215,8 +223,16 @@ class Machine:
                 class_name=plugin_class_name,
                 fq_fn_name=fq_fn_name,
                 function=fn,
-                command=command_config.command,
-                is_generator=command_config.is_generator,
+                command_config=command_config,
+                class_help=class_help,
+            )
+        for block_action_config in metadata.plugin_actions.actions:
+            self._register_block_action_handler(
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                block_action_config=block_action_config,
                 class_help=class_help,
             )
 
@@ -259,8 +275,7 @@ class Machine:
         class_name: str,
         fq_fn_name: str,
         function: Callable[..., Awaitable[None]],
-        command: str,
-        is_generator: bool,
+        command_config: CommandConfig,
         class_help: str,
     ) -> None:
         signature = Signature.from_callable(function)
@@ -270,13 +285,38 @@ class Machine:
             class_name=class_name,
             function=function,
             function_signature=signature,
-            command=command,
-            is_generator=is_generator,
+            command=command_config.command,
+            is_generator=command_config.is_generator,
         )
+        command = command_config.command
         if command in self._registered_actions.command:
             logger.warning("command was already defined, previous handler will be overwritten!", command=command)
         self._registered_actions.command[command] = handler
         # TODO: add to help
+
+    def _register_block_action_handler(
+        self,
+        class_: MachineBasePlugin,
+        class_name: str,
+        fq_fn_name: str,
+        function: Callable[..., Awaitable[None]],
+        block_action_config: ActionConfig,
+        class_help: str,
+    ) -> None:
+        signature = Signature.from_callable(function)
+        logger.debug("signature of block action handler", signature=signature, function=fq_fn_name)
+        handler = BlockActionHandler(
+            class_=class_,
+            class_name=class_name,
+            function=function,
+            function_signature=signature,
+            action_id_matcher=block_action_config.action_id,
+            block_id_matcher=block_action_config.block_id,
+        )
+        action_id = action_block_id_to_str(block_action_config.action_id)
+        block_id = action_block_id_to_str(block_action_config.block_id)
+        key = f"{fq_fn_name}-{action_id}-{block_id}"
+        self._registered_actions.block_actions[key] = handler
 
     @staticmethod
     def _parse_human_help(doc: str) -> HumanHelp:
