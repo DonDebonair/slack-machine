@@ -1,19 +1,17 @@
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import re
-from typing import Any, AsyncGenerator, Awaitable, Callable, Mapping, Union, cast
+from typing import Any, Awaitable, Callable, Mapping
 
-from slack_sdk.models import JsonObject
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.socket_mode.response import SocketModeResponse
-from structlog.stdlib import BoundLogger, get_logger
+from structlog.stdlib import get_logger
 
 from machine.clients.slack import SlackClient
+from machine.handlers.logging import create_scoped_logger
 from machine.models.core import MessageHandler, RegisteredActions
-from machine.plugins.command import Command
 from machine.plugins.message import Message
 
 logger = get_logger(__name__)
@@ -48,68 +46,6 @@ def create_message_handler(
                 )
 
     return handle_message_request
-
-
-def create_slash_command_handler(
-    plugin_actions: RegisteredActions,
-    slack_client: SlackClient,
-) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
-    async def handle_slash_command_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
-        if request.type == "slash_commands":
-            logger.debug("slash command received", payload=request.payload)
-            # We only acknowledge request if we know about this command
-            if request.payload["command"] in plugin_actions.command:
-                cmd = plugin_actions.command[request.payload["command"]]
-                command_obj = _gen_command(request.payload, slack_client)
-                if "logger" in cmd.function_signature.parameters:
-                    command_logger = create_scoped_logger(
-                        cmd.class_name, cmd.function.__name__, command_obj.sender.id, command_obj.sender.name
-                    )
-                    extra_args = {"logger": command_logger}
-                else:
-                    extra_args = {}
-                # Check if the handler is a generator. In this case we have an immediate response we can send back
-                if cmd.is_generator:
-                    gen_fn = cast(Callable[..., AsyncGenerator[Union[dict, JsonObject, str], None]], cmd.function)
-                    logger.debug("Slash command handler is generator, returning immediate ack")
-                    gen = gen_fn(command_obj, **extra_args)
-                    # return immediate reponse
-                    payload = await gen.__anext__()
-                    ack_response = SocketModeResponse(envelope_id=request.envelope_id, payload=payload)
-                    await client.send_socket_mode_response(ack_response)
-                    # Now run the rest of the function
-                    with contextlib.suppress(StopAsyncIteration):
-                        await gen.__anext__()
-                else:
-                    ack_response = SocketModeResponse(envelope_id=request.envelope_id)
-                    await client.send_socket_mode_response(ack_response)
-                    fn = cast(Callable[..., Awaitable[None]], cmd.function)
-                    await fn(command_obj, **extra_args)
-
-    return handle_slash_command_request
-
-
-def create_generic_event_handler(
-    plugin_actions: RegisteredActions,
-) -> Callable[[AsyncBaseSocketModeClient, SocketModeRequest], Awaitable[None]]:
-    async def handle_event_request(client: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
-        if request.type == "events_api":
-            # Acknowledge the request anyway
-            response = SocketModeResponse(envelope_id=request.envelope_id)
-            # Don't forget having await for method calls
-            await client.send_socket_mode_response(response)
-
-            # only process message events
-            if request.payload["event"]["type"] in plugin_actions.process:
-                await dispatch_event_handlers(
-                    request.payload["event"], list(plugin_actions.process[request.payload["event"]["type"]].values())
-                )
-
-    return handle_event_request
-
-
-async def log_request(_: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
-    logger.debug("Request received", type=request.type, request=request.to_dict())
 
 
 def generate_message_matcher(settings: Mapping) -> re.Pattern[str]:
@@ -192,10 +128,6 @@ def _gen_message(event: dict[str, Any], slack_client: SlackClient) -> Message:
     return Message(slack_client, event)
 
 
-def _gen_command(cmd_payload: dict[str, Any], slack_client: SlackClient) -> Command:
-    return Command(slack_client, cmd_payload)
-
-
 async def dispatch_listeners(
     event: dict[str, Any], message_handlers: list[MessageHandler], slack_client: SlackClient, log_handled_message: bool
 ) -> None:
@@ -209,7 +141,7 @@ async def dispatch_listeners(
             message = _gen_message(event, slack_client)
             extra_params = {**match.groupdict()}
             handler_logger = create_scoped_logger(
-                handler.class_name, handler.function.__name__, message.sender.id, message.sender.name
+                handler.class_name, handler.function.__name__, user_id=message.sender.id, user_name=message.sender.name
             )
             if log_handled_message:
                 handler_logger.info("Handling message", message=message.text)
@@ -218,17 +150,3 @@ async def dispatch_listeners(
             handler_funcs.append(handler.function(message, **extra_params))
     await asyncio.gather(*handler_funcs)
     return
-
-
-async def dispatch_event_handlers(
-    event: dict[str, Any], event_handlers: list[Callable[[dict[str, Any]], Awaitable[None]]]
-) -> None:
-    handler_funcs = [f(event) for f in event_handlers]
-    await asyncio.gather(*handler_funcs)
-
-
-def create_scoped_logger(class_name: str, function_name: str, user_id: str, user_name: str) -> BoundLogger:
-    fq_fn_name = f"{class_name}.{function_name}"
-    handler_logger = get_logger(fq_fn_name)
-    handler_logger = handler_logger.bind(user_id=user_id, user_name=user_name)
-    return handler_logger

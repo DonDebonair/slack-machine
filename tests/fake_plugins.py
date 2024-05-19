@@ -26,7 +26,7 @@ class FakePlugin(MachineBasePlugin):
         yield "hello"
 
     @action(action_id=re.compile(r"my_action.*", re.IGNORECASE), block_id="my_block")
-    async def block_action_funtion(self, payload):
+    async def block_action_function(self, payload):
         pass
 
 

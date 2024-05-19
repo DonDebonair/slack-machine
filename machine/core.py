@@ -16,6 +16,7 @@ from structlog.stdlib import get_logger
 from machine.clients.slack import SlackClient
 from machine.handlers import (
     create_generic_event_handler,
+    create_interactive_handler,
     create_message_handler,
     create_slash_command_handler,
     log_request,
@@ -355,10 +356,12 @@ class Machine:
         )
         generic_event_handler = create_generic_event_handler(self._registered_actions)
         slash_command_handler = create_slash_command_handler(self._registered_actions, self._client)
+        block_action_handler = create_interactive_handler(self._registered_actions, self._client)
 
         self._client.register_handler(message_handler)
         self._client.register_handler(generic_event_handler)
         self._client.register_handler(slash_command_handler)
+        self._client.register_handler(block_action_handler)
         # Establish a WebSocket connection to the Socket Mode servers
         await self._socket_mode_client.connect()
         logger.info("Connected to Slack")

@@ -1,6 +1,7 @@
-from machine.models.block_actions import BlockActionsPayload
+from machine.models.interactive import BlockActionsPayload
 from tests.models.example_payloads.block_action_button import payload as button_payload
 from tests.models.example_payloads.block_action_button2 import payload as button_payload2
+from tests.models.example_payloads.block_action_button_no_value import payload as button_no_value_payload
 from tests.models.example_payloads.block_action_checkboxes import payload as checkboxes_payload
 from tests.models.example_payloads.block_action_checkboxes2 import payload as checkboxes_payload2
 from tests.models.example_payloads.block_action_datepicker import payload as datepicker_payload
@@ -26,6 +27,8 @@ def test_block_action_button():
     assert validated_button_payload is not None
     validated_button_payload2 = BlockActionsPayload.model_validate(button_payload2)
     assert validated_button_payload2 is not None
+    validated_button_no_value_payload = BlockActionsPayload.model_validate(button_no_value_payload)
+    assert validated_button_no_value_payload is not None
 
 
 def test_block_action_checkboxes():

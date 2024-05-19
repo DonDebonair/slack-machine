@@ -3,11 +3,15 @@ from __future__ import annotations
 from datetime import date, time
 from typing import Any, Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, TypeAdapter
 from pydantic.functional_validators import PlainValidator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 from slack_sdk.models.blocks import Block as SlackSDKBlock
 from typing_extensions import Annotated
+
+
+class TypedModel(BaseModel):
+    type: str
 
 
 class User(BaseModel):
@@ -27,14 +31,14 @@ class Channel(BaseModel):
     name: str
 
 
-class MessageContainer(BaseModel):
+class MessageContainer(TypedModel):
     type: Literal["message"]
     message_ts: str
     channel_id: str
     is_ephemeral: bool
 
 
-class MessageAttachmentContainer(BaseModel):
+class MessageAttachmentContainer(TypedModel):
     type: Literal["message_attachment"]
     message_ts: str
     attachment_id: int
@@ -43,7 +47,7 @@ class MessageAttachmentContainer(BaseModel):
     is_app_unfurl: bool
 
 
-class ViewContainer(BaseModel):
+class ViewContainer(TypedModel):
     type: Literal["view"]
     view_id: str
 
@@ -51,13 +55,13 @@ class ViewContainer(BaseModel):
 Container = Annotated[Union[MessageContainer, MessageAttachmentContainer, ViewContainer], Field(discriminator="type")]
 
 
-class PlainText(BaseModel):
+class PlainText(TypedModel):
     type: Literal["plain_text"]
     text: str
     emoji: bool
 
 
-class MarkdownText(BaseModel):
+class MarkdownText(TypedModel):
     type: Literal["mrkdwn"]
     text: str
     verbatim: bool
@@ -71,72 +75,72 @@ class Option(BaseModel):
     value: str
 
 
-class CheckboxValues(BaseModel):
+class CheckboxValues(TypedModel):
     type: Literal["checkboxes"]
     selected_options: List[Option]
 
 
-class DatepickerValue(BaseModel):
+class DatepickerValue(TypedModel):
     type: Literal["datepicker"]
     selected_date: Optional[date]
 
 
-class EmailValue(BaseModel):
+class EmailValue(TypedModel):
     type: Literal["email_text_input"]
     value: Optional[str] = None
 
 
-class StaticSelectValue(BaseModel):
+class StaticSelectValue(TypedModel):
     type: Literal["static_select"]
     selected_option: Optional[Option]
 
 
-class ChannelSelectValue(BaseModel):
+class ChannelSelectValue(TypedModel):
     type: Literal["channels_select"]
     selected_channel: Optional[str]
 
 
-class ConversationSelectValue(BaseModel):
+class ConversationSelectValue(TypedModel):
     type: Literal["conversations_select"]
     selected_conversation: Optional[str]
 
 
-class UserSelectValue(BaseModel):
+class UserSelectValue(TypedModel):
     type: Literal["users_select"]
     selected_user: Optional[str]
 
 
-class ExternalSelectValue(BaseModel):
+class ExternalSelectValue(TypedModel):
     type: Literal["external_select"]
     selected_option: Optional[str]
 
 
-class MultiStaticSelectValues(BaseModel):
+class MultiStaticSelectValues(TypedModel):
     type: Literal["multi_static_select"]
     selected_options: List[Option]
 
 
-class MultiChannelSelectValues(BaseModel):
+class MultiChannelSelectValues(TypedModel):
     type: Literal["multi_channels_select"]
     selected_channels: List[str]
 
 
-class MultiConversationSelectValues(BaseModel):
+class MultiConversationSelectValues(TypedModel):
     type: Literal["multi_conversations_select"]
     selected_conversations: List[str]
 
 
-class MultiUserSelectValues(BaseModel):
+class MultiUserSelectValues(TypedModel):
     type: Literal["multi_users_select"]
     selected_users: List[str]
 
 
-class MultiExternalSelectValues(BaseModel):
+class MultiExternalSelectValues(TypedModel):
     type: Literal["multi_external_select"]
     selected_options: List[str]
 
 
-class NumberValue(BaseModel):
+class NumberValue(TypedModel):
     type: Literal["number_input"]
     value: Union[float, int, None] = None
 
@@ -146,22 +150,22 @@ class PlainTextInputValue(BaseModel):
     value: Optional[str]
 
 
-class RichTextInputValue(BaseModel):
+class RichTextInputValue(TypedModel):
     type: Literal["rich_text_input"]
     value: Optional[str]
 
 
-class RadioValues(BaseModel):
+class RadioValues(TypedModel):
     type: Literal["radio_buttons"]
     selected_option: Optional[Option]
 
 
-class TimepickerValue(BaseModel):
+class TimepickerValue(TypedModel):
     type: Literal["timepicker"]
     selected_time: Optional[time]
 
 
-class UrlValue(BaseModel):
+class UrlValue(TypedModel):
     type: Literal["url_text_input"]
     value: Optional[str] = None
 
@@ -196,7 +200,7 @@ class State(BaseModel):
     values: Dict[str, Dict[str, Values]]
 
 
-class BaseAction(BaseModel):
+class BaseAction(TypedModel):
     action_id: str
     block_id: str
     type: str
@@ -211,8 +215,8 @@ class RadioButtonsAction(BaseAction):
 class ButtonAction(BaseAction):
     type: Literal["button"]
     text: Text
-    value: str
-    style: str
+    value: Optional[str] = None
+    style: Optional[str] = None
 
 
 class CheckboxAction(BaseAction):
@@ -369,8 +373,15 @@ class View(BaseModel):
     bot_id: str
 
 
-class BlockActionsPayload(BaseModel):
-    type: str
+class ResponseUrlForView(BaseModel):
+    block_id: str
+    action_id: str
+    channel_id: str
+    response_url: str
+
+
+class BlockActionsPayload(TypedModel):
+    type: Literal["block_actions"]
     user: User
     api_app_id: str
     token: str
@@ -384,7 +395,6 @@ class BlockActionsPayload(BaseModel):
     view: Optional[View] = None
     state: Optional[State] = None
     response_url: Optional[str] = None
-    response_urls: Optional[List[str]] = None
     actions: List[Action]
 
     @model_validator(mode="after")
@@ -399,3 +409,21 @@ class BlockActionsPayload(BaseModel):
             if self.response_url is None:
                 raise ValueError("response_url must be present when message is present!")
         return self
+
+
+class ViewSubmissionPayload(TypedModel):
+    type: Literal["view_submission"]
+    team: Team
+    user: User
+    view: View
+    enterprise: Optional[str]
+    api_app_id: str
+    token: str
+    trigger_id: str
+    response_urls: List[ResponseUrlForView]
+    is_enterprise_install: bool
+
+
+InteractivePayload = TypeAdapter(
+    Annotated[Union[BlockActionsPayload, ViewSubmissionPayload], Field(discriminator="type")]
+)

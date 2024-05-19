@@ -88,7 +88,7 @@ async def test_load_and_register_plugins(settings, slack_client):
     assert actions.command[generator_command_key].is_generator
 
     # Test registration of block actions
-    block_action_key = "tests.fake_plugins.FakePlugin.block_action_funtion-my_action.*-my_block"
+    block_action_key = "tests.fake_plugins.FakePlugin.block_action_function-my_action.*-my_block"
     assert block_action_key in actions.block_actions
     assert isinstance(actions.block_actions[block_action_key], BlockActionHandler)
     assert actions.block_actions[block_action_key].class_name == "tests.fake_plugins.FakePlugin"
