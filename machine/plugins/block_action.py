@@ -25,10 +25,15 @@ class BlockAction:
     received when the action was triggered.
     """
 
+    payload: BlockActionsPayload
+    triggered_action: Action
+
     def __init__(self, client: SlackClient, payload: BlockActionsPayload, triggered_action: Action):
         self._client = client
-        self.payload = payload
+        self.payload = payload  #: blablab
+        """The payload that was received by the bot when the action was triggered that this plugin method listens for"""
         self.triggered_action = triggered_action
+        """The action that triggered this plugin method"""
         self._webhook_client = AsyncWebhookClient(self.payload.response_url) if self.payload.response_url else None
 
     @property
@@ -108,10 +113,10 @@ class BlockAction:
         :param blocks: optional blocks (see [blocks])
         :param ephemeral: `True/False` wether to send the message as an ephemeral message, only
             visible to the user that initiated the action
-        :replace_original: `True/False` whether the message that contains the block from which the action was triggered
-            should be replaced by this message
-        :delete_original: `True/False` whether the message that contains the block from which the action was triggered
-            should be deleted. No other parameters should be provided.
+        :param replace_original: `True/False` whether the message that contains the block from which the action was
+            triggered should be replaced by this message
+        :param delete_original: `True/False` whether the message that contains the block from which the action was
+            triggered should be deleted. No other parameters should be provided.
         :return: Dictionary deserialized from `AsyncWebhookClient.send()`
 
         """

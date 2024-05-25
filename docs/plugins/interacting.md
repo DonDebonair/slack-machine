@@ -8,7 +8,8 @@ two very similar sets of functions are exposed through two classes:
 :   The [`MachineBasePlugin`][machine.plugins.base.MachineBasePlugin] class every plugin extends, provides methods
 to send messages to channels (public, private and DM), using the WebAPI, with support for rich
 messages/blocks/attachment. It also supports adding reactions to messages, pinning and unpinning messages, replying
-in-thread, sending ephemeral messages to a channel (only visible to 1 user), and much more.
+in-thread, sending ephemeral messages to a channel (only visible to 1 user), updating and deleting messages and much
+more.
 
 ### Message
 
@@ -212,7 +213,7 @@ async def broadcast_bathroom_usage(self, msg):
     self.emit('bathroom_used', toilet_flushed=True)
 ```
 
-You can read [the events section][events] to see how your plugin can listen for events.
+You can read [the events section][slack-machine-events] to see how your plugin can listen for events.
 
 
 ## Using the Slack Web API in other ways
@@ -221,4 +222,5 @@ Sometimes you want to use [Slack Web API](https://api.slack.com/web) in ways tha
 [`MachineBaserPlugin`][machine.plugins.base.MachineBasePlugin]. In these cases you can use
 [`self.web_client`][machine.plugins.base.MachineBasePlugin.web_client]. `self.web_client` references the
 [`AsyncWebClient`](https://slack.dev/python-slack-sdk/api-docs/slack_sdk/web/async_client.html#slack_sdk.web.async_client.AsyncWebClient)
-object of the underlying Slack Python SDK.
+object of the underlying Slack Python SDK. You should be able to call any
+[Web API method](https://api.slack.com/methods) with that client.

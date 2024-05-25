@@ -16,6 +16,8 @@ The following classes form the basis for Plugin development.
 
 ### ::: machine.plugins.command.Command
 
+### ::: machine.plugins.block_action.BlockAction
+
 
 ## Decorators
 
