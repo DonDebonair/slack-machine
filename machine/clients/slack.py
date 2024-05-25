@@ -227,6 +227,14 @@ class SlackClient:
             channel=channel_id, text=text, post_at=scheduled_ts, **kwargs
         )
 
+    async def update(self, channel: Channel | str, ts: str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.chat_update(channel=channel_id, ts=ts, text=text, **kwargs)
+
+    async def delete(self, channel: Channel | str, ts: str, **kwargs: Any) -> AsyncSlackResponse:
+        channel_id = id_for_channel(channel)
+        return await self._client.web_client.chat_delete(channel=channel_id, ts=ts, **kwargs)
+
     async def react(self, channel: Channel | str, ts: str, emoji: str) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.reactions_add(name=emoji, channel=channel_id, timestamp=ts)
