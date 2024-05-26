@@ -2,7 +2,7 @@ import pytest
 from structlog.testing import capture_logs
 
 from machine.handlers import log_request
-from tests.handlers.conftest import gen_command_request
+from tests.handlers.requests import gen_command_request
 
 
 @pytest.mark.asyncio

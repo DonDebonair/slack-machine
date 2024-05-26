@@ -424,6 +424,18 @@ class ViewSubmissionPayload(TypedModel):
     is_enterprise_install: bool
 
 
-InteractivePayload: TypeAdapter[Union[BlockActionsPayload, ViewSubmissionPayload]] = TypeAdapter(
-    Annotated[Union[BlockActionsPayload, ViewSubmissionPayload], Field(discriminator="type")]
+class ViewClosedPayload(TypedModel):
+    type: Literal["view_closed"]
+    team: Team
+    user: User
+    view: View
+    enterprise: Optional[str]
+    api_app_id: str
+    token: str
+    is_cleared: bool
+    is_enterprise_install: bool
+
+
+InteractivePayload: TypeAdapter[Union[BlockActionsPayload, ViewSubmissionPayload, ViewClosedPayload]] = TypeAdapter(
+    Annotated[Union[BlockActionsPayload, ViewSubmissionPayload, ViewClosedPayload], Field(discriminator="type")]
 )

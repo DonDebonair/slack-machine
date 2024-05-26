@@ -1,21 +1,16 @@
 from __future__ import annotations
 
-import sys
 from typing import Any
 
 import pytest
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.web.async_client import AsyncWebClient
+from zoneinfo import ZoneInfo
 
 from machine.clients.slack import SlackClient, id_for_channel, id_for_user
 from machine.models.channel import Channel
 from machine.models.user import User
-
-if sys.version_info >= (3, 9):
-    from zoneinfo import ZoneInfo
-else:
-    from backports.zoneinfo import ZoneInfo
 
 # TODO: more tests
 

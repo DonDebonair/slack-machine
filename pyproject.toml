@@ -126,7 +126,7 @@ mock_use_standalone_module = true
 addopts = "--verbose --cov-report term-missing --cov-report xml --junit-xml pytest.xml --cov=machine"
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 ignore_missing_imports = true
 show_column_numbers = true
 show_error_codes = true

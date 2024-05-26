@@ -5,18 +5,18 @@ import pytest
 
 from machine.plugins import ee
 from machine.plugins.decorators import (
-    ActionConfig,
-    CommandConfig,
-    MatcherConfig,
     action,
     command,
     listen_to,
+    modal,
+    modal_closed,
     on,
     process,
     required_settings,
     respond_to,
     schedule,
 )
+from machine.plugins.metadata import ActionConfig, CommandConfig, MatcherConfig, ModalConfig
 
 
 @pytest.fixture(scope="module")
@@ -113,6 +113,51 @@ def action_f_regex():
 def action_f_no_action_or_block():
     @action(None, None)
     def f(action_paylaod):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def modal_f():
+    @modal("modal_1")
+    def f(modal_payload):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def modal_f_regex():
+    @modal(re.compile(r"modal_\d", re.IGNORECASE))
+    def f(modal_payload):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def modal_generator_f():
+    @modal("modal_1")
+    async def f(modal_payload):
+        yield "hello"
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def modal_closed_f():
+    @modal_closed("modal_1")
+    def f(modal_closed_payload):
+        pass
+
+    return f
+
+
+@pytest.fixture(scope="module")
+def modal_closed_f_regex():
+    @modal_closed(re.compile(r"modal_\d", re.IGNORECASE))
+    def f(modal_closed_payload):
         pass
 
     return f
@@ -274,6 +319,55 @@ def test_action_no_action_or_block():
         @action(None, None)
         def f(action_paylaod):
             pass
+
+
+def test_modal(modal_f):
+    assert hasattr(modal_f, "metadata")
+    assert hasattr(modal_f.metadata, "plugin_actions")
+    assert hasattr(modal_f.metadata.plugin_actions, "modal_submissions")
+    assert modal_f.metadata.plugin_actions.modal_submissions == [ModalConfig(callback_id="modal_1")]
+
+
+def test_modal_regex(modal_f_regex):
+    assert hasattr(modal_f_regex, "metadata")
+    assert hasattr(modal_f_regex.metadata, "plugin_actions")
+    assert hasattr(modal_f_regex.metadata.plugin_actions, "modal_submissions")
+    assert modal_f_regex.metadata.plugin_actions.modal_submissions == [
+        ModalConfig(callback_id=re.compile(r"modal_\d", re.IGNORECASE))
+    ]
+
+
+def test_modal_generator(modal_generator_f):
+    assert hasattr(modal_generator_f, "metadata")
+    assert hasattr(modal_generator_f.metadata, "plugin_actions")
+    assert hasattr(modal_generator_f.metadata.plugin_actions, "modal_submissions")
+    assert modal_generator_f.metadata.plugin_actions.modal_submissions == [
+        ModalConfig(callback_id="modal_1", is_generator=True)
+    ]
+
+
+def test_modal_closed(modal_closed_f):
+    assert hasattr(modal_closed_f, "metadata")
+    assert hasattr(modal_closed_f.metadata, "plugin_actions")
+    assert hasattr(modal_closed_f.metadata.plugin_actions, "modal_closures")
+    assert modal_closed_f.metadata.plugin_actions.modal_closures == [ModalConfig(callback_id="modal_1")]
+
+
+def test_modal_closed_regex(modal_closed_f_regex):
+    assert hasattr(modal_closed_f_regex, "metadata")
+    assert hasattr(modal_closed_f_regex.metadata, "plugin_actions")
+    assert hasattr(modal_closed_f_regex.metadata.plugin_actions, "modal_closures")
+    assert modal_closed_f_regex.metadata.plugin_actions.modal_closures == [
+        ModalConfig(callback_id=re.compile(r"modal_\d", re.IGNORECASE))
+    ]
+
+
+def test_modal_closed_generator():
+    with pytest.raises(ValueError, match="Modal closed handlers cannot be async generators"):
+
+        @modal_closed("modal_1")
+        async def f(modal_payload):
+            yield "hello"
 
 
 def test_required_settings_list(required_settings_list_f):

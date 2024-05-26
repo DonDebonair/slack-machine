@@ -38,6 +38,7 @@ nav:
       - 'plugins/slash-commands.md'
       - 'plugins/interacting.md'
       - 'plugins/block-kit-actions.md'
+      - 'plugins/modals.md'
       - 'plugins/settings.md'
       - 'plugins/storage.md'
       - 'plugins/misc.md'
@@ -67,4 +68,3 @@ plugins:
             members_order: source
           import:
             - https://docs.python.org/dev/objects.inv
-            - https://slack.dev/python-slack-sdk/objects.inv
