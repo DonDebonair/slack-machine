@@ -31,7 +31,8 @@ from machine.models.core import (
     action_block_id_to_str,
 )
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import ActionConfig, CommandConfig, DecoratedPluginFunc, MatcherConfig, Metadata
+from machine.plugins.decorators import DecoratedPluginFunc
+from machine.plugins.metadata import ActionConfig, CommandConfig, MatcherConfig, Metadata
 from machine.settings import import_settings
 from machine.storage import MachineBaseStorage, PluginStorage
 from machine.utils.collections import CaseInsensitiveDict
