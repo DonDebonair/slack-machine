@@ -53,15 +53,27 @@ class BlockActionHandler:
 
 
 @dataclass
+class ModalHandler:
+    class_: MachineBasePlugin
+    class_name: str
+    function: Callable[..., Awaitable[None]]
+    function_signature: Signature
+    callback_id_matcher: Union[re.Pattern[str], str]
+    is_generator: bool
+
+
+@dataclass
 class RegisteredActions:
     listen_to: dict[str, MessageHandler] = field(default_factory=dict)
     respond_to: dict[str, MessageHandler] = field(default_factory=dict)
     process: dict[str, dict[str, Callable[[dict[str, Any]], Awaitable[None]]]] = field(default_factory=dict)
     command: dict[str, CommandHandler] = field(default_factory=dict)
     block_actions: dict[str, BlockActionHandler] = field(default_factory=dict)
+    modal: dict[str, ModalHandler] = field(default_factory=dict)
+    modal_closed: dict[str, ModalHandler] = field(default_factory=dict)
 
 
-def action_block_id_to_str(id_: Union[str, re.Pattern[str], None]) -> str:
+def matcher_to_str(id_: Union[str, re.Pattern[str], None]) -> str:
     if id_ is None:
         return "*"
     elif isinstance(id_, str):

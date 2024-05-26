@@ -4,7 +4,7 @@ import pytest
 
 from machine import Machine
 from machine.clients.slack import SlackClient
-from machine.models.core import BlockActionHandler, CommandHandler, MessageHandler, RegisteredActions
+from machine.models.core import BlockActionHandler, CommandHandler, MessageHandler, ModalHandler, RegisteredActions
 from machine.plugins.decorators import required_settings
 from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.logging import configure_logging
@@ -96,6 +96,31 @@ async def test_load_and_register_plugins(settings, slack_client):
     assert actions.block_actions[block_action_key].action_id_matcher == re.compile("my_action.*", re.IGNORECASE)
     assert isinstance(actions.block_actions[block_action_key].block_id_matcher, str)
     assert actions.block_actions[block_action_key].block_id_matcher == "my_block"
+
+    # Test registration of modal actions
+    modal_key = "tests.fake_plugins.FakePlugin.modal_function-my_modal.*"
+    assert modal_key in actions.modal
+    assert isinstance(actions.modal[modal_key], ModalHandler)
+    assert actions.modal[modal_key].class_name == "tests.fake_plugins.FakePlugin"
+    assert isinstance(actions.modal[modal_key].callback_id_matcher, re.Pattern)
+    assert actions.modal[modal_key].callback_id_matcher == re.compile("my_modal.*", re.IGNORECASE)
+    assert not actions.modal[modal_key].is_generator
+
+    # Test registration of generator modal actions
+    generator_modal_key = "tests.fake_plugins.FakePlugin.generator_modal_function-my_generator_modal"
+    assert generator_modal_key in actions.modal
+    assert isinstance(actions.modal[generator_modal_key], ModalHandler)
+    assert actions.modal[generator_modal_key].class_name == "tests.fake_plugins.FakePlugin"
+    assert actions.modal[generator_modal_key].callback_id_matcher == "my_generator_modal"
+    assert actions.modal[generator_modal_key].is_generator
+
+    # Test registration of modal_closed actions
+    modal_closed_key = "tests.fake_plugins.FakePlugin.modal_closed_function-my_modal_2"
+    assert modal_closed_key in actions.modal_closed
+    assert isinstance(actions.modal_closed[modal_closed_key], ModalHandler)
+    assert actions.modal_closed[modal_closed_key].class_name == "tests.fake_plugins.FakePlugin"
+    assert actions.modal_closed[modal_closed_key].callback_id_matcher == "my_modal_2"
+    assert not actions.modal_closed[modal_closed_key].is_generator
 
 
 @pytest.mark.asyncio

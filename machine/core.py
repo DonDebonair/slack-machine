@@ -12,6 +12,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
 from structlog.stdlib import get_logger
+from zoneinfo import ZoneInfo
 
 from machine.clients.slack import SlackClient
 from machine.handlers import (
@@ -27,21 +28,18 @@ from machine.models.core import (
     HumanHelp,
     Manual,
     MessageHandler,
+    ModalHandler,
     RegisteredActions,
-    action_block_id_to_str,
+    matcher_to_str,
 )
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import ActionConfig, CommandConfig, DecoratedPluginFunc, MatcherConfig, Metadata
+from machine.plugins.decorators import DecoratedPluginFunc
+from machine.plugins.metadata import ActionConfig, CommandConfig, MatcherConfig, Metadata, ModalConfig
 from machine.settings import import_settings
 from machine.storage import MachineBaseStorage, PluginStorage
 from machine.utils.collections import CaseInsensitiveDict
 from machine.utils.logging import configure_logging
 from machine.utils.module_loading import import_string
-
-if sys.version_info >= (3, 9):
-    from zoneinfo import ZoneInfo  # pragma: no cover
-else:
-    from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
 logger = get_logger(__name__)
 
@@ -236,6 +234,26 @@ class Machine:
                 block_action_config=block_action_config,
                 class_help=class_help,
             )
+        for modal_config in metadata.plugin_actions.modal_submissions:
+            self._register_modal_handler(
+                type_="modal",
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                modal_config=modal_config,
+                class_help=class_help,
+            )
+        for modal_config in metadata.plugin_actions.modal_closures:
+            self._register_modal_handler(
+                type_="modal_closed",
+                class_=cls_instance,
+                class_name=plugin_class_name,
+                fq_fn_name=fq_fn_name,
+                function=fn,
+                modal_config=modal_config,
+                class_help=class_help,
+            )
 
         if metadata.plugin_actions.schedule is not None:
             self._scheduler.add_job(
@@ -314,10 +332,33 @@ class Machine:
             action_id_matcher=block_action_config.action_id,
             block_id_matcher=block_action_config.block_id,
         )
-        action_id = action_block_id_to_str(block_action_config.action_id)
-        block_id = action_block_id_to_str(block_action_config.block_id)
+        action_id = matcher_to_str(block_action_config.action_id)
+        block_id = matcher_to_str(block_action_config.block_id)
         key = f"{fq_fn_name}-{action_id}-{block_id}"
         self._registered_actions.block_actions[key] = handler
+
+    def _register_modal_handler(
+        self,
+        type_: Literal["modal", "modal_closed"],
+        class_: MachineBasePlugin,
+        class_name: str,
+        fq_fn_name: str,
+        function: Callable[..., Awaitable[None]],
+        modal_config: ModalConfig,
+        class_help: str,
+    ) -> None:
+        signature = Signature.from_callable(function)
+        logger.debug("signature of modal handler", signature=signature, function=fq_fn_name)
+        handler = ModalHandler(
+            class_=class_,
+            class_name=class_name,
+            function=function,
+            function_signature=signature,
+            callback_id_matcher=modal_config.callback_id,
+            is_generator=modal_config.is_generator,
+        )
+        key = f"{fq_fn_name}-{matcher_to_str(modal_config.callback_id)}"
+        getattr(self._registered_actions, type_)[key] = handler
 
     @staticmethod
     def _parse_human_help(doc: str) -> HumanHelp:

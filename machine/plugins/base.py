@@ -5,6 +5,7 @@ from typing import Any, Sequence
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
+from slack_sdk.models.views import View
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
@@ -268,7 +269,6 @@ class MachineBasePlugin:
         :param text: message text
         :param attachments: optional attachments (see [attachments])
         :param blocks: optional blocks (see [blocks])
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
         :param ephemeral_user: optional user name or id if the message needs to visible
             to a specific user only
         :return: Dictionary deserialized from [`chat.update`](https://api.slack.com/methods/chat.update) request
@@ -352,7 +352,7 @@ class MachineBasePlugin:
         :param text: message text
         :param attachments: optional attachments (see `attachments`_)
         :param blocks: optional blocks (see `blocks`_)
-        :return: Dictionary deserialized from `chat.postMessage`_ request.
+        :return: Dictionary deserialized from `chat.postMessage`_ response.
 
         .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
         """
@@ -386,6 +386,18 @@ class MachineBasePlugin:
         return await self._client.send_dm_scheduled(
             when, user, text=text, attachments=attachments, blocks=blocks, **kwargs
         )
+
+    async def open_im(self, users: User | str | list[User | str]) -> str:
+        """Open a DM channel with one or more users
+
+        Open a DM channel with one or more users. If the DM channel already exists, the existing channel id
+        will be returned. If the DM channel does not exist, a new channel will be created and the
+        id of the new channel will be returned.
+
+        :param users: :py:class:`~machine.models.user.User` object or id of user to open DM with.
+        :return: id of the DM channel
+        """
+        return await self._client.open_im(users)
 
     def emit(self, event: str, **kwargs: Any) -> None:
         """Emit an event
@@ -431,3 +443,71 @@ class MachineBasePlugin:
         :return: response from the Slack Web API
         """
         return await self._client.set_topic(channel, topic, **kwargs)
+
+    async def open_modal(self, trigger_id: str, view: dict | View, **kwargs: Any) -> AsyncSlackResponse:
+        """Open a modal dialog
+
+        Open a modal dialog in response to a user action. The modal dialog can be used to collect
+        information from the user, or to display information to the user.
+
+        :param trigger_id: trigger id is provided by Slack when a user action is performed, such as a slash command
+            or a button click
+        :param view: view definition for the modal dialog
+        :return: response from the Slack Web API
+        """
+        return await self._client.web_client.views_open(trigger_id=trigger_id, view=view, **kwargs)
+
+    async def push_modal(self, trigger_id: str, view: dict | View, **kwargs: Any) -> AsyncSlackResponse:
+        """Push a new view onto the stack of a modal that was already opened
+
+        Push a new view onto the stack of a modal that was already opened by a open_modal call. At most 3 views can be
+        active in a modal at the same time. For more information on the lifecycle of modals, refer to the
+        [relevant Slack documentation](https://api.slack.com/surfaces/modals)
+
+        :param trigger_id: trigger id is provided by Slack when a user action is performed, such as a slash command
+            or a button click
+        :param view: view definition for the modal dialog
+        :return: response from the Slack Web API
+        """
+        return await self._client.push_modal(trigger_id=trigger_id, view=view, **kwargs)
+
+    async def update_modal(
+        self,
+        view: dict | View,
+        view_id: str | None = None,
+        external_id: str | None = None,
+        hash: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
+        """Update a modal dialog
+
+        Update a modal dialog that was previously opened. You can update the view by providing the view_id or the
+        external_id of the modal. external_id has precedence over view_id, but at least one needs to be provided.
+        You can also provide a hash of the view that you want to update to prevent race conditions.
+
+        :param view: view definition for the modal dialog
+        :param view_id: id of the view to update
+        :param external_id: external id of the view to update
+        :param hash: hash of the view to update
+        :return: response from the Slack Web API
+        """
+        return await self._client.update_modal(view=view, view_id=view_id, external_id=external_id, hash=hash, **kwargs)
+
+    async def publish_home_tab(
+        self, user: User | str, view: dict | View, hash: str | None = None, **kwargs: Any
+    ) -> AsyncSlackResponse:
+        """Publish a view to the home tab of a user
+
+        Publish a view to the home tab of a user. The view will be visible to the user when they open the home tab of
+        your Slack app. This method can be used both to publish a new view for the home tab or update an existing view.
+        You can provide a hash of the view that you want to update to prevent race conditions.
+
+        Note: be careful with the use of this method, as you might be overwriting the user's home tab that was set by
+        another Slack Machine plugin enabled in your bot.
+
+        :param user: user for whom to publish or update the home tab
+        :param view: view definition for the home tab
+        :param hash: hash of the view to update
+        :return: response from the Slack Web API
+        """
+        return await self._client.publish_home_tab(user=user, view=view, hash=hash, **kwargs)

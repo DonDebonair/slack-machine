@@ -8,8 +8,9 @@ Slack Machine makes it easy to listen to _actions_ triggered by these interactiv
 
 ## Defining actions
 
-When you're defining [blocks](https://api.slack.com/reference/block-kit ) for your interactive surfaces, each of
-these blocks can be given a `block_id`. Within certain blocks, you can place
+When you're defining [blocks](https://api.slack.com/reference/block-kit ) for your interactive surfaces - either by
+providing a [dict][] or by leveraging the [models of the Slack SDK for Python](https://tools.slack.dev/python-slack-sdk/api-docs/slack_sdk/models/blocks/index.html)
+- each of these blocks can be given a `block_id`. Within certain blocks, you can place
 [block elements](https://api.slack.com/reference/block-kit/block-elements) that are interactive. These interactive
 elements can be given an `action_id`. Given that one block can contain multiple action elements, each `block_id` can
 be linked to multiple `action_id`s.
@@ -19,7 +20,7 @@ Whenever the user interacts with these elements, an event is sent to Slack Machi
 
 ## Listening to actions
 
-With the [`action`][machine.plugins.decorators.action] decorator you can define which plugin methods should be
+With the [`@action`][machine.plugins.decorators.action] decorator you can define which plugin methods should be
 called when a certain action is triggered. The decorator takes 2 arguments: the `block_id` and the `action_id` that
 you want to listen to. Both arguments are optional, but **one of them always needs to be set**. Both arguments accept a
 [`str`][str] or [`re.Pattern`][re.Pattern]. When a string is provided, the handler only fires upon an exact match,
@@ -34,7 +35,7 @@ Your block action handler will be called with a [`BlockAction`][machine.plugins.
 contains useful information about the action that was triggered and the message or other surface in which the action
 was triggered.
 
-You can optionally pass the `logger` argument to get a
+You can optionally add the `logger` argument to your handler get a
 [logger that was enriched by Slack Machine](misc.md#using-loggers-provided-by-slack-machine-in-your-handler-functions)
 
 The [`BlockAction`][machine.plugins.block_action.BlockAction] contains various useful fields and properties about

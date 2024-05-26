@@ -32,7 +32,7 @@ class DeploymentPlugin(MachineBasePlugin):
 **Dropped support for Python 3.8** (v0.38.0)
 
 As of [v0.38.0](https://github.com/DonDebonair/slack-machine/releases/tag/v0.38.0), support for Python 3.8 has been
-dropped. Python 3.7 has reached end-of-life on 2024-10-07.
+dropped. Python 3.8 has reached end-of-life on 2024-10-07.
 
 ## Features
 
@@ -59,6 +59,7 @@ dropped. Python 3.7 has reached end-of-life on 2024-10-07.
 - Support for [blocks](https://api.slack.com/reference/block-kit/blocks)
 - Support for [message attachments](https://api.slack.com/docs/message-attachments) [Legacy 🏚]
 - Support for [interactive elements](https://api.slack.com/block-kit)
+- Support for [modals](https://api.slack.com/surfaces/modals)
 - Listen and respond to any [Slack event](https://api.slack.com/events) supported by the Events API
 - Store and retrieve any kind of data in persistent storage (currently Redis, DynamoDB, SQLite and in-memory storage are
   supported)
@@ -68,7 +69,6 @@ dropped. Python 3.7 has reached end-of-life on 2024-10-07.
 
 ### Coming Soon
 
-- Support for modals
 - Support for shortcuts
 - ... and much more
 

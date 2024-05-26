@@ -4,6 +4,8 @@ from typing import Any, Sequence
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
+from slack_sdk.models.views import View
+from slack_sdk.web.async_slack_response import AsyncSlackResponse
 from slack_sdk.webhook import WebhookResponse
 from slack_sdk.webhook.async_client import AsyncWebhookClient
 
@@ -116,10 +118,26 @@ class Command:
         :param ephemeral: `True/False` wether to send the message as an ephemeral message, only
             visible to the sender of the original message
         :return: Dictionary deserialized from `AsyncWebhookClient.send()`
-
         """
         response_type = "ephemeral" if ephemeral else "in_channel"
 
         return await self._webhook_client.send(
             text=text, attachments=attachments, blocks=blocks, response_type=response_type, **kwargs
         )
+
+    async def open_modal(
+        self,
+        view: dict | View,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
+        """Open a modal in response to the command
+
+        Open a modal in response to the command, using the trigger_id that was returned when the command was invoked.
+        Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_open()`
+
+        Note: you have to call this method within 3 seconds of receiving the command payload.
+
+        :param view: the view to open
+        :return: Dictionary deserialized from `AsyncWebClient.views_open()`
+        """
+        return await self._client.open_modal(self.trigger_id, view, **kwargs)

@@ -1,7 +1,7 @@
 import re
 
 from machine.plugins.base import MachineBasePlugin
-from machine.plugins.decorators import action, command, listen_to, process, respond_to
+from machine.plugins.decorators import action, command, listen_to, modal, modal_closed, process, respond_to
 
 
 class FakePlugin(MachineBasePlugin):
@@ -27,6 +27,18 @@ class FakePlugin(MachineBasePlugin):
 
     @action(action_id=re.compile(r"my_action.*", re.IGNORECASE), block_id="my_block")
     async def block_action_function(self, payload):
+        pass
+
+    @modal(callback_id=re.compile(r"my_modal.*", re.IGNORECASE))
+    async def modal_function(self, payload):
+        pass
+
+    @modal(callback_id="my_generator_modal")
+    async def generator_modal_function(self, payload):
+        yield "hello"
+
+    @modal_closed(callback_id="my_modal_2")
+    async def modal_closed_function(self, payload):
         pass
 
 

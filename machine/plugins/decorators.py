@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import inspect
 import re
-from dataclasses import dataclass, field
 from datetime import datetime, tzinfo
 from typing import Any, Awaitable, Callable, Protocol, TypeVar, Union, cast
 
@@ -13,43 +12,9 @@ from machine.plugins import ee
 from machine.plugins.admin_utils import RoleCombinator, matching_roles_by_user_id
 from machine.plugins.base import MachineBasePlugin
 from machine.plugins.message import Message
+from machine.plugins.metadata import ActionConfig, CommandConfig, MatcherConfig, Metadata, ModalConfig
 
 logger = get_logger(__name__)
-
-
-@dataclass
-class MatcherConfig:
-    regex: re.Pattern[str]
-    handle_changed_message: bool = False
-
-
-@dataclass
-class CommandConfig:
-    command: str
-    is_generator: bool = False
-
-
-@dataclass
-class ActionConfig:
-    action_id: Union[re.Pattern[str], str, None] = None
-    block_id: Union[re.Pattern[str], str, None] = None
-
-
-@dataclass
-class PluginActions:
-    process: list[str] = field(default_factory=list)
-    listen_to: list[MatcherConfig] = field(default_factory=list)
-    respond_to: list[MatcherConfig] = field(default_factory=list)
-    schedule: dict[str, Any] | None = None
-    commands: list[CommandConfig] = field(default_factory=list)
-    actions: list[ActionConfig] = field(default_factory=list)
-
-
-@dataclass
-class Metadata:
-    plugin_actions: PluginActions = field(default_factory=PluginActions)
-    required_settings: list[str] = field(default_factory=list)
-
 
 P = ParamSpec("P")
 R = TypeVar("R", covariant=True, bound=Union[Awaitable[None], MachineBasePlugin])
@@ -186,6 +151,54 @@ def action(
         return fn
 
     return action_decorator
+
+
+def modal(callback_id: Union[re.Pattern[str], str]) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
+    """Respond to modal submissions
+
+    This decorator will enable a Plugin method to be triggered when certain modals are submitted.
+    The Plugin method will be called when a modal submission event is received for which the
+    callback_id matches the provided value. The callback_id can be a string or a regex pattern.
+
+    :param callback_id: the callback_id to respond to, can be a string or regex pattern
+    :return: wrapped method
+    """
+
+    def modal_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        is_generator = inspect.isasyncgenfunction(f)
+        fn.metadata.plugin_actions.modal_submissions.append(
+            ModalConfig(callback_id=callback_id, is_generator=is_generator)
+        )
+        return fn
+
+    return modal_decorator
+
+
+def modal_closed(callback_id: Union[re.Pattern[str], str]) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
+    """Respond to modal closures
+
+    This decorator will enable a Plugin method to be triggered when certain modals are closed.
+    The Plugin method will be called when a modal closure event is received for which the
+    callback_id matches the provided value. The callback_id can be a string or a regex pattern.
+
+    Note: in order to receive modal close events, the modal must have the `notify_on_close` property set to `True`.
+
+    :param callback_id: the callback_id to respond to, can be a string or regex pattern
+    :return: wrapped method
+    """
+
+    def modal_closed_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
+        fn = cast(DecoratedPluginFunc, f)
+        fn.metadata = getattr(f, "metadata", Metadata())
+        is_generator = inspect.isasyncgenfunction(f)
+        if is_generator:
+            raise ValueError("Modal closed handlers cannot be async generators")
+        fn.metadata.plugin_actions.modal_closures.append(ModalConfig(callback_id=callback_id))
+        return fn
+
+    return modal_closed_decorator
 
 
 def schedule(

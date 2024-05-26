@@ -34,7 +34,7 @@ features:
 
 ## Defining your Slash Command in code
 
-The next step is to use the [`command`][machine.plugins.decorators.command] decorator on the function that should be
+The next step is to use the [`@command`][machine.plugins.decorators.command] decorator on the function that should be
 triggered when the user uses the Slash Command you defined. The decorator takes only 1 parameter: the slash command
 that should trigger the decorated function. It should be the same as the Slash Command you just defined in the App
 dashboard.
@@ -55,7 +55,7 @@ information about the slash command invocation. The most important property is p
 [`text`][machine.plugins.command.Command.text], which contains any additional text that was passed when the slash
 command was used.
 
-You can optionally pass the `logger` argument to get a
+You can optionally add the `logger` argument to your handler get a
 [logger that was enriched by Slack Machine](misc.md#using-loggers-provided-by-slack-machine-in-your-handler-functions)
 
 ### Responding to a command
@@ -96,14 +96,10 @@ async def hello_again(self, command):
     await command.say("This will be sent after the initial acknowledgement")
 ```
 
-## Other types of responses
+## Opening modals
 
 The [`Command`][machine.plugins.command.Command] object that your handler receives, contains an extra piece of
 information you can use to trigger more varied reponses: the [`trigger_id`][machine.plugins.command.Command.trigger_id]
-The `trigger_id` can used specifically to trigger
-[_modal responses_](https://api.slack.com/interactivity/handling#modal_responses). For now, creating a modal is
-something you have to take care of yourself. More information on this can be found
-[here](https://api.slack.com/surfaces/modals/using).
-
-In future releases, Slack Machine will make working with modals much easier by allowing modals to be opened directly
-through the provided command object, and responding to interactions happening in modals through new decorators.
+The `trigger_id` can used specifically to trigger [_modal responses_][modals]. You don't have to worry about the
+`trigger_id` and instead can just call the [`open_modal`][machine.plugins.command.Command.open_modal] method on the
+`Command` object to open a modal.

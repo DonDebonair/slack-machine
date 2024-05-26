@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import asyncio
-import sys
 from datetime import datetime
 from typing import Any, AsyncGenerator, Awaitable, Callable
 
 from slack_sdk.errors import SlackApiError
+from slack_sdk.models.views import View
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
@@ -13,14 +13,10 @@ from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 from structlog.stdlib import get_logger
+from zoneinfo import ZoneInfo
 
 from machine.models import Channel, User
 from machine.utils.datetime import calculate_epoch
-
-if sys.version_info >= (3, 9):
-    from zoneinfo import ZoneInfo  # pragma: no cover
-else:
-    from backports.zoneinfo import ZoneInfo  # pragma: no cover
 
 logger = get_logger(__name__)
 
@@ -293,24 +289,22 @@ class SlackClient:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.reactions_add(name=emoji, channel=channel_id, timestamp=ts)
 
-    async def open_im(self, user: User | str) -> str:
-        user_id = id_for_user(user)
-        response = await self._client.web_client.conversations_open(users=user_id)
+    async def open_im(self, users: User | str | list[User | str]) -> str:
+        user_ids = [id_for_user(user) for user in users] if isinstance(users, list) else id_for_user(users)
+        response = await self._client.web_client.conversations_open(users=user_ids)
         return response["channel"]["id"]
 
     async def send_dm(self, user: User | str, text: str | None, **kwargs: Any) -> AsyncSlackResponse:
         user_id = id_for_user(user)
-        dm_channel_id = await self.open_im(user_id)
 
-        return await self._client.web_client.chat_postMessage(channel=dm_channel_id, text=text, as_user=True, **kwargs)
+        return await self._client.web_client.chat_postMessage(channel=user_id, text=text, as_user=True, **kwargs)
 
     async def send_dm_scheduled(self, when: datetime, user: User | str, text: str, **kwargs: Any) -> AsyncSlackResponse:
         user_id = id_for_user(user)
-        dm_channel_id = await self.open_im(user_id)
         scheduled_ts = calculate_epoch(when, self._tz)
 
         return await self._client.web_client.chat_scheduleMessage(
-            channel=dm_channel_id, text=text, as_user=True, post_at=scheduled_ts, **kwargs
+            channel=user_id, text=text, as_user=True, post_at=scheduled_ts, **kwargs
         )
 
     async def pin_message(self, channel: Channel | str, ts: str) -> AsyncSlackResponse:
@@ -324,3 +318,27 @@ class SlackClient:
     async def set_topic(self, channel: Channel | str, topic: str, **kwargs: Any) -> AsyncSlackResponse:
         channel_id = id_for_channel(channel)
         return await self._client.web_client.conversations_setTopic(channel=channel_id, topic=topic, **kwargs)
+
+    async def open_modal(self, trigger_id: str, view: dict | View, **kwargs: Any) -> AsyncSlackResponse:
+        return await self._client.web_client.views_open(trigger_id=trigger_id, view=view, **kwargs)
+
+    async def push_modal(self, trigger_id: str, view: dict | View, **kwargs: Any) -> AsyncSlackResponse:
+        return await self._client.web_client.views_push(trigger_id=trigger_id, view=view, **kwargs)
+
+    async def update_modal(
+        self,
+        view: dict | View,
+        view_id: str | None = None,
+        external_id: str | None = None,
+        hash: str | None = None,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
+        return await self._client.web_client.views_update(
+            view=view, view_id=view_id, external_id=external_id, hash=hash, **kwargs
+        )
+
+    async def publish_home_tab(
+        self, user: User | str, view: dict | View, hash: str | None = None, **kwargs: Any
+    ) -> AsyncSlackResponse:
+        user_id = id_for_user(user)
+        return await self._client.web_client.views_publish(user_id=user_id, view=view, hash=hash, **kwargs)

@@ -219,7 +219,7 @@ You can read [the events section][slack-machine-events] to see how your plugin c
 ## Using the Slack Web API in other ways
 
 Sometimes you want to use [Slack Web API](https://api.slack.com/web) in ways that are not directly exposed by
-[`MachineBaserPlugin`][machine.plugins.base.MachineBasePlugin]. In these cases you can use
+[`MachineBasePlugin`][machine.plugins.base.MachineBasePlugin]. In these cases you can use
 [`self.web_client`][machine.plugins.base.MachineBasePlugin.web_client]. `self.web_client` references the
 [`AsyncWebClient`](https://slack.dev/python-slack-sdk/api-docs/slack_sdk/web/async_client.html#slack_sdk.web.async_client.AsyncWebClient)
 object of the underlying Slack Python SDK. You should be able to call any
