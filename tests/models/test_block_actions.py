@@ -1,4 +1,4 @@
-from machine.models.interactive import BlockActionsPayload
+from machine.models.interactive import BlockActionsPayload, InteractivePayload
 from tests.models.example_payloads.block_action_button import payload as button_payload
 from tests.models.example_payloads.block_action_button2 import payload as button_payload2
 from tests.models.example_payloads.block_action_button_no_value import payload as button_no_value_payload
@@ -18,68 +18,84 @@ from tests.models.example_payloads.block_action_url_input import payload as url_
 
 
 def test_block_action_radio_button():
-    validated_radio_button_payload = BlockActionsPayload.model_validate(radio_button_payload)
+    validated_radio_button_payload = InteractivePayload.validate_python(radio_button_payload)
     assert validated_radio_button_payload is not None
+    assert isinstance(validated_radio_button_payload, BlockActionsPayload)
 
 
 def test_block_action_button():
-    validated_button_payload = BlockActionsPayload.model_validate(button_payload)
+    validated_button_payload = InteractivePayload.validate_python(button_payload)
     assert validated_button_payload is not None
-    validated_button_payload2 = BlockActionsPayload.model_validate(button_payload2)
+    assert isinstance(validated_button_payload, BlockActionsPayload)
+    validated_button_payload2 = InteractivePayload.validate_python(button_payload2)
     assert validated_button_payload2 is not None
-    validated_button_no_value_payload = BlockActionsPayload.model_validate(button_no_value_payload)
+    assert isinstance(validated_button_payload2, BlockActionsPayload)
+    validated_button_no_value_payload = InteractivePayload.validate_python(button_no_value_payload)
     assert validated_button_no_value_payload is not None
+    assert isinstance(validated_button_no_value_payload, BlockActionsPayload)
 
 
 def test_block_action_checkboxes():
-    validated_checkboxes_payload = BlockActionsPayload.model_validate(checkboxes_payload)
+    validated_checkboxes_payload = InteractivePayload.validate_python(checkboxes_payload)
     assert validated_checkboxes_payload is not None
-    validated_checkboxes_payload2 = BlockActionsPayload.model_validate(checkboxes_payload2)
+    assert isinstance(validated_checkboxes_payload, BlockActionsPayload)
+    validated_checkboxes_payload2 = InteractivePayload.validate_python(checkboxes_payload2)
     assert validated_checkboxes_payload2 is not None
+    assert isinstance(validated_checkboxes_payload2, BlockActionsPayload)
 
 
 def test_block_action_datepicker():
-    validated_datepicker_payload = BlockActionsPayload.model_validate(datepicker_payload)
+    validated_datepicker_payload = InteractivePayload.validate_python(datepicker_payload)
     assert validated_datepicker_payload is not None
-    validated_datepicker_payload2 = BlockActionsPayload.model_validate(datepicker_payload2)
+    assert isinstance(validated_datepicker_payload, BlockActionsPayload)
+    validated_datepicker_payload2 = InteractivePayload.validate_python(datepicker_payload2)
     assert validated_datepicker_payload2 is not None
+    assert isinstance(validated_datepicker_payload2, BlockActionsPayload)
 
 
 def test_block_action_static_select():
-    validated_static_select_payload = BlockActionsPayload.model_validate(static_select_payload)
+    validated_static_select_payload = InteractivePayload.validate_python(static_select_payload)
     assert validated_static_select_payload is not None
+    assert isinstance(validated_static_select_payload, BlockActionsPayload)
 
 
 def test_block_action_conversations_select():
-    validated_conversations_select_payload = BlockActionsPayload.model_validate(conversations_select_payload)
+    validated_conversations_select_payload = InteractivePayload.validate_python(conversations_select_payload)
     assert validated_conversations_select_payload is not None
+    assert isinstance(validated_conversations_select_payload, BlockActionsPayload)
 
 
 def test_block_action_multi_static_select():
-    validated_multi_static_select_payload = BlockActionsPayload.model_validate(multi_static_select_payload)
+    validated_multi_static_select_payload = InteractivePayload.validate_python(multi_static_select_payload)
     assert validated_multi_static_select_payload is not None
+    assert isinstance(validated_multi_static_select_payload, BlockActionsPayload)
 
 
 def test_block_action_multi_channels_select():
-    validated_multi_channels_select_payload = BlockActionsPayload.model_validate(multi_channels_select_payload)
+    validated_multi_channels_select_payload = InteractivePayload.validate_python(multi_channels_select_payload)
     assert validated_multi_channels_select_payload is not None
+    assert isinstance(validated_multi_channels_select_payload, BlockActionsPayload)
 
 
 def test_block_action_timepicker():
-    validated_timepicker_payload = BlockActionsPayload.model_validate(timepicker_payload)
+    validated_timepicker_payload = InteractivePayload.validate_python(timepicker_payload)
     assert validated_timepicker_payload is not None
+    assert isinstance(validated_timepicker_payload, BlockActionsPayload)
 
 
 def test_block_action_url_input():
-    validated_url_payload = BlockActionsPayload.model_validate(url_payload)
+    validated_url_payload = InteractivePayload.validate_python(url_payload)
     assert validated_url_payload is not None
+    assert isinstance(validated_url_payload, BlockActionsPayload)
 
 
 def test_block_action_overflow():
-    validated_overflow_payload = BlockActionsPayload.model_validate(overflow_payload)
+    validated_overflow_payload = InteractivePayload.validate_python(overflow_payload)
     assert validated_overflow_payload is not None
+    assert isinstance(validated_overflow_payload, BlockActionsPayload)
 
 
 def test_block_action_in_modal():
-    validated_in_modal_payload = BlockActionsPayload.model_validate(in_modal_payload)
+    validated_in_modal_payload = InteractivePayload.validate_python(in_modal_payload)
     assert validated_in_modal_payload is not None
+    assert isinstance(validated_in_modal_payload, BlockActionsPayload)
