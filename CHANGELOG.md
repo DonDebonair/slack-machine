@@ -8,6 +8,18 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.37.0] - 2024-05-26
+
+### Added
+
+- Support for **Block actions**, coming from interactive elements from [Block Kit](https://api.slack.com/block-kit)
+  ([#1034](https://github.com/DonDebonair/slack-machine/pull/1034) with help from
+  [**pawelros**](https://github.com/pawelros))
+
+### Changed
+
+- Bump `slack-sdk` from 3.27.1 to 3.27.2
+
 ## [0.36.0] - 2024-05-04
 
 ### Added
@@ -665,7 +677,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.36.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.37.0...HEAD
+[0.37.0]: https://github.com/DonDebonair/slack-machine/compare/v0.36.0...v0.37.0
 [0.36.0]: https://github.com/DonDebonair/slack-machine/compare/v0.35.0...v0.36.0
 [0.35.0]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...v0.35.0
 [0.34.2]: https://github.com/DonDebonair/slack-machine/compare/v0.34.1...v0.34.2
