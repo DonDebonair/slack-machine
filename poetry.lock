@@ -871,13 +871,13 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 
 [[package]]
 name = "griffe"
-version = "0.45.3"
+version = "0.46.1"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "griffe-0.45.3-py3-none-any.whl", hash = "sha256:ed1481a680ae3e28f91a06e0d8a51a5c9b97555aa2527abc2664447cc22337d6"},
-    {file = "griffe-0.45.3.tar.gz", hash = "sha256:02ee71cc1a5035864b97bd0dbfff65c33f6f2c8854d3bd48a791905c2b8a44b9"},
+    {file = "griffe-0.46.1-py3-none-any.whl", hash = "sha256:e74dd71690a6bc339916f31aec4912fcb29a67294b7a557be7f80c3131f4ec6e"},
+    {file = "griffe-0.46.1.tar.gz", hash = "sha256:cbf12fb5686110b5c1a956520079cd1656e2ea0b80b63f33ad9d9e21545af2a5"},
 ]
 
 [package.dependencies]
@@ -3199,4 +3199,4 @@ sqlite = ["aiosqlite"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "14ffd26c1f9743687a7bf77ac78132c455b8b49cd5a2fdf43d735e4e55c397e2"
+content-hash = "53e0c55a44b84c53359eba4d06726183335e2a9574cb9946c70840464b5cb513"
