@@ -8,7 +8,12 @@ logger = get_logger(__name__)
 
 
 async def log_request(_: AsyncBaseSocketModeClient, request: SocketModeRequest) -> None:
-    logger.debug("Request received", type=request.type, request=request.to_dict())
+    logger.debug(
+        "Request received",
+        type=request.type,
+        request=request.to_dict(),
+        accepts_response_payload=request.accepts_response_payload,
+    )
 
 
 def create_scoped_logger(class_name: str, function_name: str, **kwargs: Any) -> BoundLogger:
