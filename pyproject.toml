@@ -68,7 +68,7 @@ types-redis = "^4.3.21"
 aioboto3 = ">=10,<14"
 types-aiobotocore = {extras = ["essential"], version = "^2.4.0"}
 aiosqlite = ">=0.18,<0.21"
-ruff = "^0.4.3"
+ruff = ">=0.4.3,<0.6.0"
 
 [tool.poetry.group.docs]
 optional = true
