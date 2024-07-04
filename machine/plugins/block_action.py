@@ -4,6 +4,8 @@ from typing import Any, Optional, Sequence, Union
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
+from slack_sdk.models.views import View
+from slack_sdk.web.async_slack_response import AsyncSlackResponse
 from slack_sdk.webhook import WebhookResponse
 from slack_sdk.webhook.async_client import AsyncWebhookClient
 from structlog.stdlib import get_logger
@@ -30,7 +32,7 @@ class BlockAction:
 
     def __init__(self, client: SlackClient, payload: BlockActionsPayload, triggered_action: Action):
         self._client = client
-        self.payload = payload  #: blablab
+        self.payload = payload
         """The payload that was received by the bot when the action was triggered that this plugin method listens for"""
         self.triggered_action = triggered_action
         """The action that triggered this plugin method"""
@@ -136,3 +138,21 @@ class BlockAction:
             delete_original=delete_original,
             **kwargs,
         )
+
+    async def open_modal(
+        self,
+        view: dict | View,
+        **kwargs: Any,
+    ) -> AsyncSlackResponse:
+        """Open a modal in response to the block action
+
+        Open a modal in response to the block action, using the trigger_id that was returned when the block action was
+        triggered.
+        Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_open()`
+
+        Note: you have to call this method within 3 seconds of receiving the block action payload.
+
+        :param view: the view to open
+        :return: Dictionary deserialized from `AsyncWebClient.views_open()`
+        """
+        return await self._client.open_modal(self.trigger_id, view, **kwargs)
