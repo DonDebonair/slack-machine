@@ -424,6 +424,6 @@ class ViewSubmissionPayload(TypedModel):
     is_enterprise_install: bool
 
 
-InteractivePayload = TypeAdapter(
+InteractivePayload: TypeAdapter[Union[BlockActionsPayload, ViewSubmissionPayload]] = TypeAdapter(
     Annotated[Union[BlockActionsPayload, ViewSubmissionPayload], Field(discriminator="type")]
 )
