@@ -2,17 +2,17 @@
 
 [[package]]
 name = "aioboto3"
-version = "13.0.1"
+version = "13.1.0"
 description = "Async boto3 wrapper"
 optional = false
 python-versions = "<4.0,>=3.8"
 files = [
-    {file = "aioboto3-13.0.1-py3-none-any.whl", hash = "sha256:74d14d6a422348957d4f8b6dcc67e6721274e81bb7ca9c12f27e0edf1bc105c4"},
-    {file = "aioboto3-13.0.1.tar.gz", hash = "sha256:168a7dc7af2f682600a2b71c715bb2f7bee1ee93d1e8b694760a270eaf04fc49"},
+    {file = "aioboto3-13.1.0-py3-none-any.whl", hash = "sha256:daaeab5466b25a31b7b4fedfcc5d21ea2129f84c2d7ebab1ec3a299286c6f8c4"},
+    {file = "aioboto3-13.1.0.tar.gz", hash = "sha256:485b4daeaf93759e0bbf2f6dcf46a27eb68eb79f0452983d4d4f2283fc8a4086"},
 ]
 
 [package.dependencies]
-aiobotocore = {version = "2.13.0", extras = ["boto3"]}
+aiobotocore = {version = "2.13.1", extras = ["boto3"]}
 aiofiles = ">=23.2.1"
 
 [package.extras]
@@ -21,25 +21,25 @@ s3cse = ["cryptography (>=2.3.1)"]
 
 [[package]]
 name = "aiobotocore"
-version = "2.13.0"
+version = "2.13.1"
 description = "Async client for aws services using botocore and aiohttp"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "aiobotocore-2.13.0-py3-none-any.whl", hash = "sha256:f812afc678d71b0038fd1ce712ff111ab7f47bab81ce5b4c7d222d4b83bc0cb2"},
-    {file = "aiobotocore-2.13.0.tar.gz", hash = "sha256:4badf5cab6ad400216319d14278e2c99ad9b708e28a0f231605a412e632de401"},
+    {file = "aiobotocore-2.13.1-py3-none-any.whl", hash = "sha256:1bef121b99841ee3cc788e4ed97c332ba32353b1f00e886d1beb3aae95520858"},
+    {file = "aiobotocore-2.13.1.tar.gz", hash = "sha256:134f9606c2f91abde38cbc61c3241113e26ff244633e0c31abb7e09da3581c9b"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.9.2,<4.0.0"
 aioitertools = ">=0.5.1,<1.0.0"
-boto3 = {version = ">=1.34.70,<1.34.107", optional = true, markers = "extra == \"boto3\""}
-botocore = ">=1.34.70,<1.34.107"
+boto3 = {version = ">=1.34.70,<1.34.132", optional = true, markers = "extra == \"boto3\""}
+botocore = ">=1.34.70,<1.34.132"
 wrapt = ">=1.10.10,<2.0.0"
 
 [package.extras]
-awscli = ["awscli (>=1.32.70,<1.32.107)"]
-boto3 = ["boto3 (>=1.34.70,<1.34.107)"]
+awscli = ["awscli (>=1.32.70,<1.33.14)"]
+boto3 = ["boto3 (>=1.34.70,<1.34.132)"]
 
 [[package]]
 name = "aiofiles"
