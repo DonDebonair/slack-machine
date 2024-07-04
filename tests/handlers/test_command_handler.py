@@ -2,7 +2,7 @@ import pytest
 
 from machine.handlers import create_slash_command_handler
 from machine.plugins.command import Command
-from tests.handlers.conftest import gen_command_request
+from tests.handlers.requests import gen_command_request
 
 
 def _assert_command(args, command, text):
