@@ -4,6 +4,7 @@ import sys
 from datetime import datetime
 from typing import Any, Awaitable, Callable
 
+import asyncio
 from slack_sdk.errors import SlackApiError
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
@@ -112,7 +113,7 @@ class SlackClient:
 
             except SlackApiError as e:
                 # Handle rate limiting
-                if e.response is 429:
+                if e.response == 429:
                     retry_after = int(e.response.headers.get("Retry-After", 1))
                     logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
                     await asyncio.sleep(retry_after)
@@ -145,7 +146,7 @@ class SlackClient:
 
             except SlackApiError as e:
                 # Handle rate limiting
-                if e.response is 429:
+                if e.response == 429:
                     retry_after = int(e.response.headers.get("Retry-After", 1))
                     logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
                     await asyncio.sleep(retry_after)
