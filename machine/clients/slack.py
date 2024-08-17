@@ -94,8 +94,8 @@ class SlackClient:
             elif event["type"] == "member_joined_channel":
                 await self._on_member_joined_channel(event)
 
-    async def fetch_all_users(client):
-        all_users = []
+    async def fetch_all_users(client) -> list[dict[str, Any]]:
+        all_users: list[dict[str, Any]] = []
         cursor = None
 
         while True:
@@ -118,18 +118,13 @@ class SlackClient:
                     await asyncio.sleep(retry_after)
                 else:
                     # Handle other Slack API errors
-                    logger.error(f"Error fetching channels: {e.response['error']}")
-                    break
-
-            except Exception as e:
-                # Handle any other exceptions
-                logger.error(f"Unexpected error: {e}")
-                break
+                    logger.error(f"Error fetching users: {e.response['error']}")
+                    raise e
 
         return all_users
 
-    async def fetch_all_channels(client) -> List[Dict[str, Any]]:
-        all_channels: List[Dict[str, Any]] = []
+    async def fetch_all_channels(client) -> list[dict[str, Any]]:
+        all_channels: list[dict[str, Any]] = []
         cursor = None
 
         while True:
@@ -157,16 +152,9 @@ class SlackClient:
                 else:
                     # Handle other Slack API errors
                     logger.error(f"Error fetching channels: {e.response['error']}")
-                    break
-
-            except Exception as e:
-                # Handle any other exceptions
-                logger.error(f"Unexpected error: {e}")
-                break
+                    raise e
 
         return all_channels
-
-
 
     async def setup(self) -> None:
         # Setup handlers
