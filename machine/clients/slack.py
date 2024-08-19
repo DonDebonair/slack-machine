@@ -102,7 +102,7 @@ class SlackClient:
         while True:
             try:
                 # Fetch the users list with pagination
-                response = await client.web_client.users_list(limit=5000, cursor=cursor)
+                response = await client.web_client.users_list(limit=1000, cursor=cursor)
                 all_users += response["members"]
                 cursor = response.get("response_metadata", {}).get("next_cursor")
 
@@ -113,7 +113,7 @@ class SlackClient:
 
             except SlackApiError as e:
                 # Handle rate limiting
-                if e.response == 429:
+                if e.response["error"] == "ratelimited":
                     retry_after = int(e.response.headers.get("Retry-After", 1))
                     logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
                     await asyncio.sleep(retry_after)
@@ -144,7 +144,7 @@ class SlackClient:
 
             except SlackApiError as e:
                 # Handle rate limiting
-                if e.response == 429:
+                if e.response["error"] == "ratelimited":
                     retry_after = int(e.response.headers.get("Retry-After", 1))
                     logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
                     await asyncio.sleep(retry_after)
