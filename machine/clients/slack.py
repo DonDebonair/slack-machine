@@ -1,10 +1,10 @@
 from __future__ import annotations
 
+import asyncio
 import sys
 from datetime import datetime
 from typing import Any, Awaitable, Callable
 
-import asyncio
 from slack_sdk.errors import SlackApiError
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
@@ -132,9 +132,7 @@ class SlackClient:
             try:
                 # Fetch the conversations list with pagination
                 response = await client.web_client.conversations_list(
-                    limit=1000,
-                    types="public_channel,private_channel,mpim,im",
-                    cursor=cursor
+                    limit=1000, types="public_channel,private_channel,mpim,im", cursor=cursor
                 )
                 all_channels += response["channels"]
                 cursor = response.get("response_metadata", {}).get("next_cursor")
