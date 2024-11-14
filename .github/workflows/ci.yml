@@ -34,7 +34,7 @@ jobs:
     - name: Run tests with tox
       run: tox
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       if: ${{ matrix.python-version == '3.12' }}
       with:
         fail_ci_if_error: true
