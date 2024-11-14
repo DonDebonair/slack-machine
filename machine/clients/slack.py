@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import sys
 from datetime import datetime
+from functools import wraps
 from typing import Any, AsyncGenerator, Awaitable, Callable
 
 from slack_sdk.errors import SlackApiError
@@ -37,6 +38,24 @@ def id_for_channel(channel: Channel | str) -> str:
         return channel.id
     else:
         return channel
+
+
+def rate_limit_retry(func):
+    @wraps(func)
+    async def wrapper(self, *args, **kwargs):
+        while True:
+            try:
+                return await func(self, *args, **kwargs)
+            except SlackApiError as e:
+                if e.response["error"] == "ratelimited":
+                    retry_after = int(e.response.headers.get("Retry-After", 1))
+                    self.logger.warning(f"Slack API rate limit hit. Retrying after {retry_after} seconds...")
+                    await asyncio.sleep(retry_after)
+                else:
+                    self.logger.error(f"Error during API call: {e.response['error']}")
+                    raise e
+
+    return wrapper
 
 
 class SlackClient:
@@ -95,7 +114,8 @@ class SlackClient:
             elif event["type"] == "member_joined_channel":
                 await self._on_member_joined_channel(event)
 
-    async def fetch_paginated_data(
+    @rate_limit_retry
+    async def _fetch_paginated_data(
         self,
         client_method: Callable[..., Awaitable[AsyncSlackResponse]],
         data_key: str,
@@ -105,27 +125,20 @@ class SlackClient:
     ) -> AsyncGenerator[dict[str, Any], None]:
         cursor = None
         while True:
-            try:
-                response = await client_method(limit=limit, cursor=cursor, **method_kwargs)
-                items = response[data_key]
+            response = await client_method(limit=limit, cursor=cursor, **method_kwargs)
+            items = response[data_key]
 
-                for item in items:
-                    yield item
+            for item in items:
+                yield item
 
-                cursor = (response.get("response_metadata") or {}).get("next_cursor")
-                logger.info(f"{len(items)} {logger_label} loaded in this batch.")
+            cursor = (response.get("response_metadata") or {}).get("next_cursor")
+            self._log_pagination_status(items, logger_label)
 
-                if not cursor:
-                    break
+            if not cursor:
+                break
 
-            except SlackApiError as e:
-                if e.response["error"] == "ratelimited":
-                    retry_after = int(e.response.headers.get("Retry-After", 1))
-                    logger.warning(f"Slack API rate limit hit. Retrying after {retry_after} seconds...")
-                    await asyncio.sleep(retry_after)
-                else:
-                    logger.error(f"Error fetching {logger_label}: {e.response['error']}")
-                    raise e
+    def _log_pagination_status(self, items, logger_label):
+        logger.info(f"{len(items)} {logger_label} loaded in this batch.")
 
     async def cache_all_users(self) -> None:
         """
@@ -135,7 +148,7 @@ class SlackClient:
         (Web API Tier 2). This means if you have more than 20,000 users the
         cache may take over a minute to build.
         """
-        async for user in self.fetch_paginated_data(
+        async for user in self._fetch_paginated_data(
             client_method=self._client.web_client.users_list,
             data_key="members",
             logger_label="users",
@@ -155,7 +168,7 @@ class SlackClient:
         (Web API Tier 2). This means if you have more than 20,000 channels the
         cache may take over a minute to build.
         """
-        async for channel in self.fetch_paginated_data(
+        async for channel in self._fetch_paginated_data(
             client_method=self._client.web_client.conversations_list,
             data_key="channels",
             logger_label="channels",
