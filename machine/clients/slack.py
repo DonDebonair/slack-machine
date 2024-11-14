@@ -95,65 +95,81 @@ class SlackClient:
             elif event["type"] == "member_joined_channel":
                 await self._on_member_joined_channel(event)
 
-    async def fetch_all_users(client) -> list[dict[str, Any]]:
-        all_users: list[dict[str, Any]] = []
-        cursor = None
+    async def build_paginated_cache(
+        self,
+        client_method: Callable[..., Awaitable[AsyncSlackResponse]],
+        register_method: Callable[[dict[str, Any]], Any],
+        data_key: str,
+        logger_label: str,
+        limit: int = 1000,
+        **method_kwargs: Any,
+    ) -> None:
+        """
+        Helper function to build a cache by fetching paginated data and registering each item immediately.
 
+        Args:
+            client_method: Slack client method to fetch data (e.g., self._client.web_client.users_list).
+            register_method: Method to register individual items (e.g., self._register_user).
+            data_key: Key to extract data from response (e.g., "channels" or "members").
+            logger_label: Label to use for logging (e.g., "channels" or "users").
+            limit: Maximum number of items to fetch per API call.
+            **method_kwargs: Additional arguments for the client method.
+        """
+        cursor = None
         while True:
             try:
-                # Fetch the users list with pagination
-                response = await client.web_client.users_list(limit=1000, cursor=cursor)
-                all_users += response["members"]
-                cursor = response.get("response_metadata", {}).get("next_cursor")
+                response = await client_method(limit=limit, cursor=cursor, **method_kwargs)
+                items = response[data_key]
 
-                logger.info(f"{len(all_users)} users loaded!")
+                # Register each item immediately
+                for item in items:
+                    register_method(item)
+
+                cursor = (response.get("response_metadata") or {}).get("next_cursor")
+                logger.info(f"{len(items)} {logger_label} loaded in this batch.")
 
                 if not cursor:
                     break
 
             except SlackApiError as e:
-                # Handle rate limiting
                 if e.response["error"] == "ratelimited":
                     retry_after = int(e.response.headers.get("Retry-After", 1))
                     logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
                     await asyncio.sleep(retry_after)
                 else:
-                    # Handle other Slack API errors
-                    logger.error(f"Error fetching users: {e.response['error']}")
+                    logger.error(f"Error fetching {logger_label}: {e.response['error']}")
                     raise e
 
-        return all_users
+    async def cache_all_users(self) -> None:
+        """
+        Cache all users from Slack by fetching and registering each user immediately.
+        """
+        await self.build_paginated_cache(
+            client_method=self._client.web_client.users_list,
+            register_method=self._register_user,
+            data_key="members",
+            logger_label="users",
+        )
 
-    async def fetch_all_channels(client) -> list[dict[str, Any]]:
-        all_channels: list[dict[str, Any]] = []
-        cursor = None
+        logger.debug("Total users cached: %s", len(self._users))
+        logger.debug(
+            "Users: %s", ", ".join([f"{u.profile.display_name}|{u.profile.real_name}" for u in self._users.values()])
+        )
 
-        while True:
-            try:
-                # Fetch the conversations list with pagination
-                response = await client.web_client.conversations_list(
-                    limit=1000, types="public_channel,private_channel,mpim,im", cursor=cursor
-                )
-                all_channels += response["channels"]
-                cursor = response.get("response_metadata", {}).get("next_cursor")
+    async def cache_all_channels(self) -> None:
+        """
+        Cache all channels from Slack by fetching and registering each channel immediately.
+        """
+        await self.build_paginated_cache(
+            client_method=self._client.web_client.conversations_list,
+            register_method=self._register_channel,
+            data_key="channels",
+            logger_label="channels",
+            types="public_channel,private_channel,mpim,im",
+        )
 
-                logger.info(f"{len(all_channels)} channels loaded!")
-
-                if not cursor:
-                    break
-
-            except SlackApiError as e:
-                # Handle rate limiting
-                if e.response["error"] == "ratelimited":
-                    retry_after = int(e.response.headers.get("Retry-After", 1))
-                    logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
-                    await asyncio.sleep(retry_after)
-                else:
-                    # Handle other Slack API errors
-                    logger.error(f"Error fetching channels: {e.response['error']}")
-                    raise e
-
-        return all_channels
+        logger.debug("Total channels cached: %s", len(self._channels))
+        logger.debug("Channels: %s", ", ".join([c.identifier for c in self._channels.values()]))
 
     async def setup(self) -> None:
         # Setup handlers
@@ -165,22 +181,8 @@ class SlackClient:
         self._bot_info = (await self._client.web_client.bots_info(bot=auth_info["bot_id"]))["bot"]
         logger.debug("Bot info: %s", self._bot_info)
 
-        # Build user cache
-        # TODO: can we use an async list comprehension here?
-        all_users = await self.fetch_all_users()
-
-        for u in all_users:
-            self._register_user(u)
-        logger.debug("Number of users found: %s", len(self._users))
-        logger.debug(
-            "Users: %s", ", ".join([f"{u.profile.display_name}|{u.profile.real_name}" for u in self._users.values()])
-        )
-
-        all_channels = await self.fetch_all_channels()
-        for c in all_channels:
-            self._register_channel(c)
-        logger.debug("Number of channels found: %s", len(self._channels))
-        logger.debug("Channels: %s", ", ".join([c.identifier for c in self._channels.values()]))
+        await self.cache_all_users()
+        await self.cache_all_channels()
 
     def _register_user(self, user_response: dict[str, Any]) -> User:
         user = User.model_validate(user_response)
