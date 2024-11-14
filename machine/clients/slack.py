@@ -3,7 +3,7 @@ from __future__ import annotations
 import asyncio
 import sys
 from datetime import datetime
-from typing import Any, Awaitable, Callable
+from typing import Any, AsyncGenerator, Awaitable, Callable
 
 from slack_sdk.errors import SlackApiError
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
@@ -98,32 +98,19 @@ class SlackClient:
     async def build_paginated_cache(
         self,
         client_method: Callable[..., Awaitable[AsyncSlackResponse]],
-        register_method: Callable[[dict[str, Any]], Any],
         data_key: str,
         logger_label: str,
         limit: int = 1000,
         **method_kwargs: Any,
-    ) -> None:
-        """
-        Helper function to build a cache by fetching paginated data and registering each item immediately.
-
-        Args:
-            client_method: Slack client method to fetch data (e.g., self._client.web_client.users_list).
-            register_method: Method to register individual items (e.g., self._register_user).
-            data_key: Key to extract data from response (e.g., "channels" or "members").
-            logger_label: Label to use for logging (e.g., "channels" or "users").
-            limit: Maximum number of items to fetch per API call.
-            **method_kwargs: Additional arguments for the client method.
-        """
+    ) -> AsyncGenerator[dict[str, Any], None]:
         cursor = None
         while True:
             try:
                 response = await client_method(limit=limit, cursor=cursor, **method_kwargs)
                 items = response[data_key]
 
-                # Register each item immediately
                 for item in items:
-                    register_method(item)
+                    yield item
 
                 cursor = (response.get("response_metadata") or {}).get("next_cursor")
                 logger.info(f"{len(items)} {logger_label} loaded in this batch.")
@@ -141,15 +128,12 @@ class SlackClient:
                     raise e
 
     async def cache_all_users(self) -> None:
-        """
-        Cache all users from Slack by fetching and registering each user immediately.
-        """
-        await self.build_paginated_cache(
+        async for user in self.build_paginated_cache(
             client_method=self._client.web_client.users_list,
-            register_method=self._register_user,
             data_key="members",
             logger_label="users",
-        )
+        ):
+            self._register_user(user)
 
         logger.debug("Total users cached: %s", len(self._users))
         logger.debug(
@@ -157,16 +141,13 @@ class SlackClient:
         )
 
     async def cache_all_channels(self) -> None:
-        """
-        Cache all channels from Slack by fetching and registering each channel immediately.
-        """
-        await self.build_paginated_cache(
+        async for channel in self.build_paginated_cache(
             client_method=self._client.web_client.conversations_list,
-            register_method=self._register_channel,
             data_key="channels",
             logger_label="channels",
             types="public_channel,private_channel,mpim,im",
-        )
+        ):
+            self._register_channel(channel)
 
         logger.debug("Total channels cached: %s", len(self._channels))
         logger.debug("Channels: %s", ", ".join([c.identifier for c in self._channels.values()]))
