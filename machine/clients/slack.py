@@ -95,7 +95,7 @@ class SlackClient:
             elif event["type"] == "member_joined_channel":
                 await self._on_member_joined_channel(event)
 
-    async def build_paginated_cache(
+    async def fetch_paginated_data(
         self,
         client_method: Callable[..., Awaitable[AsyncSlackResponse]],
         data_key: str,
@@ -121,14 +121,21 @@ class SlackClient:
             except SlackApiError as e:
                 if e.response["error"] == "ratelimited":
                     retry_after = int(e.response.headers.get("Retry-After", 1))
-                    logger.warning(f"Rate limit hit. Retrying after {retry_after} seconds...")
+                    logger.warning(f"Slack API rate limit hit. Retrying after {retry_after} seconds...")
                     await asyncio.sleep(retry_after)
                 else:
                     logger.error(f"Error fetching {logger_label}: {e.response['error']}")
                     raise e
 
     async def cache_all_users(self) -> None:
-        async for user in self.build_paginated_cache(
+        """
+        Fetches all users and builds the user cache.
+
+        As of writing the rate limit for the Users List API is 20+ per minute
+        (Web API Tier 2). This means if you have more than 20,000 users the
+        cache may take over a minute to build.
+        """
+        async for user in self.fetch_paginated_data(
             client_method=self._client.web_client.users_list,
             data_key="members",
             logger_label="users",
@@ -141,7 +148,14 @@ class SlackClient:
         )
 
     async def cache_all_channels(self) -> None:
-        async for channel in self.build_paginated_cache(
+        """
+        Fetches all conversations and builds the channels cache.
+
+        As of writing the rate limit for the Conversations API is 20+ per minute
+        (Web API Tier 2). This means if you have more than 20,000 channels the
+        cache may take over a minute to build.
+        """
+        async for channel in self.fetch_paginated_data(
             client_method=self._client.web_client.conversations_list,
             data_key="channels",
             logger_label="channels",
