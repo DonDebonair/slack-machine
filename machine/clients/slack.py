@@ -45,7 +45,9 @@ def rate_limit_retry(func):
     async def wrapper(self, *args, **kwargs):
         while True:
             try:
-                return await func(self, *args, **kwargs)
+                async for item in func(self, *args, **kwargs):
+                    yield item
+                break
             except SlackApiError as e:
                 if e.response["error"] == "ratelimited":
                     retry_after = int(e.response.headers.get("Retry-After", 1))
