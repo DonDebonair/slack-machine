@@ -8,6 +8,38 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.38.0] - 2024-11-16
+
+### Added
+
+- Add Python 3.13 support ([#1199](https://github.com/DonDebonair/slack-machine/pull/1199))
+
+### Changed
+
+- Bump `slack-sdk` from 3.27.2 to 3.33.3
+- Bump `pydantic` from 2.7.1 to 2.9.2
+- Bump `structlog` from 24.1.0 to 24.4.0
+- Bump `redis` from 5.0.4 to 5.2.0
+- Bump `hiredis` from 2.3.2 to 3.0.0
+- Bump `aioboto3` from 12.4.0 to 13.2.0
+- Bump `urllib3` from 1.26.18 to 1.26.19
+- Bump `httpx` from 0.27.0 to 0.27.2
+- Bump `multidict` from 6.0.5 to 6.1.0
+- Bump `cryptography` from 42.0.4 to 43.0.1
+- Bump `aiohttp` from 3.9.5 to 3.10.11
+- Bump `tzdata` from 2024.1 to 2024.2
+- Bump `dill` from 0.3.8 to 0.3.9
+
+### Fixed
+
+- Add rate limit handling to Slack client to improve Slack Machine's resilience when interacting with Slack's API,
+  especially when working with large workspaces ([#1194](https://github.com/DonDebonair/slack-machine/pull/1194) by
+  [**@sprutner**](https://github.com/sprutner) and [**@jasonwbarnett**](https://github.com/jasonwbarnett))
+
+### Removed
+
+- **Breaking:** Remove Python 3.8 support ([#1199](https://github.com/DonDebonair/slack-machine/pull/1199))
+
 ## [0.37.0] - 2024-05-26
 
 ### Added
@@ -677,7 +709,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.37.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.38.0...HEAD
+[0.38.0]: https://github.com/DonDebonair/slack-machine/compare/v0.37.0...v0.38.0
 [0.37.0]: https://github.com/DonDebonair/slack-machine/compare/v0.36.0...v0.37.0
 [0.36.0]: https://github.com/DonDebonair/slack-machine/compare/v0.35.0...v0.36.0
 [0.35.0]: https://github.com/DonDebonair/slack-machine/compare/v0.34.2...v0.35.0
