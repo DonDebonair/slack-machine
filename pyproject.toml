@@ -14,11 +14,11 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Natural Language :: English",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Communications :: Chat",
     "Topic :: Internet",
@@ -30,8 +30,7 @@ packages = [
 include = ["extra/logo.png", "run_dev.py", "README.md", "CHANGELOG.md", "LICENSE", "AUTHORS"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-"backports.zoneinfo" = { version = "^0.2.1", python = "<3.9" }
+python = "^3.9"
 dill = "^0.3.5.1"
 APScheduler = "^3.9.1"
 redis = {version = ">=4.3.4,<6.0.0", optional = true}
