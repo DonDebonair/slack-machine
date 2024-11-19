@@ -73,7 +73,7 @@ ruff = ">=0.4.3,<0.8.0"
 optional = true
 
 [tool.poetry.group.docs.dependencies]
-mkdocstrings = {extras = ["python"], version = ">=0.19,<0.27"}
+mkdocstrings = {extras = ["python"], version = ">=0.19,<0.28"}
 mkdocs-material = ">=8.5.10,<10.0.0"
 griffe = ">=0.47.0,<1.6.0"
 mkdocstrings-python = "^1.10.3"
