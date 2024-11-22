@@ -8,6 +8,19 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.39.0] - 2024-11-22
+
+### Added
+
+- Add support for [modals](https://api.slack.com/surfaces/modals)
+  ([#1052](https://github.com/DonDebonair/slack-machine/pull/1052))
+
+### Changed
+
+- Bump `slack-sdk` from 3.33.3 to 3.33.4 (fixes incompatibility with newer versions of `aiohttp`)
+- Bump `pydantic` from 2.9.2 to 2.10.0
+- Bump `aiohttp` from 3.10.11 to 3.11.7
+
 ## [0.38.1] - 2024-11-17
 
 ### Fixed
@@ -716,7 +729,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.38.1...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.39.0...HEAD
+[0.39.0]: https://github.com/DonDebonair/slack-machine/compare/v0.38.1...v0.39.0
 [0.38.1]: https://github.com/DonDebonair/slack-machine/compare/v0.38.0...v0.38.1
 [0.38.0]: https://github.com/DonDebonair/slack-machine/compare/v0.37.0...v0.38.0
 [0.37.0]: https://github.com/DonDebonair/slack-machine/compare/v0.36.0...v0.37.0
