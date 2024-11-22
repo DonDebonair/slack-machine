@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Iterable, Iterator, Mapping, MutableMapping, TypeVar, cast
+from collections.abc import Iterable, Iterator, Mapping, MutableMapping
+from typing import TypeVar, cast
 
 KT = TypeVar("KT", bound=str)
 VT = TypeVar("VT")

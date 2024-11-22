@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -36,7 +36,7 @@ class Channel(BaseModel):
     user: Optional[str] = None
     topic: Optional[PurposeTopic] = None
     purpose: Optional[PurposeTopic] = None
-    previous_names: Optional[List[str]] = None
+    previous_names: Optional[list[str]] = None
 
     @property
     def identifier(self) -> str:

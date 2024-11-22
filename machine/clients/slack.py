@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import asyncio
+from collections.abc import AsyncGenerator, Awaitable
 from datetime import datetime
-from typing import Any, AsyncGenerator, Awaitable, Callable
+from typing import Any, Callable
+from zoneinfo import ZoneInfo
 
 from slack_sdk.errors import SlackApiError
 from slack_sdk.models.views import View
@@ -13,7 +15,6 @@ from slack_sdk.socket_mode.response import SocketModeResponse
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 from structlog.stdlib import get_logger
-from zoneinfo import ZoneInfo
 
 from machine.models import Channel, User
 from machine.utils.datetime import calculate_epoch

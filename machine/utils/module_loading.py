@@ -1,9 +1,8 @@
 import inspect
 from importlib import import_module
-from typing import List, Tuple, Type
 
 
-def import_string(dotted_path: str) -> List[Tuple[str, Type]]:
+def import_string(dotted_path: str) -> list[tuple[str, type]]:
     """
     Import all Classes from the module specified by
     the dotted_path. If dotted_path is not a module, try

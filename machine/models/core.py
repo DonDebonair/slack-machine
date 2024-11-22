@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import re
+from collections.abc import AsyncGenerator, Awaitable
 from dataclasses import dataclass, field
 from inspect import Signature
-from typing import Any, AsyncGenerator, Awaitable, Callable, Union
+from typing import Any, Callable, Union
 
 from slack_sdk.models import JsonObject
 

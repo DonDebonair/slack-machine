@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Sequence
+from collections.abc import Sequence
+from typing import Any
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
