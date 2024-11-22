@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import contextlib
-from typing import Any, AsyncGenerator, Awaitable, Callable, Union, cast
+from collections.abc import AsyncGenerator, Awaitable
+from typing import Any, Callable, Union, cast
 
 from slack_sdk.models import JsonObject
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient

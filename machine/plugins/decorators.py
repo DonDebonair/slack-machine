@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import inspect
 import re
+from collections.abc import Awaitable
 from datetime import datetime, tzinfo
-from typing import Any, Awaitable, Callable, Protocol, TypeVar, Union, cast
+from typing import Any, Callable, Protocol, TypeVar, Union, cast
 
 from structlog.stdlib import get_logger
 from typing_extensions import ParamSpec

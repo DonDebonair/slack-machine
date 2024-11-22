@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import pytest
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest
 from slack_sdk.web.async_client import AsyncWebClient
-from zoneinfo import ZoneInfo
 
 from machine.clients.slack import SlackClient, id_for_channel, id_for_user
 from machine.models.channel import Channel

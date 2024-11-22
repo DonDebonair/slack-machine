@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 import sys
+from collections.abc import Mapping
 from datetime import datetime, timedelta
-from typing import Any, Mapping
+from typing import Any
 
 from machine.storage.backends.base import MachineBaseStorage
 

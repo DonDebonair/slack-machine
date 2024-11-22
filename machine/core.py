@@ -4,15 +4,16 @@ import asyncio
 import inspect
 import os
 import sys
+from collections.abc import Awaitable
 from inspect import Signature
-from typing import Awaitable, Callable, Literal, cast
+from typing import Callable, Literal, cast
+from zoneinfo import ZoneInfo
 
 import dill
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from slack_sdk.socket_mode.aiohttp import SocketModeClient
 from slack_sdk.web.async_client import AsyncWebClient
 from structlog.stdlib import get_logger
-from zoneinfo import ZoneInfo
 
 from machine.clients.slack import SlackClient
 from machine.handlers import (

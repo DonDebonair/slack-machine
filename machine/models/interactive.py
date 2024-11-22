@@ -1,13 +1,12 @@
 from __future__ import annotations
 
 from datetime import date, time
-from typing import Any, Dict, List, Literal, Optional, Union
+from typing import Annotated, Any, Literal, Optional, Union
 
 from pydantic import BaseModel, Field, TypeAdapter
 from pydantic.functional_validators import PlainValidator, model_validator
 from pydantic_core.core_schema import ValidationInfo
 from slack_sdk.models.blocks import Block as SlackSDKBlock
-from typing_extensions import Annotated
 
 
 class TypedModel(BaseModel):
@@ -77,7 +76,7 @@ class Option(BaseModel):
 
 class CheckboxValues(TypedModel):
     type: Literal["checkboxes"]
-    selected_options: List[Option]
+    selected_options: list[Option]
 
 
 class DatepickerValue(TypedModel):
@@ -117,27 +116,27 @@ class ExternalSelectValue(TypedModel):
 
 class MultiStaticSelectValues(TypedModel):
     type: Literal["multi_static_select"]
-    selected_options: List[Option]
+    selected_options: list[Option]
 
 
 class MultiChannelSelectValues(TypedModel):
     type: Literal["multi_channels_select"]
-    selected_channels: List[str]
+    selected_channels: list[str]
 
 
 class MultiConversationSelectValues(TypedModel):
     type: Literal["multi_conversations_select"]
-    selected_conversations: List[str]
+    selected_conversations: list[str]
 
 
 class MultiUserSelectValues(TypedModel):
     type: Literal["multi_users_select"]
-    selected_users: List[str]
+    selected_users: list[str]
 
 
 class MultiExternalSelectValues(TypedModel):
     type: Literal["multi_external_select"]
-    selected_options: List[str]
+    selected_options: list[str]
 
 
 class NumberValue(TypedModel):
@@ -197,7 +196,7 @@ Values = Annotated[
 
 
 class State(BaseModel):
-    values: Dict[str, Dict[str, Values]]
+    values: dict[str, dict[str, Values]]
 
 
 class BaseAction(TypedModel):
@@ -221,7 +220,7 @@ class ButtonAction(BaseAction):
 
 class CheckboxAction(BaseAction):
     type: Literal["checkboxes"]
-    selected_options: List[Option]
+    selected_options: list[Option]
 
 
 class DatepickerAction(BaseAction):
@@ -256,27 +255,27 @@ class ExternalSelectAction(BaseAction):
 
 class MultiStaticSelectAction(BaseAction):
     type: Literal["multi_static_select"]
-    selected_options: List[Option]
+    selected_options: list[Option]
 
 
 class MultiChannelSelectAction(BaseAction):
     type: Literal["multi_channels_select"]
-    selected_channels: List[str]
+    selected_channels: list[str]
 
 
 class MultiConversationSelectAction(BaseAction):
     type: Literal["multi_conversations_select"]
-    selected_conversations: List[str]
+    selected_conversations: list[str]
 
 
 class MultiUserSelectAction(BaseAction):
     type: Literal["multi_users_select"]
-    selected_users: List[str]
+    selected_users: list[str]
 
 
 class MultiExternalSelectAction(BaseAction):
     type: Literal["multi_external_select"]
-    selected_options: List[str]
+    selected_options: list[str]
 
 
 class TimepickerAction(BaseAction):
@@ -348,14 +347,14 @@ class Message(BaseModel):
     app_id: str
     text: str
     team: str
-    blocks: List[Block]
+    blocks: list[Block]
 
 
 class View(BaseModel):
     id: str
     team_id: str
     type: Literal["modal", "home"]
-    blocks: List[Block]
+    blocks: list[Block]
     private_metadata: str
     callback_id: str
     state: State
@@ -395,7 +394,7 @@ class BlockActionsPayload(TypedModel):
     view: Optional[View] = None
     state: Optional[State] = None
     response_url: Optional[str] = None
-    actions: List[Action]
+    actions: list[Action]
 
     @model_validator(mode="after")
     def validate_view_or_message(self) -> BlockActionsPayload:
@@ -420,7 +419,7 @@ class ViewSubmissionPayload(TypedModel):
     api_app_id: str
     token: str
     trigger_id: str
-    response_urls: List[ResponseUrlForView]
+    response_urls: list[ResponseUrlForView]
     is_enterprise_install: bool
 
 

@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import asyncio
 import re
-from typing import Any, Awaitable, Callable, Mapping
+from collections.abc import Awaitable, Mapping
+from typing import Any, Callable
 
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
 from slack_sdk.socket_mode.request import SocketModeRequest

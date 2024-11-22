@@ -4,8 +4,9 @@ import base64
 import calendar
 import datetime
 import typing
+from collections.abc import Mapping
 from contextlib import AsyncExitStack
-from typing import Any, Mapping, cast
+from typing import Any, cast
 
 import aioboto3
 from botocore.exceptions import ClientError

@@ -1,6 +1,5 @@
 import os
 from importlib import import_module
-from typing import Tuple
 
 from structlog.stdlib import get_logger
 
@@ -9,7 +8,7 @@ from machine.utils.collections import CaseInsensitiveDict
 logger = get_logger(__name__)
 
 
-def import_settings(settings_module: str = "local_settings") -> Tuple[CaseInsensitiveDict, bool]:
+def import_settings(settings_module: str = "local_settings") -> tuple[CaseInsensitiveDict, bool]:
     default_settings = {
         "PLUGINS": [
             "machine.plugins.builtin.general.PingPongPlugin",

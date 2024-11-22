@@ -3,7 +3,8 @@ from __future__ import annotations
 import asyncio
 import contextlib
 import re
-from typing import AsyncGenerator, Awaitable, Callable, Union, cast
+from collections.abc import AsyncGenerator, Awaitable
+from typing import Callable, Union, cast
 
 from slack_sdk.models.views import View
 from slack_sdk.socket_mode.async_client import AsyncBaseSocketModeClient
