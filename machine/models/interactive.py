@@ -1,3 +1,7 @@
+# mypy: ignore-errors
+# MyPy is disabled because Pydantic doesn't support __replace__ that was introduced in Python 3.13 yet, which causes
+# MyPy to throw an error. This will be fixed once Pydantic supports __replace__ in v2.10
+
 from __future__ import annotations
 
 from datetime import date, time
