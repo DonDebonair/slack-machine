@@ -74,16 +74,22 @@ dropped. Python 3.8 has reached end-of-life on 2024-10-07.
 
 ## Installation
 
-You can install Slack Machine using pip:
+You can add Slack Machine to your uv project by running:
 
-``` bash
-$ pip install slack-machine
+```bash
+uv add slack-machine
 ```
 
 or add it to your [Poetry](https://python-poetry.org/) project:
 
 ```bash
 poetry add slack-machine
+```
+
+Lastly, you can install it using pip (not recommended):
+
+``` bash
+$ pip install slack-machine
 ```
 
 It is **strongly recommended** that you install `slack-machine` inside a
