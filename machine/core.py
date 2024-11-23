@@ -126,8 +126,14 @@ class Machine:
             proxy=self._settings["HTTP_PROXY"],
         )
 
+        # Find out if the default client should be used or a custom one
+        client = self._settings.get("SLACK_CLIENT", "machine.clients.slack.SlackClient")
+        logger.info("Initializing Slack client `%s`...", client)
+        _, cls = import_string(client)[0]
+
         # Setup high-level Slack client for plugins
-        self._client = SlackClient(self._socket_mode_client, self._tz)
+        self._client = cls(self._socket_mode_client, self._tz)
+        logger.info("Slack client `%s` initialized", client)
         await self._client.setup()
 
     # TODO: factor out plugin registration in separate class / set of functions
