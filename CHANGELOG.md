@@ -8,6 +8,16 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.40.0] - 2024-11-24
+
+### Changed
+
+- Replace Poetry with [uv](https://docs.astral.sh/uv/) ([#1218](https://github.com/DonDebonair/slack-machine/pull/1218))
+- Replace Tox with [Nox](https://nox.thea.codes) ([#1218](https://github.com/DonDebonair/slack-machine/pull/1218))
+- Replace Dependabot with [Renovate](https://www.mend.io/renovate/)
+  ([#1220](https://github.com/DonDebonair/slack-machine/pull/1220))
+- Bump `pydantic` from 2.10.0 to 2.10.1
+
 ## [0.39.0] - 2024-11-22
 
 ### Added
@@ -729,7 +739,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.39.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.40.0...HEAD
+[0.40.0]: https://github.com/DonDebonair/slack-machine/compare/v0.39.0...v0.40.0
 [0.39.0]: https://github.com/DonDebonair/slack-machine/compare/v0.38.1...v0.39.0
 [0.38.1]: https://github.com/DonDebonair/slack-machine/compare/v0.38.0...v0.38.1
 [0.38.0]: https://github.com/DonDebonair/slack-machine/compare/v0.37.0...v0.38.0

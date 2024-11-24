@@ -6,16 +6,22 @@ flexibility.
 ## Installing the easy way with pip
 
 Slack Machine is published to the [Python package index](https://pypi.python.org/pypi/slack-machine) so you can easily
-install Slack Machine using pip:
+add Slack Machine to your uv project by running:
 
 ```bash
-pip install slack-machine
+uv add slack-machine
 ```
 
 or add it to your [Poetry](https://python-poetry.org/) project:
 
 ```bash
 poetry add slack-machine
+```
+
+Lastly, you can install it using pip (not recommended):
+
+``` bash
+$ pip install slack-machine
 ```
 
 It is **strongly recommended** that you install `slack-machine` inside a
