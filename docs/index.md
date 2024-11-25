@@ -71,3 +71,8 @@ dropped. Python 3.8 has reached end-of-life on 2024-10-07.
 
 - Support for shortcuts
 - ... and much more
+
+### Examples
+
+There is an example plugin that shows off many of the features of Slack Machine:
+[Slack Machine Kitchensink Plugin](https://github.com/DonDebonair/sm-kitchensink-plugin)

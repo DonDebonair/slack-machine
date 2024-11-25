@@ -89,3 +89,8 @@ $ slack-machine
 ```
 
 That's all there is to it!
+
+## Examples
+
+There is an example plugin that shows off many of the features of Slack Machine:
+[Slack Machine Kitchensink Plugin](https://github.com/DonDebonair/sm-kitchensink-plugin)

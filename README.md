@@ -118,3 +118,6 @@ It is **strongly recommended** that you install `slack-machine` inside a
 You can find the documentation for Slack Machine here: https://dondebonair.github.io/slack-machine/
 
 Go read it to learn how to properly configure Slack Machine, write plugins, and more!
+
+There is also an example plugin that shows off many of the features of Slack Machine:
+[Slack Machine Kitchensink Plugin](https://github.com/DonDebonair/sm-kitchensink-plugin)
