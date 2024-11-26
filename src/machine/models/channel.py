@@ -12,9 +12,7 @@ class PurposeTopic(BaseModel):
 
 
 class Channel(BaseModel):
-    """
-    Channel model that represents a channel object from the Slack API
-    """
+    """Channel model that represents a channel object from the Slack API"""
 
     model_config = ConfigDict(frozen=True)
 
@@ -40,6 +38,7 @@ class Channel(BaseModel):
 
     @property
     def identifier(self) -> str:
+        """Return the name of the channel if it exists, otherwise return the id"""
         if self.name:
             return self.name
         else:

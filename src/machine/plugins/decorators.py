@@ -30,15 +30,18 @@ class DecoratedPluginFunc(Protocol[P, R]):
 def process(slack_event_type: str) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]:
     """Process Slack events of a specific type
 
-    This decorator will enable a Plugin method to process `Slack events`_ of a specific type. The
+    This decorator will enable a Plugin method to process [Slack events] of a specific type. The
     Plugin method will be called for each event of the specified type that the bot receives.
     The received event will be passed to the method when called.
 
-    .. _Slack events: https://api.slack.com/events
+    [Slack events]: https://api.slack.com/events
 
-    :param slack_event_type: type of event the method needs to process. Can be any event supported
-        by the RTM API
-    :return: wrapped method
+    Args:
+        slack_event_type: type of event the method needs to process. Can be any event supported
+            by the [Events API](https://api.slack.com/events?filter=Events)
+
+    Returns:
+        wrapped method
     """
 
     def process_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -57,14 +60,17 @@ def listen_to(
 
     This decorator will enable a Plugin method to listen to messages that match a regex pattern.
     The Plugin method will be called for each message that matches the specified regex pattern.
-    The received :py:class:`~machine.plugins.base.Message` will be passed to the method when called.
+    The received [`Message`][machine.plugins.message.Message] will be passed to the method when called.
     Named groups can be used in the regex pattern, to catch specific parts of the message. These
     groups will be passed to the method as keyword arguments when called.
 
-    :param regex: regex pattern to listen for
-    :param flags: regex flags to apply when matching
-    :param handle_message_changed: if changed messages should trigger the decorated function
-    :return: wrapped method
+    Args:
+        regex: regex pattern to listen for
+        flags: regex flags to apply when matching
+        handle_message_changed: if changed messages should trigger the decorated function
+
+    Returns:
+        wrapped method
     """
 
     def listen_to_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -84,15 +90,18 @@ def respond_to(
     This decorator will enable a Plugin method to listen to messages that are directed to the bot
     (ie. message starts by mentioning the bot) and match a regex pattern.
     The Plugin method will be called for each message that mentions the bot and matches the
-    specified regex pattern. The received :py:class:`~machine.plugins.base.Message` will be passed
+    specified regex pattern. The received [`Message`][machine.plugins.message.Message] will be passed
     to the method when called. Named groups can be used in the regex pattern, to catch specific
     parts of the message. These groups will be passed to the method as keyword arguments when
     called.
 
-    :param regex: regex pattern to listen for
-    :param flags: regex flags to apply when matching
-    :param handle_message_changed: if changed messages should trigger the decorated function
-    :return: wrapped method
+    Args:
+        regex: regex pattern to listen for
+        flags: regex flags to apply when matching
+        handle_message_changed: if changed messages should trigger the decorated function
+
+    Returns:
+        wrapped method
     """
 
     def respond_to_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -109,8 +118,11 @@ def command(slash_command: str) -> Callable[[Callable[P, R]], DecoratedPluginFun
 
     This decorator will enable a Plugin method to respond to slash commands
 
-    :param slash_command: the slash command to respond to
-    :return: wrapped method
+    Args:
+        slash_command: the slash command to respond to
+
+    Returns:
+        wrapped method
     """
 
     def command_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -132,15 +144,18 @@ def action(
 
     This decorator will enable a Plugin method to be triggered when certain block actions are
     received. The Plugin method will be called when a block action event is received for which
-    the action_id and block_id match the provided values. action_id and block_id can be strings,
+    the `action_id` and `block_id` match the provided values. `action_id` and `block_id` can be strings,
     in which case the incoming action_id and block_id must match exactly, or regex patterns, in
     which case the incoming action_id and block_id must match the regex pattern.
 
     Both action_id and block_id are optional, but **at least one of them must be provided**.
 
-    :param action_id: the action_id to respond to, can be a string or regex pattern
-    :param block_id: the block_id to respond to, can be a string or regex pattern
-    :return: wrapped method
+    Args:
+        action_id: the action_id to respond to, can be a string or regex pattern
+        block_id: the block_id to respond to, can be a string or regex pattern
+
+    Returns:
+        wrapped method
     """
 
     def action_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -159,10 +174,13 @@ def modal(callback_id: Union[re.Pattern[str], str]) -> Callable[[Callable[P, R]]
 
     This decorator will enable a Plugin method to be triggered when certain modals are submitted.
     The Plugin method will be called when a modal submission event is received for which the
-    callback_id matches the provided value. The callback_id can be a string or a regex pattern.
+    `callback_id` matches the provided value. The `callback_id` can be a string or a regex pattern.
 
-    :param callback_id: the callback_id to respond to, can be a string or regex pattern
-    :return: wrapped method
+    Args:
+        callback_id: the callback id to respond to, can be a string or regex pattern
+
+    Returns:
+        wrapped method
     """
 
     def modal_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -182,12 +200,16 @@ def modal_closed(callback_id: Union[re.Pattern[str], str]) -> Callable[[Callable
 
     This decorator will enable a Plugin method to be triggered when certain modals are closed.
     The Plugin method will be called when a modal closure event is received for which the
-    callback_id matches the provided value. The callback_id can be a string or a regex pattern.
+    `callback_id` matches the provided value. The `callback_id` can be a string or a regex pattern.
 
-    Note: in order to receive modal close events, the modal must have the `notify_on_close` property set to `True`.
+    Note:
+        In order to receive modal close events, the modal must have the `notify_on_close` property set to `True`.
 
-    :param callback_id: the callback_id to respond to, can be a string or regex pattern
-    :return: wrapped method
+    Args:
+        callback_id: the callback id to respond to, can be a string or regex pattern
+
+    Returns:
+        wrapped method
     """
 
     def modal_closed_decorator(f: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -219,20 +241,23 @@ def schedule(
 
     The decorated function will be executed according to the schedule provided. Slack Machine uses
     APScheduler under the hood for scheduling. For more information on the interpretation of the
-    provided parameters, see :class:`CronTrigger<apscheduler:apscheduler.triggers.cron.CronTrigger>`
+    provided parameters, see [`CronTrigger`][apscheduler.triggers.cron.CronTrigger]
 
-    :param int|str year: 4-digit year
-    :param int|str month: month (1-12)
-    :param int|str day: day of the (1-31)
-    :param int|str week: ISO week (1-53)
-    :param int|str day_of_week: number or name of weekday (0-6 or mon,tue,wed,thu,fri,sat,sun)
-    :param int|str hour: hour (0-23)
-    :param int|str minute: minute (0-59)
-    :param int|str second: second (0-59)
-    :param datetime|str start_date: earliest possible date/time to trigger on (inclusive)
-    :param datetime|str end_date: latest possible date/time to trigger on (inclusive)
-    :param datetime.tzinfo|str timezone: time zone to use for the date/time calculations (defaults
-        to scheduler timezone)
+    Args:
+        year: 4-digit year
+        month: month (1-12)
+        day: day of the (1-31)
+        week: ISO week (1-53)
+        day_of_week: number or name of weekday (0-6 or mon,tue,wed,thu,fri,sat,sun)
+        hour: hour (0-23)
+        minute: minute (0-59)
+        second: second (0-59)
+        start_date: earliest possible date/time to trigger on (inclusive)
+        end_date: latest possible date/time to trigger on (inclusive)
+        timezone: time zone to use for the date/time calculations (defaults to scheduler timezone)
+
+    Returns:
+        wrapped method
     """
     kwargs = locals()
 
@@ -252,7 +277,11 @@ def on(event: str) -> Callable[[Callable[P, R]], Callable[P, R]]:
     The decorated function will be called whenever a plugin (or Slack Machine itself) emits an
     event with the given name.
 
-    :param event: name of the event to listen for. Event names are global
+    Args:
+        event: name of the event to listen for. Event names are global
+
+    Returns:
+        wrapped method
     """
 
     def on_decorator(f: Callable[P, R]) -> Callable[P, R]:
@@ -269,7 +298,11 @@ def required_settings(settings: list[str] | str) -> Callable[[Callable[P, R]], D
     plugin. If one or more settings have not been defined by the user, the plugin will not be
     loaded and a warning will be written to the console upon startup.
 
-    :param settings: settings that are required (can be list of strings, or single string)
+    Args:
+        settings: settings that are required (can be list of strings, or single string)
+
+    Returns:
+        wrapped method
     """
 
     def required_settings_decorator(f_or_cls: Callable[P, R]) -> DecoratedPluginFunc[P, R]:
@@ -293,7 +326,11 @@ def require_any_role(
     To use the plugin method where this decorator is applied, the user must have
     at least one of the listed roles.
 
-    :param required_roles: list of roles required to use the plugin method
+    Args:
+        required_roles: list of roles required to use the plugin method
+
+    Returns:
+        wrapped method
     """
 
     def middle(func: Callable[..., Awaitable[None]]) -> Callable[..., Awaitable[None]]:
@@ -332,7 +369,11 @@ def require_all_roles(
     To use the plugin method where this decorator is applied, the user must have
     all of the listed roles.
 
-    :param required_roles: list of roles required to use the plugin method
+    Args:
+        required_roles: list of roles required to use the plugin method
+
+    Returns:
+        wrapped method
     """
 
     def middle(func: Callable[..., Awaitable[None]]) -> Callable[..., Awaitable[None]]:

@@ -26,9 +26,7 @@ class Profile(BaseModel):
 
 
 class User(BaseModel):
-    """
-    User model that represents a user object from the Slack API
-    """
+    """User model that represents a user object from the Slack API"""
 
     model_config = ConfigDict(frozen=True)
 
@@ -55,4 +53,5 @@ class User(BaseModel):
     locale: Optional[str] = None
 
     def fmt_mention(self) -> str:
+        """Format the user as a mention"""
         return f"<@{self.id}>"

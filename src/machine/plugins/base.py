@@ -27,10 +27,12 @@ class MachineBasePlugin:
     2. It provides a lot of common functionality and convenience methods for plugins to
        interact with channels and users
 
-    :var settings: Slack Machine settings object that contains all settings that
-        were defined through ``local_settings.py`` Plugin developers can use any
-        settings that are defined by the user, and ask users to add new settings
-        specifically for their plugin.
+    Attributes:
+        settings: Slack Machine settings object that contains all settings that
+                    were defined through ``local_settings.py`` Plugin developers can use any
+                    settings that are defined by the user, and ask users to add new settings
+                    specifically for their plugin.
+        storage: Plugin storage object that allows plugins to store and retrieve data
     """
 
     _client: SlackClient
@@ -44,24 +46,13 @@ class MachineBasePlugin:
         self.settings = settings
         self._fq_name = f"{self.__module__}.{self.__class__.__name__}"
 
-    async def init(self) -> None:
-        """Initialize plugin
-
-        This method can be implemented by concrete plugin classes. It will be called **once**
-        for each plugin, when that plugin is first loaded. You can refer to settings via
-        ``self.settings``, and access storage through ``self.storage``, but the Slack client has
-        not been initialized yet, so you cannot send or process messages during initialization.
-
-        :return: None
-        """
-        return None
-
     @property
     def users(self) -> dict[str, User]:
         """Dictionary of all users in the Slack workspace
 
-        :return: a dictionary of all users in the Slack workspace, where the key is the user id and
-            the value is a [`User`][machine.models.user.User] object
+        Returns:
+            a dictionary of all users in the Slack workspace, where the key is the user id and
+                the value is a [`User`][machine.models.user.User] object
         """
         return self._client.users
 
@@ -69,11 +60,13 @@ class MachineBasePlugin:
     def users_by_email(self) -> dict[str, User]:
         """Dictionary of all users in the Slack workspace by email
 
-        **Note**: not every user might have an email address in their profile, so this
-        dictionary might not contain all users in the Slack workspace
+        Note:
+            not every user might have an email address in their profile, so this
+            dictionary might not contain all users in the Slack workspace
 
-        :return: a dictionary of all users in the Slack workspace, where the key is the email and
-            the value is a [`User`][machine.models.user.User] object
+        Returns:
+            a dictionary of all users in the Slack workspace, where the key is the email and
+                the value is a [`User`][machine.models.user.User] object
         """
         return self._client.users
 
@@ -85,27 +78,51 @@ class MachineBasePlugin:
         includes all public channels, all private channels the bot is a member of and all DM
         channels the bot is a member of.
 
-        :return: a list of all channels in the Slack workspace, where each channel is a
-            :py:class:`~machine.models.channel.Channel` object
+        Returns:
+            a list of all channels in the Slack workspace, where each channel is a
+                [`Channel`][machine.models.channel.Channel] object
         """
         return self._client.channels
 
     @property
     def web_client(self) -> AsyncWebClient:
-        """Slack SDK web client to access the [Slack Web API][slack-web-api]
+        """Slack SDK web client to access the [Slack Web API](https://api.slack.com/web)
 
-        This property references an instance of [`AsyncWebClient`][async-web-client]
-
-        [slack-web-api]: https://api.slack.com/web
-        [async-web-client]: https://slack.dev/python-slack-sdk/api-docs/slack_sdk/web/async_client.html#slack_sdk.web.async_client.AsyncWebClient
+        Returns:
+            an instance of [`AsyncWebClient`](https://slack.dev/python-slack-sdk/api-docs/slack_sdk/web/async_client.html#slack_sdk.web.async_client.AsyncWebClient)
         """  # noqa: E501
         return self._client.web_client
+
+    @property
+    def bot_info(self) -> dict[str, Any]:
+        """Information about the bot user in Slack
+
+        This will return a dictionary with information about the bot user in Slack that represents
+        Slack Machine
+
+        Returns:
+            Bot user
+        """
+        return self._client.bot_info
+
+    async def init(self) -> None:
+        """Initialize plugin
+
+        This method can be implemented by concrete plugin classes. It will be called **once**
+        for each plugin, when that plugin is first loaded. You can refer to settings via
+        `self.settings`, and access storage through `self.storage`, but the Slack client has
+        not been initialized yet, so you cannot send or process messages during initialization.
+        """
+        return None
 
     def find_channel_by_name(self, channel_name: str) -> Channel | None:
         """Find a channel by its name, irrespective of a preceding pound symbol. This does not include DMs.
 
-        :param channel_name: The name of the channel to retrieve.
-        :return: The channel if found, None otherwise.
+        Args:
+            channel_name: The name of the channel to retrieve.
+
+        Returns:
+            The channel if found, `None` otherwise.
         """
         if channel_name.startswith("#"):
             channel_name = channel_name[1:]
@@ -117,40 +134,38 @@ class MachineBasePlugin:
     def get_user_by_id(self, user_id: str) -> User | None:
         """Get a user by their ID.
 
-        :param user_id: The ID of the user to retrieve.
-        :return: The user if found, None otherwise.
+        Args:
+            user_id: The ID of the user to retrieve.
+
+        Returns:
+            The user if found, None otherwise.
         """
         return self.users.get(user_id)
 
     def get_user_by_email(self, email: str) -> User | None:
         """Get a user by their email address.
 
-        :param email: The email address of the user to retrieve.
-        :return: The user if found, None otherwise.
+        Args:
+            email: The email address of the user to retrieve.
+
+        Returns:
+            The user if found, None otherwise.
         """
         return self._client.get_user_by_email(email)
-
-    @property
-    def bot_info(self) -> dict[str, Any]:
-        """Information about the bot user in Slack
-
-        This will return a dictionary with information about the bot user in Slack that represents
-        Slack Machine
-
-        :return: Bot user
-        """
-        return self._client.bot_info
 
     def at(self, user: User) -> str:
         """Create a mention of the provided user
 
-        Create a mention of the provided user in the form of ``<@[user_id]>``. This method is
+        Create a mention of the provided user in the form of `<@[user_id]>`. This method is
         convenient when you want to include mentions in your message. This method does not send
         a message, but should be used together with methods like
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.say`
+        [`say()`][machine.plugins.base.MachineBasePlugin.say].
 
-        :param user: user your want to mention
-        :return: user mention
+        Args:
+            user: user your want to mention
+
+        Returns:
+            user mention
         """
         return user.fmt_mention()
 
@@ -167,32 +182,35 @@ class MachineBasePlugin:
         """Send a message to a channel
 
         Send a message to a channel using the WebAPI. Allows for rich formatting using
-        `blocks`_ and/or `attachments`_. You can provide blocks and attachments as Python dicts or
-        you can use the `convenient classes`_ that the underlying slack client provides.
+        [blocks] and/or [attachments]. You can provide blocks and attachments as Python dicts or
+        you can use the [convenience classes] that the underlying slack client provides.
         Can also reply in-thread and send ephemeral messages, visible to only one user.
-        Ephemeral messages and threaded messages are mutually exclusive, and ``ephemeral_user``
-        takes precedence over ``thread_ts``
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
-        `chat.postEphemeral`_ request.
+        Ephemeral messages and threaded messages are mutually exclusive, and `ephemeral_user`
+        takes precedence over `thread_ts`
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
-        .. _convenient classes:
+        Any extra kwargs you provide, will be passed on directly to the [chat.postMessage] or
+        [chat.postEphemeral] request.
+
+        [attachments]: https://api.slack.com/docs/message-attachments
+        [blocks]: https://api.slack.com/reference/block-kit/blocks
+        [convenience classes]:
             https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
+        [chat.postEphemeral]: https://api.slack.com/methods/chat.postEphemeral
 
-        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
-            message to. Can be public or private (group) channel, or DM channel.
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :param ephemeral_user: optional user name or id if the message needs to visible
-            to a specific user only
-        :return: Dictionary deserialized from `chat.postMessage`_ request, or `chat.postEphemeral`_
-            if `ephemeral_user` is True.
+        Args:
+            channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
+                message to. Can be public or private (group) channel, or DM channel.
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments)
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            thread_ts: optional timestamp of thread, to send a message in that thread
+            ephemeral_user: optional user name or id if the message needs to visible
+                to a specific user only
 
-        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
-        .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response,
+                or [chat.postEphemeral](https://api.slack.com/methods/chat.postEphemeral) if `ephemeral_user` is set.
         """
         return await self._client.send(
             channel,
@@ -216,20 +234,20 @@ class MachineBasePlugin:
     ) -> AsyncSlackResponse:
         """Schedule a message to a channel
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.MachineBasePlugin.say`.
+        This is the scheduled version of [`say()`][machine.plugins.base.MachineBasePlugin.say].
         It behaves the same, but will send the message at the scheduled time.
 
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
-            message to. Can be public or private (group) channel, or DM channel.
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :return: None
-
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        Args:
+            when: when you want the message to be sent, as [`datetime`][datetime.datetime] instance
+            channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
+                message to. Can be public or private (group) channel, or DM channel.
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            thread_ts: optional timestamp of thread, to send a message in that thread
+        Returns:
+            Dictionary deserialized from [chat.scheduleMessage](https://api.slack.com/methods/chat.scheduleMessage)
+                response.
         """
         return await self._client.send_scheduled(
             when,
@@ -255,26 +273,27 @@ class MachineBasePlugin:
 
         Update an existing message using the WebAPI. Allows for rich formatting using
         [blocks] and/or [attachments]. You can provide blocks and attachments as Python dicts or
-        you can use the [convenient classes] that the underlying slack client provides.
+        you can use the [convenience classes] that the underlying slack client provides.
         Can also update in-thread and ephemeral messages, visible to only one user.
         Any extra kwargs you provide, will be passed on directly to the [`chat.update`][chat_update] request.
 
         [attachments]: https://api.slack.com/docs/message-attachments
         [blocks]: https://api.slack.com/reference/block-kit/blocks
-        [convenient classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
+        [convenience classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
         [chat_update]: https://api.slack.com/methods/chat.update
 
-        :param channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
-            message to. Can be public or private (group) channel, or DM channel.
-        :param ts: timestamp of the message to be updated.
-        :param text: message text
-        :param attachments: optional attachments (see [attachments])
-        :param blocks: optional blocks (see [blocks])
-        :param ephemeral_user: optional user name or id if the message needs to visible
-            to a specific user only
-        :return: Dictionary deserialized from [`chat.update`](https://api.slack.com/methods/chat.update) request
+        Args:
+            channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
+                message to. Can be public or private (group) channel, or DM channel.
+            ts: timestamp of the message to be updated.
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            ephemeral_user: optional user name or id if the message needs to visible
+                to a specific user only
 
-
+        Returns:
+            Dictionary deserialized from [`chat.update`](https://api.slack.com/methods/chat.update) response
         """
         return await self._client.update(
             channel,
@@ -299,12 +318,13 @@ class MachineBasePlugin:
 
         [chat_delete]: https://api.slack.com/methods/chat.delete
 
-        :param channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
-            message to. Can be public or private (group) channel, or DM channel.
-        :param ts: timestamp of the message to be deleted.
-        :return: Dictionary deserialized from [`chat.delete`](https://api.slack.com/methods/chat.delete) request
+        Args:
+            channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
+                message to. Can be public or private (group) channel, or DM channel.
+            ts: timestamp of the message to be deleted.
 
-
+        Returns:
+            Dictionary deserialized from [`chat.delete`](https://api.slack.com/methods/chat.delete) response
         """
         return await self._client.delete(
             channel,
@@ -318,13 +338,14 @@ class MachineBasePlugin:
         Add a reaction to a message in a channel. What message to react to, is determined by the
         combination of the channel and the timestamp of the message.
 
-        :param channel: :py:class:`~machine.models.channel.Channel` object or id of channel to send
-            message to. Can be public or private (group) channel, or DM channel.
-        :param ts: timestamp of the message to react to
-        :param emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
-        :return: Dictionary deserialized from `reactions.add`_ request.
+        Args:
+            channel: [`Channel`][machine.models.channel.Channel] object or id of channel to send
+                message to. Can be public or private (group) channel, or DM channel.
+            ts: timestamp of the message to react to
+            emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
 
-        .. _reactions.add: https://api.slack.com/methods/reactions.add
+        Returns:
+            Dictionary deserialized from [reactions.add](https://api.slack.com/methods/reactions.add) response.
         """
         return await self._client.react(channel, ts, emoji)
 
@@ -339,23 +360,25 @@ class MachineBasePlugin:
         """Send a Direct Message
 
         Send a Direct Message to a user by opening a DM channel and sending a message to it. Allows
-        for rich formatting using `blocks`_ and/or `attachments`_. You can provide blocks and
-        attachments as Python dicts or you can use the `convenient classes`_ that the underlying
+        for rich formatting using [blocks] and/or [attachments]. You can provide blocks and
+        attachments as Python dicts or you can use the [convenience classes] that the underlying
         slack client provides.
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ request.
+        Any extra kwargs you provide, will be passed on directly to the [chat.postMessage] request.
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
-        .. _convenient classes:
+        [attachments]: https://api.slack.com/docs/message-attachments
+        [blocks]: https://api.slack.com/reference/block-kit/blocks
+        [convenience classes]:
             https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
 
-        :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :return: Dictionary deserialized from `chat.postMessage`_ response.
+        Args:
+            user: [`User`][machine.models.user.User] object or id of user to send DM to.
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
 
-        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response.
         """
         return await self._client.send_dm(user, text, attachments=attachments, blocks=blocks, **kwargs)
 
@@ -371,18 +394,19 @@ class MachineBasePlugin:
         """Schedule a Direct Message
 
         This is the scheduled version of
-        :py:meth:`~machine.plugins.base.MachineBasePlugin.send_dm`. It behaves the same, but
+        [`send_dm()`][machine.plugins.base.MachineBasePlugin.send_dm]. It behaves the same, but
         will send the DM at the scheduled time.
 
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param user: :py:class:`~machine.models.user.User` object or id of user to send DM to.
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :return: None
+        Args:
+            when: when you want the message to be sent, as [`datetime`][datetime.datetime] instance
+            user: [`User`][machine.models.user.User] object or id of user to send DM to.
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        Returns:
+            Dictionary deserialized from [chat.scheduleMessage](https://api.slack.com/methods/chat.scheduleMessage)
+                response.
         """
         return await self._client.send_dm_scheduled(
             when, user, text=text, attachments=attachments, blocks=blocks, **kwargs
@@ -395,8 +419,12 @@ class MachineBasePlugin:
         will be returned. If the DM channel does not exist, a new channel will be created and the
         id of the new channel will be returned.
 
-        :param users: :py:class:`~machine.models.user.User` object or id of user to open DM with.
-        :return: id of the DM channel
+        Args:
+            users: [`User`][machine.models.user.User] object or id of user to open DM with, or a list of user objects
+                or user ids.
+
+        Returns:
+            id of the DM channel
         """
         return await self._client.open_im(users)
 
@@ -406,9 +434,9 @@ class MachineBasePlugin:
         Emit an event that plugins can listen for. You can include arbitrary data as keyword
         arguments.
 
-        :param event: name of the event
-        :param **kwargs: any data you want to emit with the event
-        :return: None
+        Args:
+            event: name of the event
+            **kwargs: any data you want to emit with the event
         """
         ee.emit(event, self, **kwargs)
 
@@ -417,9 +445,12 @@ class MachineBasePlugin:
 
         Pin a message in a channel
 
-        :param channel: channel to pin the message in
-        :param ts: timestamp of the message to pin
-        :return: response from the Slack Web API
+        Args:
+            channel: channel to pin the message in
+            ts: timestamp of the message to pin
+
+        Returns:
+            Dictionary deserialized from [pins.add](https://api.slack.com/methods/pins.add) response.
         """
         return await self._client.pin_message(channel, ts)
 
@@ -428,9 +459,12 @@ class MachineBasePlugin:
 
         Unpin a message that was previously pinned in a channel
 
-        :param channel: channel where the message is pinned that needs to be unpinned
-        :param ts: timestamp of the message to unpin
-        :return: response from the Slack Web API
+        Args:
+            channel: channel where the message is pinned that needs to be unpinned
+            ts: timestamp of the message to unpin
+
+        Returns:
+            Dictionary deserialized from [pins.remove](https://api.slack.com/methods/pins.remove) response.
         """
         return await self._client.unpin_message(channel, ts)
 
@@ -439,9 +473,13 @@ class MachineBasePlugin:
 
         Set or update topic for the channel
 
-        :param channel: channel where topic needs to be set or updated
-        :param topic: topic for the channel (slack does not support formatting for topics)
-        :return: response from the Slack Web API
+        Args:
+            channel: channel where topic needs to be set or updated
+            topic: topic for the channel (slack does not support formatting for topics)
+
+        Returns:
+            Dictionary deserialized from [conversations.setTopic](https://api.slack.com/methods/conversations.setTopic)
+                response.
         """
         return await self._client.set_topic(channel, topic, **kwargs)
 
@@ -451,10 +489,13 @@ class MachineBasePlugin:
         Open a modal dialog in response to a user action. The modal dialog can be used to collect
         information from the user, or to display information to the user.
 
-        :param trigger_id: trigger id is provided by Slack when a user action is performed, such as a slash command
-            or a button click
-        :param view: view definition for the modal dialog
-        :return: response from the Slack Web API
+        Args:
+            trigger_id: trigger id is provided by Slack when a user action is performed, such as a slash command
+                or a button click
+            view: view definition for the modal dialog
+
+        Returns:
+            Dictionary deserialized from [views.open](https://api.slack.com/methods/views.open) response.
         """
         return await self._client.web_client.views_open(trigger_id=trigger_id, view=view, **kwargs)
 
@@ -465,10 +506,13 @@ class MachineBasePlugin:
         active in a modal at the same time. For more information on the lifecycle of modals, refer to the
         [relevant Slack documentation](https://api.slack.com/surfaces/modals)
 
-        :param trigger_id: trigger id is provided by Slack when a user action is performed, such as a slash command
-            or a button click
-        :param view: view definition for the modal dialog
-        :return: response from the Slack Web API
+        Args:
+            trigger_id: trigger id is provided by Slack when a user action is performed, such as a slash command
+                or a button click
+            view: view definition for the modal dialog
+
+        Returns:
+            Dictionary deserialized from [views.push](https://api.slack.com/methods/views.push) response.
         """
         return await self._client.push_modal(trigger_id=trigger_id, view=view, **kwargs)
 
@@ -486,11 +530,13 @@ class MachineBasePlugin:
         external_id of the modal. external_id has precedence over view_id, but at least one needs to be provided.
         You can also provide a hash of the view that you want to update to prevent race conditions.
 
-        :param view: view definition for the modal dialog
-        :param view_id: id of the view to update
-        :param external_id: external id of the view to update
-        :param hash: hash of the view to update
-        :return: response from the Slack Web API
+        Args:
+            view: view definition for the modal dialog
+            view_id: id of the view to update
+            external_id: external id of the view to update
+            hash: hash of the view to update
+        Returns:
+            Dictionary deserialized from [views.update](https://api.slack.com/methods/views.update) response.
         """
         return await self._client.update_modal(view=view, view_id=view_id, external_id=external_id, hash=hash, **kwargs)
 
@@ -503,12 +549,16 @@ class MachineBasePlugin:
         your Slack app. This method can be used both to publish a new view for the home tab or update an existing view.
         You can provide a hash of the view that you want to update to prevent race conditions.
 
-        Note: be careful with the use of this method, as you might be overwriting the user's home tab that was set by
-        another Slack Machine plugin enabled in your bot.
+        Warning:
+            Be careful with the use of this method, as you might be overwriting the user's home tab that was set by
+            another Slack Machine plugin enabled in your bot.
 
-        :param user: user for whom to publish or update the home tab
-        :param view: view definition for the home tab
-        :param hash: hash of the view to update
-        :return: response from the Slack Web API
+        Args:
+            user: user for whom to publish or update the home tab
+            view: view definition for the home tab
+            hash: hash of the view to update
+
+        Returns:
+            Dictionary deserialized from [views.publish](https://api.slack.com/methods/views.publish) response.
         """
         return await self._client.publish_home_tab(user=user, view=view, hash=hash, **kwargs)

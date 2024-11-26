@@ -14,6 +14,14 @@ from machine.models.interactive import View, ViewClosedPayload, ViewSubmissionPa
 
 
 class ModalSubmission:
+    """A Slack modal submission that was received by the bot
+
+    This class represents a modal submission that was received by the bot and passed to a plugin.
+
+    Attributes:
+        payload: The payload that was received by the bot when the modal was submitted
+    """
+
     payload: ViewSubmissionPayload
 
     def __init__(self, client: SlackClient, payload: ViewSubmissionPayload):
@@ -24,7 +32,8 @@ class ModalSubmission:
     def user(self) -> User:
         """The user that submitted the modal
 
-        :return: the user that submitted the modal
+        Returns:
+            the user that submitted the modal
         """
         return self._client.users[self.payload.user.id]
 
@@ -32,7 +41,8 @@ class ModalSubmission:
     def view(self) -> View:
         """The view that was submitted including the state of all the elements in the view
 
-        :return: the view that was submitted
+        Returns:
+            the view that was submitted
         """
         return self.payload.view
 
@@ -40,9 +50,16 @@ class ModalSubmission:
     def trigger_id(self) -> str:
         """The trigger id associated with the submitted modal
 
-        The trigger id can be user ot open another modal
+        The trigger id can be used to open another modal
 
-        :return: the trigger id for the modal
+        Note:
+            The trigger id is only valid for 3 seconds after the modal was submitted.
+
+            You can use [`open_modal()`][machine.plugins.modals.ModalSubmission.open_modal] to open a modal instead of
+            using the `trigger_id` directly.
+
+        Returns:
+            the trigger id for the modal
         """
         return self.payload.trigger_id
 
@@ -55,12 +72,17 @@ class ModalSubmission:
 
         Open another modal in response to modal submission, using the trigger_id that was returned when the modal was
         submitted.
-        Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_open()`
+        Any extra kwargs you provide, will be passed on directly to
+        [views.open](https://api.slack.com/methods/views.open)
 
-        Note: you have to call this method within 3 seconds of receiving the modal submission payload.
+        Note:
+            You have to call this method within 3 seconds of receiving the modal submission payload.
 
-        :param view: the view to open
-        :return: Dictionary deserialized from `AsyncWebClient.views_open()`
+        Args:
+            view: the view to open
+
+        Returns:
+            Dictionary deserialized from [views.open](https://api.slack.com/methods/views.open)
         """
         return await self._client.open_modal(self.trigger_id, view, **kwargs)
 
@@ -73,12 +95,17 @@ class ModalSubmission:
 
         Push a new modal view on top of the view stack in response to modal submission, using the trigger_id that was
         returned when the modal was submitted.
-        Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_push()`
+        Any extra kwargs you provide, will be passed on directly to
+        [views.push](https://api.slack.com/methods/views.push)
 
-        Note: you have to call this method within 3 seconds of receiving the modal submission payload.
+        Note:
+            You have to call this method within 3 seconds of receiving the modal submission payload.
 
-        :param view: the view to push
-        :return: Dictionary deserialized from `AsyncWebClient.views_push()`
+        Args:
+            view: the view to push
+
+        Returns:
+            Dictionary deserialized from [views.push](https://api.slack.com/methods/views.push)
         """
         return await self._client.push_modal(self.trigger_id, view, **kwargs)
 
@@ -91,12 +118,17 @@ class ModalSubmission:
 
         Update the modal view in response to modal submission, using the trigger_id that was returned when the modal was
         submitted.
-        Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_update()`
+        Any extra kwargs you provide, will be passed on directly to
+        [views.update](https://api.slack.com/methods/views.update)
 
-        Note: you have to call this method within 3 seconds of receiving the modal submission payload.
+        Note:
+            You have to call this method within 3 seconds of receiving the modal submission payload.
 
-        :param view: the view to update
-        :return: Dictionary deserialized from `AsyncWebClient.views_update()`
+        Args:
+            view: the view to update
+
+        Returns:
+            Dictionary deserialized from [views.update](https://api.slack.com/methods/views.update)
         """
         return await self._client.update_modal(view, self.payload.view.id, self.payload.view.external_id, **kwargs)
 
@@ -112,25 +144,35 @@ class ModalSubmission:
         Send a Direct Message to the user that submitted the modal by opening a DM channel and
         sending a message to it.
         Allows for rich formatting using [blocks] and/or [attachments] . You can provide blocks
-        and attachments as Python dicts or you can use the [convenient classes] that the
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage` request.
+        Any extra kwargs you provide, will be passed on directly to the
+        [chat.postMessage](https://api.slack.com/methods/chat.postMessage) request.
 
         [attachments]: https://api.slack.com/docs/message-attachments
         [blocks]: https://api.slack.com/reference/block-kit/blocks
-        [convenient classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
+        [convenience classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
 
-        :param text: message text
-        :param attachments: optional attachments (see [attachments])
-        :param blocks: optional blocks (see [blocks])
-        :return: Dictionary deserialized from [chat.postMessage] response.
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
 
-        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response.
         """
         return await self._client.send_dm(self.user.id, text, attachments=attachments, blocks=blocks, **kwargs)
 
 
 class ModalClosure:
+    """A Slack modal closure that was received by the bot
+
+    This class represents the closure (cancellation) of a modal that was received by the bot and passed to a plugin.
+
+    Attributes:
+        payload: The payload that was received by the bot when the modal was closed
+    """
+
     payload: ViewClosedPayload
 
     def __init__(self, client: SlackClient, payload: ViewClosedPayload):
@@ -141,7 +183,8 @@ class ModalClosure:
     def user(self) -> User:
         """The user that closed the modal
 
-        :return: the user that closed the modal
+        Returns:
+            the user that closed the modal
         """
         return self._client.users[self.payload.user.id]
 
@@ -149,7 +192,8 @@ class ModalClosure:
     def view(self) -> View:
         """The view that was closed including the state of all the elements in the view when it was closed
 
-        :return: the view that was closed
+        Returns:
+            the view that was closed
         """
         return self.payload.view
 
@@ -165,19 +209,20 @@ class ModalClosure:
         Send a Direct Message to the user that closed the modal by opening a DM channel and
         sending a message to it.
         Allows for rich formatting using [blocks] and/or [attachments] . You can provide blocks
-        and attachments as Python dicts or you can use the [convenient classes] that the
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage` request.
+        Any extra kwargs you provide, will be passed on directly to the
+        [chat.postMessage](https://api.slack.com/methods/chat.postMessage) request.
 
         [attachments]: https://api.slack.com/docs/message-attachments
         [blocks]: https://api.slack.com/reference/block-kit/blocks
-        [convenient classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
+        [convenience classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
 
-        :param text: message text
-        :param attachments: optional attachments (see [attachments])
-        :param blocks: optional blocks (see [blocks])
-        :return: Dictionary deserialized from [chat.postMessage] response.
-
-        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response.
         """
         return await self._client.send_dm(self.user.id, text, attachments=attachments, blocks=blocks, **kwargs)
