@@ -34,30 +34,38 @@ class Command:
 
     @property
     def sender(self) -> User:
-        """The sender of the message
+        """The user that invoked the command
 
-        :return: the User the message was sent by
+        Returns:
+            the User that invoked the command
         """
         return self._client.users[self._cmd_payload["user_id"]]
 
     @property
     def channel(self) -> Channel:
-        """The channel the message was sent to
+        """The channel the command was invoked in
 
-        :return: the Channel the message was sent to
+        Returns:
+            the Channel the command was invoked in
         """
         return self._client.channels[self._cmd_payload["channel_id"]]
 
     @property
     def is_dm(self) -> bool:
+        """Whether the command was invoked in a DM
+
+        Returns:
+            `True` if the message was _not_ invoked in a channel or group, `False` otherwise
+        """
         channel_id = self._cmd_payload["channel_id"]
         return not (channel_id.startswith("C") or channel_id.startswith("G"))
 
     @property
     def text(self) -> str:
-        """The body of the actual message
+        """The body of the command (i.e. anything after the command itself)
 
-        :return: the body (text) of the actual message
+        Returns:
+            the body (text) of the command
         """
         return self._cmd_payload["text"]
 
@@ -65,7 +73,8 @@ class Command:
     def command(self) -> str:
         """The command that was invoked
 
-        :return: the command that was invoked
+        Returns:
+            the command that was invoked
         """
         return self._cmd_payload["command"]
 
@@ -77,7 +86,8 @@ class Command:
         It can be used for sending messages in response to the command.
         This can only be used 5 times within 30 minutes of receiving the payload.
 
-        :return: the response url associated with the command
+        Returns:
+            the response url associated with the command
         """
         return self._cmd_payload["response_url"]
 
@@ -87,7 +97,14 @@ class Command:
 
         The trigger id can be used to trigger modals
 
-        :return: the trigger id associated with the command
+        Note:
+            The `trigger_id` is only valid for 3 seconds after the modal was submitted.
+
+            You can use [`open_modal`][machine.plugins.command.Command.open_modal] to open a modal instead of using
+            the `trigger_id` directly.
+
+        Returns:
+            the trigger id associated with the command
         """
         return self._cmd_payload["trigger_id"]
 
@@ -103,7 +120,7 @@ class Command:
 
         Send a new message to the channel the command was invoked in, using the response_url as a webhook.
         Allows for rich formatting using [blocks] and/or [attachments] . You can provide blocks
-        and attachments as Python dicts or you can use the [convenient classes] that the
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
         This will send an ephemeral message by default, only visible to the user that invoked the command.
         You can set `ephemeral` to `False` to make the message visible to everyone in the channel
@@ -111,14 +128,17 @@ class Command:
 
         [attachments]: https://api.slack.com/docs/message-attachments
         [blocks]: https://api.slack.com/reference/block-kit/blocks
-        [convenient classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
+        [convenience classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
 
-        :param text: message text
-        :param attachments: optional attachments (see [attachments])
-        :param blocks: optional blocks (see [blocks])
-        :param ephemeral: `True/False` wether to send the message as an ephemeral message, only
-            visible to the sender of the original message
-        :return: Dictionary deserialized from `AsyncWebhookClient.send()`
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            ephemeral: `True/False` wether to send the message as an ephemeral message, only
+                visible to the sender of the original message
+
+        Returns:
+            Dictionary deserialized from `AsyncWebhookClient.send()`
         """
         response_type = "ephemeral" if ephemeral else "in_channel"
 
@@ -136,9 +156,13 @@ class Command:
         Open a modal in response to the command, using the trigger_id that was returned when the command was invoked.
         Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_open()`
 
-        Note: you have to call this method within 3 seconds of receiving the command payload.
+        Note:
+            You have to call this method within 3 seconds of receiving the command payload.
 
-        :param view: the view to open
-        :return: Dictionary deserialized from `AsyncWebClient.views_open()`
+        Args:
+            view: the view to open
+
+        Returns:
+            Dictionary deserialized from `AsyncWebClient.views_open()`
         """
         return await self._client.open_modal(self.trigger_id, view, **kwargs)

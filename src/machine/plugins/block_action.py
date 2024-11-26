@@ -26,6 +26,11 @@ class BlockAction:
     This class contains metadata about the block action, such as the action that happened that triggered this handler,
     the user that triggered the action, the state of the block when the action was triggered, the payload that was
     received when the action was triggered.
+
+    Attributes:
+        payload: The payload that was received by the bot when the action was triggered that this
+            plugin method listens for
+        triggered_action: The action that triggered this plugin method
     """
 
     payload: BlockActionsPayload
@@ -43,7 +48,8 @@ class BlockAction:
     def user(self) -> User:
         """The user that triggered the action
 
-        :return: the user that triggered the action
+        Returns:
+            the user that triggered the action
         """
         return self._client.users[self.payload.user.id]
 
@@ -51,7 +57,8 @@ class BlockAction:
     def channel(self) -> Optional[Channel]:
         """The channel the action was triggered in
 
-        :return: the channel the action was triggered in or None if the action was triggered in a modal
+        Returns:
+            the channel the action was triggered in or None if the action was triggered in a modal
         """
         if self.payload.channel is None:
             return None
@@ -61,7 +68,8 @@ class BlockAction:
     def state(self) -> Optional[State]:
         """The state of the block when the action was triggered
 
-        :return: the state of the block when the action was triggered
+        Returns:
+            the state of the block when the action was triggered
         """
         return self.payload.state
 
@@ -69,7 +77,8 @@ class BlockAction:
     def response_url(self) -> Optional[str]:
         """The response URL for the action
 
-        :return: the response URL for the action or None if the action was triggered in a modal
+        Returns:
+            the response URL for the action or `None` if the action was triggered in a modal
         """
         return self.payload.response_url
 
@@ -79,7 +88,14 @@ class BlockAction:
 
         The trigger id can be used to open a modal
 
-        :return: the trigger id for the action
+        Note:
+            The `trigger_id` is only valid for 3 seconds after the modal was submitted.
+
+            You can use [`open_modal`][machine.plugins.block_action.BlockAction.open_modal] to open a modal instead of
+            using the `trigger_id` directly.
+
+        Returns:
+            the trigger id for the action
         """
         return self.payload.trigger_id
 
@@ -98,8 +114,8 @@ class BlockAction:
         Send a new message to the channel the block action was triggered in, using the response_url as a webhook.
         If the block action happened in a modal, the response_url will be None and this method will not send a message
         but instead log a warning.
-        Allows for rich formatting using [blocks] and/or [attachments] . You can provide blocks
-        and attachments as Python dicts or you can use the [convenient classes] that the
+        Allows for rich formatting using [blocks] and/or [attachments]. You can provide blocks
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
         This will send an ephemeral message by default, only visible to the user that triggered the action.
         You can set `ephemeral` to `False` to make the message visible to everyone in the channel.
@@ -109,18 +125,21 @@ class BlockAction:
 
         [attachments]: https://api.slack.com/docs/message-attachments
         [blocks]: https://api.slack.com/reference/block-kit/blocks
-        [convenient classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
+        [convenience classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
 
-        :param text: message text
-        :param attachments: optional attachments (see [attachments])
-        :param blocks: optional blocks (see [blocks])
-        :param ephemeral: `True/False` wether to send the message as an ephemeral message, only
-            visible to the user that initiated the action
-        :param replace_original: `True/False` whether the message that contains the block from which the action was
-            triggered should be replaced by this message
-        :param delete_original: `True/False` whether the message that contains the block from which the action was
-            triggered should be deleted. No other parameters should be provided.
-        :return: Dictionary deserialized from `AsyncWebhookClient.send()`
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/docs/message-attachments))
+            ephemeral: `True/False` wether to send the message as an ephemeral message, only
+                visible to the user that initiated the action
+            replace_original: `True/False` whether the message that contains the block from which the action was
+                triggered should be replaced by this message
+            delete_original: `True/False` whether the message that contains the block from which the action was
+                triggered should be deleted. No other parameters should be provided.
+
+        Returns:
+            Dictionary deserialized from `AsyncWebhookClient.send()`
 
         """
         if self._webhook_client is None:
@@ -150,22 +169,23 @@ class BlockAction:
         """Send a DM to the user that triggered the block action
 
         Send a Direct Message to the user that triggered the block action by opening a DM channel and
-        sending a message to it. Allows for rich formatting using `blocks`_ and/or `attachments`_.
-        Allows for rich formatting using [blocks] and/or [attachments] . You can provide blocks
-        and attachments as Python dicts or you can use the [convenient classes] that the
+        sending a message to it.
+        Allows for rich formatting using [blocks] and/or [attachments]. You can provide blocks
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
         Any extra kwargs you provide, will be passed on directly to the `chat.postMessage` request.
 
         [attachments]: https://api.slack.com/docs/message-attachments
         [blocks]: https://api.slack.com/reference/block-kit/blocks
-        [convenient classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
+        [convenience classes]: https://github.com/slackapi/python-slack-sdk/tree/main/slack/web/classes
 
-        :param text: message text
-        :param attachments: optional attachments (see [attachments])
-        :param blocks: optional blocks (see [blocks])
-        :return: Dictionary deserialized from [chat.postMessage] response.
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
 
-        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response.
         """
         return await self._client.send_dm(self.user.id, text, attachments=attachments, blocks=blocks, **kwargs)
 
@@ -178,11 +198,16 @@ class BlockAction:
 
         Open a modal in response to the block action, using the trigger_id that was returned when the block action was
         triggered.
-        Any extra kwargs you provide, will be passed on directly to `AsyncWebClient.views_open()`
+        Any extra kwargs you provide, will be passed on directly to
+        [views.open](https://api.slack.com/methods/views.open)
 
-        Note: you have to call this method within 3 seconds of receiving the block action payload.
+        Note:
+            You have to call this method within 3 seconds of receiving the block action payload.
 
-        :param view: the view to open
-        :return: Dictionary deserialized from `AsyncWebClient.views_open()`
+        Args:
+            view: the view to open
+
+        Returns:
+            Dictionary deserialized from [views.open](https://api.slack.com/methods/views.open)
         """
         return await self._client.open_modal(self.trigger_id, view, **kwargs)

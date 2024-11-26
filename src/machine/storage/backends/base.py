@@ -22,16 +22,22 @@ class MachineBaseStorage(ABC):
         self.settings = settings
 
     async def init(self) -> None:  # noqa: B027 (no-op by design)
-        """Initialize the storage backend"""
+        """Initialize the storage backend
+
+        To be implemented by subclasses if initialization is required. This method is called once after instantiation.
+        """
         pass
 
     @abstractmethod
     async def get(self, key: str) -> bytes | None:
         """Retrieve data by key
 
-        :param key: key for which to retrieve data
-        :return: the raw data for the provided key, as (byte)string. Should return ``None`` when
-            the key is unknown or the data has expired.
+        Args:
+            key: key for which to retrieve data
+
+        Returns:
+            the raw data for the provided key, as (byte)string. Should return `None` when
+                the key is unknown or the data has expired.
         """
         ...
 
@@ -39,10 +45,11 @@ class MachineBaseStorage(ABC):
     async def set(self, key: str, value: bytes, expires: int | None = None) -> None:
         """Store data by key
 
-        :param key: the key under which to store the data
-        :param value: data as (byte)string
-        :param expires: optional expiration time in seconds, after which the data should not be
-            returned any more.
+        Args:
+            key: the key under which to store the data
+            value: data as (byte)string
+            expires: optional expiration time in seconds, after which the data should not be
+                returned any more.
         """
         ...
 
@@ -58,8 +65,11 @@ class MachineBaseStorage(ABC):
     async def has(self, key: str) -> bool:
         """Check if the key exists
 
-        :param key: key to check
-        :return: ``True/False`` wether the key exists
+        Args:
+            key: key to check
+
+        Returns:
+            `True/False` wether the key exists
         """
         ...
 
@@ -67,7 +77,8 @@ class MachineBaseStorage(ABC):
     async def size(self) -> int:
         """Calculate the total size of the storage
 
-        :return: total size of storage in bytes (integer)
+        Returns:
+            total size of storage in bytes (integer)
         """
         ...
 

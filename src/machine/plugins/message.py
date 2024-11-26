@@ -20,7 +20,7 @@ class Message:
     plugins. It contains the message (text) itself, and metadata about the message, such as the
     sender of the message, the channel the message was sent to.
 
-    The ``Message`` class also contains convenience methods for replying to the message in the
+    The `Message` class also contains convenience methods for replying to the message in the
     right channel, replying to the sender, etc.
     """
 
@@ -33,7 +33,8 @@ class Message:
     def sender(self) -> User:
         """The sender of the message
 
-        :return: the User the message was sent by
+        Returns:
+            the User the message was sent by
         """
         return self._client.users[self._msg_event["user"]]
 
@@ -41,12 +42,18 @@ class Message:
     def channel(self) -> Channel:
         """The channel the message was sent to
 
-        :return: the Channel the message was sent to
+        Returns:
+            the Channel the message was sent to
         """
         return self._client.channels[self._msg_event["channel"]]
 
     @property
     def is_dm(self) -> bool:
+        """Is the message a direct message
+
+        Returns:
+            `True` if the message was _not_ sent in a channel or group, `False` otherwise
+        """
         channel_id = self._msg_event["channel"]
         return not (channel_id.startswith("C") or channel_id.startswith("G"))
 
@@ -54,7 +61,8 @@ class Message:
     def text(self) -> str:
         """The body of the actual message
 
-        :return: the body (text) of the actual message
+        Returns:
+            the body (text) of the actual message
         """
         return self._msg_event["text"]
 
@@ -62,12 +70,30 @@ class Message:
     def at_sender(self) -> str:
         """The sender of the message formatted as mention
 
-        :return: a string representation of the sender of the message, formatted as `mention`_,
-            to be used in messages
-
-        .. _mention: https://api.slack.com/docs/message-formatting#linking_to_channels_and_users
+        Returns:
+            a string representation of the sender of the message, formatted as
+                [mention](https://api.slack.com/docs/message-formatting#linking_to_channels_and_users),
+                to be used in messages
         """
         return self.sender.fmt_mention()
+
+    @property
+    def ts(self) -> str:
+        """The timestamp of the message
+
+        Returns:
+            the timestamp of the message
+        """
+        return self._msg_event["ts"]
+
+    @property
+    def in_thread(self) -> bool:
+        """Is message in a thread
+
+        Returns:
+            the message is in a thread
+        """
+        return "thread_ts" in self._msg_event
 
     async def say(
         self,
@@ -81,31 +107,35 @@ class Message:
         """Send a new message to the channel the original message was received in
 
         Send a new message to the channel the original message was received in, using the WebAPI.
-        Allows for rich formatting using `blocks`_ and/or `attachments`_. You can provide blocks
-        and attachments as Python dicts or you can use the `convenient classes`_ that the
+        Allows for rich formatting using [blocks] and/or [attachments]. You can provide blocks
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
         Can also reply to a thread and send an ephemeral message only visible to the sender of the
         original message. Ephemeral messages and threaded messages are mutually exclusive, and
-        ``ephemeral`` takes precedence over ``thread_ts``
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
-        `chat.postEphemeral`_ request.
+        `ephemeral` takes precedence over `thread_ts`
+        Any extra kwargs you provide, will be passed on directly to the [chat.postMessage] or
+        [chat.postEphemeral] request.
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
-        .. _convenient classes:
+        [attachments]: https://api.slack.com/docs/message-attachments
+        [blocks]: https://api.slack.com/reference/block-kit/blocks
+        [convenience classes]:
             https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
+        [chat.postEphemeral]: https://api.slack.com/methods/chat.postEphemeral
 
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
-            visible to the sender of the original message
-        :return: Dictionary deserialized from `chat.postMessage`_ request, or `chat.postEphemeral`_
-            if `ephemeral` is True.
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            thread_ts: optional timestamp of thread, to send a message in that thread
+            ephemeral: `True/False` wether to send the message as an ephemeral message, only
+                visible to the sender of the original message
 
-        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
-        .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response,
+                or [chat.postEphemeral](https://api.slack.com/methods/chat.postEphemeral) if `ephemeral` is True.
+
+
         """
         ephemeral_user = self.sender.id if ephemeral else None
 
@@ -130,18 +160,19 @@ class Message:
     ) -> AsyncSlackResponse:
         """Schedule a message
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.say`.
+        This is the scheduled version of [`say()`][machine.plugins.message.Message.say].
         It behaves the same, but will send the message at the scheduled time.
 
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :param thread_ts: optional timestamp of thread, to send a message in that thread
-        :return: None
+        Args:
+            when: when you want the message to be sent, as [`datetime`][datetime.datetime] instance
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            thread_ts: optional timestamp of thread, to send a message in that thread
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        Returns:
+            Dictionary deserialized from [chat.scheduleMessage](https://api.slack.com/methods/chat.scheduleMessage)
+                response.
         """
         return await self._client.send_scheduled(
             when,
@@ -165,32 +196,34 @@ class Message:
         """Reply to the sender of the original message
 
         Reply to the sender of the original message with a new message, mentioning that user. Rich
-        formatting using `blocks`_ and/or `attachments`_ is possible. You can provide blocks
-        and attachments as Python dicts or you can use the `convenient classes`_ that the
+        formatting using [blocks] and/or [attachments] is possible. You can provide blocks
+        and attachments as Python dicts or you can use the [convenience classes] that the
         underlying slack client provides.
         Can also reply to a thread and send an ephemeral message only visible to the sender of the
         original message. In the case of in-thread response, the sender of the original message
         will not be mentioned. Ephemeral messages and threaded messages are mutually exclusive,
-        and ``ephemeral`` takes precedence over ``in_thread``
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ or
-        `chat.postEphemeral`_ request.
+        and `ephemeral` takes precedence over `in_thread`
+        Any extra kwargs you provide, will be passed on directly to the [chat.postMessage] or
+        [chat.postEphemeral] request.
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
-        .. _convenient classes:
+        [attachments]: https://api.slack.com/docs/message-attachments
+        [blocks]: https://api.slack.com/reference/block-kit/blocks
+        [convenience classes]:
             https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
+        [chat.postEphemeral]: https://api.slack.com/methods/chat.postEphemeral
 
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :param in_thread: ``True/False`` wether to reply to the original message in-thread
-        :param ephemeral: ``True/False`` wether to send the message as an ephemeral message, only
-            visible to the sender of the original message
-        :return: Dictionary deserialized from `chat.postMessage`_ request, or `chat.postEphemeral`_
-            if `ephemeral` is True.
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks)
+            in_thread: `True/False` wether to reply to the original message in-thread
+            ephemeral: `True/False` wether to send the message as an ephemeral message, only
+                visible to the sender of the original message
 
-        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
-        .. _chat.postEphemeral: https://api.slack.com/methods/chat.postEphemeral
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response,
+                or [chat.postEphemeral](https://api.slack.com/methods/chat.postEphemeral) if `ephemeral` is True.
         """
         if in_thread and not ephemeral:
             return await self.say(text, attachments=attachments, blocks=blocks, thread_ts=self.ts, **kwargs)
@@ -209,18 +242,19 @@ class Message:
     ) -> AsyncSlackResponse:
         """Schedule a reply and send it
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply`.
+        This is the scheduled version of [`reply()`][machine.plugins.message.Message.reply].
         It behaves the same, but will send the reply at the scheduled time.
 
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :param in_thread: ``True/False`` wether to reply to the original message in-thread
-        :return: None
+        Args:
+            when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
+            in_thread: `True/False` wether to reply to the original message in-thread
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        Returns:
+            Dictionary deserialized from [chat.scheduleMessage](https://api.slack.com/methods/chat.scheduleMessage)
+                response.
         """
         if in_thread:
             return await self.say_scheduled(
@@ -240,22 +274,24 @@ class Message:
         """Reply to the sender of the original message with a DM
 
         Reply in a Direct Message to the sender of the original message by opening a DM channel and
-        sending a message to it. Allows for rich formatting using `blocks`_ and/or `attachments`_.
+        sending a message to it. Allows for rich formatting using [blocks] and/or [attachments].
         You can provide blocks and attachments as Python dicts or you can use the
-        `convenient classes`_ that the underlying slack client provides.
-        Any extra kwargs you provide, will be passed on directly to the `chat.postMessage`_ request.
+        [convenience classes] that the underlying slack client provides.
+        Any extra kwargs you provide, will be passed on directly to the [chat.postMessage] request.
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
-        .. _convenient classes:
+        [attachments]: https://api.slack.com/docs/message-attachments
+        [blocks]: https://api.slack.com/reference/block-kit/blocks
+        [convenience classes]:
             https://github.com/slackapi/python-slackclient/tree/master/slack/web/classes
+        [chat.postMessage]: https://api.slack.com/methods/chat.postMessage
 
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :return: Dictionary deserialized from `chat.postMessage`_ request.
+        Args:
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
 
-        .. _chat.postMessage: https://api.slack.com/methods/chat.postMessage
+        Returns:
+            Dictionary deserialized from [chat.postMessage](https://api.slack.com/methods/chat.postMessage) response.
         """
         return await self._client.send_dm(self.sender.id, text, attachments=attachments, blocks=blocks, **kwargs)
 
@@ -269,17 +305,18 @@ class Message:
     ) -> AsyncSlackResponse:
         """Schedule a DM reply and send it
 
-        This is the scheduled version of :py:meth:`~machine.plugins.base.Message.reply_dm`.
+        This is the scheduled version of [`reply_dm()`][machine.plugins.message.Message.reply_dm].
         It behaves the same, but will send the DM at the scheduled time.
 
-        :param when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
-        :param text: message text
-        :param attachments: optional attachments (see `attachments`_)
-        :param blocks: optional blocks (see `blocks`_)
-        :return: None
+        Args:
+            when: when you want the message to be sent, as :py:class:`datetime.datetime` instance
+            text: message text
+            attachments: optional attachments (see [attachments](https://api.slack.com/docs/message-attachments))
+            blocks: optional blocks (see [blocks](https://api.slack.com/reference/block-kit/blocks))
 
-        .. _attachments: https://api.slack.com/docs/message-attachments
-        .. _blocks: https://api.slack.com/reference/block-kit/blocks
+        Returns:
+            Dictionary deserialized from [chat.scheduleMessage](https://api.slack.com/methods/chat.scheduleMessage)
+                response.
         """
         return await self._client.send_dm_scheduled(
             when, self.sender.id, text=text, attachments=attachments, blocks=blocks, **kwargs
@@ -290,10 +327,11 @@ class Message:
 
         Add a reaction to the original message
 
-        :param emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
-        :return: Dictionary deserialized from `reactions.add`_ request.
+        Args:
+            emoji: what emoji to react with (should be a string, like 'angel', 'thumbsup', etc.)
 
-        .. _reactions.add: https://api.slack.com/methods/reactions.add
+        Returns:
+            Dictionary deserialized from [reactions.add](https://api.slack.com/methods/reactions.add) response.
         """
         return await self._client.react(self.channel.id, self._msg_event["ts"], emoji)
 
@@ -303,26 +341,13 @@ class Message:
         else:
             return text
 
-    @property
-    def ts(self) -> str:
-        """The timestamp of the message
-
-        :return: the timestamp of the message
-        """
-        return self._msg_event["ts"]
-
-    @property
-    def in_thread(self) -> bool:
-        """Is message in a thread
-
-        :return: bool
-        """
-        return "thread_ts" in self._msg_event
-
     async def pin_message(self) -> AsyncSlackResponse:
         """Pin message
 
         Pin the current message in the channel it was posted in
+
+        Returns:
+            Dictionary deserialized from [pins.add](https://api.slack.com/methods/pins.add) response.
         """
         return await self._client.pin_message(self.channel, self.ts)
 
