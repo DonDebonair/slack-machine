@@ -51,7 +51,7 @@ dynamodb = [
     "aioboto3>=10,<14",
 ]
 sqlite = [
-    "aiosqlite>=0.18,<0.21",
+    "aiosqlite>=0.21,<0.22",
 ]
 
 [project.scripts]
@@ -73,7 +73,7 @@ dev = [
     "types-redis>=4.3.21,<5.0.0",
     "aioboto3>=10,<14",
     "types-aiobotocore[essential]>=2.4.0,<3.0.0",
-    "aiosqlite>=0.18,<0.21",
+    "aiosqlite>=0.21,<0.22",
     "ruff>=0.9.1,<0.10.0",
     "nox>=2024.10.9",
 ]
