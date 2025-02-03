@@ -175,14 +175,14 @@ wheels = [
 
 [[package]]
 name = "aiosqlite"
-version = "0.20.0"
+version = "0.21.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typing-extensions" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0d/3a/22ff5415bf4d296c1e92b07fd746ad42c96781f13295a074d58e77747848/aiosqlite-0.20.0.tar.gz", hash = "sha256:6d35c8c256637f4672f843c31021464090805bf925385ac39473fb16eaaca3d7", size = 21691 }
+sdist = { url = "https://files.pythonhosted.org/packages/13/7d/8bca2bf9a247c2c5dfeec1d7a5f40db6518f88d314b8bca9da29670d2671/aiosqlite-0.21.0.tar.gz", hash = "sha256:131bb8056daa3bc875608c631c678cda73922a2d4ba8aec373b19f18c17e7aa3", size = 13454 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/00/c4/c93eb22025a2de6b83263dfe3d7df2e19138e345bca6f18dba7394120930/aiosqlite-0.20.0-py3-none-any.whl", hash = "sha256:36a1deaca0cac40ebe32aac9977a6e2bbc7f5189f23f4a54d5908986729e5bd6", size = 15564 },
+    { url = "https://files.pythonhosted.org/packages/f5/10/6c25ed6de94c49f88a91fa5018cb4c0f3625f31d5be9f771ebe5cc7cd506/aiosqlite-0.21.0-py3-none-any.whl", hash = "sha256:2549cf4057f95f53dcba16f2b64e8e2791d7e1adedb13197dd8ed77bb226d7d0", size = 15792 },
 ]
 
 [[package]]
@@ -1980,7 +1980,7 @@ docs = [
 requires-dist = [
     { name = "aioboto3", marker = "extra == 'dynamodb'", specifier = ">=10,<14" },
     { name = "aiohttp", specifier = ">=3.8.5,<4.0.0" },
-    { name = "aiosqlite", marker = "extra == 'sqlite'", specifier = ">=0.18,<0.21" },
+    { name = "aiosqlite", marker = "extra == 'sqlite'", specifier = ">=0.21,<0.22" },
     { name = "apscheduler", specifier = ">=3.9.1,<4.0.0" },
     { name = "dill", specifier = ">=0.3.5.1,<1.0.0.0" },
     { name = "hiredis", marker = "extra == 'redis'", specifier = ">=2,<4" },
@@ -1997,7 +1997,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "aioboto3", specifier = ">=10,<14" },
-    { name = "aiosqlite", specifier = ">=0.18,<0.21" },
+    { name = "aiosqlite", specifier = ">=0.21,<0.22" },
     { name = "coverage", specifier = ">=6.5,<8.0" },
     { name = "mock", specifier = ">=4.0.3,<6.0.0" },
     { name = "mypy", specifier = ">=1.14,<2" },
