@@ -1,0 +1,77 @@
+display_information:
+  name: Slack Machine
+features:
+  bot_user:
+    display_name: Slack Machine
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - app_mentions:read
+      - channels:history
+      - channels:join
+      - channels:read
+      - chat:write
+      - chat:write.public
+      - emoji:read
+      - groups:history
+      - groups:read
+      - groups:write
+      - im:history
+      - im:read
+      - im:write
+      - mpim:history
+      - mpim:read
+      - mpim:write
+      - pins:read
+      - pins:write
+      - reactions:read
+      - reactions:write
+      - users:read
+      - users:read.email
+      - channels:manage
+      - chat:write.customize
+      - dnd:read
+      - files:read
+      - files:write
+      - links:read
+      - links:write
+      - metadata.message:read
+      - usergroups:read
+      - usergroups:write
+      - users.profile:read
+      - users:write
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_home_opened
+      - app_mention
+      - channel_archive
+      - channel_created
+      - channel_deleted
+      - channel_id_changed
+      - channel_left
+      - channel_rename
+      - channel_unarchive
+      - group_archive
+      - group_deleted
+      - group_left
+      - group_rename
+      - group_unarchive
+      - member_joined_channel
+      - member_left_channel
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+      - reaction_added
+      - reaction_removed
+      - team_join
+      - user_change
+      - user_profile_changed
+      - user_status_changed
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false
