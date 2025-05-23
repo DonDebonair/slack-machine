@@ -78,7 +78,7 @@ dev = [
     "nox>=2024.10.9",
 ]
 docs = [
-    "mkdocstrings[python]>=0.28,<0.29",
+    "mkdocstrings[python]>=0.29,<0.30",
     "mkdocs-material>=8.5.10,<10.0.0",
     "griffe>=0.47.0,<1.6.0",
     "mkdocstrings-python>=1.10.3,<2.0.0",
