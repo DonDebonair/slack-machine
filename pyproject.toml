@@ -80,7 +80,7 @@ dev = [
 docs = [
     "mkdocstrings[python]>=0.28,<0.29",
     "mkdocs-material>=8.5.10,<10.0.0",
-    "griffe>=0.47.0,<1.6.0",
+    "griffe>=1.7.3,<2.0.0",
     "mkdocstrings-python>=1.10.3,<2.0.0",
 ]
 [build-system]
