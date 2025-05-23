@@ -8,7 +8,7 @@ def _install_deps(session: nox.Session):
         "uv",
         "sync",
         f"--python={session.python}",
-        "--extra=dev",
+        "--group=dev",
         env={"UV_PROJECT_ENVIRONMENT": session.virtualenv.location},
     )
 
