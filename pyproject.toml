@@ -74,7 +74,7 @@ dev = [
     "aioboto3>=10,<14",
     "types-aiobotocore[essential]>=2.4.0,<3.0.0",
     "aiosqlite>=0.21,<0.22",
-    "ruff>=0.9.1,<0.10.0",
+    "ruff>=0.11.11,<0.12.0",
     "nox>=2024.10.9",
 ]
 docs = [
