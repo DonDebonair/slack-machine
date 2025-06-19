@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
-from typing import Any, Optional, Union
+from typing import Any, Union
 
 from slack_sdk.models.attachments import Attachment
 from slack_sdk.models.blocks import Block
@@ -54,7 +54,7 @@ class BlockAction:
         return self._client.users[self.payload.user.id]
 
     @property
-    def channel(self) -> Optional[Channel]:
+    def channel(self) -> Channel | None:
         """The channel the action was triggered in
 
         Returns:
@@ -65,7 +65,7 @@ class BlockAction:
         return self._client.channels[self.payload.channel.id]
 
     @property
-    def state(self) -> Optional[State]:
+    def state(self) -> State | None:
         """The state of the block when the action was triggered
 
         Returns:
@@ -74,7 +74,7 @@ class BlockAction:
         return self.payload.state
 
     @property
-    def response_url(self) -> Optional[str]:
+    def response_url(self) -> str | None:
         """The response URL for the action
 
         Returns:
@@ -101,14 +101,14 @@ class BlockAction:
 
     async def say(
         self,
-        text: Optional[str] = None,
+        text: str | None = None,
         attachments: Union[Sequence[Attachment], Sequence[dict[str, Any]], None] = None,
         blocks: Union[Sequence[Block], Sequence[dict[str, Any]], None] = None,
         ephemeral: bool = True,
         replace_original: bool = False,
         delete_original: bool = False,
         **kwargs: Any,
-    ) -> Optional[WebhookResponse]:
+    ) -> WebhookResponse | None:
         """Send a new message to the channel the block action was triggered in
 
         Send a new message to the channel the block action was triggered in, using the response_url as a webhook.

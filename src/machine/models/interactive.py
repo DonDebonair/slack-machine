@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 from datetime import date, time
-from typing import Annotated, Any, Literal, Optional, Union
+from typing import Annotated, Any, Literal, Union
 
 from pydantic import BaseModel, Field, TypeAdapter
 from pydantic.functional_validators import PlainValidator, model_validator
@@ -85,37 +85,37 @@ class CheckboxValues(TypedModel):
 
 class DatepickerValue(TypedModel):
     type: Literal["datepicker"]
-    selected_date: Optional[date]
+    selected_date: date | None
 
 
 class EmailValue(TypedModel):
     type: Literal["email_text_input"]
-    value: Optional[str] = None
+    value: str | None = None
 
 
 class StaticSelectValue(TypedModel):
     type: Literal["static_select"]
-    selected_option: Optional[Option]
+    selected_option: Option | None
 
 
 class ChannelSelectValue(TypedModel):
     type: Literal["channels_select"]
-    selected_channel: Optional[str]
+    selected_channel: str | None
 
 
 class ConversationSelectValue(TypedModel):
     type: Literal["conversations_select"]
-    selected_conversation: Optional[str]
+    selected_conversation: str | None
 
 
 class UserSelectValue(TypedModel):
     type: Literal["users_select"]
-    selected_user: Optional[str]
+    selected_user: str | None
 
 
 class ExternalSelectValue(TypedModel):
     type: Literal["external_select"]
-    selected_option: Optional[str]
+    selected_option: str | None
 
 
 class MultiStaticSelectValues(TypedModel):
@@ -150,27 +150,27 @@ class NumberValue(TypedModel):
 
 class PlainTextInputValue(BaseModel):
     type: Literal["plain_text_input"]
-    value: Optional[str]
+    value: str | None
 
 
 class RichTextInputValue(TypedModel):
     type: Literal["rich_text_input"]
-    value: Optional[str]
+    value: str | None
 
 
 class RadioValues(TypedModel):
     type: Literal["radio_buttons"]
-    selected_option: Optional[Option]
+    selected_option: Option | None
 
 
 class TimepickerValue(TypedModel):
     type: Literal["timepicker"]
-    selected_time: Optional[time]
+    selected_time: time | None
 
 
 class UrlValue(TypedModel):
     type: Literal["url_text_input"]
-    value: Optional[str] = None
+    value: str | None = None
 
 
 Values = Annotated[
@@ -218,8 +218,8 @@ class RadioButtonsAction(BaseAction):
 class ButtonAction(BaseAction):
     type: Literal["button"]
     text: Text
-    value: Optional[str] = None
-    style: Optional[str] = None
+    value: str | None = None
+    style: str | None = None
 
 
 class CheckboxAction(BaseAction):
@@ -229,7 +229,7 @@ class CheckboxAction(BaseAction):
 
 class DatepickerAction(BaseAction):
     type: Literal["datepicker"]
-    selected_date: Optional[date]
+    selected_date: date | None
 
 
 class StaticSelectAction(BaseAction):
@@ -366,9 +366,9 @@ class View(BaseModel):
     title: Text
     clear_on_close: bool
     notify_on_close: bool
-    close: Optional[Text]
-    submit: Optional[Text]
-    previous_view_id: Optional[str]
+    close: Text | None
+    submit: Text | None
+    previous_view_id: str | None
     root_view_id: str
     app_id: str
     external_id: str
@@ -391,13 +391,13 @@ class BlockActionsPayload(TypedModel):
     container: Container
     trigger_id: str
     team: Team
-    enterprise: Optional[str]
+    enterprise: str | None
     is_enterprise_install: bool
-    channel: Optional[Channel] = None
-    message: Optional[Message] = None
-    view: Optional[View] = None
-    state: Optional[State] = None
-    response_url: Optional[str] = None
+    channel: Channel | None = None
+    message: Message | None = None
+    view: View | None = None
+    state: State | None = None
+    response_url: str | None = None
     actions: list[Action]
 
     @model_validator(mode="after")
@@ -419,7 +419,7 @@ class ViewSubmissionPayload(TypedModel):
     team: Team
     user: User
     view: View
-    enterprise: Optional[str]
+    enterprise: str | None
     api_app_id: str
     token: str
     trigger_id: str
@@ -432,7 +432,7 @@ class ViewClosedPayload(TypedModel):
     team: Team
     user: User
     view: View
-    enterprise: Optional[str]
+    enterprise: str | None
     api_app_id: str
     token: str
     is_cleared: bool
