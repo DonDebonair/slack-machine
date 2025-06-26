@@ -48,7 +48,7 @@ redis = [
     "hiredis>=2,<4",
 ]
 dynamodb = [
-    "aioboto3>=14,<15",
+    "aioboto3>=15,<16",
 ]
 sqlite = [
     "aiosqlite>=0.21,<0.22",
@@ -71,7 +71,7 @@ dev = [
     "mock>=4.0.3,<6.0.0",
     "mypy>=1.14,<2",
     "types-redis>=4.3.21,<5.0.0",
-    "aioboto3>=14,<15",
+    "aioboto3>=15,<16",
     "types-aiobotocore[essential]>=2.4.0,<3.0.0",
     "aiosqlite>=0.21,<0.22",
     "ruff>=0.12.0,<0.13.0",
