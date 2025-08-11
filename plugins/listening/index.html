@@ -1,0 +1,1012 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../basics/">
+      
+      
+        <link rel="next" href="../slash-commands/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>Listening for things - Slack Machine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Quicksand";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#listening-for-things" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Slack Machine" class="md-header__button md-logo" aria-label="Slack Machine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slack Machine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Listening for things
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DonDebonair/slack-machine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DonDebonair/slack-machine
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Slack Machine" class="md-nav__button md-logo" aria-label="Slack Machine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Slack Machine
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DonDebonair/slack-machine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DonDebonair/slack-machine
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slack Machine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user/usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Slack Machine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Plugins
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Plugins
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../basics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plugin Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Listening for things
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Listening for things
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#listen-for-a-mention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Listen for a mention
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Listen for a mention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-your-function-will-be-called" class="md-nav__link">
+    <span class="md-ellipsis">
+      How your function will be called
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hear-any-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hear any message
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-flexibility-with-slack-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      More flexibility with Slack events
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#take-action-on-a-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Take action on a Schedule
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slack-machine-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      Slack Machine events
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../slash-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slash Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../interacting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to interact
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../block-kit-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Block Kit actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../modals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plugin Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Miscellaneous stuff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migrating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Migrating plugins to async
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#listen-for-a-mention" class="md-nav__link">
+    <span class="md-ellipsis">
+      Listen for a mention
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Listen for a mention">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-your-function-will-be-called" class="md-nav__link">
+    <span class="md-ellipsis">
+      How your function will be called
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hear-any-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      Hear any message
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#more-flexibility-with-slack-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      More flexibility with Slack events
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#take-action-on-a-schedule" class="md-nav__link">
+    <span class="md-ellipsis">
+      Take action on a Schedule
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#slack-machine-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      Slack Machine events
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="listening-for-things">Listening for things</h1>
+<p>Slack Machine allows you to listen for various different things and respond to that. By decorating functions in your
+plugin using the <a href="../../api/#decorators">decorators</a> Slack Machine provides, you can tell Slack Machine to run those
+functions when something specific happens.</p>
+<h2 id="listen-for-a-mention">Listen for a mention</h2>
+<p>The <a class="autorefs autorefs-internal" title="            respond_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]" href="../../api/#machine.plugins.decorators.respond_to"><code>respond_to</code></a> decorator tells Slack Machine to listen for messages
+mentioning your bot and matching a specific pattern. Slack Machine will hear messages sent in any channel or private
+group it is a member of. For a message to trigger a function decorated by <code>@respond_to(...)</code>, the message has to <em>start</em>
+with a mention of your bot or with any alias the user configured using the <code>ALIASES</code> setting. The exception is direct
+messages sent to the bot, they don't have to include a mention to trigger <code>@respond_to</code>.</p>
+<dl>
+<dt><code>@respond_to</code> takes 3 parameters:</dt>
+<dd>
+<p><strong>regex</strong> (<em>required</em>): the regular expression Slack Machine should listen for. The regex pattern should <strong>not</strong>
+account for the mention of your bot, as Slack Machine will remove the mention before looking for a match. Slack Machine
+listens for any occurrence of the pattern in the message, so if you want to specifically match the whole message, you
+can anchor your pattern using the <code>^</code> and <code>$</code> symbols.</p>
+</dd>
+<dd>
+<p><strong>flags</strong> (optional): can be used to pass flags for the regex matching as defined in the <a class="autorefs autorefs-external" href="https://docs.python.org/dev/library/re.html#module-re"><code>re</code></a> module. By
+default, <a class="autorefs autorefs-external" href="https://docs.python.org/dev/library/re.html#re.IGNORECASE"><code>re.IGNORECASE</code></a> is applied.</p>
+</dd>
+<dd>
+<p><strong>handle_message_changed</strong> (optional): is used to configure if Slack Machine should trigger this function for
+messages that have been <em>changed</em>. By default, only <em>new</em> messages will trigger the decorated function.</p>
+</dd>
+</dl>
+<h3 id="how-your-function-will-be-called">How your function will be called</h3>
+<p>Your function will be called with a <a class="autorefs autorefs-internal" title="            machine.plugins.message.Message" href="../../api/#machine.plugins.message.Message"><code>Message</code></a> object that represents the message
+that triggered the function. It not only contains the message text itself, but also has many convenient
+methods for replying.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@respond_to</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;^I love you&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">spread_love</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="s2">&quot;I love you too!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>The regex pattern can optionally contain <a href="http://www.regular-expressions.info/named.html">named groups</a>
+that will be captured and passed to your function as keyword arguments.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@respond_to</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;You deserve (?P&lt;num_stars&gt;\d+) stars!&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">award</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">,</span> <span class="n">num_stars</span><span class="p">):</span>
+    <span class="n">stars_back</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">num_stars</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">reply</span><span class="p">(</span><span class="s2">&quot;Well, you deserve </span><span class="si">{}</span><span class="s2">!&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">stars_back</span><span class="p">))</span>
+</code></pre></div>
+<h2 id="hear-any-message">Hear any message</h2>
+<p>The <a class="autorefs autorefs-internal" title="            listen_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]" href="../../api/#machine.plugins.decorators.listen_to"><code>@listen_to</code></a> decorator works similar as the
+<a class="autorefs autorefs-internal" title="            respond_to(regex: str, flags: re.RegexFlag | int = re.IGNORECASE, handle_message_changed: bool = False) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]" href="../../api/#machine.plugins.decorators.respond_to"><code>@respond_to</code></a> decorator, but it will hear <em>any</em> message matching a pattern,
+without the bot being explicitly mentioned. <code>@listen_to</code> takes the same parameters as <code>@respond_to</code>.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@listen_to</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;go for it&quot;</span><span class="p">)</span>
+<span class="nd">@listen_to</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;go 4 it&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">go_for_it</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+    <span class="k">await</span> <span class="n">msg</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;https://a-z-animals.com/media/animals/images/original/gopher_2.jpg&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>As you can see, you can also apply the same decorator multiple times to a function, each time with different arguments.
+Of course, you can also combine different decorators on one function.</p>
+<h2 id="more-flexibility-with-slack-events">More flexibility with Slack events</h2>
+<p>If you want your bot to respond to other things than messages, you can do so using the
+<a class="autorefs autorefs-internal" title="            process(slack_event_type: str) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]" href="../../api/#machine.plugins.decorators.process"><code>@process</code></a> decorator. <code>@process</code> requires an <code>event_type</code> as parameter and will
+trigger the decorated function any time an event of the specified type happens. It can listen to
+any <a href="https://api.slack.com/events">Slack event</a> that is supported by the Events API.</p>
+<p>The received event will be passed to your function.</p>
+<p>The following example will listen for the <a href="https://api.slack.com/events/reaction_added">reaction_added</a> event to
+know if a <em>reaction</em> was added to a message, and will match that reaction:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@process</span><span class="p">(</span><span class="s2">&quot;reaction_added&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">match_reaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+    <span class="n">emoji</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;reaction&quot;</span><span class="p">]</span>
+    <span class="n">channel</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;item&quot;</span><span class="p">][</span><span class="s2">&quot;channel&quot;</span><span class="p">]</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;item&quot;</span><span class="p">][</span><span class="s2">&quot;ts&quot;</span><span class="p">]</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">react</span><span class="p">(</span><span class="n">channel</span><span class="p">,</span> <span class="n">ts</span><span class="p">,</span> <span class="n">emoji</span><span class="p">)</span>
+</code></pre></div>
+<p>As you can see, <code>@process</code> gives you a lot of flexibility by allowing you to process any event Slack Machine does not
+provide a specific decorator for.</p>
+<h2 id="take-action-on-a-schedule">Take action on a Schedule</h2>
+<p>Slack Machine can also run functions on a schedule, using the <a class="autorefs autorefs-internal" title="            schedule(year: int | str | None = None, month: int | str | None = None, day: int | str | None = None, week: int | str | None = None, day_of_week: int | str | None = None, hour: int | str | None = None, minute: int | str | None = None, second: int | str | None = None, start_date: datetime | str | None = None, end_date: datetime | str | None = None, timezone: tzinfo | str | None = None) -> Callable[[Callable[P, R]], DecoratedPluginFunc[P, R]]" href="../../api/#machine.plugins.decorators.schedule"><code>@schedule</code></a>
+decorator. <code>@schedule</code> behaves like Linux/Unix <a href="http://www.adminschoice.com/crontab-quick-reference">Crontab</a>, and
+receives similar parameters. You can specify on what schedule your function should be called. When your function is
+called, it will not receive any arguments except <code>self</code>, but you can of course call any
+<a class="autorefs autorefs-internal" title="            machine.plugins.base.MachineBasePlugin" href="../../api/#machine.plugins.base.MachineBasePlugin"><code>MachineBasePlugin</code></a> methods to send message and do other things.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@schedule</span><span class="p">(</span><span class="n">hour</span><span class="o">=</span><span class="s2">&quot;9-17&quot;</span><span class="p">,</span> <span class="n">minute</span><span class="o">=</span><span class="s2">&quot;*/30&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">movement_reminder</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;general&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;!here&gt; maybe now is a good time to take a short walk!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="slack-machine-events">Slack Machine events</h2>
+<p>Slack Machine can respond to events that are emitted by your plugin(s) or plugins of others, or events generated by
+parts of Slack Machine itself. You can use the <a class="autorefs autorefs-internal" title="            on(event: str) -> Callable[[Callable[P, R]], Callable[P, R]]" href="../../api/#machine.plugins.decorators.on"><code>@on</code></a> decorator on a function to run
+that function whenever a certain event is emitted somewhere.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@on</span><span class="p">(</span><span class="s2">&quot;bathroom_used&quot;</span><span class="p">)</span>
+<span class="k">async</span> <span class="k">def</span> <span class="nf">call_cleaning_department</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="s2">&quot;cleaning-department&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;!here&gt; Somebody used the toilet!&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>This function will be called whenever the <code>bathroom_used</code> event is emitted somewhere.</p>
+<div class="admonition important">
+<p class="admonition-title">Some things to be aware of</p>
+<p>Event names are global, every plugin can emit and listen for the same events. This is by design, because this
+way, you can use events to exchange data between plugins. Events can be a way to expose a "public API" for
+plugins. But this can also mean your functions are unexpectedly triggered by events sent by other plugins,
+especially if the event names you choose are very generic.</p>
+<p>When emitting events, plugins can attach whatever variables they want to the event, and when listening for an
+event, your function will be called with whatever arguments were attached to the event when the event was
+emitted. It's therefor a good idea to always include <code>**kwargs</code> as a catch-all, otherwise your function could
+return an error when it's called with arguments that have not been explicitly defined.</p>
+</div>
+<p>So what is this event system useful for? As mentioned in the above note, events can be used to communicate between
+plugins and/or for plugins to respond to events that happen within the core of Slack Machine. A good example of this,
+is the <code>unauthorized-access</code> event. This event will be emitted whenever someone tries to use a bot command protected
+by the <a class="autorefs autorefs-internal" title="            require_any_role(required_roles: list[str]) -> Callable[[Callable[..., Awaitable[None]]], Callable[..., Awaitable[None]]]" href="../../api/#machine.plugins.decorators.require_any_role"><code>require_any_role</code></a> or
+<a class="autorefs autorefs-internal" title="            require_all_roles(required_roles: list[str]) -> Callable[[Callable[..., Awaitable[None]]], Callable[..., Awaitable[None]]]" href="../../api/#machine.plugins.decorators.require_all_roles"><code>require_all_roles</code></a> decorators without having the right roles to
+issue that command. By listening to this event, your plugins can take action when this happens. The built-in RBAC
+plugin also listens for this event.</p>
+<p>You can read <a class="autorefs autorefs-internal" title="Emitting events" href="../interacting/#emitting-events">emitting events</a> to learn how to emit events from your own plugins.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.instant", "navigation.tracking", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
