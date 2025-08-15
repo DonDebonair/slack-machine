@@ -29,6 +29,11 @@ class Team(BaseModel):
     domain: str
 
 
+class Enterprise(BaseModel):
+    id: str
+    name: str
+
+
 class Channel(BaseModel):
     id: str
     name: str
@@ -391,7 +396,7 @@ class BlockActionsPayload(TypedModel):
     container: Container
     trigger_id: str
     team: Team
-    enterprise: str | None
+    enterprise: Enterprise | None
     is_enterprise_install: bool
     channel: Channel | None = None
     message: Message | None = None
@@ -419,7 +424,7 @@ class ViewSubmissionPayload(TypedModel):
     team: Team
     user: User
     view: View
-    enterprise: str | None
+    enterprise: Enterprise | None
     api_app_id: str
     token: str
     trigger_id: str
@@ -432,7 +437,7 @@ class ViewClosedPayload(TypedModel):
     team: Team
     user: User
     view: View
-    enterprise: str | None
+    enterprise: Enterprise | None
     api_app_id: str
     token: str
     is_cleared: bool
