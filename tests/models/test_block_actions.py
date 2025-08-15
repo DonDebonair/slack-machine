@@ -1,6 +1,7 @@
 from machine.models.interactive import BlockActionsPayload, InteractivePayload
 from tests.models.example_payloads.block_action_button import payload as button_payload
 from tests.models.example_payloads.block_action_button2 import payload as button_payload2
+from tests.models.example_payloads.block_action_button_enterprise import payload as button_enterprise_payload
 from tests.models.example_payloads.block_action_button_no_value import payload as button_no_value_payload
 from tests.models.example_payloads.block_action_checkboxes import payload as checkboxes_payload
 from tests.models.example_payloads.block_action_checkboxes2 import payload as checkboxes_payload2
@@ -33,6 +34,12 @@ def test_block_action_button():
     validated_button_no_value_payload = InteractivePayload.validate_python(button_no_value_payload)
     assert validated_button_no_value_payload is not None
     assert isinstance(validated_button_no_value_payload, BlockActionsPayload)
+
+
+def test_block_action_button_enterprise():
+    validated_button_enterprise_payload = InteractivePayload.validate_python(button_enterprise_payload)
+    assert validated_button_enterprise_payload is not None
+    assert isinstance(validated_button_enterprise_payload, BlockActionsPayload)
 
 
 def test_block_action_checkboxes():
