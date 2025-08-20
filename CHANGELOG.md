@@ -8,6 +8,18 @@ _prefixes_. This project adheres to [Semantic Versioning](https://semver.org/spe
 
 ## [Unreleased]
 
+## [0.40.1] - 2025-08-20
+
+### Changed
+
+- Bumped various dependencies
+
+### Fixed
+
+- Update `enterprise` model type to adhere to the Slack API
+  ([#1260](https://github.com/DonDebonair/slack-machine/pull/1260) by
+  [**@AlexanderOtavka**](https://github.com/AlexanderOtavka))
+
 ## [0.40.0] - 2024-11-24
 
 ### Changed
@@ -739,7 +751,8 @@ _First release. Rejoice!_ :wave:
 - A simple, yet powerful and extendable Slack bot framework
 
 
-[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.40.0...HEAD
+[Unreleased]: https://github.com/DonDebonair/slack-machine/compare/v0.40.1...HEAD
+[0.40.1]: https://github.com/DonDebonair/slack-machine/compare/v0.40.0...v0.40.1
 [0.40.0]: https://github.com/DonDebonair/slack-machine/compare/v0.39.0...v0.40.0
 [0.39.0]: https://github.com/DonDebonair/slack-machine/compare/v0.38.1...v0.39.0
 [0.38.1]: https://github.com/DonDebonair/slack-machine/compare/v0.38.0...v0.38.1

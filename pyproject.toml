@@ -1,6 +1,6 @@
 [project]
 name = "slack-machine"
-version = "0.40.0"
+version = "0.40.1"
 description = "A wonderful, simple, yet powerful and extendable Slack bot framework"
 readme = "README.md"
 authors = [
