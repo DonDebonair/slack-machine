@@ -74,7 +74,7 @@ dev = [
     "aioboto3>=15,<16",
     "types-aiobotocore[essential]>=2.4.0,<3.0.0",
     "aiosqlite>=0.21,<0.22",
-    "ruff>=0.12.0,<0.13.0",
+    "ruff>=0.13.0,<0.14.0",
     "nox>=2024.10.9",
     "eval-type-backport>=0.2.2; python_version < '3.10'",
 ]
