@@ -1,0 +1,5199 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../migrating/">
+      
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>Changelog - Slack Machine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Quicksand";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#changelog" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Slack Machine" class="md-header__button md-logo" aria-label="Slack Machine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slack Machine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Changelog
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DonDebonair/slack-machine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DonDebonair/slack-machine
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Slack Machine" class="md-nav__button md-logo" aria-label="Slack Machine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Slack Machine
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DonDebonair/slack-machine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DonDebonair/slack-machine
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slack Machine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../user/usage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using Slack Machine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Plugins
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Plugins
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/basics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plugin Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/listening/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Listening for things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/slash-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slash Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/interacting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to interact
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/block-kit-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Block Kit actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/modals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plugin Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../plugins/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Miscellaneous stuff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../migrating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Migrating plugins to async
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unreleased
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0401-2025-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.40.1 - 2025-08-20
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.40.1 - 2025-08-20">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0400-2024-11-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.40.0 - 2024-11-24
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.40.0 - 2024-11-24">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0390-2024-11-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.39.0 - 2024-11-22
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.39.0 - 2024-11-22">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0381-2024-11-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.38.1 - 2024-11-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.38.1 - 2024-11-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0380-2024-11-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.38.0 - 2024-11-16
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.38.0 - 2024-11-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0370-2024-05-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.37.0 - 2024-05-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.37.0 - 2024-05-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0360-2024-05-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.36.0 - 2024-05-04
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.36.0 - 2024-05-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0350-2023-09-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.35.0 - 2023-09-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.35.0 - 2023-09-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0342-2023-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.34.2 - 2023-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.34.2 - 2023-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0341-2023-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.34.1 - 2023-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.34.1 - 2023-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0340-2023-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.34.0 - 2023-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.34.0 - 2023-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0330-2023-05-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.33.0 - 2023-05-15
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.33.0 - 2023-05-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0320-2022-11-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.32.0 - 2022-11-27
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.32.0 - 2022-11-27">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0310-2022-10-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.31.0 - 2022-10-21
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.31.0 - 2022-10-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0300-2022-08-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.30.0 - 2022-08-30
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.30.0 - 2022-08-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0282-2022-08-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.28.2 - 2022-08-30
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.28.2 - 2022-08-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0281-2022-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.28.1 - 2022-08-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.28.1 - 2022-08-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0280-2022-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.28.0 - 2022-08-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.28.0 - 2022-08-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0272-2022-08-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.27.2 - 2022-08-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.27.2 - 2022-08-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0271-2022-08-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.27.1 - 2022-08-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.27.1 - 2022-08-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0270-2022-08-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.27.0 - 2022-08-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.27.0 - 2022-08-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0261-2022-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.26.1 - 2022-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.26.1 - 2022-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0260-2022-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.26.0 - 2022-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.26.0 - 2022-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0250-2022-03-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.25.0 - 2022-03-27
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.25.0 - 2022-03-27">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0240-2021-12-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.24.0 - 2021-12-01
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.24.0 - 2021-12-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0232-2021-10-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.23.2 - 2021-10-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.23.2 - 2021-10-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0231-2021-10-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.23.1 - 2021-10-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.23.1 - 2021-10-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0230-2021-10-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.23.0 - 2021-10-16
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.23.0 - 2021-10-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0220-2021-09-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.22.0 - 2021-09-12
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.22.0 - 2021-09-12">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0211-2021-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.21.1 - 2021-08-01
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.21.1 - 2021-08-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0210-2021-04-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.21.0 - 2021-04-25
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.21.0 - 2021-04-25">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0201-2020-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.20.1 - 2020-07-23
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.1 - 2020-07-23">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0200-2020-07-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.20.0 - 2020-07-22
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.0 - 2020-07-22">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0192-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.2 - 2020-01-05
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.2 - 2020-01-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0191-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.1 - 2020-01-05
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.1 - 2020-01-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0190-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.0 - 2020-01-05
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.0 - 2020-01-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0182-2019-11-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.2 - 2019-11-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.2 - 2019-11-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0181-2019-11-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.1 - 2019-11-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.1 - 2019-11-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0180-2019-03-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.0 - 2019-03-10
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.0 - 2019-03-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0170-2018-11-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.17.0 - 2018-11-10
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.17.0 - 2018-11-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0161-2018-09-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.16.1 - 2018-09-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.16.1 - 2018-09-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0160-2018-09-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.16.0 - 2018-09-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.16.0 - 2018-09-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0150-2018-09-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.15.0 - 2018-09-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.15.0 - 2018-09-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0140-2018-07-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.14.0 - 2018-07-31
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.0 - 2018-07-31">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0132-2018-07-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.13.2 - 2018-07-04
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.2 - 2018-07-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_32" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0131-2018-03-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.13.1 - 2018-03-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.1 - 2018-03-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_33" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0130-2018-03-06-yanked" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.13.0 - 2018-03-06 [YANKED]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.0 - 2018-03-06 [YANKED]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_34" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0122-2018-02-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.12.2 - 2018-02-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.12.2 - 2018-02-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_35" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0121-2018-01-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.12.1 - 2018-01-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.12.1 - 2018-01-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0120-2018-01-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.12.0 - 2018-01-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.12.0 - 2018-01-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0110-2018-01-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.11.0 - 2018-01-22
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.11.0 - 2018-01-22">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0100-2018-01-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.10.0 - 2018-01-21
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.10.0 - 2018-01-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_36" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#090-2017-12-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.9.0 - 2017-12-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.0 - 2017-12-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_37" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#080-2017-10-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.8.0 - 2017-10-15
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.8.0 - 2017-10-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#070-2017-10-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.7.0 - 2017-10-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.0 - 2017-10-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_38" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#060-2017-09-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.6.0 - 2017-09-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6.0 - 2017-09-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_39" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#050-2017-09-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 - 2017-09-09
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.0 - 2017-09-09">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_40" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#040-2017-09-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 - 2017-09-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.0 - 2017-09-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_41" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#030-2017-09-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 - 2017-09-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.0 - 2017-09-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020-2017-09-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 - 2017-09-01
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 - 2017-09-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2017-08-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.0 - 2017-08-29
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.0 - 2017-08-29">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unreleased" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unreleased
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0401-2025-08-20" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.40.1 - 2025-08-20
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.40.1 - 2025-08-20">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0400-2024-11-24" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.40.0 - 2024-11-24
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.40.0 - 2024-11-24">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0390-2024-11-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.39.0 - 2024-11-22
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.39.0 - 2024-11-22">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0381-2024-11-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.38.1 - 2024-11-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.38.1 - 2024-11-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0380-2024-11-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.38.0 - 2024-11-16
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.38.0 - 2024-11-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0370-2024-05-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.37.0 - 2024-05-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.37.0 - 2024-05-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0360-2024-05-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.36.0 - 2024-05-04
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.36.0 - 2024-05-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0350-2023-09-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.35.0 - 2023-09-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.35.0 - 2023-09-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0342-2023-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.34.2 - 2023-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.34.2 - 2023-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0341-2023-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.34.1 - 2023-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.34.1 - 2023-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0340-2023-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.34.0 - 2023-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.34.0 - 2023-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0330-2023-05-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.33.0 - 2023-05-15
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.33.0 - 2023-05-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0320-2022-11-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.32.0 - 2022-11-27
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.32.0 - 2022-11-27">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0310-2022-10-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.31.0 - 2022-10-21
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.31.0 - 2022-10-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0300-2022-08-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.30.0 - 2022-08-30
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.30.0 - 2022-08-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0282-2022-08-30" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.28.2 - 2022-08-30
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.28.2 - 2022-08-30">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0281-2022-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.28.1 - 2022-08-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.28.1 - 2022-08-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0280-2022-08-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.28.0 - 2022-08-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.28.0 - 2022-08-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0272-2022-08-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.27.2 - 2022-08-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.27.2 - 2022-08-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0271-2022-08-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.27.1 - 2022-08-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.27.1 - 2022-08-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0270-2022-08-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.27.0 - 2022-08-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.27.0 - 2022-08-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0261-2022-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.26.1 - 2022-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.26.1 - 2022-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0260-2022-08-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.26.0 - 2022-08-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.26.0 - 2022-08-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0250-2022-03-27" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.25.0 - 2022-03-27
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.25.0 - 2022-03-27">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0240-2021-12-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.24.0 - 2021-12-01
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.24.0 - 2021-12-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0232-2021-10-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.23.2 - 2021-10-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.23.2 - 2021-10-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0231-2021-10-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.23.1 - 2021-10-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.23.1 - 2021-10-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0230-2021-10-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.23.0 - 2021-10-16
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.23.0 - 2021-10-16">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0220-2021-09-12" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.22.0 - 2021-09-12
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.22.0 - 2021-09-12">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0211-2021-08-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.21.1 - 2021-08-01
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.21.1 - 2021-08-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0210-2021-04-25" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.21.0 - 2021-04-25
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.21.0 - 2021-04-25">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0201-2020-07-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.20.1 - 2020-07-23
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.1 - 2020-07-23">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0200-2020-07-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.20.0 - 2020-07-22
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.20.0 - 2020-07-22">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0192-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.2 - 2020-01-05
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.2 - 2020-01-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0191-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.1 - 2020-01-05
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.1 - 2020-01-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0190-2020-01-05" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.19.0 - 2020-01-05
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.19.0 - 2020-01-05">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0182-2019-11-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.2 - 2019-11-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.2 - 2019-11-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0181-2019-11-17" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.1 - 2019-11-17
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.1 - 2019-11-17">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0180-2019-03-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.18.0 - 2019-03-10
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.18.0 - 2019-03-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0170-2018-11-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.17.0 - 2018-11-10
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.17.0 - 2018-11-10">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0161-2018-09-28" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.16.1 - 2018-09-28
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.16.1 - 2018-09-28">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0160-2018-09-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.16.0 - 2018-09-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.16.0 - 2018-09-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0150-2018-09-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.15.0 - 2018-09-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.15.0 - 2018-09-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0140-2018-07-31" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.14.0 - 2018-07-31
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.14.0 - 2018-07-31">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_19" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_31" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0132-2018-07-04" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.13.2 - 2018-07-04
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.2 - 2018-07-04">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_32" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0131-2018-03-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.13.1 - 2018-03-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.1 - 2018-03-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_33" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0130-2018-03-06-yanked" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.13.0 - 2018-03-06 [YANKED]
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.13.0 - 2018-03-06 [YANKED]">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_34" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0122-2018-02-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.12.2 - 2018-02-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.12.2 - 2018-02-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_35" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fixed_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0121-2018-01-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.12.1 - 2018-01-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.12.1 - 2018-01-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fixed_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fixed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0120-2018-01-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.12.0 - 2018-01-26
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.12.0 - 2018-01-26">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0110-2018-01-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.11.0 - 2018-01-22
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.11.0 - 2018-01-22">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#0100-2018-01-21" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.10.0 - 2018-01-21
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.10.0 - 2018-01-21">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_36" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#090-2017-12-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.9.0 - 2017-12-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.9.0 - 2017-12-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_37" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#removed_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      Removed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#080-2017-10-15" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.8.0 - 2017-10-15
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.8.0 - 2017-10-15">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#070-2017-10-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.7.0 - 2017-10-13
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.7.0 - 2017-10-13">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_25" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_38" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#060-2017-09-14" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.6.0 - 2017-09-14
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.6.0 - 2017-09-14">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_26" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_39" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#050-2017-09-09" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.5.0 - 2017-09-09
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.5.0 - 2017-09-09">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#changed_40" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#040-2017-09-06" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.4.0 - 2017-09-06
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.4.0 - 2017-09-06">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_27" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#changed_41" class="md-nav__link">
+    <span class="md-ellipsis">
+      Changed
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#030-2017-09-03" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.3.0 - 2017-09-03
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.3.0 - 2017-09-03">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_28" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#020-2017-09-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.2.0 - 2017-09-01
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.2.0 - 2017-09-01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_29" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#010-2017-08-29" class="md-nav__link">
+    <span class="md-ellipsis">
+      0.1.0 - 2017-08-29
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="0.1.0 - 2017-08-29">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#added_30" class="md-nav__link">
+    <span class="md-ellipsis">
+      Added
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="changelog">Changelog</h1>
+<p>All notable changes to this project will be documented in this file.</p>
+<p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>, with a smattering of
+<a href="https://common-changelog.org/#21-file-format">Common Changelog</a> thrown in, most notably <em>references</em>, <em>authors</em> and
+<em>prefixes</em>. This project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
+<h2 id="unreleased"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.40.1...HEAD">Unreleased</a></h2>
+<h2 id="0401-2025-08-20"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.40.0...v0.40.1">0.40.1</a> - 2025-08-20</h2>
+<h3 id="changed">Changed</h3>
+<ul>
+<li>Bumped various dependencies</li>
+</ul>
+<h3 id="fixed">Fixed</h3>
+<ul>
+<li>Update <code>enterprise</code> model type to adhere to the Slack API
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/1260">#1260</a> by
+  <a href="https://github.com/AlexanderOtavka"><strong>@AlexanderOtavka</strong></a>)</li>
+</ul>
+<h2 id="0400-2024-11-24"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.39.0...v0.40.0">0.40.0</a> - 2024-11-24</h2>
+<h3 id="changed_1">Changed</h3>
+<ul>
+<li>Replace Poetry with <a href="https://docs.astral.sh/uv/">uv</a> (<a href="https://github.com/DonDebonair/slack-machine/pull/1218">#1218</a>)</li>
+<li>Replace Tox with <a href="https://nox.thea.codes">Nox</a> (<a href="https://github.com/DonDebonair/slack-machine/pull/1218">#1218</a>)</li>
+<li>Replace Dependabot with <a href="https://www.mend.io/renovate/">Renovate</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/1220">#1220</a>)</li>
+<li>Bump <code>pydantic</code> from 2.10.0 to 2.10.1</li>
+</ul>
+<h2 id="0390-2024-11-22"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.38.1...v0.39.0">0.39.0</a> - 2024-11-22</h2>
+<h3 id="added">Added</h3>
+<ul>
+<li>Add support for <a href="https://api.slack.com/surfaces/modals">modals</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/1052">#1052</a>)</li>
+</ul>
+<h3 id="changed_2">Changed</h3>
+<ul>
+<li>Bump <code>slack-sdk</code> from 3.33.3 to 3.33.4 (fixes incompatibility with newer versions of <code>aiohttp</code>)</li>
+<li>Bump <code>pydantic</code> from 2.9.2 to 2.10.0</li>
+<li>Bump <code>aiohttp</code> from 3.10.11 to 3.11.7</li>
+</ul>
+<h2 id="0381-2024-11-17"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.38.0...v0.38.1">0.38.1</a> - 2024-11-17</h2>
+<h3 id="fixed_1">Fixed</h3>
+<ul>
+<li><code>aiohttp</code> versions 3.11.0 and higher were causing issues, so <code>aiohttp</code> is temporarily restricted to versions &lt; 3.11
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/1201">#1201</a>)</li>
+</ul>
+<h2 id="0380-2024-11-16"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.37.0...v0.38.0">0.38.0</a> - 2024-11-16</h2>
+<h3 id="added_1">Added</h3>
+<ul>
+<li>Add Python 3.13 support (<a href="https://github.com/DonDebonair/slack-machine/pull/1199">#1199</a>)</li>
+</ul>
+<h3 id="changed_3">Changed</h3>
+<ul>
+<li>Bump <code>slack-sdk</code> from 3.27.2 to 3.33.3</li>
+<li>Bump <code>pydantic</code> from 2.7.1 to 2.9.2</li>
+<li>Bump <code>structlog</code> from 24.1.0 to 24.4.0</li>
+<li>Bump <code>redis</code> from 5.0.4 to 5.2.0</li>
+<li>Bump <code>hiredis</code> from 2.3.2 to 3.0.0</li>
+<li>Bump <code>aioboto3</code> from 12.4.0 to 13.2.0</li>
+<li>Bump <code>urllib3</code> from 1.26.18 to 1.26.19</li>
+<li>Bump <code>httpx</code> from 0.27.0 to 0.27.2</li>
+<li>Bump <code>multidict</code> from 6.0.5 to 6.1.0</li>
+<li>Bump <code>cryptography</code> from 42.0.4 to 43.0.1</li>
+<li>Bump <code>aiohttp</code> from 3.9.5 to 3.10.11</li>
+<li>Bump <code>tzdata</code> from 2024.1 to 2024.2</li>
+<li>Bump <code>dill</code> from 0.3.8 to 0.3.9</li>
+</ul>
+<h3 id="fixed_2">Fixed</h3>
+<ul>
+<li>Add rate limit handling to Slack client to improve Slack Machine's resilience when interacting with Slack's API,
+  especially when working with large workspaces (<a href="https://github.com/DonDebonair/slack-machine/pull/1194">#1194</a> by
+  <a href="https://github.com/sprutner"><strong>@sprutner</strong></a> and <a href="https://github.com/jasonwbarnett"><strong>@jasonwbarnett</strong></a>)</li>
+</ul>
+<h3 id="removed">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> Remove Python 3.8 support (<a href="https://github.com/DonDebonair/slack-machine/pull/1199">#1199</a>)</li>
+</ul>
+<h2 id="0370-2024-05-26"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.36.0...v0.37.0">0.37.0</a> - 2024-05-26</h2>
+<h3 id="added_2">Added</h3>
+<ul>
+<li>Support for <strong>Block actions</strong>, coming from interactive elements from <a href="https://api.slack.com/block-kit">Block Kit</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/1034">#1034</a> with help from
+  <a href="https://github.com/pawelros"><strong>pawelros</strong></a>)</li>
+</ul>
+<h3 id="changed_4">Changed</h3>
+<ul>
+<li>Bump <code>slack-sdk</code> from 3.27.1 to 3.27.2</li>
+</ul>
+<h2 id="0360-2024-05-04"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.35.0...v0.36.0">0.36.0</a> - 2024-05-04</h2>
+<h3 id="added_3">Added</h3>
+<ul>
+<li>Replace <code>flake8</code>, <code>isort</code> and <code>black</code> with <code>ruff</code> (<a href="https://github.com/DonDebonair/slack-machine/pull/1027">#1027</a>)</li>
+<li>Add Python 3.12 (<a href="https://github.com/DonDebonair/slack-machine/pull/1028">#1028</a>)</li>
+</ul>
+<h3 id="changed_5">Changed</h3>
+<ul>
+<li>Update Github Actions (<a href="https://github.com/DonDebonair/slack-machine/pull/1008">#1008</a>)</li>
+<li>Bump <code>slack-sdk</code> from 3.21.3 to 3.27.1</li>
+<li>Bump <code>httpx</code> from 0.24.1 to 0.27.0</li>
+<li>Bump <code>pydantic</code> from 2.3.0 to 2.7.1</li>
+<li>Bump <code>cryptography</code> from 41.0.3 to 42.0.4</li>
+<li>Bump <code>aiohttp</code> from 3.8.5 to 3.9.5</li>
+<li>Bump <code>urllib3</code> from 1.26.16 1.26.18</li>
+<li>Bump <code>structlog</code> from 23.1.0 to 24.1.0</li>
+<li>Bump <code>redis</code> from 5.0.0 to 5.0.4</li>
+<li>Bump <code>pyee</code> from 11.0.0 to 11.1.0</li>
+<li>Bump <code>aioboto3</code> from 11.3.0 to 12.4.0</li>
+<li>Bump <code>tzdata</code> from 2023.3 to 2024.1</li>
+<li>Bump <code>aiosqlite</code> from 0.19.0 to 0.20.0</li>
+<li>Bump <code>hiredis</code> from 2.2.3 to 2.3.2</li>
+</ul>
+<h2 id="0350-2023-09-03"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.34.2...v0.35.0">0.35.0</a> - 2023-09-03</h2>
+<h3 id="added_4">Added</h3>
+<ul>
+<li>Incoming requests/events from Slack that the Slack App is subscribed to, will be logged when <code>LOGLEVEL</code> is set to
+  <code>DEBUG</code> (<a href="https://github.com/DonDebonair/slack-machine/pull/876">#876</a>)</li>
+</ul>
+<h3 id="changed_6">Changed</h3>
+<ul>
+<li><strong>Breaking:</strong> the optional <code>init()</code> method of plugins is now expected to be <code>async</code>. This allows plugin authors to
+  interact with Slack during plugin initialization through Slack Machine's plugin API.
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/868">#868</a>)</li>
+<li>Standard app manifest for Slack Machine now also enables listening for the <code>app_home_opened</code> event</li>
+<li>Bump <code>aiosqlite</code> from 0.18.0 to 0.19.0</li>
+<li>Bump <code>apscheduler</code> from 3.10.1 to 3.10.4</li>
+<li>Bump <code>redis</code> from 4.6.0 to 5.0.0</li>
+<li>Bump <code>pyee</code> from 10.0.2 to 11.0.0</li>
+<li>Bump <code>pydantic</code> from 2.2.1 to 2.3.0</li>
+</ul>
+<h3 id="fixed_3">Fixed</h3>
+<ul>
+<li>Use conversations_setTopic instead of channels_setTopic for setting channel topic
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/869">#869</a> by
+  <a href="https://github.com/jogendra"><strong>@jogendra</strong></a>)</li>
+</ul>
+<h2 id="0342-2023-08-13"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.34.1...v0.34.2">0.34.2</a> - 2023-08-13</h2>
+<h3 id="fixed_4">Fixed</h3>
+<ul>
+<li>Users indexed by email and related functions are now exposed through the plugin interface
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/852">#852</a>)</li>
+</ul>
+<h2 id="0341-2023-08-13"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.34.0...v0.34.1">0.34.1</a> - 2023-08-13</h2>
+<h3 id="added_5">Added</h3>
+<ul>
+<li>Slack users are now indexed by their email as well, allowing fast lookups by email
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/849">#849</a>)</li>
+</ul>
+<h3 id="fixed_5">Fixed</h3>
+<ul>
+<li>All logging in Slack Machine is now done through structlog instead of the Python stdlib logger
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/850">#850</a>)</li>
+</ul>
+<h2 id="0340-2023-08-13"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.33.0...v0.34.0">0.34.0</a> - 2023-08-13</h2>
+<h3 id="added_6">Added</h3>
+<ul>
+<li>Add support to set topic on channels (<a href="https://github.com/DonDebonair/slack-machine/pull/839">#839</a> by
+  <a href="https://github.com/jogendra"><strong>@jogendra</strong></a>)</li>
+<li>Add SQLite storage backend (<a href="https://github.com/DonDebonair/slack-machine/pull/844">#844</a> by
+  <a href="https://github.com/cp-richard"><strong>@cp-richard</strong></a>)</li>
+</ul>
+<h3 id="changed_7">Changed</h3>
+<ul>
+<li>Bump <code>httpx</code> from 0.24.0 to 0.24.1</li>
+<li>Bump <code>aiohttp</code> from 3.8.4 to 3.8.5</li>
+<li>Bump <code>certifi</code> from 2022.12.7 to 2023.7.22</li>
+<li>Bump <code>pyee</code> from 9.1.0 to 10.0.2</li>
+<li>Bump <code>pydantic</code> from 1.10.7 to 2.1.1 (<a href="https://github.com/DonDebonair/slack-machine/pull/840">#840</a>)</li>
+</ul>
+<h3 id="removed_1">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> Remove Python 3.7 support (<a href="https://github.com/DonDebonair/slack-machine/pull/846">#846</a>)</li>
+</ul>
+<h2 id="0330-2023-05-15"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.32.0...v0.33.0">0.33.0</a> - 2023-05-15</h2>
+<h3 id="added_7">Added</h3>
+<ul>
+<li>Add support for <a href="https://api.slack.com/interactivity/slash-commands">slash commands</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/787">#787</a>)</li>
+</ul>
+<h3 id="changed_8">Changed</h3>
+<ul>
+<li><strong>Breaking:</strong> move <code>Message</code> class from <code>machine.plugins.base</code> to <code>machine.plugins.message</code></li>
+<li>Use dots only for referencing the fully-qualified name of classes and functions instead of using a colon before
+  the class name</li>
+<li>Bump <code>tzdata</code> from 2022.6 to 2023.3</li>
+<li>Bump <code>slack-sdk</code> from 3.19.4 to 3.21.3</li>
+<li>Bump <code>aioboto3</code> from 10.1.0 to 11.2.0</li>
+<li>Bump <code>aiohttp</code> from 3.8.3 to 3.8.4</li>
+<li>Bump <code>redis</code> from 4.3.5 to 4.5.5</li>
+<li>Bump <code>hiredis</code> from 2.0.0 to 2.2.3</li>
+<li>Bump <code>pydantic</code> from 1.10.2 to 1.10.7</li>
+<li>Bump <code>httpx</code> from 0.23.1 to 0.24.0</li>
+<li>Bump <code>apscheduler</code> from 3.9.1.post1 to 3.10.1</li>
+<li>Bump <code>structlog</code> from 22.3.0 to 23.1.0</li>
+<li>Bump <code>pyee</code> from 9.0.4 to 9.1.0</li>
+</ul>
+<h2 id="0320-2022-11-27"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.31.0...v0.32.0">0.32.0</a> - 2022-11-27</h2>
+<h3 id="added_8">Added</h3>
+<ul>
+<li>Add Python 3.11 support (<a href="https://github.com/DonDebonair/slack-machine/pull/676">#676</a>)</li>
+<li>Expose web client of Slack SDK (<a href="https://github.com/DonDebonair/slack-machine/pull/677">#677</a>)</li>
+</ul>
+<h3 id="changed_9">Changed</h3>
+<ul>
+<li>Bump <code>dill</code> from 0.3.5.1 to 0.3.6</li>
+<li>Bump <code>slack-sdk</code> from 3.19.1 to 3.19.4</li>
+<li>Bump <code>tzdata</code> from 2022.5 to 2022.6</li>
+<li>Bump <code>apscheduler</code> from 3.9.1 to 3.9.1.post1</li>
+<li>Bump <code>httpx</code> from 0.23.0 to 0.23.1</li>
+<li>Bump <code>redis</code> from 4.3.4 to 4.3.5</li>
+<li>Bump <code>structlog</code> from 22.1.0 to 22.3.0</li>
+</ul>
+<h3 id="fixed_6">Fixed</h3>
+<ul>
+<li>Fix documentation typos (<a href="https://github.com/DonDebonair/slack-machine/pull/665">#665</a> by
+  <a href="https://github.com/bennylu2"><strong>@bennylu2</strong></a>)</li>
+</ul>
+<h2 id="0310-2022-10-21"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.30.0...v0.31.0">0.31.0</a> - 2022-10-21</h2>
+<h3 id="changed_10">Changed</h3>
+<ul>
+<li>Moved Slack Machine community chat to <a href="https://join.slack.com/t/slack-machine-chat/shared_invite/zt-1g87tzvlf-8bV_WnY3JZyaYNnRFwRd~w">Slack</a></li>
+<li>Type-hint coverage is now 100% so mypy is happy (<a href="https://github.com/DonDebonair/slack-machine/pull/633">#633</a>)</li>
+<li>Update <em>pyproject.toml</em> to conform to Poetry 1.2 dependency specification
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/657">#657</a>)</li>
+<li>Replace <code>dacite</code> with <code>pydantic</code> to create models for Slack API interactions
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/659">#659</a>)</li>
+<li>Bump <code>aiohttp</code> from 3.8.1 to 3.8.3</li>
+<li>Bump <code>slack-sdk</code> from 3.18.3 to 3.19.1</li>
+<li>Bump <code>tzdata</code> from 2022.4 to 2022.5</li>
+<li>Bump <code>aioboto3</code> from 10.0.0 to 10.1.0</li>
+<li>Add changelog to keep track of updates</li>
+<li>Move to <a href="https://www.structlog.org">structlog</a> for logging, fixes
+  <a href="https://github.com/DonDebonair/slack-machine/issues/599">#599</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/663">#663</a>)</li>
+</ul>
+<h3 id="removed_2">Removed</h3>
+<ul>
+<li>Remove unused settings: <code>DISABLE_HTTP</code>, <code>HTTP_SERVER_HOST</code>, <code>HTTP_SERVER_PORT</code>, <code>HTTP_SERVER_BACKEND</code>, <code>HTTPS_PROXY</code>,
+  <code>KEEP_ALIVE</code></li>
+</ul>
+<h2 id="0300-2022-08-30"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.28.2...v0.30.0">0.30.0</a> - 2022-08-30</h2>
+<h3 id="changed_11">Changed</h3>
+<ul>
+<li>Bump <code>slack-sdk</code> from 3.18.1 to 3.18.3 (<a href="https://github.com/DonDebonair/slack-machine/pull/619">#619</a>)</li>
+</ul>
+<h3 id="removed_3">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> Remove sync version, it's all async now baby! :dancing_men:</li>
+</ul>
+<h2 id="0282-2022-08-30"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.28.1...v0.28.2">0.28.2</a> - 2022-08-30</h2>
+<h3 id="changed_12">Changed</h3>
+<ul>
+<li>Make handling changed message configurable in async mode (<a href="https://github.com/DonDebonair/slack-machine/pull/613">#613</a>)</li>
+<li>Add tests for slack client (<a href="https://github.com/DonDebonair/slack-machine/pull/614">#614</a>)</li>
+</ul>
+<h2 id="0281-2022-08-28"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.28.0...v0.28.1">0.28.1</a> - 2022-08-28</h2>
+<h3 id="added_9">Added</h3>
+<ul>
+<li>Add support for pinning/unpinning of messages (<a href="https://github.com/DonDebonair/slack-machine/pull/611">#611</a>)</li>
+</ul>
+<h3 id="changed_13">Changed</h3>
+<ul>
+<li>Add support for listening to message change events (<a href="https://github.com/DonDebonair/slack-machine/pull/594">#594</a>
+  with help from <a href="https://github.com/cchadowitz-pf"><strong>@cchadowitz-pf</strong></a>)</li>
+</ul>
+<h2 id="0280-2022-08-28"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.27.2...v0.28.0">0.28.0</a> - 2022-08-28</h2>
+<h3 id="added_10">Added</h3>
+<ul>
+<li>Add support to async version for scheduling messages and running plugin functions on a schedule
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/610">#610</a>)</li>
+</ul>
+<h2 id="0272-2022-08-14"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.27.1...v0.27.2">0.27.2</a> - 2022-08-14</h2>
+<h3 id="fixed_7">Fixed</h3>
+<ul>
+<li><code>aioboto3</code> types are only relevant for type checking, so move imports inside type checking guard</li>
+</ul>
+<h2 id="0271-2022-08-14"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.27.0...v0.27.1">0.27.1</a> - 2022-08-14</h2>
+<h3 id="changed_14">Changed</h3>
+<ul>
+<li>Add documentation for DynamoDB storage backend (<a href="https://github.com/DonDebonair/slack-machine/pull/603">#603</a>)</li>
+</ul>
+<h3 id="fixed_8">Fixed</h3>
+<ul>
+<li>Add <code>aioboto3</code> as optional dependency so extras can be satisfied (<a href="https://github.com/DonDebonair/slack-machine/pull/604">#604</a>)</li>
+</ul>
+<h2 id="0270-2022-08-14"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.26.1...v0.27.0">0.27.0</a> - 2022-08-14</h2>
+<h3 id="added_11">Added</h3>
+<ul>
+<li>Add DynamoDB storage backend (<a href="https://github.com/DonDebonair/slack-machine/pull/602">#602</a> by
+  <a href="https://github.com/jkmathes"><strong>@jkmathes</strong></a>)</li>
+<li>Add <code>black</code>, <code>isort</code> and other linters/formatters to create uniform code style (<a href="https://github.com/DonDebonair/slack-machine/pull/597">#597</a>)</li>
+</ul>
+<h3 id="changed_15">Changed</h3>
+<ul>
+<li>Update documentation for builtin plugins, fixes <a href="https://github.com/DonDebonair/slack-machine/issues/396">#396</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/598">#598</a>)</li>
+<li>Replace <code>requests</code> with <code>httpx</code> for async http calls in meme plugin and share memes as blocks
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/600">#600</a>)</li>
+<li>Replace <code>requests</code> with <code>httpx</code> for async http calls in Google image search plugin (<a href="https://github.com/DonDebonair/slack-machine/pull/601">#601</a>)</li>
+</ul>
+<h2 id="0261-2022-08-13"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.26.0...v0.26.1">0.26.1</a> - 2022-08-13</h2>
+<h3 id="fixed_9">Fixed</h3>
+<ul>
+<li>Various documentation fixes</li>
+<li>Fix project metadata</li>
+</ul>
+<h2 id="0260-2022-08-13"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.25...v0.26.0">0.26.0</a> - 2022-08-13</h2>
+<h3 id="added_12">Added</h3>
+<ul>
+<li>Slack Machine now supports <a href="https://docs.python.org/3/library/asyncio.html">asyncio</a> using the <a href="https://api.slack.com/apis/connections/events-api">Slack Events API</a>
+  and <a href="https://api.slack.com/apis/connections/socket">Socket Mode</a>! :racing_car:</li>
+</ul>
+<h3 id="changed_16">Changed</h3>
+<ul>
+<li>Bump <code>redis</code> from 4.2.0 to 4.3.4</li>
+<li>Bump <code>slack-sdk</code> from 3.15.2 to 3.18.1</li>
+</ul>
+<h2 id="0250-2022-03-27"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.24...v0.25">0.25.0</a> - 2022-03-27</h2>
+<h3 id="changed_17">Changed</h3>
+<ul>
+<li>Bump <code>redis</code> from 4.0.2 to 4.2.0</li>
+<li>Bump <code>slack-sdk</code> from 3.12.0 to 3.15.2</li>
+<li>Bump <code>requests</code> from 2.26.0 to 2.27.1</li>
+<li>Bump <code>apscheduler</code> from 3.8.1 to 3.9.1</li>
+</ul>
+<h3 id="fixed_10">Fixed</h3>
+<ul>
+<li>Fix expected payload of events when updating channel cache, fixes <a href="https://github.com/DonDebonair/slack-machine/issues/526">#526</a>
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/565">#565</a>)</li>
+</ul>
+<h2 id="0240-2021-12-01"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.23...v0.24">0.24.0</a> - 2021-12-01</h2>
+<h3 id="added_13">Added</h3>
+<ul>
+<li>Add Python 3.10 support</li>
+</ul>
+<h3 id="changed_18">Changed</h3>
+<ul>
+<li>Bump <code>redis</code> from 3.5.3 to 4.0.2</li>
+<li>Bump <code>apscheduler</code> from 3.8.0 to 3.8.1</li>
+<li>Move documentation from Sphinx to MkDocs and <a href="https://squidfunk.github.io/mkdocs-material/">Material for MkDocs</a>
+  for beautiful docs (<a href="https://github.com/DonDebonair/slack-machine/pull/514">#514</a>)</li>
+<li>Switch from <code>slackclient</code> to <code>slack_sdk</code> library, fixes <a href="https://github.com/DonDebonair/slack-machine/issues/443">#443</a></li>
+</ul>
+<h3 id="removed_4">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> Remove Python 3.6 support</li>
+</ul>
+<h2 id="0232-2021-10-17"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.23.1...v0.23.2">0.23.2</a> - 2021-10-17</h2>
+<h3 id="fixed_11">Fixed</h3>
+<ul>
+<li>Bring back script to run Slack Machine</li>
+</ul>
+<h2 id="0231-2021-10-17"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.23...v0.23.1">0.23.1</a> - 2021-10-17</h2>
+<h3 id="changed_19">Changed</h3>
+<ul>
+<li>Document all contributors</li>
+</ul>
+<h3 id="fixed_12">Fixed</h3>
+<ul>
+<li>Install the right extra packages for Redis</li>
+</ul>
+<h3 id="removed_5">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> HBase storage backend has been removed</li>
+</ul>
+<h2 id="0230-2021-10-16"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.22...v0.23">0.23.0</a> - 2021-10-16</h2>
+<h3 id="changed_20">Changed</h3>
+<ul>
+<li>Switch to Poetry for project and dependency management</li>
+<li>Bump <code>apscheduler</code> from 3.7.0 to 3.8.0</li>
+</ul>
+<h3 id="fixed_13">Fixed</h3>
+<ul>
+<li>Various CI fixes</li>
+</ul>
+<h2 id="0220-2021-09-12"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.21.1...v0.22">0.22.0</a> - 2021-09-12</h2>
+<h3 id="changed_21">Changed</h3>
+<ul>
+<li>Bump <code>dill</code> from 0.3.3 to 0.3.4</li>
+<li>Bump <code>requests</code> from 2.25.1 to 2.26.0</li>
+<li>Bump <code>cython</code> from 0.29.23 to 0.29.24</li>
+<li>Use Github Actions for CI and drop Travis (<a href="https://github.com/DonDebonair/slack-machine/pull/492">#492</a>)</li>
+<li>Switch <code>master</code> branch to <code>main</code> to get with the times</li>
+</ul>
+<h3 id="fixed_14">Fixed</h3>
+<ul>
+<li>Only cover named channels when attempting to find a channel by name (<a href="https://github.com/DonDebonair/slack-machine/pull/483">#483</a>
+  by <a href="https://github.com/arusahni"><strong>@arusahni</strong></a>)</li>
+</ul>
+<h2 id="0211-2021-08-01"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.21...v0.21.1">0.21.1</a> - 2021-08-01</h2>
+<h3 id="changed_22">Changed</h3>
+<ul>
+<li>Add channel members to <code>Channel</code> model and keep members up-to-date through Slack events (<a href="https://github.com/DonDebonair/slack-machine/pull/485">#485</a>
+  by <a href="https://github.com/arusahni"><strong>@arusahni</strong></a>)</li>
+</ul>
+<h2 id="0210-2021-04-25"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.20.1...v0.21">0.21.0</a> - 2021-04-25</h2>
+<h3 id="added_14">Added</h3>
+<ul>
+<li>Add Gitter chat room to facilitate discussions about Slack Machine</li>
+<li>Add Role-based access controls feature for plugins (<a href="https://github.com/DonDebonair/slack-machine/pull/321">#321</a>
+  by <a href="https://github.com/davidolrik"><strong>@davidolrik</strong></a>)</li>
+<li>Add Python 3.9 support</li>
+</ul>
+<h3 id="changed_23">Changed</h3>
+<ul>
+<li>Move to Dependabot from PyUp to manage automatic dependency updates</li>
+<li>Bump <code>slackclient</code> from 2.7.3 to 2.9.3</li>
+<li>Bump <code>requests</code> from 2.24.0 to 2.25.1</li>
+<li>Bump <code>dill</code> from 0.3.2 to 0.3.3</li>
+<li>Bump <code>dacite</code> from 1.5.1 to 1.6.0</li>
+<li>Bump <code>cython</code> from 0.29.21 to 0.29.23</li>
+<li>Bump <code>apscheduler</code> from 3.6.3 to 3.7.0</li>
+</ul>
+<h3 id="fixed_15">Fixed</h3>
+<ul>
+<li>Make channel topic creator an optional field in the <code>Channel</code> model (<a href="https://github.com/DonDebonair/slack-machine/pull/439">#439</a>
+  by <a href="https://github.com/eguven"><strong>@eguven</strong></a>)</li>
+<li>Always respond to plugin functions decorated with <code>@listen_to</code>, also when bot is addressed in direct message (<a href="https://github.com/DonDebonair/slack-machine/pull/436">#436</a>
+  by <a href="https://github.com/eddyg"><strong>@eddyg</strong></a>)</li>
+<li>Use <code>conversations.open</code> endpoint on Slack WebAPI instead of <code>im.open</code> endpoint to open direct message conversations,
+  because the latter is deprecated (<a href="https://github.com/DonDebonair/slack-machine/pull/401">#401</a>
+  by <a href="https://github.com/cchadowitz-pf"><strong>@cchadowitz-pf</strong></a>)</li>
+</ul>
+<h2 id="0201-2020-07-23"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.20...v0.20.1">0.20.1</a> - 2020-07-23</h2>
+<h3 id="fixed_16">Fixed</h3>
+<ul>
+<li>Use <code>conversations.info</code> endpoint on Slack WebAPI instead of <code>channels.info</code> endpoint, which is deprecated and
+  mark optional fields as such in <code>User</code> and <code>Channel</code> objects
+  (<a href="https://github.com/DonDebonair/slack-machine/pull/386">#386</a> by <a href="https://github.com/repudi8or"><strong>@repudi8or</strong></a>)</li>
+</ul>
+<h2 id="0200-2020-07-22"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.19.2...v0.20">0.20.0</a> - 2020-07-22</h2>
+<h3 id="added_15">Added</h3>
+<ul>
+<li>Support Python 3.8</li>
+</ul>
+<h3 id="changed_24">Changed</h3>
+<ul>
+<li>Bump <code>dacite</code> from 1.0.2 to 1.5.1</li>
+<li>Bump <code>redis</code> from 3.3.11 to 3.5.3</li>
+<li>Bump <code>cython</code> from 0.29.14 to 0.29.21</li>
+<li>Bump <code>dill</code> from 0.3.1.1 to 0.3.2</li>
+<li>Bump <code>requests</code> from 2.22.0 to 2.24.0</li>
+<li>Bump <code>slackclient</code> from 2.5.0 to 2.7.3</li>
+<li>Add <code>is_thread</code> property to <code>Message</code> class (<a href="https://github.com/DonDebonair/slack-machine/pull/286">#286</a> by
+  <a href="https://github.com/davidolrik"><strong>@davidolrik</strong></a>)</li>
+<li>Use <code>conversations.list</code> endpoint on Slack WebAPI instead of <code>channels.list</code> endpoint, which is deprecated and
+  include private channels in channel cache (<a href="https://github.com/DonDebonair/slack-machine/pull/329">#329</a> by
+  <a href="https://github.com/repudi8or"><strong>@repudi8or</strong></a>)</li>
+<li>Include direct messages in channel cache</li>
+<li>Add pre-commit hooks to verify basic things before commiting</li>
+</ul>
+<h3 id="fixed_17">Fixed</h3>
+<ul>
+<li><code>deleted</code> property is optional on user responses from Slack WebAPI</li>
+</ul>
+<h2 id="0192-2020-01-05"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.19.1...v0.19.2">0.19.2</a> - 2020-01-05</h2>
+<h3 id="changed_25">Changed</h3>
+<ul>
+<li><strong>Breaking:</strong>: <code>thread_ts</code> property on the <code>Message</code> class has been renamed to <code>ts</code></li>
+</ul>
+<h3 id="fixed_18">Fixed</h3>
+<ul>
+<li><code>EchoPlugin</code> will not respond to itself anymore</li>
+<li>Fixed PyPI classifiers</li>
+</ul>
+<h2 id="0191-2020-01-05"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.19...v0.19.1">0.19.1</a> - 2020-01-05</h2>
+<h3 id="fixed_19">Fixed</h3>
+<ul>
+<li>Fix help plugin</li>
+<li>Fix various typos in the documentation</li>
+</ul>
+<h2 id="0190-2020-01-05"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.18.2...v0.19">0.19.0</a> - 2020-01-05</h2>
+<h3 id="changed_26">Changed</h3>
+<ul>
+<li>Major version upgrade of <code>slackclient</code> from 1.3.1 to 2.5.0</li>
+<li>Refactor code to capture Slack API responses in dataclasses for easier development</li>
+<li>Split internal Slack client into low-level client and high-level facade</li>
+<li>Start adding type hints</li>
+<li><strong>Breaking:</strong> <code>self.users</code> and <code>self.channels</code> on the base plugin class now return different objects than before.
+  See API documentation for more details. These properties should behave more consistently however, even in workspaces
+  with many users.</li>
+</ul>
+<h3 id="removed_6">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> Remove <code>catch_all()</code> method from base plugin class because it's not supported by the <code>slackclient</code>
+  library anymore</li>
+<li><strong>Breaking:</strong> The <code>*_webapi</code> methods to send messages do not exist anymore, use the regular counterparts instead. All
+  messages are now sent using the Slack WebAPI. The RTM API is still used for listening to messages and events</li>
+</ul>
+<h2 id="0182-2019-11-17"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.18.1...v0.18.2">0.18.2</a> - 2019-11-17</h2>
+<h3 id="fixed_20">Fixed</h3>
+<ul>
+<li>Fix <code>bottle</code> import</li>
+</ul>
+<h2 id="0181-2019-11-17"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.18...v0.18.1">0.18.1</a> - 2019-11-17</h2>
+<h3 id="changed_27">Changed</h3>
+<ul>
+<li>Bump <code>apscheduler</code> from 3.5.3 to 3.6.3</li>
+<li>Bump <code>redis</code> from 3.2.0 to 3.3.11</li>
+<li>Bump <code>happybase</code> from 1.1.0 to 1.2.0</li>
+<li>Bump <code>cython</code> from 0.29.6 to 0.29.14</li>
+<li>Bump <code>dill</code> from 0.2.9 to 0.3.1.1</li>
+<li>Bump <code>bottle</code> from 0.12.16 to 0.12.17</li>
+<li>Include <code>bottle</code> as a vendored dependency to not be dependent on the long release cycles of <code>bottle</code></li>
+<li>Fix deprecation warnings to prepare for Python 3.8</li>
+<li>Allow matching multiline messages in <code>@listen_to</code> and <code>@respond_to</code> decorators (<a href="https://github.com/DonDebonair/slack-machine/pull/178">#178</a>
+  by <a href="https://github.com/seerickcode"><strong>@seerickcode</strong></a>)</li>
+</ul>
+<h3 id="removed_7">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> drop support for Python 3.4 and 3.5</li>
+</ul>
+<h2 id="0180-2019-03-10"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.17...v0.18">0.18.0</a> - 2019-03-10</h2>
+<h3 id="changed_28">Changed</h3>
+<ul>
+<li>Bump <code>slackclient</code> from 1.3.0 to 1.3.1</li>
+<li>Bump <code>dill</code> from 0.2.8.2 to 0.2.9</li>
+<li>Bump <code>bottle</code> from 0.12.13 to 0.12.16</li>
+<li>Bump <code>redis</code> from 2.10.6 to 3.2.0</li>
+<li>Bump <code>Cython</code> from 0.28.5 to 0.29.6</li>
+</ul>
+<h2 id="0170-2018-11-10"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.16.1...v0.17">0.17.0</a> - 2018-11-10</h2>
+<h3 id="added_16">Added</h3>
+<ul>
+<li>Add support for bot aliases (<a href="https://github.com/DonDebonair/slack-machine/pull/108">#108</a>
+  by <a href="https://github.com/seerickcode"><strong>@seerickcode</strong></a>)</li>
+</ul>
+<h2 id="0161-2018-09-28"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.16...v0.16.1">0.16.1</a> - 2018-09-28</h2>
+<h3 id="changed_29">Changed</h3>
+<ul>
+<li>Allow not only direct subclasses of MachineBasePlugin be plugins, but also deeper decendants (<a href="https://github.com/DonDebonair/slack-machine/pull/95">#95</a>
+  by <a href="https://github.com/gfreezy"><strong>@gfreezy</strong></a>)</li>
+<li>Bump <code>slackclient</code> from 1.2.1 to 1.3.0 (<a href="https://github.com/DonDebonair/slack-machine/pull/88">#88</a>)</li>
+</ul>
+<h2 id="0160-2018-09-06"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.15...v0.16">0.16.0</a> - 2018-09-06</h2>
+<h3 id="added_17">Added</h3>
+<ul>
+<li>Add HBase storage backend</li>
+</ul>
+<h2 id="0150-2018-09-03"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.14...v0.15">0.15.0</a> - 2018-09-03</h2>
+<h3 id="added_18">Added</h3>
+<ul>
+<li>Add optional keep-alive ping in background thread to keep the connection to Slack alive (<a href="https://github.com/DonDebonair/slack-machine/pull/79">#79</a>
+  by <a href="https://github.com/preludedrew"><strong>@preludedrew</strong></a>)</li>
+</ul>
+<p>This helps when Slack Machine is running in environments that occasionally "go to sleep", such as Heroku</p>
+<h3 id="changed_30">Changed</h3>
+<ul>
+<li>Bump <code>apscheduler</code> from 3.5.1 to 3.5.3</li>
+<li>Fix Python 3.7 builds by using Xenial distro</li>
+</ul>
+<h2 id="0140-2018-07-31"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.13.2...v0.14">0.14.0</a> - 2018-07-31</h2>
+<h3 id="added_19">Added</h3>
+<ul>
+<li>Add Python 3.7 support</li>
+</ul>
+<h3 id="changed_31">Changed</h3>
+<ul>
+<li>Add support for configuring HTTP proxy for Slack client (<a href="https://github.com/DonDebonair/slack-machine/pull/64">#69</a>
+  by <a href="https://github.com/gfreezy"><strong>@gfreezy</strong></a>)</li>
+</ul>
+<h2 id="0132-2018-07-04"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.13.1...v0.13.2">0.13.2</a> - 2018-07-04</h2>
+<h3 id="changed_32">Changed</h3>
+<ul>
+<li>Make HTTP server host &amp; port configurable (<a href="https://github.com/DonDebonair/slack-machine/pull/64">#64</a> by
+  <a href="https://github.com/pirogoeth"><strong>@pirogoeth</strong></a>)</li>
+<li>Bump <code>dill</code> from 0.2.7.1 to 0.2.8.2</li>
+<li>Bump <code>slackclient</code> from 1.1.3 to 1.2.1</li>
+</ul>
+<h2 id="0131-2018-03-06"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.13...v0.13.1">0.13.1</a> - 2018-03-06</h2>
+<h3 id="changed_33">Changed</h3>
+<ul>
+<li>Mention webserver functionality in README</li>
+</ul>
+<h2 id="0130-2018-03-06-yanked"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.12.2...v0.13">0.13.0</a> - 2018-03-06 [YANKED]</h2>
+<p><em>:warning: NOTE: release was yanked due to lack of documentation</em></p>
+<h3 id="added_20">Added</h3>
+<ul>
+<li>Add webserver functionality so plugins can have functions triggered by HTTP requests</li>
+</ul>
+<h3 id="changed_34">Changed</h3>
+<ul>
+<li>Bump <code>slackclient</code> from 1.1.2 to 1.1.3</li>
+</ul>
+<h2 id="0122-2018-02-26"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.12.1...v0.12.2">0.12.2</a> - 2018-02-26</h2>
+<h3 id="changed_35">Changed</h3>
+<ul>
+<li>Bump <code>slackclient</code> from 1.1.0 to 1.1.2</li>
+<li>Memes plugin: support custom meme templates</li>
+</ul>
+<h3 id="fixed_21">Fixed</h3>
+<ul>
+<li>Plugin help now properly distinguishes between robot or human help</li>
+</ul>
+<h2 id="0121-2018-01-26"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.12...v0.12.1">0.12.1</a> - 2018-01-26</h2>
+<h3 id="fixed_22">Fixed</h3>
+<ul>
+<li>Fix tests for new plugins</li>
+</ul>
+<h2 id="0120-2018-01-26"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.11...v0.12">0.12.0</a> - 2018-01-26</h2>
+<h3 id="added_21">Added</h3>
+<ul>
+<li>Add Google Image search plugin</li>
+<li>Add memes plugin based on <a href="https://memegen.link/">Memegen</a></li>
+</ul>
+<h2 id="0110-2018-01-22"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.10...v0.11">0.11.0</a> - 2018-01-22</h2>
+<h3 id="added_22">Added</h3>
+<ul>
+<li>Add help feature so users can see what a bot can do based on documentation provided by plugin authors</li>
+</ul>
+<h2 id="0100-2018-01-21"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.9...v0.10">0.10.0</a> - 2018-01-21</h2>
+<h3 id="added_23">Added</h3>
+<ul>
+<li>Add optional plugin initialization</li>
+<li>Allow plugins to mark settings as <em>required</em></li>
+</ul>
+<h3 id="changed_36">Changed</h3>
+<ul>
+<li>Bump <code>apscheduler</code> from 3.4.0 to 3.5.1</li>
+</ul>
+<h2 id="090-2017-12-03"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.8...v0.9">0.9.0</a> - 2017-12-03</h2>
+<h3 id="changed_37">Changed</h3>
+<ul>
+<li>Bump <code>apscheduler</code> from 3.3.1 to 3.4.0</li>
+<li>Bump <code>slackclient</code> from 1.0.9 to 1.1.0</li>
+<li>WebAPI methods will return deserialized API responses (<a href="https://github.com/DonDebonair/slack-machine/pull/14">#14</a>
+  by <a href="https://github.com/pirogoeth"><strong>@pirogoeth</strong></a>)</li>
+</ul>
+<h3 id="removed_8">Removed</h3>
+<ul>
+<li><strong>Breaking:</strong> drop support for Python 3.3</li>
+</ul>
+<h2 id="080-2017-10-15"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.7...v0.8">0.8.0</a> - 2017-10-15</h2>
+<h3 id="added_24">Added</h3>
+<ul>
+<li>Add support for event listeners and emitting events for inter-plugin communication</li>
+</ul>
+<h2 id="070-2017-10-13"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.6...v0.7">0.7.0</a> - 2017-10-13</h2>
+<h3 id="added_25">Added</h3>
+<ul>
+<li>Add scheduling functionality to send messages and run plugin functions on a schedule</li>
+</ul>
+<h3 id="changed_38">Changed</h3>
+<ul>
+<li>Refactor client classes to be singletons so they don't need to be persisted by APScheduler</li>
+<li>Add PyUp to automatically update dependencies</li>
+</ul>
+<h2 id="060-2017-09-14"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.5...v0.6">0.6.0</a> - 2017-09-14</h2>
+<h3 id="added_26">Added</h3>
+<ul>
+<li>Add pluggable plugin storage so plugins can store data</li>
+<li>Add 2 storage backends: in-memory and Redis</li>
+</ul>
+<h3 id="changed_39">Changed</h3>
+<ul>
+<li>Drastically improve tests and increase coverage</li>
+</ul>
+<h2 id="050-2017-09-09"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.4...v0.5">0.5.0</a> - 2017-09-09</h2>
+<h3 id="changed_40">Changed</h3>
+<ul>
+<li>Finish documentation</li>
+</ul>
+<h2 id="040-2017-09-06"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.3...v0.4">0.4.0</a> - 2017-09-06</h2>
+<h3 id="added_27">Added</h3>
+<ul>
+<li>Document how to create plugins + plugin API</li>
+</ul>
+<h3 id="changed_41">Changed</h3>
+<ul>
+<li>Decorators can now be used multiple times on the same function</li>
+</ul>
+<h2 id="030-2017-09-03"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.2...v0.3">0.3.0</a> - 2017-09-03</h2>
+<h3 id="added_28">Added</h3>
+<ul>
+<li>Basic documentation</li>
+</ul>
+<h2 id="020-2017-09-01"><a href="https://github.com/DonDebonair/slack-machine/compare/v0.1...v0.2">0.2.0</a> - 2017-09-01</h2>
+<h3 id="added_29">Added</h3>
+<ul>
+<li>Add tests and CI</li>
+</ul>
+<h2 id="010-2017-08-29"><a href="https://github.com/DonDebonair/slack-machine/commits/v0.1">0.1.0</a> - 2017-08-29</h2>
+<p><em>First release. Rejoice!</em> :wave:</p>
+<h3 id="added_30">Added</h3>
+<ul>
+<li>A simple, yet powerful and extendable Slack bot framework</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand", "navigation.instant", "navigation.tracking", "navigation.indexes"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>

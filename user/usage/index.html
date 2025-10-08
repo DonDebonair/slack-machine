@@ -1,0 +1,1200 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../install/">
+      
+      
+        <link rel="next" href="../../plugins/basics/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.45">
+    
+    
+      
+        <title>Using Slack Machine - Slack Machine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.0253249f.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Quicksand:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Quicksand";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-slack-machine" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Slack Machine" class="md-header__button md-logo" aria-label="Slack Machine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Slack Machine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Using Slack Machine
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="purple"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="purple" data-md-color-accent="purple"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/DonDebonair/slack-machine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DonDebonair/slack-machine
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Slack Machine" class="md-nav__button md-logo" aria-label="Slack Machine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Slack Machine
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/DonDebonair/slack-machine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    DonDebonair/slack-machine
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slack Machine
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intro/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Introduction
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Using Slack Machine
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Using Slack Machine
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-slack-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring Slack Machine
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring Slack Machine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-environment-variables-for-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using environment variables for configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting aliases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabling-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling plugins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing storage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      in-memory (default)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      DynamoDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLite
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Plugins
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Plugins
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/basics/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plugin Basics
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/listening/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Listening for things
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/slash-commands/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Slash Commands
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/interacting/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    How to interact
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/block-kit-actions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Block Kit actions
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/modals/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Modals
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/settings/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Plugin Settings
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/storage/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Storage
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../plugins/misc/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Miscellaneous stuff
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Documentation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../migrating/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Migrating plugins to async
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Changelog
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuring-slack-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuring Slack Machine
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuring Slack Machine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-environment-variables-for-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      Using environment variables for configuration
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#setting-aliases" class="md-nav__link">
+    <span class="md-ellipsis">
+      Setting aliases
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enabling-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enabling plugins
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#choosing-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Choosing storage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      in-memory (default)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#redis" class="md-nav__link">
+    <span class="md-ellipsis">
+      Redis
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamodb" class="md-nav__link">
+    <span class="md-ellipsis">
+      DynamoDB
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlite" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLite
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="using-slack-machine">Using Slack Machine</h1>
+<p>Once you have installed Slack Machine, configuring and starting your bot is easy:</p>
+<ol>
+<li>Create a directory for your Slack Machine bot: <code>mkdir my-slack-bot &amp;&amp; cd my-slack-bot</code></li>
+<li>Add a <code>local_settings.py</code> file to your bot directory: <code>touch local_settings.py</code></li>
+<li>Create a new app in Slack: <a href="https://api.slack.com/apps">https://api.slack.com/apps</a></li>
+<li>Choose to create an app from an <em>App manifest</em></li>
+<li>
+<p>Copy/paste the following manifest:</p>
+<div class="highlight"><span class="filename">manifest.yaml</span><pre><span></span><code>display_information:
+  name: Slack Machine
+features:
+  bot_user:
+    display_name: Slack Machine
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - app_mentions:read
+      - channels:history
+      - channels:join
+      - channels:read
+      - chat:write
+      - chat:write.public
+      - emoji:read
+      - groups:history
+      - groups:read
+      - groups:write
+      - im:history
+      - im:read
+      - im:write
+      - mpim:history
+      - mpim:read
+      - mpim:write
+      - pins:read
+      - pins:write
+      - reactions:read
+      - reactions:write
+      - users:read
+      - users:read.email
+      - channels:manage
+      - chat:write.customize
+      - dnd:read
+      - files:read
+      - files:write
+      - links:read
+      - links:write
+      - metadata.message:read
+      - usergroups:read
+      - usergroups:write
+      - users.profile:read
+      - users:write
+settings:
+  event_subscriptions:
+    bot_events:
+      - app_home_opened
+      - app_mention
+      - channel_archive
+      - channel_created
+      - channel_deleted
+      - channel_id_changed
+      - channel_left
+      - channel_rename
+      - channel_unarchive
+      - group_archive
+      - group_deleted
+      - group_left
+      - group_rename
+      - group_unarchive
+      - member_joined_channel
+      - member_left_channel
+      - message.channels
+      - message.groups
+      - message.im
+      - message.mpim
+      - reaction_added
+      - reaction_removed
+      - team_join
+      - user_change
+      - user_profile_changed
+      - user_status_changed
+  interactivity:
+    is_enabled: true
+  org_deploy_enabled: false
+  socket_mode_enabled: true
+  token_rotation_enabled: false
+</code></pre></div>
+</li>
+<li>
+<p>Add the Slack App and Bot tokens to your <code>local_settings.py</code> like this:</p>
+<div class="highlight"><span class="filename">local_settings.py</span><pre><span></span><code>SLACK_APP_TOKEN = &quot;xapp-my-app-token&quot;
+SLACK_BOT_TOKEN = &quot;xoxb-my-bot-token&quot;
+</code></pre></div>
+</li>
+<li>
+<p>Start the bot with <code>slack-machine</code></p>
+</li>
+<li>...</li>
+<li>Profit!</li>
+</ol>
+<h2 id="configuring-slack-machine">Configuring Slack Machine</h2>
+<p>All the configuration for your bot lives in the <code>local_settings.py</code> in the root of your bot directory. The core of
+Slack Machine, and the most of the built-in plugins, only need a <code>SLACK_APP_TOKEN</code> and <code>SLACK_BOT_TOKEN</code> to function.</p>
+<p>You can override the log level by setting <code>LOGLEVEL</code>. By default this is set to <code>"ERROR"</code>.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you set the <code>LOGLEVEL</code> to <code>DEBUG</code>, all events your Slack App is subscribed to, will be logged.</p>
+</div>
+<p>If you want to use Slack Machine behind a proxy, you can set <code>HTTP_PROXY</code>.</p>
+<h3 id="using-environment-variables-for-configuration">Using environment variables for configuration</h3>
+<p>For some configuration, it can be a security consideration not to store them in your source code
+(i.e. <code>local_settings.py</code>) Slack Machine allows you to provide any setting - both built-in and for plugins - as
+environment variables. This is done by prefixing the setting name with <code>SM_</code>. Example: <code>SM_SLACK_APP_TOKEN</code> and
+<code>SM_SLACK_BOT_TOKEN</code> as environment variable can be used to set the <code>SLACK_APP_TOKEN</code> and <code>SLACK_BOT_TOKEN</code> settings
+instead of having to put it in the <code>local_settings.py</code>.</p>
+<p>This way you can follow the <a href="https://12factor.net/">12 Factor app</a> best practices to configure your bot!</p>
+<h3 id="setting-aliases">Setting aliases</h3>
+<p>The <code>ALIASES</code> configuration setting allows the bot to respond to a
+trigger symbol instead of a direct @botname.</p>
+<p>Example:</p>
+<p>If <code>ALIASES='!,%'</code> was set in <code>local_settings.py</code> then the bot would
+respond to the following phrases:</p>
+<div class="highlight"><pre><span></span><code>@botname release the hounds
+!release the hounds
+%release the hounds
+</code></pre></div>
+<h3 id="enabling-plugins">Enabling plugins</h3>
+<p>Slack Machine comes with a few simple built-in plugins:</p>
+<ul>
+<li><strong>HelloPlugin</strong>: responds in kind when users greet the bot with
+  "hello" or "hi" (only when the bot is mentioned)</li>
+<li><strong>PingPongPlugin</strong>: responds to "ping" with "pong" and vice
+  versa (listens regardless of mention)</li>
+<li><strong>EchoPlugin</strong>: replies to any message the bot hears, with exactly
+  the same message. The bot will reply to the same channel the
+  original message was heard in</li>
+<li><strong>HelpPlugin</strong>: responds to "help" with a list of all available commands and how they work. You can use "robot
+  help" to learn the regexes that are used to match commands.</li>
+<li><strong>MemePlugin</strong>: lets the user generate memes based on templates and captions Uses <a href="https://memegen.link/">Memegen</a></li>
+<li><strong>ImageSearchPlugin</strong>: lets users search images and gifs using Google Custom Search (requires setting up a
+  <a href="https://developers.google.com/custom-search/v1/introduction">Programmable Search Engine</a> in Google and adding the
+  search engine id as <code>GOOGLE_CSE_ID</code> and a Google API key as <code>GOOGLE_API_KEY</code>)</li>
+<li><strong>RBACPlugin</strong>: lets admins assign, revoke and list user roles. Is used when you want to
+  <a class="autorefs autorefs-internal" title="Protecting commands" href="../../plugins/interacting/#protecting-commands">protect commands</a></li>
+</ul>
+<p>By default, <strong>HelloPlugin</strong> and <strong>PingPongPlugin</strong> are enabled.</p>
+<p>You can specify which plugins Slack Machine should load, by setting the <code>PLUGINS</code> variable in <code>local_settings.py</code> to
+a list of fully qualified classes or modules that contain plugins. You can either point to a plugin class directly, or
+to a module containing one or more plugins.</p>
+<p>For example, to enable most of the built-in Slack Machine plugins, your <code>local_settings.py</code> would look like this:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SLACK_APP_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;xapp-my-app-token&quot;</span>
+<span class="n">SLACK_BOT_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;xoxb-my-bot-token&quot;</span>
+<span class="n">PLUGINS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;machine.plugins.builtin.general.PingPongPlugin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.general.HelloPlugin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.debug.EchoPlugin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.fun.memes.MemePlugin&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.help.HelpPlugin&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>Or is you want import them by the modules they're in:</p>
+<div class="highlight"><pre><span></span><code><span class="n">SLACK_APP_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;xapp-my-app-token&quot;</span>
+<span class="n">SLACK_BOT_TOKEN</span> <span class="o">=</span> <span class="s2">&quot;xoxb-my-bot-token&quot;</span>
+<span class="n">PLUGINS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;machine.plugins.builtin.general&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.debug&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.help&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;machine.plugins.builtin.fun.memes&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>Slack Machine can load any plugin that is on the Python path. This means you can load any plugin that is installed in
+the same virtual environment you installed Slack Machine in. And as a convenience, Slack Machine will also add the
+directory you start Slack Machine from, to your Python path.</p>
+<h3 id="choosing-storage">Choosing storage</h3>
+<p>Slack Machine provides persistent storage, which can be used by plugins to store data of any kind. Slack Machine
+supports different <em>backends</em> for storage, so you can choose one that best fits your needs and existing infrastructure.
+You can configure which backend to use, by setting the <code>STORAGE_BACKEND</code> variable in <code>local_settings.py</code> to the fully
+qualified class of the chosen storage backend.</p>
+<p>Out of the box, Slack Machine provides 4 options for storage backend:</p>
+<h4 id="in-memory-default">in-memory (<em>default</em>)</h4>
+<p>This backend will store all data in-memory, which is great for testing because it doesn't have any external
+dependencies. <strong>Does not persist data between restarts</strong></p>
+<p><em>Class</em>: <code>machine.storage.backends.memory.MemoryStorage</code></p>
+<h4 id="redis">Redis</h4>
+<p>Install with: <code>uv add 'slack-machine[redis]'</code></p>
+<p>This backend stores data in <a href="https://redis.io/">Redis</a>. Redis is a very fast key-value store that is super easy to
+install and operate. This backend is recommended, because it will persist data between restarts. The Redis backend
+requires you to provide a URL to your Redis instance by setting the <code>REDIS_URL</code> variable in <code>local_settings.py</code>. The
+URL should have the following format:</p>
+<div class="highlight"><pre><span></span><code>`redis://&lt;host&gt;:&lt;port&gt;[/&lt;db&gt;]`
+</code></pre></div>
+<p>Where <code>db</code> is optional and sets the database number (<em>0</em> by default)</p>
+<p>Optional parameters:</p>
+<ul>
+<li><code>REDIS_MAX_CONNECTIONS</code>: maximum number of connections Slack
+  Machine can make to your Redis instance</li>
+<li><code>REDIS_KEY_PREFIX</code>: the prefix Slack Machine uses for keys (<code>SM</code>
+  by default, so "key1" gets stored under <code>SM:key1</code>)</li>
+</ul>
+<p><em>Class</em>: <code>machine.storage.backends.redis.RedisStorage</code></p>
+<h4 id="dynamodb">DynamoDB</h4>
+<p>Install with: <code>uv add 'slack-machine[dynamodb]'</code></p>
+<p>This backend stores data in <a href="https://aws.amazon.com/dynamodb/">DynamoDB</a>. DynamoDB is a managed NoSQL datastore on AWS
+that, among other things, allows for easy persistance of objects by key. The DynamoDB backend requires either a set of
+valid AWS account credentials, or a locally running DynamoDB test bed, such as the one included in
+<a href="https://github.com/localstack/localstack">localstack</a>. This backend requires the environment variables or path-based
+AWS credentials that are normally used to access AWS services. The following are optional parameters that can be set in
+your <code>local_settings.py</code> or <code>SM_</code> environment variable slack-machine settings:</p>
+<p>Optional parameters:</p>
+<ul>
+<li><code>DYNAMODB_ENDPOINT_URL</code>: specifies an optional alternate endpoint, for local bot testing</li>
+<li><code>DYNAMODB_KEY_PREFIX</code>: an optional prefix to use within the key lookup. Defaults to <code>SM:</code></li>
+<li><code>DYNAMODB_TABLE_NAME</code>: specifies the table to use in DynamoDB. Defaults to <code>slack-machine-state</code></li>
+<li><code>DYNAMODB_CREATE_TABLE</code>: optionally -create- the table to be used in DynamoDB. Defaults to <code>False</code></li>
+<li><code>DYNAMODB_CLIENT</code>: if custom configuration is needed for the DynamoDB client, an optional
+  <a href="https://pypi.org/project/aioboto3/"><code>aioboto3</code></a> resource can be specified here</li>
+</ul>
+<p><em>Class</em>: <code>machine.storage.backends.dynamodb.DynamoDBStorage</code></p>
+<h4 id="sqlite">SQLite</h4>
+<p>Install with: <code>uv add 'slack-machine[sqlite]'</code></p>
+<p>This backend stores data in <a href="https://www.sqlite.org/">SQLite</a>. SQLite is a C library that provides a lightweight
+disk-based database that doesn’t require a separate server process and allows accessing the database using a
+non-standard variant of the SQL query language.</p>
+<p>The SQLite backend requires you to provide a filename that will be used to store the data by setting the
+<code>SQLITE_PATH</code> variable in <code>local_settings.py</code>. The filename can be relative or absolute:</p>
+<div class="highlight"><pre><span></span><code>`SQLITE_PATH: /path/to/slack-machine.db`
+</code></pre></div>
+<p><em>Class</em>: <code>machine.storage.backends.sqlite.SQLiteStorage</code></p>
+<hr />
+<p>So if, for example, you want to configure Slack Machine to use Redis as a storage backend, with your Redis instance
+running on <em>localhost</em> on the default port, you would add this to your <code>local_settings.py</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">STORAGE_BACKEND</span> <span class="o">=</span> <span class="s1">&#39;machine.storage.backends.redis.RedisStorage&#39;</span>
+<span class="n">REDIS_URL</span> <span class="o">=</span> <span class="n">redis</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">6379</span><span class="s1">&#39;</span>
+</code></pre></div>
+<p>That's all there is to it!</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.instant", "navigation.tracking", "navigation.indexes"], "search": "../../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.83f73b43.min.js"></script>
+      
+    
+  </body>
+</html>
