@@ -82,7 +82,7 @@ docs = [
     "mkdocstrings[python]>=0.30,<0.31",
     "mkdocs-material>=8.5.10,<10.0.0",
     "griffe>=1.7.3,<2.0.0",
-    "mkdocstrings-python>=1.10.3,<2.0.0",
+    "mkdocstrings-python>=2.0.8,<2.1.0",
 ]
 [build-system]
 requires = ["hatchling"]
